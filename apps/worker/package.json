@@ -1,0 +1,29 @@
+{
+  "name": "@lms/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "heygen:register-webhook": "tsx src/register-heygen-webhook.ts",
+    "heygen:webhooks": "tsx src/register-heygen-webhook.ts",
+    "test": "vitest run",
+    "stop": "pkill -f 'tsx/dist/preflight.cjs'; pkill -f 'cli.mjs src/index.ts'; echo 'workers encerrados'"
+  },
+  "dependencies": {
+    "@lms/db": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "tsx": "4.23.15",
+    "@lms/media": "workspace:*",
+    "@lms/ai": "workspace:*",
+    "@lms/course-schema": "workspace:*",
+    "pdf-parse": "2.4.5"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "26.6.5",
+    "vitest": "5.0.5"
+  }
+}
