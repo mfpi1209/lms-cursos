@@ -149,3 +149,78 @@ export function ChapterCard({
     </Link>
   );
 }
+
+/**
+ * Curso na vitrine (fileira horizontal, modelo serviço de vídeo): quadro 16:9 com a instrutora no estúdio,
+ * selo de estado, barra de progresso na borda de baixo; título e "instrutora · N aulas" embaixo.
+ * O cartão inteiro é o link para continuar de onde parou.
+ */
+export function CourseCard({
+  href,
+  title,
+  thumb,
+  presenter,
+  lessons,
+  completed,
+  status,
+  cta,
+  testId,
+}: {
+  href: string;
+  title: string;
+  thumb?: string;
+  presenter?: string;
+  lessons: number;
+  completed: number;
+  status: 'new' | 'in_progress' | 'completed';
+  cta: string;
+  testId?: string;
+}) {
+  const percent = status === 'completed' ? 100 : lessons > 0 ? Math.round((completed / lessons) * 100) : 0;
+  const state = status === 'completed' ? 'Concluído' : status === 'in_progress' ? `${completed} de ${lessons} aulas concluídas` : 'Novo';
+  return (
+    <li className="w-[72vw] max-w-[300px] shrink-0 snap-start sm:w-[280px]">
+      <Link
+        href={href}
+        data-testid={testId}
+        aria-label={`${title}. ${state}. ${cta}.`}
+        className="group/cc block rounded-[14px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
+      >
+        <div className="relative aspect-video overflow-hidden rounded-[14px] border border-line bg-[var(--im-media-bg)] transition-transform duration-200 group-hover/cc:-translate-y-1 group-hover/cc:shadow-[0_18px_40px_-20px_rgba(15,16,48,0.55)] motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
+          {thumb ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={thumb} alt="" loading="lazy" className="h-full w-full object-cover object-[50%_30%] transition-transform duration-300 group-hover/cc:scale-[1.03] motion-reduce:transition-none" />
+          ) : (
+            <div className="grid h-full w-full place-items-center bg-[image:var(--im-media-empty)]">
+              <span className="text-5xl font-semibold lowercase text-fg/15">{title.trim().charAt(0)}</span>
+            </div>
+          )}
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0" />
+          {status === 'new' && (
+            <span aria-hidden="true" className="absolute left-2.5 top-2.5 rounded-full bg-accent-fill px-2.5 py-0.5 text-xs font-semibold text-accent-fill-fg">Novo</span>
+          )}
+          {status === 'completed' && (
+            <span aria-hidden="true" className="absolute right-2.5 top-2.5 grid size-8 place-items-center rounded-full bg-accent-fill text-accent-fill-fg">
+              <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+            </span>
+          )}
+          <span aria-hidden="true" className="absolute bottom-3 right-2.5 rounded-md bg-black/60 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white">
+            {lessons} {lessons === 1 ? 'aula' : 'aulas'}
+          </span>
+          <span aria-hidden="true" className="absolute inset-0 grid place-items-center opacity-0 transition-opacity duration-200 group-hover/cc:opacity-100 group-focus-visible/cc:opacity-100">
+            <span className="grid size-14 place-items-center rounded-full bg-white/90 text-[#1D1E4C] shadow-lg">
+              <svg viewBox="0 0 24 24" className="ml-0.5 size-6" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+            </span>
+          </span>
+          {status !== 'new' && (
+            <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 bg-white/25">
+              <span className="block h-full bg-accent-fill" style={{ width: `${Math.max(4, percent)}%` }} />
+            </span>
+          )}
+        </div>
+        <p className="mt-2.5 line-clamp-2 text-[17px] font-semibold leading-snug text-fg group-hover/cc:underline group-hover/cc:decoration-accent group-hover/cc:underline-offset-4">{title}</p>
+        <p className="mt-0.5 text-sm text-fg-muted">{[presenter, status === 'in_progress' ? `${completed} de ${lessons} aulas` : null].filter(Boolean).join(' · ') || cta}</p>
+      </Link>
+    </li>
+  );
+}
