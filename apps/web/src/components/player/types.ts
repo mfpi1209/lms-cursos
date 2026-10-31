@@ -83,6 +83,12 @@ export interface PlatformContext {
   castPresenter?: { name: string; role?: string };
   lessons: Array<{ id: string; title: string; status: LessonRunStatus; href: string }>;
   currentLessonId: string;
+  /** o que o aluno leva ao concluir o curso (objetivos do curso, na voz do aluno) */
+  courseGoals?: string[];
+  /** frase do curso para o aluno (`learnerSummary`) */
+  courseSummary?: string;
+  /** nome do selo de competência que o curso dá (o título curto do curso) */
+  credentialName?: string;
   /** matrícula (LMS): habilita as respostas do curso inteiro no roteiro */
   enrollmentId?: string;
   /** encerramento com roteiro do curso (de qualquer aula) e os nós que ele cita */

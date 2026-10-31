@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Check, FileText, ListVideo, Mic, Pause, Pencil, Play, RotateCcw, Undo2 } from 'lucide-react';
+import { ArrowLeft, Award, Check, FileText, ListChecks, ListVideo, Mic, MousePointerClick, Pause, Pencil, Play, RotateCcw, Target, Undo2 } from 'lucide-react';
 import { resolveReview, type AttemptState, type ProgressSummary, type ReviewSummary } from '@lms/course-engine';
 import {
   NODE_TYPE_LABELS,
@@ -95,6 +95,8 @@ export function ImmersivePlayer({
     lessonTitle: lesson.title,
     lessons,
     lessonIndex,
+    ...(platform.courseGoals?.length ? { courseGoals: platform.courseGoals } : {}),
+    ...(platform.credentialName ? { credentialName: platform.credentialName } : {}),
     exitHref,
     shortLabel: shortLessonLabel(lesson),
     posterUrl: platform.posterUrl,
@@ -260,6 +262,61 @@ interface FrameInfo {
   nav?: { openMap(): void; mapOpen: boolean; canGoBack: boolean; pending: boolean; onBack(): void; onRestart?(): void };
   /** vinheta da marca a tocar no palco quando a aula termina (já filtrada por `playOn`) */
   bumper?: PlatformContext['bumper'];
+  /** abertura do curso: o que o aluno leva e o selo para o currículo */
+  courseGoals?: string[];
+  credentialName?: string;
+}
+
+type StepKind = 'video' | 'choice' | 'mission' | 'review';
+const STEP_LABEL: Record<StepKind, string> = { video: 'Vídeo', choice: 'Decisão', mission: 'Missão', review: 'Revisão' };
+
+/** Etapas da aula na ordem do roteiro (avaliações seguidas viram uma só "Revisão"); o fim não conta. */
+function lessonSteps(lesson: Lesson): Array<{ kind: StepKind; nodeIds: string[] }> {
+  const out: Array<{ kind: StepKind; nodeIds: string[] }> = [];
+  for (const n of lesson.graph.nodes) {
+    const kind: StepKind | null = n.type === 'scenario' || n.type === 'content' || n.type === 'consequence' ? 'video' : n.type === 'choice' ? 'choice' : n.type === 'reflection' ? 'mission' : n.type === 'assessment' ? 'review' : null;
+    if (!kind) continue;
+    const last = out[out.length - 1];
+    if (kind === 'review' && last?.kind === 'review') last.nodeIds.push(n.id);
+    else out.push({ kind, nodeIds: [n.id] });
+  }
+  return out;
+}
+
+const STEP_ICON: Record<StepKind, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>> = { video: Play, choice: MousePointerClick, mission: Target, review: ListChecks };
+
+/**
+ * Trilha da aula (gamificação leve): uma marca por etapa — feita (laranja, com visto), atual (anel) e a fazer.
+ * "3 de 7 etapas" para leitores de tela e ao lado no computador. Não muda regra nenhuma: só mostra o caminho.
+ */
+function LessonStepsBar({ lesson, state, currentNodeId, completed }: { lesson: Lesson; state: AttemptState; currentNodeId?: string; completed: boolean }) {
+  const steps = useMemo(() => lessonSteps(lesson), [lesson]);
+  if (steps.length < 2) return null;
+  const done = new Set(state.completedNodeIds);
+  const doneCount = completed ? steps.length : steps.filter((st) => st.nodeIds.every((id) => done.has(id))).length;
+  return (
+    <div className="flex items-center gap-3" data-testid="lesson-steps">
+      <ol className="flex items-center gap-1.5" aria-label={`Etapas da aula: ${doneCount} de ${steps.length} concluídas`}>
+        {steps.map((st, i) => {
+          const isDone = completed || st.nodeIds.every((id) => done.has(id));
+          const isNow = !completed && !!currentNodeId && st.nodeIds.includes(currentNodeId);
+          const Icon = STEP_ICON[st.kind];
+          return (
+            <li key={i} title={STEP_LABEL[st.kind]} className={cn('grid size-7 place-items-center rounded-full transition-colors motion-reduce:transition-none', isDone ? 'bg-[var(--im-accent)] text-[var(--im-on-accent)]' : isNow ? 'bg-surface text-fg ring-2 ring-[var(--im-accent)]' : 'bg-fg/10 text-fg/45')}>
+              {isDone ? <Check className="size-3.5" strokeWidth={3} aria-hidden="true" /> : <Icon className="size-3.5" aria-hidden="true" />}
+              <span className="sr-only">
+                {STEP_LABEL[st.kind]}
+                {isDone ? ' (feita)' : isNow ? ' (agora)' : ''}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      <span className="hidden text-[13px] font-medium tabular-nums text-fg/65 lg:inline" aria-hidden="true">
+        {doneCount} de {steps.length} etapas
+      </span>
+    </div>
+  );
 }
 
 /** Moldura do palco sem cena (carregando / erro): mesma geometria, sem vídeo. */
@@ -324,7 +381,7 @@ const ROUND_BTN =
  * mouse parado, some junto com a barra de controles (`hidden`); volta ao mexer
  * o mouse, tocar, pausar ou ao focar pelo teclado.
  */
-function StageTopNav({ frame, percent, hidden = false }: { frame: FrameInfo; percent: number; hidden?: boolean }) {
+function StageTopNav({ frame, percent, hidden = false, steps }: { frame: FrameInfo; percent: number; hidden?: boolean; /** trilha de etapas da aula (gamificação) */ steps?: React.ReactNode }) {
   // o cabeçalho da página já diz "Aula N de M": aqui fica só o nome da aula (no celular, onde o cabeçalho não mostra a posição, "Aula N")
   const label = frame.lessonTitle;
   return (
@@ -355,8 +412,9 @@ function StageTopNav({ frame, percent, hidden = false }: { frame: FrameInfo; per
             <span className="sm:hidden">Aula {frame.lessonIndex + 1}</span>
           </span>
         </h1>
+        {steps && <div className="ml-auto hidden md:block">{steps}</div>}
         {frame.nav && (
-          <div className="ml-auto flex shrink-0 items-center gap-2">
+          <div className={cn('flex shrink-0 items-center gap-2', steps ? 'md:ml-4 max-md:ml-auto' : 'ml-auto')}>
             {frame.nav.canGoBack && (
               <RoundIconButton label="Cena anterior" onClick={frame.nav.onBack} disabled={frame.nav.pending} testId="player-back" aria-keyshortcuts="ArrowLeft">
                 <Undo2 className="size-5" aria-hidden="true" />
@@ -684,6 +742,23 @@ function Scene({
     if (video.phase === 'ended') headingRef.current?.focus({ preventScroll: true });
   }, [video.phase]);
 
+  // O vídeo termina chamando a pergunta ("Agora é com você: …"): ao fim dele, a pergunta entra direto,
+  // sem tela intermediária. Só quando o vídeo chegou ao fim (não quando o aluno pulou) e não há vinheta tocando.
+  const leadsToChoice = useMemo(() => {
+    if (!node || node.type === 'choice' || node.type === 'end') return false;
+    const outs = [...new Set(lesson.graph.edges.filter((e) => e.from === node.id).map((e) => e.to))];
+    if (outs.length !== 1) return false;
+    const next = lesson.graph.nodes.find((n) => n.id === outs[0]);
+    return next?.type === 'choice' && callHostId(lesson.graph, next.id) === node.id;
+  }, [node, lesson.graph]);
+  const autoAdvanced = useRef(false);
+  useEffect(() => {
+    if (!leadsToChoice || video.phase !== 'ended' || outroNow || pending || autoAdvanced.current) return;
+    autoAdvanced.current = true;
+    const t = window.setTimeout(() => send({ kind: 'advance' }), 700);
+    return () => window.clearTimeout(t);
+  }, [leadsToChoice, video.phase, outroNow, pending, send]);
+
   const videoEl = video.active ? (
     <video
       {...video.videoProps}
@@ -723,6 +798,12 @@ function Scene({
         onRestart={() => void restart()}
         hasRecap={!!recap}
         onOpenRecap={onOpenRecap}
+        achievements={(() => {
+          const visited = new Set(state.path.map((p) => (p as { nodeId: string }).nodeId));
+          const of = (t: string) => lesson.graph.nodes.filter((n) => n.type === t && visited.has(n.id)).length;
+          return { choices: of('choice'), missions: of('reflection'), reviews: of('assessment') > 0 ? 1 : 0 };
+        })()}
+        {...(!nextLesson && frame.credentialName && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { credential: frame.credentialName } : {})}
       />
     );
   } else if (watching) {
@@ -753,6 +834,7 @@ function Scene({
       <OpeningPanel
         node={node}
         first={node.id === firstSceneId}
+        {...(node.id === firstSceneId && frame.lessonIndex === 0 && frame.courseGoals?.length ? { courseIntro: { goals: frame.courseGoals, ...(frame.credentialName ? { credential: frame.credentialName } : {}) } } : {})}
         lessonTitle={lesson.title}
         {...(lesson.description?.trim() ? { lessonDescription: lesson.description.trim() } : {})}
         video={video}
@@ -798,7 +880,11 @@ function Scene({
         onKeyDown={wake}
         className={cn(stageClass(hasControls), chromeHidden && 'md:cursor-none')}
       >
-        <StageTopNav frame={frame} percent={percent} hidden={chromeHidden} />
+        <StageTopNav frame={frame} percent={percent} hidden={chromeHidden} steps={<LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} />} />
+        {/* celular: a trilha de etapas logo abaixo do topo */}
+        <div className="px-4 pb-3 md:hidden">
+          <LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} />
+        </div>
         <StageMedia frame={stageFrame} video={{ el: videoEl, playing, caption: video.caption, hasControls, watching }} bumper={bumperEl} bumperFull={outroNow}>
           {/* decisão: aviso discreto de que é a vez do aluno (o vídeo não segue sozinho) */}
           {node?.type === 'choice' && !completed && !watching && (
@@ -1086,7 +1172,8 @@ function OpeningPanel({
   pending,
   fieldError,
   onSend,
-}: PanelProps & { node: Extract<AnyNode, { type: 'content' | 'scenario' | 'consequence' }>; first: boolean; lessonTitle: string; lessonDescription?: string; video: SceneVideo; narrationTitle: string }) {
+  courseIntro,
+}: PanelProps & { node: Extract<AnyNode, { type: 'content' | 'scenario' | 'consequence' }>; first: boolean; lessonTitle: string; lessonDescription?: string; video: SceneVideo; narrationTitle: string; /** 1ª cena do curso: o que o aluno leva ao concluir e o selo */ courseIntro?: { goals: string[]; credential?: string } }) {
   const [reading, setReading] = useState(false);
   const narration = narrationOf(node) ?? ((node as { media?: { transcript?: string } }).media?.transcript?.trim() || null);
   const title = first ? lessonTitle : (node.title ?? lessonTitle);
@@ -1101,7 +1188,8 @@ function OpeningPanel({
         <Eyebrow>{first ? 'Antes de começar' : 'A seguir'}</Eyebrow>
         {title}
       </h2>
-      {orientation && <p className="mt-3 max-w-[38ch] text-[18px] leading-snug text-fg/75 md:text-[20px]">{orientation}</p>}
+      {orientation && !courseIntro && <p className="mt-3 max-w-[38ch] text-[18px] leading-snug text-fg/75 md:text-[20px]">{orientation}</p>}
+      {courseIntro && <CourseIntro goals={courseIntro.goals} {...(courseIntro.credential ? { credential: courseIntro.credential } : {})} />}
       <FieldError message={fieldError} />
       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
         <ImButton size="xl" data-testid="player-watch" onClick={() => video.play()} disabled={pending}>
@@ -1145,6 +1233,31 @@ function OpeningPanel({
           <p className="mb-1 text-[13px] font-semibold text-fg/60">{narrationTitle}</p>
           {narration}
         </div>
+      )}
+    </div>
+  );
+}
+
+/** "Ao concluir este curso, você…": os objetivos do curso + o selo de competência para o currículo. */
+function CourseIntro({ goals, credential }: { goals: string[]; credential?: string }) {
+  return (
+    <div className="mt-4 max-w-[46ch] space-y-3" data-testid="course-intro">
+      <p className="text-[15px] font-semibold text-fg/80">Ao concluir este curso:</p>
+      <ul className="space-y-1.5">
+        {goals.map((g) => (
+          <li key={g} className="flex gap-2.5 text-[16px] leading-snug text-fg/85 md:text-[17px]">
+            <Check className="mt-0.5 size-[18px] shrink-0 text-[var(--im-accent-ink)]" strokeWidth={3} aria-hidden="true" />
+            <span>{g}</span>
+          </li>
+        ))}
+      </ul>
+      {credential && (
+        <p className="flex items-center gap-2.5 rounded-[12px] border border-[var(--im-accent-line)]/50 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] px-3 py-2 text-[15px] leading-snug text-fg">
+          <Award className="size-5 shrink-0 text-[var(--im-accent-ink)]" aria-hidden="true" />
+          <span>
+            E ganha o <strong>Selo de competência DNA Work · {credential}</strong> para colocar no seu currículo.
+          </span>
+        </p>
       )}
     </div>
   );
@@ -1609,7 +1722,13 @@ function EndPanel({
   onRestart,
   hasRecap,
   onOpenRecap,
+  achievements,
+  credential,
 }: {
+  /** conquistas da aula (contadas do caminho feito) */
+  achievements?: { choices: number; missions: number; reviews: number };
+  /** curso inteiro concluído: o selo de competência para o currículo */
+  credential?: string;
   headingRef: React.Ref<HTMLHeadingElement>;
   headingId: string;
   node: EndNode | null;
@@ -1634,6 +1753,14 @@ function EndPanel({
           <span className="inline-flex items-center rounded-full border border-line-strong bg-fg/5 px-3 py-1 text-sm font-medium text-fg/85">{node.outcomeLabel}</span>
         )}
       </div>
+      {achievements && (achievements.choices > 0 || achievements.missions > 0 || achievements.reviews > 0) && (
+        <ul className="mt-4 flex flex-wrap gap-2" aria-label="Conquistas desta aula" data-testid="lesson-achievements">
+          {achievements.choices > 0 && <AchievementChip icon={MousePointerClick} label={`${achievements.choices} ${achievements.choices === 1 ? 'decisão tomada' : 'decisões tomadas'}`} />}
+          {achievements.missions > 0 && <AchievementChip icon={Target} label={achievements.missions === 1 ? 'Missão cumprida' : `${achievements.missions} missões cumpridas`} />}
+          {achievements.reviews > 0 && <AchievementChip icon={ListChecks} label="Revisão feita" />}
+        </ul>
+      )}
+      {credential && <CredentialCard name={credential} />}
       {carry && <CarryCard carry={carry} />}
       {node && <RichText doc={node.summary} className={cn(BODY, 'mt-5')} />}
       {!ownRecap && node?.closingLine && <p className="mt-6 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[32px]">{node.closingLine}</p>}
@@ -1662,6 +1789,43 @@ function EndPanel({
           </ImButton>
         )}
       </div>
+    </div>
+  );
+}
+
+function AchievementChip({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>; label: string }) {
+  return (
+    <li className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-sm font-medium text-fg">
+      <Icon className="size-4 text-[var(--im-accent-ink)]" aria-hidden="true" />
+      {label}
+    </li>
+  );
+}
+
+/** Selo de competência do curso concluído, com a linha pronta para o currículo (copiar). */
+function CredentialCard({ name }: { name: string }) {
+  const [copied, setCopied] = useState(false);
+  const line = `Selo de competência DNA Work: ${name} (curso prático com decisões e missões)`;
+  return (
+    <div className="mt-5 rounded-[16px] border border-[var(--im-accent-line)]/60 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] p-4" data-testid="credential-card">
+      <p className="flex items-center gap-2 text-[15px] font-semibold text-fg">
+        <Award className="size-5 text-[var(--im-accent-ink)]" aria-hidden="true" /> Você conquistou o Selo de competência DNA Work
+      </p>
+      <p className="mt-1 text-[17px] font-semibold text-fg">{name}</p>
+      <p className="mt-1 text-sm text-fg/75">Coloque no seu currículo, na parte de cursos e certificações.</p>
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(line);
+            setCopied(true);
+          } catch {}
+        }}
+        className="mt-3 inline-flex min-h-11 items-center rounded-[10px] border border-line-strong bg-surface px-4 text-[15px] font-medium text-fg hover:bg-fg/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]"
+      >
+        {copied ? 'Copiado: cole no seu currículo' : 'Copiar para o currículo'}
+      </button>
+      <span role="status" className="sr-only">{copied ? 'Texto do selo copiado.' : ''}</span>
     </div>
   );
 }

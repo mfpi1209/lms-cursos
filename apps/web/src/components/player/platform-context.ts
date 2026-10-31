@@ -103,6 +103,8 @@ export function buildPlatformContext({
     castPresenter: presenterFromCast(document),
     lessons: lessons.map((l) => ({ id: l.id, title: l.title, status: statuses[l.id] ?? 'not_started', href: hrefFor(l.id) })),
     currentLessonId: lessonId,
+    courseGoals: (document.objectives ?? []).map((o) => o.title.trim()).filter(Boolean).slice(0, 4),
+    ...(document.learnerSummary?.trim() ? { courseSummary: document.learnerSummary.trim() } : {}),
     enrollmentId,
     recap,
     ...(bumper ? { bumper } : {}),

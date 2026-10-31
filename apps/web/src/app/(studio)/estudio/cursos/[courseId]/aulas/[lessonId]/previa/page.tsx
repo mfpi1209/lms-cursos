@@ -5,6 +5,7 @@ import { requireStaff } from '@/server/viewer';
 import { requireCourseInWorkspace } from '@/server/courses';
 import { buildPlatformContext } from '@/components/player/platform-context';
 import { platformDefaultBumper } from '@/server/bumper';
+import { shortTitleFor } from '@/app/(lms)/aprender/_lib/short-titles';
 import { PreviewClient } from './preview-client';
 import { parseTestParams } from '@/components/studio/test-mode/test-model';
 
@@ -35,6 +36,9 @@ export default async function LessonPreviewPage({
     forceClassic: player === 'classic',
     defaultBumper: await platformDefaultBumper(viewer.workspace.id, draft.document.branding.bumper?.assetId),
   });
+  platform.credentialName = shortTitleFor(courseId, draft.document.title);
+  // topo do player com o título curto da capa, igual ao do aluno
+  if (shortTitleFor(courseId, '')) platform.branding = { ...platform.branding, wordmark: shortTitleFor(courseId, '') };
   // Modo de teste: ?cena=<nó>&v.<variável>=<valor> começa nessa cena com esses valores (prévia, nada é salvo)
   const test = parseTestParams(found.lesson.graph, sp);
   return (

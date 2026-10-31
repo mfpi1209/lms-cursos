@@ -59,6 +59,7 @@ export default async function LessonPage({
   // topo do player: o mesmo título curto das capas (quando o curso tem um), no lugar do wordmark gravado no curso
   const short = shortTitleFor(enr.course.id, '');
   if (short) platform.branding = { ...platform.branding, wordmark: short };
+  platform.credentialName = short || enr.course.title;
   if (identity.canEdit(viewer.role) && enr.course.workspaceId === viewer.workspace.id) platform.studioHref = `/estudio/cursos/${enr.course.id}/aulas/${lessonId}`;
 
   // A aula é JSON serializável (schema zod): vai como prop para o cliente.
