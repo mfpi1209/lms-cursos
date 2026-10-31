@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Cartão · dividido</title>
+<style>
+  html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Inter","Figtree",-apple-system,sans-serif}
+  .stage{position:relative;width:1920px;height:1080px;background:#0f1030;overflow:hidden}
+  /* a Marina continua no quadro: o vídeo dela é deslocado para a direita */
+  .presenter{position:absolute;right:0;top:0;width:1536px;height:864px;top:108px;background:url(marina.png) center/cover;filter:saturate(1.02)}
+  .presenter-fill{position:absolute;right:0;top:0;width:1536px;height:1080px;background:url(marina.png) center/cover;filter:blur(30px) brightness(.85);transform:scale(1.1)}
+  .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,16,48,.96) 0%,rgba(15,16,48,.90) 36%,rgba(15,16,48,.0) 52%)}
+  .panel{position:absolute;left:110px;top:170px;width:760px;color:#fff}
+  .eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:26px;font-weight:600;color:#FFB070;letter-spacing:.02em}
+  .eyebrow i{width:36px;height:4px;border-radius:2px;background:#FF7A08}
+  h1{font-size:76px;line-height:1.02;margin:22px 0 46px;font-weight:800;letter-spacing:-.02em}
+  ul{list-style:none;margin:0;padding:0;display:grid;gap:26px}
+  li{display:flex;align-items:center;gap:24px;font-size:38px;line-height:1.15;color:rgba(255,255,255,.86);
+     background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:22px 28px;backdrop-filter:blur(6px)}
+  li b{color:#fff;font-weight:800}
+  .ic{flex:none;width:72px;height:72px;border-radius:18px;background:#FF7A08;display:grid;place-items:center}
+  .ic svg{width:40px;height:40px;stroke:#1D1E4C;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  li.dim{opacity:.38}
+  .wm{position:absolute;right:56px;bottom:44px;height:40px;opacity:.75;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+  .tag{position:absolute;left:120px;bottom:70px;color:rgba(255,255,255,.55);font-size:22px}
+</style></head><body><div class="stage">
+  <div class="presenter-fill"></div><div class="presenter"></div><div class="shade"></div>
+  <div class="panel">
+    <div class="eyebrow"><i></i>Aula 1 · Você tem mais experiência do que imagina</div>
+    <h1>Isso também é experiência</h1>
+    <ul>
+      <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span><span>Ajudar no <b>negócio da família</b></span></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span>Organizar <b>eventos</b> e trabalhos da escola</span></li>
+      <li class="dim"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></span><span><b>Voluntariado</b>, esporte e <b>cursos online</b></span></li>
+    </ul>
+  </div>
+  
+  <img class="wm" src="logo-branco.png" alt="">
+</div></body></html>

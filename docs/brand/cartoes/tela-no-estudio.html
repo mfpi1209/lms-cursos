@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Tela no estúdio</title>
+<style>
+  html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Inter","Figtree",-apple-system,sans-serif}
+  .stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#111}
+  .presenter{position:absolute;inset:0;background:url(frente.png) center/cover;transform:translateX(-300px)}
+  /* no lugar da placa: um monitor grande do próprio estúdio, que mostra o conteúdo da aula */
+  .tv{position:absolute;left:1080px;top:110px;width:760px;height:430px;border-radius:14px;background:#0b0c22;
+      box-shadow:0 0 0 10px #15162b,0 0 0 12px #2b2d4a,0 30px 60px rgba(0,0,0,.45),0 0 80px rgba(255,140,40,.18)}
+  .screen{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,#1D1E4C 0%,#2a2b6b 60%,#3b2c66 100%);color:#fff;padding:38px 42px;box-sizing:border-box}
+  .screen::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.10),rgba(255,255,255,0) 40%)}
+  .screen small{font-size:18px;color:#FFB070;font-weight:600}
+  .screen h2{font-size:44px;line-height:1.05;margin:10px 0 22px;font-weight:800}
+  .screen ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+  .screen li{font-size:26px;display:flex;gap:14px;align-items:center;color:rgba(255,255,255,.85)}
+  .screen li i{width:14px;height:14px;border-radius:4px;background:#FF7A08;flex:none}
+  .screen li b{color:#fff}
+  .screen .brand{position:absolute;right:30px;bottom:24px;height:28px;opacity:.9}
+  .stand{position:absolute;left:1445px;top:552px;width:30px;height:120px;background:linear-gradient(90deg,#15162a,#2a2b45,#15162a)}
+  .wm{position:absolute;right:56px;bottom:44px;height:38px;opacity:.75}
+</style></head><body><div class="stage">
+  <div class="presenter"></div>
+  <div class="tv"><div class="screen">
+    <small>Aula 1 · Você tem mais experiência do que imagina</small>
+    <h2>Isso também é experiência</h2>
+    <ul>
+      <li><i></i><span>Ajudar no <b>negócio da família</b></span></li>
+      <li><i></i><span>Organizar <b>eventos</b> da escola</span></li>
+      <li><i></i><span><b>Voluntariado</b> e <b>cursos online</b></span></li>
+    </ul>
+    <img class="brand" src="logo-branco.png" alt="">
+  </div></div>
+  <img class="wm" src="logo-branco.png" alt="">
+</div></body></html>

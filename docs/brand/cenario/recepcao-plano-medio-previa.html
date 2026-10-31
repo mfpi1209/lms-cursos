@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+.stage{position:relative;width:1920px;height:1080px;overflow:hidden}
+/* Cenário aproximado: janela de recorte 0..860 de altura (acima do rodapé em y=872), largura 16:9 = 1529,
+   deslocada para a direita para manter a placa inteira (x 250..1779). Escala 1080/860 = 1.2558. */
+.bg{position:absolute;left:-314px;top:0;width:2411px;height:1356px}
+/* Apresentadora: identidade e proporções originais (só escala uniforme). Folga de 6% acima da cabeça
+   (cabeça em y≈65), tronco saindo pela borda inferior, centro em x≈0,34·W. */
+.presenter{position:absolute;left:-314px;top:25px;height:1080px;
+  filter:brightness(1.02) saturate(1.04) sepia(.06)} /* harmonização sutil com a luz quente do cenário */
+</style></head><body><div class="stage">
+<img class="bg" src="recepcao-dnawork-sem-balcao-1920.png">
+<img class="presenter" src="presenter.png">
+</div></body></html>

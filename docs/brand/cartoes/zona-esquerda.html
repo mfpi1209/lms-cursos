@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Marina à esquerda, conteúdo à direita</title>
+<style>
+  html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Inter","Figtree",-apple-system,sans-serif}
+  .stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#111}
+  /* a Marina vai para o terço esquerdo; a parede da direita vira área de conteúdo */
+  .presenter{position:absolute;inset:0;background:url(frente.png) center/cover;transform:translateX(-430px)}
+  .shade{position:absolute;inset:0;background:linear-gradient(270deg,rgba(15,16,48,.95) 0%,rgba(15,16,48,.86) 30%,rgba(15,16,48,.35) 42%,rgba(15,16,48,0) 50%)}
+  .panel{position:absolute;right:96px;top:150px;width:700px;color:#fff}
+  .eyebrow{font-size:23px;font-weight:600;color:#FFB070;display:flex;gap:12px;align-items:center}
+  .eyebrow i{width:36px;height:4px;border-radius:2px;background:#FF7A08}
+  h1{font-size:64px;line-height:1.04;margin:18px 0 34px;font-weight:800;letter-spacing:-.02em}
+  .chips{display:flex;flex-wrap:wrap;gap:16px}
+  .chip{display:inline-flex;align-items:center;gap:14px;font-size:32px;font-weight:700;color:#1D1E4C;background:#fff;border-radius:999px;padding:14px 26px 14px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .chip .ic{width:48px;height:48px;border-radius:999px;background:#FF7A08;display:grid;place-items:center}
+  .chip svg{width:26px;height:26px;stroke:#1D1E4C;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .chip.pop{transform:scale(1.06) rotate(-1.5deg);outline:6px solid rgba(255,122,8,.35)}
+  .chip.wait{opacity:.35}
+  .q{margin-top:44px;padding:26px 30px;border-radius:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);font-size:30px;line-height:1.3}
+  .q b{color:#FFB070}
+  .lower{position:absolute;left:86px;bottom:90px;display:flex;align-items:center;gap:16px;background:rgba(15,16,48,.82);color:#fff;border-radius:16px;padding:14px 22px 14px 16px}
+  .lower .bar{width:6px;height:46px;border-radius:3px;background:#FF7A08}
+  .lower b{display:block;font-size:28px} .lower span{font-size:20px;opacity:.8}
+  .wm{position:absolute;right:56px;bottom:44px;height:38px;opacity:.75}
+</style></head><body><div class="stage">
+  <div class="presenter"></div><div class="shade"></div>
+  <div class="panel">
+    <div class="eyebrow"><i></i>Aula 1 · Você tem mais experiência do que imagina</div>
+    <h1>Isso também é experiência</h1>
+    <div class="chips">
+      <span class="chip"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>Negócio da família</span>
+      <span class="chip pop"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Eventos da escola</span>
+      <span class="chip wait"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></span>Voluntariado</span>
+      <span class="chip wait"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg></span>Cursos online</span>
+    </div>
+    <div class="q">Pergunta que vem a seguir: <b>"Isso entra no seu currículo?"</b></div>
+  </div>
+  <div class="lower"><div class="bar"></div><div><b>Marina</b><span>Sua orientadora · DNA Work</span></div></div>
+  <img class="wm" src="logo-branco.png" alt="">
+</div></body></html>

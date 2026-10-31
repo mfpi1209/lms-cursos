@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Cenário padrão DNA Work</title>
+<style>
+  :root { --navy: #1D1E4C; --orange: #FF7A08; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #000; font-family: -apple-system, "Figtree", "Helvetica Neue", Arial, sans-serif; }
+  .stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+
+  /* ---------- Parede de madeira ---------- */
+  .wall { position: absolute; inset: 0; background: #a87448; }
+  .wall svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wall .light { position: absolute; inset: 0; background:
+      /* luz principal vinda da esquerda/alto, iluminando a placa */
+      radial-gradient(900px 700px at 22% 30%, rgba(255,230,190,.30), rgba(255,230,190,0) 65%),
+      /* luz secundária sobre a TV */
+      radial-gradient(700px 500px at 78% 30%, rgba(255,240,220,.12), rgba(0,0,0,0) 65%),
+      /* vinheta e piso escurecendo */
+      linear-gradient(180deg, rgba(0,0,0,.12) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,.10) 70%, rgba(0,0,0,.45) 100%),
+      radial-gradient(1400px 1000px at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.35) 100%); }
+
+  /* ---------- Placa com relevo ---------- */
+  .sign { position: absolute; left: 140px; top: 150px; width: 640px; height: 330px; border-radius: 22px;
+      background: linear-gradient(160deg, #26285f 0%, #1D1E4C 45%, #15163b 100%);
+      /* espessura (extrusão) + sombra projetada na parede + halo de LED por trás */
+      box-shadow:
+        1px 1px 0 #1a1b45, 2px 2px 0 #171840, 3px 3px 0 #15163a, 4px 4px 0 #131434, 5px 5px 0 #11122f,
+        6px 6px 0 #0f102a, 7px 7px 0 #0e0f26, 8px 8px 0 #0c0d22, 9px 9px 0 #0b0c1f, 10px 10px 0 #0a0b1c,
+        14px 26px 38px rgba(0,0,0,.55), 0 0 90px 10px rgba(255,150,60,.28);
+      display: grid; place-items: center; }
+  /* reflexo do acrílico */
+  .sign::before { content: ""; position: absolute; inset: 0; border-radius: 22px;
+      background: linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.04) 28%, rgba(255,255,255,0) 50%, rgba(255,255,255,.05) 100%); }
+  /* borda chanfrada */
+  .sign::after { content: ""; position: absolute; inset: 0; border-radius: 22px;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.22), inset -1px -1px 0 rgba(0,0,0,.45); }
+  /* logo em relevo: camadas de sombra dura simulam a espessura das letras, mais uma sombra suave */
+  .sign img { width: 470px; position: relative;
+      filter: drop-shadow(1px 1px 0 #0a0b22) drop-shadow(1px 1px 0 #0a0b22) drop-shadow(1px 1px 0 #0a0b22)
+              drop-shadow(1px 1px 0 #0a0b22) drop-shadow(1px 1px 0 #0a0b22) drop-shadow(0 10px 14px rgba(0,0,0,.55)); }
+  /* parafusos */
+  .sign i { position: absolute; width: 14px; height: 14px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #d9dbe8, #6c6f8a 60%, #3a3c52);
+      box-shadow: 0 1px 2px rgba(0,0,0,.6), inset 0 0 0 1px rgba(0,0,0,.25); }
+  .sign i:nth-child(1){ left: 18px; top: 18px; } .sign i:nth-child(2){ right: 18px; top: 18px; }
+  .sign i:nth-child(3){ left: 18px; bottom: 18px; } .sign i:nth-child(4){ right: 18px; bottom: 18px; }
+
+  /* ---------- TV à direita ---------- */
+  .tv { position: absolute; left: 1120px; top: 150px; width: 700px; height: 420px; background: #0b0c1f; border-radius: 10px;
+      box-shadow: 0 40px 80px rgba(0,0,0,.5), 0 0 0 10px #0f1024, 0 0 0 12px #2a2b45, 0 0 70px rgba(80,90,200,.15); overflow: hidden; }
+  .screen { position: absolute; inset: 0; background: linear-gradient(135deg, #1D1E4C 0%, #2a2b6b 55%, #4a2f6a 100%); color: #fff; padding: 44px 48px; box-sizing: border-box; }
+  .screen::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.10), rgba(255,255,255,0) 45%); pointer-events: none; }
+  .screen .logo { height: 46px; }
+  .screen .title { margin-top: 36px; font-size: 46px; line-height: 1.1; font-weight: 800; letter-spacing: -0.01em; max-width: 600px; }
+  .screen .title em { font-style: normal; box-shadow: inset 0 -14px 0 var(--orange); }
+  .screen .who { position: absolute; left: 48px; bottom: 40px; font-size: 24px; opacity: .92; }
+  .screen .who strong { display: block; font-size: 28px; }
+  .screen .dot { position: absolute; right: 48px; bottom: 44px; width: 18px; height: 18px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 24px var(--orange); }
+  .stand { position: absolute; left: 1440px; top: 582px; width: 60px; height: 160px; background: linear-gradient(90deg, #15162a, #2a2b45, #15162a); }
+  .stand::after { content: ""; position: absolute; left: -150px; top: 150px; width: 360px; height: 22px; border-radius: 11px; background: #15162a; box-shadow: 0 10px 20px rgba(0,0,0,.4); }
+
+  /* Apresentadora (prévia): recorte na frente, à esquerda do centro */
+  .presenter { position: absolute; left: 70px; bottom: 0; height: 940px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="wall">
+    <svg viewBox="0 0 1920 1080" preserveAspectRatio="none">
+      <defs>
+        <!-- veios largos -->
+        <filter id="grainWide" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.0015 0.22" numOctaves="4" seed="11" result="n"/>
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.36  0 0 0 0 0.22  0 0 0 0 0.10  0 0 0 0.75 0"/>
+        </filter>
+        <!-- veios finos com ondulação -->
+        <filter id="grainFine" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.004 0.9" numOctaves="2" seed="3" result="f"/>
+          <feTurbulence type="turbulence" baseFrequency="0.02 0.01" numOctaves="1" seed="5" result="w"/>
+          <feDisplacementMap in="f" in2="w" scale="18" xChannelSelector="R" yChannelSelector="G" result="d"/>
+          <feColorMatrix in="d" type="matrix" values="0 0 0 0 0.98  0 0 0 0 0.85  0 0 0 0 0.62  0 0 0 0.22 0"/>
+        </filter>
+        <linearGradient id="panel" x1="0" x2="1">
+          <stop offset="0" stop-color="#000" stop-opacity=".40"/>
+          <stop offset=".03" stop-color="#fff" stop-opacity=".10"/>
+          <stop offset=".10" stop-color="#000" stop-opacity="0"/>
+          <stop offset=".88" stop-color="#000" stop-opacity=".06"/>
+          <stop offset=".97" stop-color="#000" stop-opacity=".22"/>
+          <stop offset="1" stop-color="#000" stop-opacity=".45"/>
+        </linearGradient>
+        <pattern id="panels" width="160" height="1080" patternUnits="userSpaceOnUse">
+          <rect width="160" height="1080" fill="url(#panel)"/>
+        </pattern>
+      </defs>
+      <rect width="1920" height="1080" fill="#a87448"/>
+      <rect width="1920" height="1080" filter="url(#grainWide)"/>
+      <rect width="1920" height="1080" filter="url(#grainFine)"/>
+      <!-- variação de tom por tábua -->
+      <g fill="#000">
+        <rect x="0" width="160" height="1080" opacity=".06"/><rect x="160" width="160" height="1080" opacity=".00"/>
+        <rect x="320" width="160" height="1080" opacity=".09"/><rect x="480" width="160" height="1080" opacity=".03"/>
+        <rect x="640" width="160" height="1080" opacity=".07"/><rect x="800" width="160" height="1080" opacity=".01"/>
+        <rect x="960" width="160" height="1080" opacity=".10"/><rect x="1120" width="160" height="1080" opacity=".04"/>
+        <rect x="1280" width="160" height="1080" opacity=".02"/><rect x="1440" width="160" height="1080" opacity=".08"/>
+        <rect x="1600" width="160" height="1080" opacity=".03"/><rect x="1760" width="160" height="1080" opacity=".07"/>
+      </g>
+      <g fill="#fff">
+        <rect x="160" width="160" height="1080" opacity=".05"/><rect x="800" width="160" height="1080" opacity=".04"/>
+        <rect x="1280" width="160" height="1080" opacity=".05"/><rect x="1600" width="160" height="1080" opacity=".03"/>
+      </g>
+      <rect width="1920" height="1080" fill="url(#panels)"/>
+    </svg>
+    <div class="light"></div>
+  </div>
+
+  <div class="sign"><i></i><i></i><i></i><i></i><img src="../../../apps/web/public/brand/dnawork/logo-branco.png" alt="DNA Work" /></div>
+
+  <div class="tv">
+    <div class="screen">
+      <img class="logo" src="../../../apps/web/public/brand/dnawork/logo-branco.png" alt="DNA Work" />
+      <div class="title">Pode entrar: sua próxima <em>entrevista</em> começa aqui</div>
+      <div class="who"><strong>Marina</strong>Sua entrevistadora</div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  <div class="stand"></div>
+
+  <img class="presenter" src="presenter.png" alt="" onerror="this.remove()" />
+</div>
+</body>
+</html>

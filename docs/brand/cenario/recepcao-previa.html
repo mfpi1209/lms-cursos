@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:#000}
+.stage{position:relative;width:1920px;height:1080px;overflow:hidden}
+.bg{position:absolute;inset:0;width:1920px;height:1080px}
+/* apresentadora atrás da mesa: a base do recorte fica na linha do tampo (y≈918) */
+.presenter{position:absolute;left:-68px;top:38px;height:880px}
+/* tampo da mesa por cima da apresentadora (recorte da própria foto, a partir da linha do tampo) */
+.desk{position:absolute;left:0;top:918px;width:1920px;height:162px;background:url(recepcao-dnawork-1920.png) 0 -918px no-repeat}
+</style></head><body><div class="stage">
+<img class="bg" src="recepcao-dnawork-1920.png">
+<img class="presenter" src="presenter.png">
+<div class="desk"></div>
+</div></body></html>
