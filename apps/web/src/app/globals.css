@@ -717,3 +717,8 @@ main[tabindex='-1']:focus { outline: none; }
   from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: none; }
 }
+
+/* Vitrine do aluno, "editorial claro": papel quente no tema claro (o escuro segue marinho) */
+:root[data-theme='light'].brand-dnawork .theme-platform:has(.lms-editorial) { --t-bg: #fbf8f4; }
+:root[data-theme='light'].brand-dnawork:has(.lms-editorial) { --page-platform: #fbf8f4; }
+.font-hand { font-family: var(--font-hand), 'Segoe Print', 'Bradley Hand', cursive; }

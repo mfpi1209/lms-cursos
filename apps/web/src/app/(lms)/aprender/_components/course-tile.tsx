@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
-import { Info, ListVideo, Play, X } from 'lucide-react';
+import { Clock3, Info, ListVideo, Play, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface CourseTileData {
@@ -13,6 +13,8 @@ export interface CourseTileData {
   title: string;
   summary?: string;
   thumb?: string;
+  /** quadro com a instrutora centrada (reação), para a capa em pé */
+  posterThumb?: string;
   /** vídeo de abertura do curso (prévia muda na ficha) */
   previewSrc?: string;
   presenter?: string;
@@ -139,7 +141,18 @@ function Details({ c, headingId, compact }: { c: CourseTileData; headingId?: str
  * Mouse parado em cima (computador): abre a ficha por cima, com prévia em vídeo, resumo e aulas.
  * Botão de detalhes (todas as telas e teclado): a mesma ficha numa janela.
  */
-export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }) {
+/** Pincelada laranja sob o título manuscrito. */
+export function Swoosh({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true" className={className}>
+      <path d="M3 12c38-6 92-9 194-5" fill="none" stroke="var(--im-accent)" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export type TileVariant = 'poster' | 'wide';
+
+export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileData; testId?: string; variant?: TileVariant }) {
   const cardRef = React.useRef<HTMLDivElement>(null);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const timer = React.useRef<number | undefined>(undefined);
@@ -204,44 +217,67 @@ export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }
   }
 
   return (
-    <li className="w-[72vw] max-w-[300px] shrink-0 snap-start sm:w-[280px] xl:w-[300px] 2xl:w-[330px] 2xl:max-w-[330px]" onMouseEnter={open} onMouseLeave={(e) => {
-      // sair do cartão para a ficha não fecha
-      const to = e.relatedTarget as Node | null;
-      if (to && to instanceof Node && document.querySelector('[role="group"][aria-label^="Ficha de"]')?.contains(to)) return;
-      close();
-    }}>
+    <li
+      className={variant === 'poster' ? 'w-[46vw] max-w-[260px] shrink-0 snap-start sm:w-[220px] xl:w-[240px] 2xl:w-[260px]' : 'w-[84vw] max-w-[420px] shrink-0 snap-start sm:w-[360px] xl:w-[380px]'}
+      onMouseEnter={open}
+      onMouseLeave={(e) => {
+        // sair do cartão para a ficha não fecha
+        const to = e.relatedTarget as Node | null;
+        if (to && to instanceof Node && document.querySelector('[role="group"][aria-label^="Ficha de"]')?.contains(to)) return;
+        close();
+      }}
+    >
       <div ref={cardRef} className="relative">
         <Link
           href={c.href}
           data-testid={testId}
           aria-label={`${c.title}. ${state}. ${courseFacts(c)}. ${c.cta}.`}
-          className="group/cc block rounded-[14px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          className="group/cc block rounded-[16px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
-          <div className="relative aspect-video overflow-hidden rounded-[14px] border border-line bg-[var(--im-media-bg)]">
-            {c.thumb ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.thumb} alt="" loading="lazy" className="h-full w-full object-cover object-[50%_30%]" />
-            ) : (
-              <div className="grid h-full w-full place-items-center bg-[image:var(--im-media-empty)]">
-                <span className="text-5xl font-semibold lowercase text-fg/15">{c.title.trim().charAt(0)}</span>
-              </div>
-            )}
-            {/* capa de pôster: o título em tipo grande sobre a instrutora, como a arte de um serviço de vídeo */}
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0f1030]/95 via-[#0f1030]/35 via-50% to-transparent" />
-            <Badge status={c.status} />
-            <span aria-hidden="true" className="absolute inset-x-3 bottom-3.5 block">
-              <span className="font-display line-clamp-3 text-[19px] font-bold leading-[1.08] tracking-[-0.01em] text-white [text-wrap:balance] xl:text-[21px]">{c.title}</span>
-              {c.presenter && <span className="mt-1 block text-[13px] font-medium text-white/80">com {c.presenter}</span>}
-            </span>
-            <ProgressEdge c={c} />
-          </div>
-          <p className="mt-2.5 text-sm tabular-nums text-fg-muted">
-            {courseFacts(c)}
-            {c.status === 'in_progress' && <span className="text-fg"> · {c.completed} de {c.lessons} aulas</span>}
-          </p>
+          {variant === 'poster' ? (
+            <div className="relative aspect-[3/4] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
+              {c.posterThumb || c.thumb ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
+              ) : null}
+              {/* capa em pé: título manuscrito com pincelada laranja sobre a instrutora */}
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#12132f]/95 via-[#12132f]/30 via-45% to-transparent" />
+              <Badge status={c.status} />
+              <span aria-hidden="true" className="absolute inset-x-3.5 bottom-3.5 block">
+                <span className="font-hand line-clamp-3 -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
+                <Swoosh className="mt-1 h-3 w-[68%]" />
+                <span className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-white/90">
+                  <Clock3 className="size-4" aria-hidden="true" />
+                  {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
+                </span>
+              </span>
+              <ProgressEdge c={c} />
+            </div>
+          ) : (
+            <div className="relative flex aspect-[2.6/1] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
+              {(c.posterThumb || c.thumb) && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="absolute inset-y-0 right-0 h-full w-[62%] object-cover object-[50%_20%]" />
+              )}
+              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#1d1e4c] from-40% via-[#1d1e4c]/70 via-55% to-transparent" />
+              <span aria-hidden="true" className="relative flex max-w-[62%] flex-col justify-center gap-1.5 p-4">
+                <span className="line-clamp-2 text-[17px] font-bold leading-tight text-white">{c.title}</span>
+                <span className="flex items-center gap-1.5 text-[13px] text-white/85">
+                  <Clock3 className="size-4" aria-hidden="true" />
+                  {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
+                </span>
+              </span>
+              <span aria-hidden="true" className="absolute bottom-3 right-3 grid size-11 place-items-center rounded-full bg-white/90 text-[#1d1e4c] shadow-lg transition-transform group-hover/cc:scale-105">
+                <Play className="ml-0.5 size-5 fill-current" />
+              </span>
+              <Badge status={c.status} />
+              <ProgressEdge c={c} />
+            </div>
+          )}
+          {variant === 'poster' && c.status === 'in_progress' && <p className="mt-2 text-sm tabular-nums text-fg-muted">{c.completed} de {c.lessons} aulas</p>}
         </Link>
-        {/* camada com a mesma proporção da capa: o botão de detalhes fica no canto de baixo dela */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 aspect-video">
+        {/* camada com a proporção da capa: o botão de detalhes fica no canto de cima dela */}
+        <div className={cn('pointer-events-none absolute inset-x-0 top-0', variant === 'poster' ? 'aspect-[3/4]' : 'aspect-[2.6/1]')}>
           <button
             type="button"
             onClick={() => {
@@ -249,7 +285,7 @@ export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }
               dialogRef.current?.showModal();
             }}
             aria-label={`Detalhes de ${c.title}`}
-            className="pointer-events-auto absolute right-2 top-2 grid size-9 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="pointer-events-auto absolute right-2 top-2 grid size-9 place-items-center rounded-full bg-black/45 text-white opacity-90 backdrop-blur-sm hover:bg-black/70 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <Info className="size-[18px]" aria-hidden="true" />
           </button>
@@ -282,29 +318,3 @@ export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }
   );
 }
 
-/**
- * Fundo do destaque: a imagem e, por cima, a prévia em vídeo da instrutora (muda, em laço, como o trailer de
- * um serviço de vídeo). Botão "Ouvir" liga o som; com movimento reduzido fica só a imagem.
- */
-export function HeroBackdrop({ image, videoSrc }: { image?: string; videoSrc?: string }) {
-  const [playing, setPlaying] = React.useState(false);
-  const [muted, setMuted] = React.useState(true);
-  const cls = 'absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[50%_30%] sm:w-[68%]';
-  return (
-    <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      {image && <img src={image} alt="" aria-hidden="true" className={cls} />}
-      {videoSrc && <PreviewVideo src={videoSrc} poster={image} muted={muted} startAt={1} seconds={20} onPlaying={() => setPlaying(true)} className={cn(cls, 'transition-opacity duration-700', playing ? 'opacity-100' : 'opacity-0')} />}
-      {videoSrc && playing && (
-        <button
-          type="button"
-          onClick={() => setMuted((m) => !m)}
-          aria-pressed={!muted}
-          className="absolute right-4 top-4 z-10 inline-flex sm:bottom-4 sm:top-auto min-h-11 items-center gap-2 rounded-full border border-white/40 bg-black/45 px-4 text-sm font-semibold text-white backdrop-blur hover:bg-black/60 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          {muted ? 'Ouvir' : 'Sem som'}
-        </button>
-      )}
-    </>
-  );
-}

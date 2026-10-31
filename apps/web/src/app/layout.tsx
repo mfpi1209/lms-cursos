@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Bricolage_Grotesque, Figtree, Instrument_Sans } from 'next/font/google';
+import { Bricolage_Grotesque, Caveat, Figtree, Instrument_Sans } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { THEME_COOKIE, THEME_INIT_SCRIPT, parseThemePref } from '@/lib/theme';
 import { getBrand } from '@/config/brand';
@@ -8,7 +8,9 @@ import './globals.css';
 const display = Bricolage_Grotesque({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-display', display: 'swap' });
 const body = Instrument_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-body', display: 'swap' });
 /** Fonte da plataforma (aluno, login e estúdio): sans geométrica. Exposta como `--font-platform`. */
-const platform = Figtree({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-platform', display: 'swap' });
+const platform = Figtree({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'], variable: '--font-platform', display: 'swap' });
+/** Letra manuscrita dos títulos nas capas da vitrine do aluno (editorial claro). Exposta como `--font-hand`. */
+const hand = Caveat({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-hand', display: 'swap' });
 
 // Marca da plataforma (preset do workspace; ver config/brand.ts). Título da aba: "<página> · <marca>".
 const brand = getBrand();
@@ -35,7 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang="pt-BR"
       // a classe do preset liga os tokens de cor da marca (globals.css, "PRESETS DE MARCA")
-      className={`${display.variable} ${body.variable} ${platform.variable} ${brand.className}`}
+      className={`${display.variable} ${body.variable} ${platform.variable} ${hand.variable} ${brand.className}`}
       style={{ ['--brand-primary' as string]: brand.accent }}
       data-brand={brand.id}
       data-theme-pref={hasCookie ? pref : undefined}

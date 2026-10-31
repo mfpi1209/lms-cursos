@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { LmsAvatarMenu, LmsSearch, LmsTabs } from './_components/lms-nav';
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/ui/skip-link';
 import { redirect } from 'next/navigation';
 import { identity } from '@lms/db';
@@ -23,18 +25,20 @@ export default async function LmsLayout({ children }: { children: React.ReactNod
       <SkipLink />
       <header className="lms-chrome border-b border-line">
         <div className="mx-auto flex h-16 max-w-[1760px] items-center justify-between gap-2 px-4 sm:h-[72px] sm:gap-3 sm:px-8 xl:px-14">
-          <Link href="/aprender" className="inline-flex min-h-11 min-w-0 shrink items-center rounded-md" aria-label={`${brand.name}: meus cursos`}>
-            <BrandLogo brand={brand} height={26} className="max-sm:[--logo-h:22px]" />
-          </Link>
-          <div className="flex shrink-0 items-center gap-1.5 text-sm text-fg-muted sm:gap-4">
-            {identity.isStaff(viewer.role) && (
-              <Link href="/estudio" className="inline-flex min-h-11 items-center rounded-full px-3 hover:bg-surface-2 hover:text-fg">
-                Estúdio
-              </Link>
-            )}
-            <span className="hidden sm:inline">{viewer.user.name}</span>
+          <div className="flex min-w-0 items-center gap-6 self-stretch lg:gap-12">
+            <Link href="/aprender" className="inline-flex min-h-11 min-w-0 shrink items-center self-center rounded-md" aria-label={`${brand.name}: explorar cursos`}>
+              <BrandLogo brand={brand} height={26} className="max-sm:[--logo-h:22px]" />
+            </Link>
+            <LmsTabs />
+          </div>
+          <div className="flex shrink-0 items-center gap-1 text-sm text-fg-muted sm:gap-2">
+            <Suspense fallback={null}>
+              <LmsSearch />
+            </Suspense>
             <ThemeSwitch />
-            <SignOutButton />
+            <LmsAvatarMenu name={viewer.user.name || viewer.user.email} staff={identity.isStaff(viewer.role)}>
+              <SignOutButton />
+            </LmsAvatarMenu>
           </div>
         </div>
       </header>
