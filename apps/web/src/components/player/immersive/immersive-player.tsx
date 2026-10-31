@@ -506,17 +506,18 @@ function StageMedia({ frame, video, bumper, bumperFull, children }: { frame: Fra
   );
 }
 
-function PanelArea({ hasControls, compact, light, side = 'left', children }: { hasControls: boolean; /** vídeo tocando: etiqueta pequena no canto, sem cobrir a cena */ compact?: boolean; /** abertura: texto direto sobre o cenário (sem o painel branco) */ light?: boolean; /** lado livre do palco (o oposto ao da apresentadora, quando o curso informa) */ side?: 'left' | 'right'; children: React.ReactNode }) {
+function PanelArea({ hasControls, compact, light, center, side = 'left', children }: { hasControls: boolean; /** vídeo tocando: etiqueta pequena no canto, sem cobrir a cena */ compact?: boolean; /** abertura: texto direto sobre o cenário (sem o painel branco) */ light?: boolean; /** pergunta e missão: no centro do palco, mais largas, com o fundo escurecido (foco no que o aluno faz) */ center?: boolean; /** lado livre do palco (o oposto ao da apresentadora, quando o curso informa) */ side?: 'left' | 'right'; children: React.ReactNode }) {
   return (
     <div
       className={cn(
         'relative z-10 flex-1 px-4 pt-7 md:flex md:px-16 md:py-6 min-[1600px]:py-10',
         compact ? 'md:pointer-events-none md:items-end md:px-6 md:pb-28' : cn('md:items-center', hasControls ? 'md:pb-6' : 'md:pb-14'),
-        !compact && side === 'right' && 'md:justify-end',
+        !compact && !center && side === 'right' && 'md:justify-end',
+        !compact && center && 'md:justify-center',
       )}
     >
       {/* vídeo tocando: sem o painel branco do tema claro (no desktop não há nada visível aqui; o atalho fica na barra) */}
-      <div className={cn('w-full', compact ? 'md:pointer-events-auto md:max-w-[340px]' : light ? 'max-w-[560px] min-[1700px]:max-w-[620px]' : 'im-panel max-w-[600px] min-[1700px]:max-w-[680px]')}>{children}</div>
+      <div className={cn('w-full', compact ? 'md:pointer-events-auto md:max-w-[340px]' : light ? 'max-w-[560px] min-[1700px]:max-w-[620px]' : center ? 'im-panel max-w-[760px] md:shadow-[0_30px_80px_-30px_rgba(15,16,48,0.55)] min-[1700px]:max-w-[820px]' : 'im-panel max-w-[600px] min-[1700px]:max-w-[680px]')}>{children}</div>
     </div>
   );
 }
@@ -648,7 +649,9 @@ function Scene({
   const carryHere = carry && carry.nodeId === state.currentNodeId ? carry : null;
   // logo depois de responder: a cena seguinte mostra primeiro "Sua escolha" + o retorno, e o vídeo espera o
   // "Assistir" (sem isso o vídeo tocava sozinho por cima e o retorno só aparecia no fim dele)
-  const holdForCarry = !!carryHere && !!capable && capable.type !== 'choice';
+  // ...exceto quando a instrutora já reagiu em vídeo à escolha: aí o próximo vídeo segue direto (continuidade);
+  // o retorno escrito aparece no painel quando o vídeo termina
+  const holdForCarry = !!carryHere && !!capable && capable.type !== 'choice' && !(carryHere.kind === 'choice' && carryHere.reaction);
   const video = useSceneVideo(capable, media, gesture && !holdForCarry);
   // antes do primeiro play, um só acionador (o da abertura): a barra de controles entra quando o vídeo começa
   const hasControls = video.active && video.phase !== 'idle';
@@ -657,18 +660,27 @@ function Scene({
   const firstSceneId = useMemo(() => lesson.graph.nodes.find((n) => n.type === 'scenario' || n.type === 'content')?.id, [lesson.graph.nodes]);
   // decisão sem vídeo próprio: o palco mostra o fim do vídeo que fez a chamada (o instrutor "pausado"), não um fundo vazio
   const stageFrame = useMemo(() => {
-    if (!node || node.type !== 'choice' || media) return frame;
-    const hostId = callHostId(lesson.graph, node.id);
-    const host = hostId ? lesson.graph.nodes.find((n) => n.id === hostId) : undefined;
+    if (!node || (node.type !== 'choice' && node.type !== 'reflection') || media) return frame;
+    // decisão: o vídeo que fez a chamada; missão (ou decisão sem anfitrião): o último vídeo do caminho feito
+    const videoOf = (id: string | undefined) => {
+      const n = id ? lesson.graph.nodes.find((x) => x.id === id) : undefined;
+      const m = n ? (n as { media?: { kind?: string; assetId?: string } | null }).media : null;
+      return m?.kind === 'video' && m.assetId ? n : undefined;
+    };
+    const hostId = (node.type === 'choice' ? callHostId(lesson.graph, node.id) : null) ?? [...state.path].reverse().map((p) => p.nodeId).find((id) => id !== node.id && videoOf(id));
+    const host = videoOf(hostId ?? undefined);
     const assetId = host ? (host as { media?: { kind?: string; assetId?: string } | null }).media : null;
     return assetId?.kind === 'video' && assetId.assetId ? { ...frame, posterUrl: `/api/assets/${assetId.assetId}/thumb?at=0.82` } : frame;
-  }, [node, media, lesson.graph, frame]);
+  }, [node, media, lesson.graph, frame, state.path]);
   const playing = video.playing;
   // "Pular vídeo"/"Responder agora": o aluno pediu o painel inteiro (mesmo com o vídeo pausado no meio)
   const [expanded, setExpanded] = useState(false);
   // vídeo começado e pausado no meio (cena sem pergunta): continua compacto para não cobrir o que o vídeo mostra
   const watching = !completed && video.active && (playing || (video.phase === 'paused' && !expanded && node?.type !== 'choice'));
   const retryHere = retry && retry.nodeId === state.currentNodeId ? retry : null;
+  // pergunta e missão abrem no centro, com o fundo escurecido (o que o aluno precisa fazer em evidência)
+  const centered = !!node && !completed && !watching && (node.type === 'choice' || node.type === 'reflection');
+
   const endNode = node?.type === 'end' ? node : null;
   // vinheta da marca: fecha o ÚLTIMO vídeo da aula (toca no palco inteiro assim que ele termina, com som: o aluno
   // acabou de apertar "Assistir"). Quem pulou o vídeo vê a vinheta no fim, junto com o painel de encerramento.
@@ -861,6 +873,11 @@ function Scene({
         narrationTitle={frame.narrationTitle}
         review={review}
         sceneTitle={node.id === firstSceneId ? lesson.title : (node.title ?? lesson.title)}
+        {...(() => {
+          const qs = lesson.graph.nodes.filter((n) => n.type === 'choice');
+          const i = qs.findIndex((n) => n.id === node.id);
+          return i >= 0 ? { questionPos: { n: i + 1, total: qs.length } } : {};
+        })()}
       />
     );
   }
@@ -900,7 +917,8 @@ function Scene({
           )}
         </StageMedia>
         {hasControls && <ControlBar video={video} fullscreenTarget={stageRef} skip={watching && node ? { label: node.type === 'choice' ? 'Responder agora' : 'Pular vídeo', onClick: answerNow, testId: node.type === 'choice' ? 'video-answer-now-bar' : 'video-skip-bar' } : undefined} className={cn('mx-4 mt-2 transition-opacity duration-300 motion-reduce:transition-none md:absolute md:inset-x-6 md:bottom-6 md:z-20 md:mx-0 md:mt-0', chromeHidden && 'pointer-events-none opacity-0 focus-within:pointer-events-auto focus-within:opacity-100')} />}
-        <PanelArea hasControls={hasControls} compact={watching} light={opening} side={frame.presenterPlacement === 'left' ? 'right' : 'left'}>
+        {centered && <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] hidden bg-[#0f1030]/45 backdrop-blur-[2px] md:block" />}
+        <PanelArea hasControls={hasControls} compact={watching} light={opening} center={centered} side={frame.presenterPlacement === 'left' ? 'right' : 'left'}>
           {conflict && (
             <ImCard role="status" data-testid="player-conflict" className="mb-6 flex items-start justify-between gap-3 py-3 text-sm text-fg/85 md:py-3">
               <span>Esta aula avançou em outra aba. Continuamos do ponto atual.</span>
@@ -1045,8 +1063,9 @@ function NodePanel({
   narrationTitle,
   review,
   sceneTitle,
+  questionPos,
   ...p
-}: PanelProps & { node: AnyNode; carry: Carry | null; retry: RetryInfo | null; video: SceneVideo | null; narrationTitle: string; review: ReviewSummary | null; /** título de apresentação da cena (a 1ª cena da aula usa o nome da aula) */ sceneTitle?: string }) {
+}: PanelProps & { node: AnyNode; carry: Carry | null; retry: RetryInfo | null; video: SceneVideo | null; narrationTitle: string; review: ReviewSummary | null; /** título de apresentação da cena (a 1ª cena da aula usa o nome da aula) */ sceneTitle?: string; questionPos?: { n: number; total: number } }) {
   // Fala escrita: só quando não há vídeo (ou ele falhou), aberta ("O que a Marina diz"). Com vídeo, a fala
   // fica nas legendas do próprio vídeo, em tempo real, ligadas pelo aluno no botão "Legendas" da barra.
   const narration = narrationOf(node);
@@ -1054,7 +1073,7 @@ function NodePanel({
   const spoken = narration && !hasVideo ? <NarrationBlock key={`${node.id}:none`} narration={narration} heading={narrationTitle} hasVideo={false} className="mt-6" /> : null;
   switch (node.type) {
     case 'choice':
-      return <ChoicePanel node={node} carry={carry} spoken={spoken} {...p} />;
+      return <ChoicePanel node={node} carry={carry} spoken={spoken} {...(questionPos ? { questionPos } : {})} {...p} />;
     case 'consequence':
       return <FeedbackPanel node={node} carry={carry} spoken={spoken} {...p} />;
     case 'scenario':
@@ -1275,7 +1294,7 @@ type ChoiceMode = 'choose' | 'write' | 'record' | 'match';
  * - texto (só se `openAnswer.text`): link "Prefere responder do seu jeito?".
  * Depois de gravar/escrever, o aluno aponta a opção mais parecida e segue.
  */
-function ChoicePanel({ node, carry, spoken, headingRef, headingId, pending, fieldError, onSend }: PanelProps & { node: ChoiceNode; carry: Carry | null; spoken?: React.ReactNode }) {
+function ChoicePanel({ node, carry, spoken, headingRef, headingId, pending, fieldError, onSend, questionPos }: PanelProps & { node: ChoiceNode; carry: Carry | null; spoken?: React.ReactNode; /** "Pergunta 1 de 2" */ questionPos?: { n: number; total: number } }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [mode, setMode] = useState<ChoiceMode>('choose');
   const [draft, setDraft] = useState<OpenAnswerDraft | null>(null);
@@ -1313,21 +1332,27 @@ function ChoicePanel({ node, carry, spoken, headingRef, headingId, pending, fiel
 
   return (
     <div data-testid="choice-panel" data-mode={mode}>
-      <PanelHead ref={headingRef} id={headingId} chip={chipFor(node, false)} title={title} eyebrow={mode === 'match' ? undefined : 'Agora é com você'} compact />
+      <PanelHead ref={headingRef} id={headingId} chip={chipFor(node, false)} title={title} eyebrow={mode === 'match' ? undefined : questionPos && questionPos.total > 1 ? `Pergunta ${questionPos.n} de ${questionPos.total} · Agora é com você` : 'Agora é com você'} compact />
       {carry && mode === 'choose' && <CarryCard carry={carry} />}
 
       {mode === 'choose' && (
         <div id={subId} className="mt-4 space-y-3">
-          {leadDoc && <RichText doc={leadDoc} className={BODY} />}
+          {/* a situação em quadro próprio: o aluno vê o caso antes de escolher */}
+          {(leadDoc || context) && (
+            <div className="rounded-[14px] border-l-4 border-[var(--im-accent)] bg-fg/[0.04] px-4 py-3" data-testid="choice-situation">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-fg/60">A situação</p>
+              {leadDoc ? <RichText doc={leadDoc} className="mt-1 text-[17px] leading-relaxed text-fg/90 md:text-[18px]" /> : <p className="mt-1 text-[17px] leading-relaxed text-fg/90 md:text-[18px]">{context}</p>}
+            </div>
+          )}
           {(() => {
             const call = node.bridge?.call?.trim();
-            // quando a chamada termina com a própria pergunta do título, não repete; sem chamada, a instrução padrão
-            const instruction = call ? (callRepeatsTitle(call, title) ? null : <span data-testid="choice-call">{call}</span>) : 'Escolha uma resposta.';
-            if (!context && !instruction) return null;
+            // quando a chamada termina com a própria pergunta do título, não repete; sem chamada, nada (a orientação vem abaixo das alternativas)
+            const instruction = call && !callRepeatsTitle(call, title) ? <span data-testid="choice-call">{call}</span> : null;
+            // ligação explícita com a pergunta: o aluno responde como ELE agiria (não "a resposta certa")
             return (
-              <p className="text-[18px] leading-snug text-fg/75 md:text-[20px]">
-                {context && <span className="text-fg/80">{context} </span>}
-                {instruction}
+              <p className="flex items-start gap-2 text-[17px] font-medium leading-snug text-fg">
+                <MousePointerClick className="mt-0.5 size-5 shrink-0 text-[var(--im-accent-ink)]" aria-hidden="true" />
+                <span>{instruction ? <>{instruction} </> : null}Responda como você agiria nessa situação.</span>
               </p>
             );
           })()}
@@ -1389,7 +1414,7 @@ function ChoicePanel({ node, carry, spoken, headingRef, headingId, pending, fiel
             describedBy={subId}
             lettered
           />
-          {mode === 'choose' && <p className="mt-3 text-[15px] text-fg/65">Escolha uma alternativa e confirme para ver o que pode acontecer.</p>}
+          {mode === 'choose' && <p className="mt-3 text-[15px] text-fg/65">Escolha uma alternativa e confirme para ver o que acontece.</p>}
           {mode === 'choose' && canVoice && (
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2" data-testid="voice-practice">
               <ImButton size="sm" variant="outline" onClick={() => setMode('record')} data-testid="open-answer-voice" aria-describedby={voiceNoteId}>
@@ -1631,9 +1656,21 @@ function ComposePanel({ node, carry, headingRef, headingId, pending, fieldError,
         if (ready) onSend({ kind: 'reflect', text: sentence.text });
       }}
     >
-      <PanelHead ref={headingRef} id={headingId} chip={optional ? { label: 'Opcional', tone: 'neutral' } : chipFor(node, false)} title={node.title?.trim() || 'Monte sua frase'} />
+      <PanelHead ref={headingRef} id={headingId} chip={chipFor(node, false)} eyebrow="Sua missão" compact title={(node.title?.trim() || 'Monte sua frase').replace(/^miss[aã]o\s*:\s*/i, '')} />
       {carry && <CarryCard carry={carry} />}
-      {lead && <p className="mt-4 text-[18px] leading-relaxed text-fg/80">{lead}</p>}
+      {/* para que serve e como fazer: a frase é para usar no trabalho de verdade (fica no roteiro) */}
+      <div className="mt-4 rounded-[14px] border border-line bg-fg/[0.03] p-4" data-testid="mission-howto">
+        <p className="text-[16px] leading-relaxed text-fg/85">Monte a frase que você vai usar no trabalho. Ela fica salva no seu roteiro para quando você precisar.</p>
+        <ol className="mt-3 grid gap-2 text-[15px] text-fg/80 sm:grid-cols-3">
+          {['Toque em cada “escolha aqui”', 'Escolha a opção que combina com você', 'Confira a frase e salve'].map((t, i) => (
+            <li key={t} className="flex items-start gap-2">
+              <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center rounded-full bg-[var(--im-accent)] text-[13px] font-semibold text-[var(--im-on-accent)]">{i + 1}</span>
+              <span>{t}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      {lead && !/^monte sua frase/i.test(lead) && <p className="mt-4 text-[17px] leading-relaxed text-fg/80">{lead}</p>}
       <ScaffoldComposer scaffold={node.scaffold!} disabled={pending} onChange={setSentence} className="mt-6" />
       {tooLong && (
         <p role="alert" className="mt-3 text-sm text-danger">
@@ -1643,11 +1680,11 @@ function ComposePanel({ node, carry, headingRef, headingId, pending, fieldError,
       <FieldError message={fieldError} />
       <ActionBar>
         <ImButton type="submit" size="xl" data-testid="player-submit" disabled={!ready || pending} aria-busy={pending}>
-          {pending ? 'Enviando…' : 'Usar esta frase'}
+          {pending ? 'Enviando…' : 'Salvar no meu roteiro'}
         </ImButton>
         {optional && (
           <ImButton variant="outline" size="xl" data-testid="player-skip" disabled={pending} onClick={() => onSend({ kind: 'reflect', text: '' })}>
-            Pular
+            Pular missão
           </ImButton>
         )}
       </ActionBar>

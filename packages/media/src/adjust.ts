@@ -21,7 +21,8 @@ export const ADJUST_VERSION = 'adjust-1';
 export const REACTION_OPENERS = ['Boa escolha!', 'Isso mesmo!', 'Exatamente!', 'Quase lá.'] as const;
 
 export interface AdjustCuts {
-  [shotId: string]: { first: number; last: number };
+  /** `lead`: palavras tiradas do começo da 1ª frase que sobra (ex.: "Seja qual for a sua escolha,") */
+  [shotId: string]: { first: number; last: number; lead?: number };
 }
 
 /** Estado acumulado do ajuste de uma cena (fica em `media.adjust`). */
@@ -36,6 +37,8 @@ export interface AdjustState {
 export interface AdjustRequest {
   drop?: string[];
   cut?: Array<{ shotId: string; side: 'first' | 'last' }>;
+  /** apara as primeiras palavras do plano (uma oração de abertura, até a vírgula) */
+  trimLead?: Array<{ shotId: string; words: number }>;
   teaser?: string | null;
 }
 
@@ -74,13 +77,15 @@ export function sentenceSpans(words: ReadonlyArray<{ text: string }>): Array<[nu
 }
 
 /** Faixa de palavras que sobra depois de tirar `first` frases do começo e `last` do fim; null se não sobra nada. */
-export function keptWordRange(words: ReadonlyArray<{ text: string }>, first: number, last: number): [number, number] | null {
+export function keptWordRange(words: ReadonlyArray<{ text: string }>, first: number, last: number, lead = 0): [number, number] | null {
   const spans = sentenceSpans(words);
   if (!spans.length) return null;
   const from = first;
   const to = spans.length - 1 - last;
   if (from > to) return null;
-  return [spans[from]![0], spans[to]![1]];
+  const start = spans[from]![0] + Math.max(0, lead);
+  if (start > spans[to]![1] || (from === to && start > spans[from]![1])) return null;
+  return [start, spans[to]![1]];
 }
 
 const norm = (t: string) =>
@@ -92,8 +97,8 @@ const norm = (t: string) =>
     .trim();
 
 /** Texto falado de um plano depois dos cortes (as palavras guardadas, sem as frases tiradas). */
-export function keptText(words: ReadonlyArray<{ text: string }>, cut?: { first: number; last: number }): string | null {
-  const r = keptWordRange(words, cut?.first ?? 0, cut?.last ?? 0);
+export function keptText(words: ReadonlyArray<{ text: string }>, cut?: { first: number; last: number; lead?: number }): string | null {
+  const r = keptWordRange(words, cut?.first ?? 0, cut?.last ?? 0, cut?.lead ?? 0);
   return r ? words.slice(r[0], r[1] + 1).map((w) => w.text).join(' ') : null;
 }
 
@@ -133,6 +138,10 @@ export function mergeAdjust(current: AdjustState, req: AdjustRequest): AdjustSta
   for (const c of req.cut ?? []) {
     const cur = cut[c.shotId] ?? { first: 0, last: 0 };
     cut[c.shotId] = { ...cur, [c.side]: cur[c.side] + 1 };
+  }
+  for (const t of req.trimLead ?? []) {
+    const cur = cut[t.shotId] ?? { first: 0, last: 0 };
+    cut[t.shotId] = { ...cur, lead: Math.max(0, t.words) };
   }
   const teaser = req.teaser !== undefined ? (req.teaser === null ? null : req.teaser.trim() || null) : current.teaser;
   return { drop, cut, ...(teaser !== undefined ? { teaser } : {}) };
@@ -179,7 +188,14 @@ export function adjustOptions(baseShots: ReadonlyArray<{ id: string; line: strin
 
 /** Erro do pedido (texto para o autor) ou null quando o pedido pode ser montado. */
 export function validateAdjust(baseShots: ReadonlyArray<{ id: string; line: string }>, units: ReadonlyArray<AdjustUnit>, wordsByUnit: ReadonlyMap<string, ReadonlyArray<{ text: string }>>, current: AdjustState, req: AdjustRequest): string | null {
-  if (!req.drop?.length && !req.cut?.length && req.teaser === undefined) return 'Nada a ajustar: escolha um plano, uma frase ou mude o cartão.';
+  if (!req.drop?.length && !req.cut?.length && !req.trimLead?.length && req.teaser === undefined) return 'Nada a ajustar: escolha um plano, uma frase ou mude o cartão.';
+  for (const t of req.trimLead ?? []) {
+    const unit = units.find((u) => u.shotIds.length === 1 && u.shotIds[0] === t.shotId);
+    const words = unit ? wordsByUnit.get(unit.id) : undefined;
+    if (!unit || !words?.length) return `O plano ${t.shotId} não tem clipe sozinho com palavras guardadas.`;
+    const cut = mergeAdjust(current, req).cut[t.shotId]!;
+    if (!keptWordRange(words, cut.first, cut.last, cut.lead ?? 0)) return `O plano ${t.shotId} ficaria sem fala.`;
+  }
   const opts = new Map(adjustOptions(baseShots, units, wordsByUnit, current).map((o) => [o.id, o]));
   for (const id of req.drop ?? []) {
     const o = opts.get(id);

@@ -113,12 +113,12 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
     const clipFiles = new Map<string, string>();
     const lines = new Map<string, string>();
     for (const [shotId, cut] of Object.entries(next.cut)) {
-      if (drop.has(shotId) || (!cut.first && !cut.last)) continue;
+      if (drop.has(shotId) || (!cut.first && !cut.last && !cut.lead)) continue;
       const u = input.units.find((x) => x.shotIds.length === 1 && x.shotIds[0] === shotId && x.kind === 'clip');
       const st = u ? input.shots![u.id] : undefined;
       const words = u ? wordsByUnit.get(u.id) : undefined;
       if (!u || !st?.clipAssetId || !words?.length) throw new AdjustError(`O plano ${shotId} não tem clipe sozinho com palavras guardadas`);
-      const range = keptWordRange(words, cut.first, cut.last);
+      const range = keptWordRange(words, cut.first, cut.last, cut.lead ?? 0);
       if (!range) throw new AdjustError(`O plano ${shotId} ficaria sem fala`);
       const clip = await media.getAsset(db, st.clipAssetId);
       if (!clip) throw new AdjustError(`Clipe do plano ${shotId} não encontrado`);
@@ -126,12 +126,14 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
       await writeFile(src, await readAsset(clip.storageKey));
       const total = (await ffprobe(src)).durationSeconds;
       const [a, b] = range;
-      const t0 = cut.first ? Math.max(0, words[a]!.start - 0.12) : 0;
+      const t0 = cut.first || cut.lead ? Math.max(0, words[a]!.start - 0.12) : 0;
       const t1 = cut.last ? Math.min(total, words[b]!.end + 0.3) : total;
       const trimmed = path.join(dir, `cut-${u.id}.mp4`);
       await runFfmpeg(['-ss', t0.toFixed(3), '-to', t1.toFixed(3), '-i', src, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', trimmed]);
       clipFiles.set(u.id, trimmed);
-      const kept = words.slice(a, b + 1);
+      const kept = words.slice(a, b + 1).map((w) => ({ ...w }));
+      // oração de abertura aparada: a fala segue com maiúscula ("o caminho é…" → "O caminho é…")
+      if (cut.lead && kept[0]) kept[0].text = kept[0].text.charAt(0).toLocaleUpperCase('pt-BR') + kept[0].text.slice(1);
       st.words = packWords(kept, t0) as never;
       lines.set(shotId, kept.map((w) => w.text).join(' '));
     }
@@ -146,7 +148,7 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
     }
     const captions = await sceneCaptions(job, direction, scene.timeline, scene.wordSources);
     const asset = await storeGeneratedAsset({ workspaceId: job.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(scene.output)), durationSeconds: scene.durationSeconds, transcript, createdBy: job.createdBy, ...(scene.loudness ? { metadata: { loudness: scene.loudness } } : {}) });
-    const summary = [...next.drop.map((x) => `sem ${x}`), ...Object.entries(next.cut).filter(([, v]) => v.first || v.last).map(([k, v]) => `${k} −${v.first}/−${v.last} frase(s)`), ...(request.teaser !== undefined ? ['cartão'] : [])].join(', ');
+    const summary = [...next.drop.map((x) => `sem ${x}`), ...Object.entries(next.cut).filter(([, v]) => v.first || v.last || v.lead).map(([k, v]) => `${k} −${v.first}/−${v.last} frase(s)${v.lead ? ` −${v.lead} palavra(s) no começo` : ''}`), ...(request.teaser !== undefined ? ['cartão'] : [])].join(', ');
     await saveWithRetry(courseId, `ajuste fino ${lessonId}/${nodeId}: ${summary}`, (doc) => {
       const n = findNode(doc, lessonId, nodeId);
       if (!n) return false;

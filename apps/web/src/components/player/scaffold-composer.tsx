@@ -111,7 +111,7 @@ export function ScaffoldComposer({
                 isOpen && 'ring-2 ring-accent-strong ring-offset-2 ring-offset-bg',
               )}
             >
-              <span className="whitespace-normal text-left">{value || slot.label || 'escolher'}</span>
+              <span className="whitespace-normal text-left">{value || 'escolha aqui'}</span>
             </button>
           );
         })}
@@ -135,7 +135,7 @@ export function ScaffoldComposer({
           className="rounded-[16px] border border-line bg-surface-2/80 p-3 backdrop-blur-md md:p-4"
         >
           <p className="mb-2.5 text-sm font-medium text-fg-muted" aria-hidden="true">
-            Escolha {openSlot.label || 'uma opção'}:
+            Escolha uma opção para completar a frase:
           </p>
           <div className="flex flex-wrap gap-2">
             {openSlot.options

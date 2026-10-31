@@ -67,3 +67,15 @@ describe('ajuste fino: frases e cortes', () => {
     expect(isAdjustJobInput({ kind: 'bumper', spec: {} })).toBe(false);
   });
 });
+
+describe('trimLead: apara a oração de abertura', () => {
+  const w = (t: string) => t.split(' ').map((text) => ({ text }));
+  it('tira as primeiras palavras da 1ª frase e mantém o resto', () => {
+    const words = w('Seja qual for a sua escolha, o caminho é parecido: confira antes. Depois avise.');
+    const r = keptWordRange(words, 0, 0, 6)!;
+    expect(words.slice(r[0], r[1] + 1).map((x) => x.text).join(' ')).toBe('o caminho é parecido: confira antes. Depois avise.');
+  });
+  it('não deixa o plano sem fala', () => {
+    expect(keptWordRange(w('Seja qual for.'), 0, 0, 5)).toBeNull();
+  });
+});
