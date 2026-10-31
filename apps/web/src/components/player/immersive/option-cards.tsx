@@ -17,6 +17,7 @@ export function OptionCards({
   disabled = false,
   legend,
   describedBy,
+  lettered = false,
 }: {
   options: Array<{ id: string; label: string }>;
   selected: string[];
@@ -26,20 +27,24 @@ export function OptionCards({
   /** texto para leitores de tela (o enunciado visível fica no título) */
   legend: string;
   describedBy?: string;
+  /** decisão: letra (A, B, C…) à esquerda, o controle nativo fica invisível; tudo neutro até a resposta */
+  lettered?: boolean;
 }) {
   const name = useId();
   return (
     <fieldset disabled={disabled} aria-describedby={describedBy} className="min-w-0">
       <legend className="sr-only">{legend}</legend>
       <div className="space-y-3" role="presentation">
-        {options.map((opt) => {
+        {options.map((opt, idx) => {
           const on = selected.includes(opt.id);
           return (
             <label
               key={opt.id}
               className={cn(
                 // vidro (como a referência): escuro = preto 35% + desfoque, borda branca 12%; claro = branco com borda cinza. Raio 18
-                'group flex min-h-[72px] w-full cursor-pointer items-center gap-5 rounded-[18px] border-[1.5px] px-5 py-4 text-left text-[18px] font-normal leading-snug text-fg backdrop-blur-[12px] transition-[border-color,background-color,box-shadow] duration-150 md:px-7 md:text-[19px]',
+                lettered
+                  ? 'group flex min-h-[60px] w-full cursor-pointer items-center gap-4 rounded-[14px] border-[1.5px] px-4 py-3 text-left text-[17px] font-normal leading-snug text-fg backdrop-blur-[12px] transition-[border-color,background-color,box-shadow] duration-150 md:px-5 md:text-[18px]'
+                  : 'group flex min-h-[72px] w-full cursor-pointer items-center gap-5 rounded-[18px] border-[1.5px] px-5 py-4 text-left text-[18px] font-normal leading-snug text-fg backdrop-blur-[12px] transition-[border-color,background-color,box-shadow] duration-150 md:px-7 md:text-[19px]',
                 'has-disabled:cursor-not-allowed has-disabled:opacity-60',
                 'has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-[var(--im-accent-ink)]',
                 // marcada: anel do acento (lima no escuro; oliva sobre lima clara no tema claro, texto marinho)
@@ -48,8 +53,13 @@ export function OptionCards({
                   : 'border-[var(--im-glass-line)] bg-[var(--im-glass)] hover:border-[var(--im-glass-line-hover)] hover:bg-[var(--im-glass-hover)]',
               )}
             >
+              {lettered && (
+                <span aria-hidden="true" className={cn('grid size-9 shrink-0 place-items-center rounded-full text-[15px] font-semibold transition-colors', on ? 'bg-[#1d1e4c] text-white' : 'bg-fg/[0.06] text-fg')}>
+                  {String.fromCharCode(65 + idx)}
+                </span>
+              )}
               <span className="min-w-0 flex-1">{opt.label}</span>
-              <span className="relative grid size-6 shrink-0 place-items-center">
+              <span className={cn('relative grid size-6 shrink-0 place-items-center', lettered && 'sr-only')}>
                 <input
                   type={multiple ? 'checkbox' : 'radio'}
                   name={name}

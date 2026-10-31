@@ -46,7 +46,7 @@ export function ControlBar({ video, fullscreenTarget, className, skip }: {
       role="group"
       aria-label="Controles do vídeo"
       data-testid="video-controls"
-      className={cn('flex min-h-14 items-center gap-1 rounded-[16px] border border-[var(--im-ctrl-line)] bg-[var(--im-ctrl-bg)] px-2 text-[var(--im-ctrl-fg)] backdrop-blur-[12px] md:min-h-16 md:gap-4 md:px-5', className)}
+      className={cn('flex min-h-12 items-center gap-1 rounded-[14px] border border-[var(--im-ctrl-line)] bg-[var(--im-ctrl-bg)] px-1.5 text-[var(--im-ctrl-fg)] backdrop-blur-[12px] md:min-h-[52px] md:gap-3 md:px-3', className)}
     >
       <button
         type="button"
