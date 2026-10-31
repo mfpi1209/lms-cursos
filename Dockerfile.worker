@@ -21,7 +21,7 @@ RUN pnpm install --frozen-lockfile --filter @lms/worker... --filter @lms/db...
 COPY packages ./packages
 COPY apps/worker ./apps/worker
 ENV NODE_ENV=production
-RUN groupadd -r app && useradd -r -g app app && chown -R app:app /app
+RUN groupadd -r -g 10001 app && useradd -r -u 10001 -g app app && chown -R app:app /app
 USER app
 # "migrate" aplica as migrations; "worker" roda o consumidor do outbox.
 CMD ["pnpm", "--filter", "@lms/worker", "start"]
