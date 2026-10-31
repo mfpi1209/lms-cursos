@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Check, FileText, ListVideo, Mic, Pencil, Play, RotateCcw, Undo2 } from 'lucide-react';
 import { resolveReview, type AttemptState, type ProgressSummary, type ReviewSummary } from '@lms/course-engine';
 import {
@@ -383,7 +383,7 @@ function StageTopNav({ frame, percent, hidden = false }: { frame: FrameInfo; per
 }
 
 /** Vídeo (ou imagem parada) à direita, fundindo com o marinho; legenda do apresentador. */
-function StageMedia({ frame, video, bumper, children }: { frame: FrameInfo; video: { el: React.ReactNode; playing: boolean; caption: string | null; hasControls: boolean; /** vídeo tocando: quadro inteiro e limpo */ watching?: boolean } | null; /** vinheta da marca no lugar da mídia (fim da aula) */ bumper?: React.ReactNode; children?: React.ReactNode }) {
+function StageMedia({ frame, video, bumper, bumperFull, children }: { frame: FrameInfo; video: { el: React.ReactNode; playing: boolean; caption: string | null; hasControls: boolean; /** vídeo tocando: quadro inteiro e limpo */ watching?: boolean } | null; /** vinheta da marca no lugar da mídia (fim da aula) */ bumper?: React.ReactNode; /** vinheta fechando o último vídeo: ocupa o palco inteiro, por cima */ bumperFull?: boolean; children?: React.ReactNode }) {
   const { brand, posterUrl } = frame;
   const showPresenter = !!brand.presenterName && !bumper;
   // vídeo já montado com a apresentadora ao lado: quadro inteiro, sem a âncora à direita (que só serve ao avatar centralizado)
@@ -399,7 +399,7 @@ function StageMedia({ frame, video, bumper, children }: { frame: FrameInfo; vide
       )}
     >
       {/* vinheta no fim: ocupa a parte direita do palco (o painel do fim fica à esquerda); celular: o quadro 16:9 inteiro */}
-      {bumper && <div data-testid="stage-bumper" className="absolute inset-0 z-[1] md:left-[42%]">{bumper}</div>}
+      {bumper && <div data-testid="stage-bumper" className={cn('absolute inset-0 z-[1]', bumperFull ? 'z-20' : 'md:left-[42%]')}>{bumper}</div>}
       {/* Fundo do palco inteiro: a mesma imagem, desfocada e escurecida — o "cenário" que aparece atrás do texto. */}
       {posterUrl && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -597,8 +597,32 @@ function Scene({
   const watching = !completed && video.active && (playing || (video.phase === 'paused' && !expanded && node?.type !== 'choice'));
   const retryHere = retry && retry.nodeId === state.currentNodeId ? retry : null;
   const endNode = node?.type === 'end' ? node : null;
-  // vinheta da marca: toca no palco junto com o painel do fim (nunca bloqueia o encerramento)
-  const bumperEl = completed && frame.bumper ? <BrandBumper bumper={frame.bumper} gesture={gesture} variant="stage" /> : null;
+  // vinheta da marca: fecha o ÚLTIMO vídeo da aula (toca no palco inteiro assim que ele termina, com som: o aluno
+  // acabou de apertar "Assistir"). Quem pulou o vídeo vê a vinheta no fim, junto com o painel de encerramento.
+  const outroNodeId = useMemo(() => {
+    const narrated = lesson.graph.nodes.filter((n) => n.type === 'scenario' || n.type === 'content' || n.type === 'consequence');
+    return narrated[narrated.length - 1]?.id;
+  }, [lesson.graph.nodes]);
+  const outroKey = `lms.bumper.played:${lesson.id}`;
+  // já tocou nesta sessão (lido depois de montar: o HTML do servidor não conhece o sessionStorage)
+  const [outroPlayed, setOutroPlayed] = useState(false);
+  useEffect(() => {
+    try {
+      if (window.sessionStorage.getItem(outroKey) === '1') setOutroPlayed(true);
+    } catch {}
+  }, [outroKey]);
+  const markOutro = useCallback(() => {
+    setOutroPlayed(true);
+    try {
+      window.sessionStorage.setItem(outroKey, '1');
+    } catch {}
+  }, [outroKey]);
+  const outroNow = !!frame.bumper && !completed && !!node && node.id === outroNodeId && video.active && video.phase === 'ended' && !outroPlayed;
+  const bumperEl = outroNow ? (
+    <BrandBumper key="outro" bumper={frame.bumper!} gesture={gesture} variant="stage" onDone={markOutro} />
+  ) : completed && frame.bumper && !outroPlayed ? (
+    <BrandBumper key="end" bumper={frame.bumper} gesture={gesture} variant="stage" onDone={markOutro} />
+  ) : null;
   // "Resultado da simulação": decisões desta aula revisadas a partir das respostas da tentativa
   const review = useMemo<ReviewSummary | null>(
     () => (node?.type === 'content' && node.reviewNodeIds?.length ? resolveReview(lesson.graph, node.reviewNodeIds, state) : null),
@@ -743,7 +767,7 @@ function Scene({
         className={cn(stageClass(hasControls), chromeHidden && 'md:cursor-none')}
       >
         <StageTopNav frame={frame} percent={percent} hidden={chromeHidden} />
-        <StageMedia frame={frame} video={{ el: videoEl, playing, caption: video.caption, hasControls, watching }} bumper={bumperEl}>
+        <StageMedia frame={frame} video={{ el: videoEl, playing, caption: video.caption, hasControls, watching }} bumper={bumperEl} bumperFull={outroNow}>
           {video.buffering && (
             <p role="status" className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#050A14]/80 px-4 py-2 text-sm text-white md:left-[62%]">
               Carregando vídeo…

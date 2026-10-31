@@ -33,7 +33,9 @@ export function BrandBumper({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [reduced, setReduced] = useState(false);
   const [portrait, setPortrait] = useState(false);
-  const [muted, setMuted] = useState(!gesture);
+  // som permitido: gesto nesta sessão do player ou qualquer clique/toque na página (ativação do navegador)
+  const canSound = gesture || (typeof navigator !== 'undefined' && !!(navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive);
+  const [muted, setMuted] = useState(!canSound);
   const [status, setStatus] = useState<'playing' | 'ended' | 'skipped' | 'failed'>('playing');
   const doneRef = useRef(false);
   const finish = useCallback((how: 'ended' | 'skipped' | 'failed') => {
@@ -66,8 +68,8 @@ export function BrandBumper({
     if (!v) return;
     let cancelled = false;
     const tryPlay = async () => {
-      v.muted = !gesture;
-      setMuted(!gesture);
+      v.muted = !canSound;
+      setMuted(!canSound);
       try {
         await v.play();
       } catch {
@@ -85,7 +87,7 @@ export function BrandBumper({
     return () => {
       cancelled = true;
     };
-  }, [reduced, gesture, src, finish]);
+  }, [reduced, canSound, src, finish]);
 
   if (reduced) {
     // movimento reduzido: cartão parado com o logo (sem vídeo, sem som)
