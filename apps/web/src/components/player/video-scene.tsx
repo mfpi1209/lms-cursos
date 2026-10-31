@@ -69,10 +69,11 @@ const CAPTIONS_KEY = 'lms.player.captions';
 /** Preferência de legendas: ligadas por padrão; o storage pode estar bloqueado. */
 export function readCaptionsPref(): boolean {
   try {
+    // legendas são opcionais: começam desligadas e o aluno liga no botão "Legendas" (a escolha fica salva)
     const v = window.localStorage.getItem(CAPTIONS_KEY);
-    return v === null ? true : v === '1';
+    return v === '1';
   } catch {
-    return true;
+    return false;
   }
 }
 export function writeCaptionsPref(on: boolean) {
@@ -196,7 +197,7 @@ export function VideoScene({ node, media, pending, fieldError, autoPlay, chosenL
   const [buffering, setBuffering] = useState(false);
   /** nada tocou em 12 s: oferece o texto da cena */
   const [slow, setSlow] = useState(false);
-  const [captionsOn, setCaptionsOn] = useState(true);
+  const [captionsOn, setCaptionsOn] = useState(false);
   const [textOpen, setTextOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);

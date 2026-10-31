@@ -8,6 +8,7 @@ import { buildPlatformContext } from '@/components/player/platform-context';
 import { platformDefaultBumper } from '@/server/bumper';
 import type { LessonRunStatus } from '@/components/player/types';
 import { LessonClient } from './lesson-client';
+import { shortTitleFor } from '../../../_lib/short-titles';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +56,9 @@ export default async function LessonPage({
     defaultBumper: await platformDefaultBumper(enr.course.workspaceId, enr.document.branding.bumper?.assetId),
   });
   // equipe que edita este curso: link discreto "Abrir no estúdio" (na cena atual)
+  // topo do player: o mesmo título curto das capas (quando o curso tem um), no lugar do wordmark gravado no curso
+  const short = shortTitleFor(enr.course.id, '');
+  if (short) platform.branding = { ...platform.branding, wordmark: short };
   if (identity.canEdit(viewer.role) && enr.course.workspaceId === viewer.workspace.id) platform.studioHref = `/estudio/cursos/${enr.course.id}/aulas/${lessonId}`;
 
   // A aula é JSON serializável (schema zod): vai como prop para o cliente.

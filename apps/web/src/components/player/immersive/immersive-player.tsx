@@ -212,9 +212,12 @@ function PlatformHeader({ brand, homeHref, onOpenRecap, drawerOpen }: { brand: R
         aria-label={`${brand.wordmark}: início`}
       >
         <span className="truncate">{brand.wordmark}</span>
-        <span aria-hidden="true" className="text-[var(--im-accent-ink)]">
-          .
-        </span>
+        {/* o ponto laranja da marca só entra quando o título não termina em pontuação ("terminei. e agora?" sem "?.") */}
+        {!/[.!?…:]$/.test(brand.wordmark.trim()) && (
+          <span aria-hidden="true" className="text-[var(--im-accent-ink)]">
+            .
+          </span>
+        )}
       </Link>
       <p className="hidden truncate text-center text-[17px] text-fg/70 md:block">{brand.subtitle}</p>
       <div className="flex items-center justify-end gap-2 md:gap-3">
@@ -876,9 +879,11 @@ function NodePanel({
   review,
   ...p
 }: PanelProps & { node: AnyNode; carry: Carry | null; retry: RetryInfo | null; video: SceneVideo | null; narrationTitle: string; review: ReviewSummary | null }) {
-  // Fala escrita: sem vídeo pronto, aberta ("O que a Marina diz"); com vídeo, recolhida ("Ler a fala").
+  // Fala escrita: só quando não há vídeo (ou ele falhou), aberta ("O que a Marina diz"). Com vídeo, a fala
+  // fica nas legendas do próprio vídeo, em tempo real, ligadas pelo aluno no botão "Legendas" da barra.
   const narration = narrationOf(node);
-  const spoken = narration ? <NarrationBlock key={`${node.id}:${!!video}`} narration={narration} heading={narrationTitle} hasVideo={!!video} className="mt-6" /> : null;
+  const hasVideo = !!video?.active;
+  const spoken = narration && !hasVideo ? <NarrationBlock key={`${node.id}:none`} narration={narration} heading={narrationTitle} hasVideo={false} className="mt-6" /> : null;
   switch (node.type) {
     case 'choice':
       return <ChoicePanel node={node} carry={carry} spoken={spoken} {...p} />;
@@ -1137,6 +1142,18 @@ function FeedbackPanel({ node, carry, spoken, headingRef, headingId, pending, fi
 
 /* --------------------------- Conteúdo / dica ---------------------------- */
 
+/**
+ * "Texto na tela" do roteiro que é só uma lista de palavras-chave ("Celular · Atenção · Combinado"): no
+ * vídeo elas viram pílulas com contexto; soltas no cartão parecem um subtítulo sem sentido, então não aparecem.
+ */
+function isKeywordLine(doc: RichTextDocument | undefined): boolean {
+  if (!doc) return false;
+  const text = richTextToPlain(doc).replace(/\s+/g, ' ').trim();
+  if (!text || !text.includes('·')) return false;
+  const parts = text.split('·').map((t) => t.trim()).filter(Boolean);
+  return parts.length >= 2 && parts.every((t) => t.split(' ').length <= 3 && !/[.!?:;]/.test(t));
+}
+
 function InfoPanel({
   node,
   carry,
@@ -1154,7 +1171,7 @@ function InfoPanel({
     <div>
       <PanelHead ref={headingRef} id={headingId} chip={review ? { label: 'Resultado', tone: 'accent' } : chipFor(node, false)} title={node.title ?? NODE_TYPE_LABELS[node.type]} />
       {carry && <CarryCard carry={carry} />}
-      {tip ? <ChecklistBody doc={node.body} /> : <RichText doc={node.body} className={cn(BODY, 'mt-5')} />}
+      {tip ? <ChecklistBody doc={node.body} /> : !isKeywordLine(node.body) && <RichText doc={node.body} className={cn(BODY, 'mt-5')} />}
       {review && <ReviewSummaryView review={review} className="mt-6" />}
       {spoken}
       <ContinueAction pending={pending} fieldError={fieldError} onSend={onSend} video={video} />

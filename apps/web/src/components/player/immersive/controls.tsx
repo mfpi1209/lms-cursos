@@ -89,7 +89,7 @@ export function ControlBar({ video, fullscreenTarget, className, skip }: {
           onClick={video.toggleCaptions}
           aria-pressed={video.captionsOn}
           aria-label="Legendas"
-          title={video.captionsOn ? 'Desativar legendas' : 'Ativar legendas'}
+          title={video.captionsOn ? 'Esconder a fala (legendas)' : 'Mostrar a fala em tempo real (legendas)'}
           data-testid="video-captions-toggle"
         >
           {/* "CC" em caixa: cheio = ligadas, contorno = desligadas */}

@@ -26,7 +26,7 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
   const [volume, setVolumeState] = useState(1);
-  const [captionsOn, setCaptionsOn] = useState(true);
+  const [captionsOn, setCaptionsOn] = useState(false);
   const [cue, setCue] = useState<string | null>(null);
 
   const active = !!media && !failed;
