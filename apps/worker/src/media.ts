@@ -12,6 +12,7 @@ import { loadStandInVideo } from './compose-scene';
 import { JobNotRunningError, PaidButNotStoredError, patchJobInput, storeCaptions, storeWithRetry, synthesizeOnce, type CaptionsRef } from './narration';
 import { placeStoredClip, placementFromParams, presentationBackground, type PlacementParams } from './placement';
 import { isBumperJob, processBumperJob, reconcileBumperJob } from './bumper';
+import { isAdjustJob, processAdjustJob, reconcileAdjustJob } from './adjust';
 import { finishSingleShotBytes } from './watermark-clip';
 import type { WatermarkSpec } from '@lms/media';
 
@@ -474,6 +475,8 @@ export async function processQueuedJob(jobId: string) {
   if (Date.now() < retryDueAt(job)) return;
   // vinheta de marca: render local (resvg + ffmpeg), custo 0, nenhum provedor — roda até em modo de demonstração
   if (isBumperJob(job)) return processBumperJob(jobId);
+  // ajuste fino sem regravar: remontagem local dos clipes já pagos, custo 0, nenhum provedor
+  if (isAdjustJob(job)) return processAdjustJob(jobId);
   // remontagem sem custo: tudo precisa já existir no nosso storage ANTES de reivindicar (nunca chama provedor)
   const recompose = isRecomposeJob(job);
   if (recompose) {
@@ -652,6 +655,7 @@ export async function reconcileJob(jobId: string) {
   if (isDirectedJob(job)) return reconcileDirectedJob(jobId);
   // vinheta: render local síncrono; só volta para a fila se o worker morreu no meio
   if (isBumperJob(job)) return reconcileBumperJob(job);
+  if (isAdjustJob(job)) return reconcileAdjustJob(job);
   const cfg = mediaConfigFromEnv();
   // remontagem sem custo: só ffmpeg local — termina (ou anexa) sem precisar de chave nem de provedor
   if (isRecomposeJob(job)) {
