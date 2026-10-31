@@ -1,0 +1,1 @@
+ALTER TYPE "public"."agent_task" ADD VALUE 'scene_direction';

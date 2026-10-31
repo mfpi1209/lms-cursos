@@ -1,0 +1,1 @@
+ALTER TABLE "media_jobs" ADD COLUMN "phase" text DEFAULT 'waiting' NOT NULL;

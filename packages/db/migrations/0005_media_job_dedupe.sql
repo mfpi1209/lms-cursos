@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "media_jobs_open_node_uq" ON "media_jobs" USING btree ("course_id","lesson_id","node_id") WHERE status in ('queued','running');
