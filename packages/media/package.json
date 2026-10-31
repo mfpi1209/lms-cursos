@@ -8,7 +8,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./compose": "./src/compose/index.ts",
-    "./layout": "./src/compose/layout.ts"
+    "./layout": "./src/compose/layout.ts",
+    "./adjust": "./src/adjust.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

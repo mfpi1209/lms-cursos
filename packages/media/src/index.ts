@@ -17,3 +17,4 @@ export * from './sniff';
 export * from './heygen-looks';
 export * from './new-instructor';
 export * from './pricing';
+export * from './adjust';

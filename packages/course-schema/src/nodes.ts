@@ -38,6 +38,17 @@ export const MediaRefSchema = z.object({
     .optional(),
   /** legendas WebVTT do vídeo (geradas do alinhamento da narração; tocadas via <track> no player) */
   captions: MediaCaptionsSchema.optional(),
+  /**
+   * ajuste fino SEM REGRAVAR já aplicado (A17), acumulado: planos tirados, frases tiradas do começo/fim de
+   * cada plano e o cartão "Pergunta a seguir" (`null` = sem cartão). A montagem sempre parte do job de origem.
+   */
+  adjust: z
+    .object({
+      drop: z.array(z.string().max(40)).max(12).default([]),
+      cut: z.record(z.string().max(40), z.object({ first: z.number().int().min(0).max(20).default(0), last: z.number().int().min(0).max(20).default(0) })).default({}),
+      teaser: z.string().max(300).nullable().optional(),
+    })
+    .optional(),
 });
 export type MediaRef = z.infer<typeof MediaRefSchema>;
 
