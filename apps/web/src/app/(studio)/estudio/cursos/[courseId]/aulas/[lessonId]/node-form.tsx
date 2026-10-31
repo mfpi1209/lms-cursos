@@ -23,6 +23,7 @@ import { Field, Input, Label } from '@/components/ui/input';
 import { RichTextEditor } from '@/components/studio/rich-text-editor';
 import { ScaffoldFields } from '@/components/studio/scaffold-fields';
 import { MediaPanel } from '@/components/studio/media-panel';
+import { ReactionFineAdjust, SceneFineAdjust } from '@/components/studio/fine-adjust';
 import {
   addConditionalEdge,
   conditionalEdges,
@@ -115,7 +116,7 @@ export function NodeForm({ courseId, lessonId, graph, node, objectives, onGraphC
         <RichField id={`node-body-${node.id}`} label="Texto" value={node.body} onChange={(doc) => patchText({ body: doc }, `node.body.${node.id}`)} />
       )}
 
-      {node.type === 'choice' && <ChoiceFields graph={graph} node={node} others={others} patch={patch} patchText={patchText} onGraphChange={onGraphChange} />}
+      {node.type === 'choice' && <ChoiceFields courseId={courseId} lessonId={lessonId} graph={graph} node={node} others={others} patch={patch} patchText={patchText} onGraphChange={onGraphChange} />}
 
       {node.type === 'consequence' && <ConsequenceFields graph={graph} node={node} patch={patch} patchText={patchText} />}
 
@@ -128,6 +129,10 @@ export function NodeForm({ courseId, lessonId, graph, node, objectives, onGraphC
           scriptDefault={nodeScriptText(node)}
           onChange={(m, coalesce) => onGraphChange((g) => replaceNode(g, withNodeMedia(g.nodes.find((n) => n.id === node.id) ?? node, m)), coalesce)}
         />
+      )}
+
+      {nodeSupportsMedia(node) && media?.kind === 'video' && media.generatedFrom?.jobId && (
+        <SceneFineAdjust courseId={courseId} lessonId={lessonId} nodeId={node.id} mediaAssetId={media.assetId} />
       )}
 
       {node.type === 'reflection' && <ReflectionFields node={node} patch={patch} />}
@@ -228,6 +233,8 @@ function DestinationSelect({
 /* ------------------------------------------------------------------ */
 
 function ChoiceFields({
+  courseId,
+  lessonId,
   graph,
   node,
   others,
@@ -235,6 +242,8 @@ function ChoiceFields({
   patchText,
   onGraphChange,
 }: {
+  courseId: string;
+  lessonId: string;
   graph: LessonGraph;
   node: ChoiceNode;
   others: AnyNode[];
@@ -271,6 +280,7 @@ function ChoiceFields({
                 </Button>
               </div>
               <RichField id={`opt-feedback-${o.id}`} label="Feedback ao escolher" value={o.feedback} onChange={(d) => setOption(o.id, { feedback: d }, `opt.fb.${o.id}`)} />
+              <ReactionFineAdjust courseId={courseId} lessonId={lessonId} choiceId={node.id} optionId={o.id} reaction={o.reaction} />
               <DestinationSelect
                 id={`opt-dest-${o.id}`}
                 testId={`option-dest-${o.id}`}

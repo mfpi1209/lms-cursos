@@ -733,7 +733,7 @@ function JobCard({ job, busy, onCancel }: { job: MediaJob; busy: boolean; onCanc
     <div className="space-y-2 rounded-lg border border-line bg-surface p-3 text-sm text-fg" data-testid="media-job-status" data-status={job.status} aria-live="polite">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-medium">Job de vídeo</span>
+          <span className="font-medium">{job.provider === 'local-adjust' ? 'Ajuste fino (grátis)' : 'Job de vídeo'}</span>
           <Badge tone={JOB_TONE[job.status]}>{JOB_STATUS_LABEL[job.status]}</Badge>
           {job.simulated && <Badge tone="warning">Simulado</Badge>}
         </div>
