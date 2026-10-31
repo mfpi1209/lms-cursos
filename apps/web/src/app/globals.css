@@ -1,0 +1,713 @@
+@import 'tailwindcss';
+@import '@xyflow/react/dist/style.css';
+
+/*
+  Sistema visual.
+  - O ESTÚDIO (equipe) usa o tema "control room": marinho profundo, superfícies
+    translúcidas, um acento luminoso (teal) para ação, violeta só para o que a IA
+    faz, âmbar só para ação paga, terra para perigo.
+  - O LMS (aluno) usa o tema claro, com os mesmos tokens semânticos.
+  Componentes usam SEMPRE os tokens semânticos (bg/surface/fg/line/accent…),
+  nunca cores cruas; assim os dois temas compartilham os mesmos componentes.
+*/
+@theme {
+  /* paleta base (primitivos) */
+  --color-navy-950: #070b16;
+  --color-navy-900: #0b1224;
+  --color-navy-800: #111a31;
+  --color-navy-700: #18233f;
+  --color-navy-600: #233052;
+  --color-mist-100: #eef2f8;
+  --color-mist-200: #d9e0ec;
+  --color-mist-400: #9aa7bd;
+  --color-teal-300: #5ef2e3;
+  --color-teal-400: #2ee6d6;
+  --color-teal-600: #0b7d74;
+  --color-teal-700: #086158;
+  --color-violet-300: #b3a7ff;
+  --color-violet-400: #8b7cff;
+  --color-violet-600: #5b4bd6;
+  --color-amber-300: #ffd27a;
+  --color-amber-400: #f2a541;
+  --color-amber-600: #b8761a;
+  --color-coral-400: #ff6b57;
+  --color-coral-600: #c2452f;
+  --color-leaf-400: #4ad38a;
+  --color-leaf-600: #237a4c;
+}
+
+@theme inline {
+  /* tokens semânticos (resolvidos por tema via CSS vars) */
+  --color-bg: var(--t-bg);
+  --color-bg-2: var(--t-bg-2);
+  --color-surface: var(--t-surface);
+  --color-surface-2: var(--t-surface-2);
+  --color-fg: var(--t-fg);
+  --color-fg-muted: var(--t-fg-muted);
+  --color-fg-faint: var(--t-fg-faint);
+  --color-line: var(--t-line);
+  --color-line-strong: var(--t-line-strong);
+  --color-accent: var(--t-accent);
+  --color-accent-strong: var(--t-accent-strong);
+  --color-accent-fg: var(--t-accent-fg);
+  --color-accent-soft: var(--t-accent-soft);
+  /* acento como PREENCHIMENTO (botão principal, progresso, seleção): lima com texto marinho nos dois temas.
+     `accent` é o acento como TEXTO/linha/foco: lima no escuro, oliva escuro no claro (lima sobre branco não passa no contraste). */
+  --color-accent-fill: var(--t-accent-fill);
+  --color-accent-fill-strong: var(--t-accent-fill-strong);
+  --color-accent-fill-fg: var(--t-accent-fill-fg);
+  --color-ai: var(--t-ai);
+  --color-ai-soft: var(--t-ai-soft);
+  --color-paid: var(--t-paid);
+  --color-paid-soft: var(--t-paid-soft);
+  --color-danger: var(--t-danger);
+  --color-danger-soft: var(--t-danger-soft);
+  --color-success: var(--t-success);
+  --color-success-soft: var(--t-success-soft);
+
+  /* compatibilidade com classes já usadas (ink/paper/mar/sol/terra/folha) */
+  --color-ink-900: var(--t-fg);
+  --color-ink-700: var(--t-fg);
+  --color-ink-500: var(--t-fg-muted);
+  --color-ink-300: var(--t-fg-faint);
+  --color-paper: var(--t-bg);
+  --color-mar-700: var(--t-accent-strong);
+  --color-mar-600: var(--t-accent);
+  --color-mar-100: var(--t-accent-soft);
+  --color-sol-600: var(--t-paid);
+  --color-sol-500: var(--t-paid);
+  --color-sol-100: var(--t-paid-soft);
+  --color-terra-600: var(--t-danger);
+  --color-terra-100: var(--t-danger-soft);
+  --color-folha-600: var(--t-success);
+  --color-folha-100: var(--t-success-soft);
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-display), var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --shadow-glow: 0 0 0 1px color-mix(in oklab, var(--t-accent) 35%, transparent), 0 12px 40px -12px color-mix(in oklab, var(--t-accent) 45%, transparent);
+  --shadow-panel: 0 1px 2px rgb(16 24 40 / 0.04), 0 12px 32px -16px rgb(16 24 40 / 0.18);
+}
+
+/* Tema claro (padrão; LMS do aluno e login) */
+:root {
+  --t-bg: #f4f6fb;
+  --t-bg-2: #ffffff;
+  --t-surface: #ffffff;
+  --t-surface-2: #eef2f8;
+  --t-fg: #0f172a;
+  --t-fg-muted: #4b5873;
+  /* contrastes (WCAG AA, texto ≥ 4,5:1): faint/bg 4,99 · branco/accent 5,00 · accent-strong/accent-soft 6,41 */
+  --t-fg-faint: #5f6b7e;
+  --t-line: #dde3ee;
+  --t-line-strong: #c3cbdb;
+  --t-accent: #0b7d74;
+  --t-accent-strong: #086158;
+  --t-accent-fg: #ffffff;
+  --t-accent-soft: #d7f6f2;
+  --t-accent-fill: #0b7d74;
+  --t-accent-fill-strong: #086158;
+  --t-accent-fill-fg: #ffffff;
+  --t-ai: #5b4bd6;
+  --t-ai-soft: #e9e5ff;
+  /* paid/paid-soft 5,73 · danger/danger-soft 5,26 · success/success-soft 5,42 */
+  --t-paid: #8a5200;
+  --t-paid-soft: #fff1d8;
+  --t-danger: #a83a26;
+  --t-danger-soft: #fde4df;
+  --t-success: #1e6e44;
+  --t-success-soft: #dcf5e6;
+  --brand-primary: var(--t-accent);
+}
+
+/* ===================================================================
+   ESTÚDIO (tema escuro) — mantido pelo agente do estúdio.
+   Só regras com escopo .theme-studio / .theme-video aqui.
+   Linguagem visual da plataforma: marinho profundo, cartões translúcidos
+   com borda branca 10%, acento lima com texto marinho, sans geométrica.
+   =================================================================== */
+.theme-studio {
+  --t-bg: #0b1424;
+  --t-bg-2: #0e1829;
+  --t-surface: #111c2e;
+  --t-surface-2: #16233a;
+  --t-fg: #f4f7fb;
+  /* contrastes (WCAG AA, texto ≥ 4,5:1) sobre surface/surface-2: fg 15,9/14,6 · muted 8,2/7,5 ·
+     faint 5,4/5,0 · accent 13,0/12,0 · marinho sobre accent 14,0 (sobre accent-strong 11,6) */
+  --t-fg-muted: #a9b4c6;
+  --t-fg-faint: #8592a6;
+  --t-line: rgb(255 255 255 / 0.1);
+  --t-line-strong: rgb(255 255 255 / 0.18);
+  --t-accent: #c8f03c;
+  --t-accent-strong: #b4dc28;
+  --t-accent-fg: #0b1424;
+  --t-accent-soft: rgb(200 240 60 / 0.14);
+  /* sobre o "soft" correspondente (em surface): ai 5,8 · paid 7,2 · danger 5,5 · success 7,8 */
+  --t-ai: #b49cff;
+  --t-ai-soft: rgb(180 156 255 / 0.14);
+  --t-paid: #f5b544;
+  --t-paid-soft: rgb(245 181 68 / 0.14);
+  --t-danger: #ff7a7a;
+  --t-danger-soft: rgb(255 122 122 / 0.14);
+  --t-success: #5be49b;
+  --t-success-soft: rgb(91 228 155 / 0.14);
+  --t-accent-fill: #c8f03c;
+  --t-accent-fill-strong: #b4dc28;
+  --t-accent-fill-fg: #0b1424;
+  /* cromo do tema (painéis translúcidos, trilhos, rolagem, seleção, brilho de fundo) */
+  --t-panel: rgb(17 28 46 / 0.78);
+  --t-panel-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 48px -32px rgb(0 0 0 / 0.6);
+  --t-track: rgb(255 255 255 / 0.14);
+  --t-progress-ring: transparent;
+  --t-scrollbar: rgb(255 255 255 / 0.18);
+  --t-selection: rgb(200 240 60 / 0.3);
+  --t-glow: radial-gradient(60rem 32rem at 85% -10%, rgb(64 98 168 / 0.22), transparent 70%), radial-gradient(40rem 28rem at -5% 105%, rgb(200 240 60 / 0.05), transparent 70%);
+  --brand-primary: var(--t-accent);
+  /* fonte geométrica arredondada da plataforma (Figtree, `--font-platform`, registrada em app/layout.tsx) */
+  --font-display: var(--font-platform);
+  --font-body: var(--font-platform);
+  font-family: var(--font-platform), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+  position: relative;
+  isolation: isolate;
+  background: var(--t-bg);
+  color: var(--t-fg);
+}
+.theme-studio h1, .theme-studio h2, .theme-studio .display { letter-spacing: -0.025em; font-weight: 600; }
+.theme-studio h1 { font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem); line-height: 1.04; }
+/* brilho marinho discreto, fixo, no topo (substitui as formas pastel do tema claro) */
+.theme-studio::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--t-glow);
+}
+@media (prefers-reduced-transparency: reduce) { .theme-studio::before { display: none; } }
+/* rótulo de seção em caixa alta espaçada ("SUA APRESENTAÇÃO") */
+.theme-studio .eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t-fg-muted); }
+/* barras de progresso segmentadas (passos) */
+.theme-studio .seg-progress { display: flex; gap: 6px; }
+.theme-studio .seg-progress > * { height: 4px; flex: 1; border-radius: 999px; background: var(--t-track); }
+.theme-studio .seg-progress > [data-on='true'] { background: var(--t-accent-fill); box-shadow: inset 0 0 0 1px var(--t-progress-ring); }
+/* barra de rolagem no tom do tema */
+.theme-studio * { scrollbar-color: var(--t-scrollbar) transparent; }
+.theme-studio ::selection { background: var(--t-selection); color: var(--t-fg); }
+
+/* Quadro do VÍDEO (slides, animatic): representa o vídeo final, que é claro.
+   Dentro do estúdio escuro ele volta à paleta clara dos slides. */
+.theme-video {
+  --t-bg: #ffffff;
+  --t-bg-2: #f6f8fc;
+  --t-surface: #ffffff;
+  --t-surface-2: #f3f6fb;
+  --t-fg: #0b0f1a;
+  --t-fg-muted: #4a5468;
+  --t-fg-faint: #667085;
+  --t-line: #e6eaf2;
+  --t-line-strong: #cfd6e3;
+  --t-accent: #1a66d1;
+  --t-accent-strong: #1554b0;
+  --t-accent-fg: #ffffff;
+  --t-accent-soft: #e4efff;
+  --t-paid: #8a5200;
+  --t-paid-soft: #fff0d6;
+  --t-accent-fill: #1a66d1;
+  --t-accent-fill-strong: #1554b0;
+  --t-accent-fill-fg: #ffffff;
+  color-scheme: light;
+}
+
+/* ===================================================================
+   PLATAFORMA DO ALUNO (tema escuro) — mantido pelo agente do player/LMS.
+   Só regras com escopo .theme-platform aqui. Usado em app/(lms)/**, no login
+   e no player (inclusive dentro da prévia do estúdio).
+   Mesma linguagem do estúdio: marinho #0B1424, cartões com borda branca 10%,
+   acento lima (por curso: `--im-accent`, posto pelo player) com texto marinho,
+   sans geométrica (Figtree, `--font-platform`).
+   =================================================================== */
+.theme-platform {
+  --im-accent: #c8f03c;
+  /* texto legível SOBRE o acento (o player troca para branco se o acento do curso for escuro) */
+  --im-on-accent: #0b1424;
+  /* acento usado como TEXTO/ícone/linha fina sobre o fundo do tema. O player põe `--im-ink-dark`/`--im-ink-light`
+     (calculados do acento do curso); aqui cada tema escolhe o seu. */
+  --im-accent-ink: var(--im-ink-dark, var(--im-accent));
+  /* linha de seleção (opção marcada, barra do roteiro) e anel dos segmentos de progresso */
+  --im-accent-line: var(--im-accent);
+  --im-on-line: var(--im-on-accent);
+  --im-seg-ring: transparent;
+  /* palco do player: fundo, quadro da mídia, véus de legibilidade sobre o vídeo */
+  --im-stage: #0b1424;
+  --im-media-bg: #0e1829;
+  --im-media-empty: radial-gradient(60% 70% at 65% 40%, #1e2e4d 0%, #0e1829 70%);
+  --im-backdrop-opacity: 0.45;
+  --im-scrim-x: linear-gradient(90deg, #0b1424 0%, rgb(11 20 36 / 0.85) 30%, rgb(11 20 36 / 0.45) 46%, transparent 60%);
+  --im-scrim-top: linear-gradient(to bottom, rgb(11 20 36 / 0.55), transparent);
+  --im-scrim-bottom: linear-gradient(to top, rgb(11 20 36 / 0.8), transparent);
+  /* vidro (opções, botão de contorno, cartões, pílula de estado) */
+  --im-glass: rgb(0 0 0 / 0.35);
+  --im-glass-hover: rgb(0 0 0 / 0.45);
+  --im-glass-line: rgb(255 255 255 / 0.12);
+  --im-glass-line-hover: rgb(255 255 255 / 0.3);
+  --im-selected: rgb(0 0 0 / 0.35);
+  --im-outline-bg: rgb(0 0 0 / 0.2);
+  --im-card: rgb(11 20 36 / 0.7);
+  --im-chip: rgb(255 255 255 / 0.1);
+  --im-chip-line: rgb(255 255 255 / 0.1);
+  --im-control: rgb(255 255 255 / 0.6);
+  --im-control-hover: rgb(255 255 255 / 0.8);
+  --im-disabled-base: #0b1424;
+  /* barra de controles do vídeo e legenda do apresentador (sobre o vídeo) */
+  --im-ctrl-bg: rgb(0 0 0 / 0.4);
+  --im-ctrl-line: rgb(255 255 255 / 0.1);
+  --im-ctrl-fg: #ffffff;
+  --im-ctrl-muted: rgb(255 255 255 / 0.85);
+  --im-ctrl-hover: rgb(255 255 255 / 0.1);
+  --im-ctrl-solid: #0b1424;
+  --im-track: rgb(255 255 255 / 0.2);
+  --im-range-fill: var(--im-accent);
+  --im-thumb: #ffffff;
+  --im-tag-fg: #ffffff;
+  --im-tag-muted: rgb(255 255 255 / 0.7);
+  --im-sticky: rgb(11 20 36 / 0.95);
+  --im-overlay: rgb(5 10 20 / 0.7);
+  /* capa do curso e arte dos cartões na área do aluno */
+  --im-cover-scrim: linear-gradient(90deg, #0b1424 0%, #0b1424 38%, rgb(11 20 36 / 0.82) 52%, rgb(11 20 36 / 0.2) 72%, transparent 85%);
+  --im-art-scrim-x: linear-gradient(90deg, #111c2e 0%, rgb(17 28 46 / 0.6) 30%, transparent 60%);
+  --im-art-scrim-y: linear-gradient(to top, #111c2e, transparent 50%);
+  --t-bg: #0b1424;
+  --t-bg-2: #0e1829;
+  --t-surface: #111c2e;
+  --t-surface-2: #16233a;
+  --t-fg: #f4f7fb;
+  /* contrastes (WCAG AA ≥ 4,5:1) sobre bg/surface-2: fg 17,1/14,6 · muted 9,0/7,5 · faint 5,9/5,0 ·
+     lima 14,4/12,0 · marinho sobre lima 14,4 */
+  --t-fg-muted: #a9b4c6;
+  --t-fg-faint: #8592a6;
+  --t-line: rgb(255 255 255 / 0.1);
+  --t-line-strong: rgb(255 255 255 / 0.2);
+  --t-accent: var(--im-accent);
+  --t-accent-strong: var(--im-accent-ink);
+  --t-accent-fg: var(--im-on-accent);
+  --t-accent-soft: color-mix(in oklab, var(--im-accent) 14%, transparent);
+  --t-ai: #b49cff;
+  --t-ai-soft: rgb(180 156 255 / 0.14);
+  --t-paid: #f5b544;
+  --t-paid-soft: rgb(245 181 68 / 0.14);
+  --t-danger: #ff8a7a;
+  --t-danger-soft: rgb(255 122 122 / 0.14);
+  --t-success: #5be49b;
+  --t-success-soft: rgb(91 228 155 / 0.14);
+  --t-accent-fill: var(--im-accent);
+  --t-accent-fill-strong: color-mix(in oklab, var(--im-accent) 90%, #0b1424);
+  --t-accent-fill-fg: var(--im-on-accent);
+  --t-panel: rgb(17 28 46 / 0.78);
+  --t-panel-shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 48px -32px rgb(0 0 0 / 0.6);
+  --t-track: rgb(255 255 255 / 0.15);
+  --t-scrollbar: rgb(255 255 255 / 0.18);
+  --t-selection: color-mix(in oklab, var(--im-accent) 30%, transparent);
+  --t-glow: radial-gradient(48rem 32rem at 85% -10%, rgb(64 98 168 / 0.25), transparent 70%), radial-gradient(36rem 28rem at -10% 110%, color-mix(in oklab, var(--im-accent) 10%, transparent), transparent 70%);
+  --brand-primary: var(--t-accent);
+  --font-display: var(--font-platform);
+  --font-body: var(--font-platform);
+  font-family: var(--font-platform), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: dark;
+  background: var(--t-bg);
+  color: var(--t-fg);
+}
+html:has(.theme-platform) body { background: var(--page-platform, #0b1424); }
+.theme-platform h1, .theme-platform h2, .theme-platform .display { letter-spacing: -0.025em; font-weight: 600; }
+.theme-platform h1 { font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem); line-height: 1.04; }
+.theme-platform :focus-visible { outline-color: var(--im-accent-ink); }
+.theme-platform * { scrollbar-color: var(--t-scrollbar) transparent; }
+.theme-platform ::selection { background: var(--t-selection); color: var(--t-fg); }
+.theme-platform .panel { background: var(--t-panel); box-shadow: var(--t-panel-shadow); backdrop-filter: blur(14px); }
+.theme-platform .panel-accent { box-shadow: 0 0 0 1px color-mix(in oklab, var(--im-accent) 35%, transparent); border-color: color-mix(in oklab, var(--im-accent) 45%, transparent); }
+/* rótulo em caixa alta espaçada ("SUA APRESENTAÇÃO"): o texto no DOM fica em caixa normal para leitores de tela */
+.theme-platform .eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t-fg-muted); }
+/* Página da aula no LMS: o player ocupa a tela inteira (sem o cabeçalho e a coluna estreita do LMS) */
+.theme-platform:has([data-immersive-root]) > .lms-chrome { display: none; }
+.theme-platform:has([data-immersive-root]) > .lms-main { max-width: none; padding: 0; }
+/* palco do player: vídeo/imagem ocupando a direita, fundindo com o marinho à esquerda */
+@media (min-width: 768px) {
+  .im-media-fade { mask-image: linear-gradient(to right, transparent 0, #000 30%); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%); }
+}
+/* controle deslizante do vídeo (posição/volume) na cor do acento */
+.theme-platform .im-range { -webkit-appearance: none; appearance: none; background: transparent; height: 24px; cursor: pointer; }
+.theme-platform .im-range::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: linear-gradient(to right, var(--im-range-fill) 0 var(--im-fill, 0%), var(--im-track) var(--im-fill, 0%) 100%); }
+.theme-platform .im-range::-moz-range-track { height: 4px; border-radius: 999px; background: var(--im-track); }
+.theme-platform .im-range::-moz-range-progress { height: 4px; border-radius: 999px; background: var(--im-range-fill); }
+/* sem botão de arraste até o ponteiro/foco chegar (como a referência) */
+.theme-platform .im-range::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5px; border-radius: 999px; background: var(--im-thumb); border: 0; opacity: 0; }
+.theme-platform .im-range::-moz-range-thumb { width: 14px; height: 14px; border-radius: 999px; background: var(--im-thumb); border: 0; opacity: 0; }
+.theme-platform .im-range:hover::-webkit-slider-thumb, .theme-platform .im-range:focus-visible::-webkit-slider-thumb { opacity: 1; }
+.theme-platform .im-range:hover::-moz-range-thumb, .theme-platform .im-range:focus-visible::-moz-range-thumb { opacity: 1; }
+/* Prévia do estúdio = o que o aluno vê: sem o cabeçalho do estúdio e sem a coluna do conteúdo
+   (só quando o player da plataforma está na página; o aviso de prévia vira uma pílula flutuante). */
+.theme-studio:has([data-immersive-root]) > header { display: none; }
+.theme-studio:has([data-immersive-root]) .studio-main { max-width: none; padding: 0; }
+@media (prefers-reduced-motion: reduce) { .theme-platform *, .theme-platform *::before, .theme-platform *::after { transition: none !important; animation: none !important; } }
+
+/* ===================================================================
+   TEMA CLARO (preferência do usuário: `data-theme="light"` em <html>,
+   posto pelo script inline de app/layout.tsx a partir do cookie
+   `lms-theme` = system | light | dark; "system" segue prefers-color-scheme).
+   Mesma identidade: tinta marinho, acento lima. Regras de contraste (WCAG AA):
+   - lima #C8F03C só como PREENCHIMENTO (`accent-fill`), com texto marinho (14,0:1);
+   - acento como TEXTO/ícone/linha fina/foco = oliva #3F5A00 (7,9:1 no branco, 7,3:1 no fundo);
+   - fg #0B1424 (18,4:1 no branco) · muted #4A5568 (7,5:1 branco · 6,6:1 surface-2) ·
+     faint #5A6475 (6,0:1 branco · 5,3:1 surface-2);
+   - danger #B42318 (6,6:1) · success #1E6E44 (6,2:1) · paid #8A5200 (6,4:1) · ai #5B3FD0 (6,9:1),
+     todos ≥ 5,4:1 também sobre o respectivo "soft".
+   =================================================================== */
+:root[data-theme='light'] :is(.theme-studio, .theme-platform) {
+  --t-bg: #f4f6f9;
+  --t-bg-2: #ffffff;
+  --t-surface: #ffffff;
+  --t-surface-2: #eef1f5;
+  --t-fg: #0b1424;
+  --t-fg-muted: #4a5568;
+  --t-fg-faint: #5a6475;
+  --t-line: #d9dee6;
+  /* bordas de campos e controles: ≥ 3:1 no branco (1.4.11) */
+  --t-line-strong: #8a94a6;
+  --t-accent: #3f5a00;
+  --t-accent-strong: #2f4400;
+  --t-accent-fg: #ffffff;
+  --t-accent-soft: #eef8cc;
+  --t-accent-fill: #c8f03c;
+  --t-accent-fill-strong: #b4dc28;
+  --t-accent-fill-fg: #0b1424;
+  --t-ai: #5b3fd0;
+  --t-ai-soft: #ece8ff;
+  --t-paid: #8a5200;
+  --t-paid-soft: #fff1d8;
+  --t-danger: #b42318;
+  --t-danger-soft: #fde7e4;
+  --t-success: #1e6e44;
+  --t-success-soft: #dcf5e6;
+  --t-panel: rgb(255 255 255 / 0.94);
+  --t-panel-shadow: 0 1px 2px rgb(16 24 40 / 0.05), 0 12px 32px -18px rgb(16 24 40 / 0.18);
+  --t-track: #d9dee6;
+  --t-progress-ring: rgb(63 90 0 / 0.4);
+  --t-scrollbar: rgb(11 20 36 / 0.22);
+  --t-selection: rgb(200 240 60 / 0.55);
+  --t-glow: radial-gradient(60rem 32rem at 85% -10%, rgb(64 98 168 / 0.08), transparent 70%), radial-gradient(40rem 28rem at -5% 105%, rgb(200 240 60 / 0.12), transparent 70%);
+  --t-flow-edge: rgb(11 20 36 / 0.32);
+  --t-flow-hover: #e3e8ef;
+  --t-flow-mask: rgb(244 246 249 / 0.7);
+  --t-flow-dots: rgb(11 20 36 / 0.14);
+  color-scheme: light;
+}
+:root[data-theme='light'] .theme-platform {
+  /* acento do curso: lima continua como preenchimento; como texto vira a versão escura calculada */
+  --im-accent-ink: var(--im-ink-light, #3f5a00);
+  --t-accent: var(--im-accent-ink);
+  --t-accent-strong: color-mix(in oklab, var(--im-accent-ink) 80%, #000);
+  --t-accent-soft: color-mix(in oklab, var(--im-accent) 24%, #fff);
+  --t-accent-fill: var(--im-accent);
+  --t-accent-fill-strong: color-mix(in oklab, var(--im-accent) 88%, #0b1424);
+  --t-accent-fill-fg: var(--im-on-accent);
+  --t-selection: color-mix(in oklab, var(--im-accent) 55%, transparent);
+  --im-accent-line: var(--im-accent-ink);
+  --im-on-line: #ffffff;
+  --im-seg-ring: color-mix(in oklab, var(--im-accent-ink) 45%, transparent);
+  --im-stage: #e9edf2;
+  --im-media-bg: #e3e8ee;
+  --im-media-empty: radial-gradient(60% 70% at 65% 40%, #ffffff 0%, #e3e8ee 70%);
+  --im-backdrop-opacity: 0.22;
+  --im-scrim-x: linear-gradient(90deg, #e9edf2 0%, rgb(233 237 242 / 0.8) 28%, rgb(233 237 242 / 0.35) 44%, transparent 58%);
+  --im-scrim-top: none;
+  --im-scrim-bottom: none;
+  --im-glass: #ffffff;
+  --im-glass-hover: #f7f9fb;
+  --im-glass-line: #b4bcc8;
+  --im-glass-line-hover: #8a94a6;
+  --im-selected: color-mix(in oklab, var(--im-accent) 26%, #fff);
+  --im-outline-bg: #ffffff;
+  --im-card: #f4f6f9;
+  --im-chip: #eef1f5;
+  --im-chip-line: #d9dee6;
+  --im-control: #6b7587;
+  --im-control-hover: #4a5568;
+  --im-disabled-base: #ffffff;
+  --im-ctrl-bg: rgb(255 255 255 / 0.92);
+  --im-ctrl-line: #d9dee6;
+  --im-ctrl-fg: #0b1424;
+  --im-ctrl-muted: #4a5568;
+  --im-ctrl-hover: rgb(11 20 36 / 0.06);
+  --im-ctrl-solid: #ffffff;
+  --im-track: rgb(11 20 36 / 0.18);
+  --im-range-fill: var(--im-accent-ink);
+  --im-thumb: #0b1424;
+  --im-tag-fg: #0b1424;
+  --im-tag-muted: #4a5568;
+  --im-sticky: rgb(244 246 249 / 0.96);
+  --im-overlay: rgb(11 20 36 / 0.4);
+  --im-cover-scrim: linear-gradient(90deg, #f4f6f9 0%, #f4f6f9 38%, rgb(244 246 249 / 0.85) 52%, rgb(244 246 249 / 0.2) 72%, transparent 85%);
+  --im-art-scrim-x: linear-gradient(90deg, #ffffff 0%, rgb(255 255 255 / 0.6) 30%, transparent 60%);
+  --im-art-scrim-y: linear-gradient(to top, #ffffff, transparent 50%);
+}
+:root[data-theme='light'] { --page-platform: #f4f6f9; }
+:root[data-theme='light'] .theme-studio .panel-accent { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-accent) 35%, transparent), var(--t-panel-shadow); }
+/* Palco claro (≥ 768px): o texto e as opções ficam num painel branco translúcido sobre o vídeo */
+@media (min-width: 768px) {
+  :root[data-theme='light'] .theme-platform .im-panel {
+    background: rgb(255 255 255 / 0.95);
+    border: 1px solid var(--t-line);
+    border-radius: 24px;
+    padding: 28px 32px 30px;
+    box-shadow: 0 1px 2px rgb(16 24 40 / 0.06), 0 24px 56px -28px rgb(16 24 40 / 0.28);
+    backdrop-filter: blur(14px);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-theme='light'] .theme-platform .im-panel { background: #ffffff; backdrop-filter: none; }
+}
+/* legenda do apresentador sobre o vídeo: no claro vira uma etiqueta branca (o vídeo pode ser escuro ou claro) */
+:root[data-theme='light'] .theme-platform .im-nametag {
+  background: rgb(255 255 255 / 0.92);
+  border: 1px solid var(--t-line);
+  border-radius: 12px;
+  padding: 6px 12px;
+  backdrop-filter: blur(10px);
+}
+/* legendas nativas (faixa WebVTT do player clássico): caixa escura, texto branco, embaixo — como a referência de estúdio */
+video::cue {
+  background: rgb(5 10 20 / 0.8);
+  color: #fff;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.95em;
+  line-height: 1.35;
+}
+/* troca de tema sem animar cores (e sem movimento para quem pediu menos movimento) */
+:root[data-theme-switching], :root[data-theme-switching] *, :root[data-theme-switching] *::before, :root[data-theme-switching] *::after { transition: none !important; }
+
+/* ===================================================================
+   PRESETS DE MARCA (white-label por workspace) — mantidos pelo agente de marca.
+   O preset vem de config/brand.ts e entra como classe em <html> (app/layout.tsx):
+   `brand-lms` = identidade original (marinho + lima; os blocos acima, sem override);
+   `brand-dnawork` = DNA Work (navy #1D1E4C + laranja #FF7A08, fundo claro #F4F7FA).
+   Só VALORES dos tokens mudam; os nomes semânticos são os mesmos dos temas acima.
+
+   DNA Work — contrastes (WCAG AA, texto ≥ 4,5:1; UI ≥ 3:1):
+   escuro (bg #12132F · surface #1D1E4C · surface-2 #26285C):
+     fg #F5F6FB 18,1/15,6/12,6 · muted #B8BAD3 8,2 (surface) 7,1 (surface-2) · faint #A3A5C4 5,7 (surface-2) ·
+     laranja #FF7A08 como texto 6,9/6,0/5,2 · navy sobre laranja (botão) 6,0 · navy sobre fill-strong #F07000 5,2 ·
+     danger #FF8A7A 6,0 · success #5BE49B 8,5 · ai #B49CFF 5,9 · paid #F5B544 7,5 (todos sobre surface-2).
+   claro (bg #F4F7FA · surface #FFFFFF · surface-2 #EEF1F6):
+     navy #1D1E4C 14,6 (bg) 15,6 (branco) · muted #4A4D6E 7,2 (surface-2) · faint #5C5F80 5,5 (surface-2) ·
+     laranja #FF7A08 só como PREENCHIMENTO (2,4 como texto no bg: reprova) · acento como TEXTO #A84C00 5,3 (bg) 5,7 (branco) 4,8 (surface-2) ·
+     accent-strong #8A3E00 sobre accent-soft #FFF0E3 6,8 · line-strong #8A8DA6 3,3 (branco) 3,0 (bg) ·
+     danger #B42318 6,1 · success #1E6E44 5,8 · ai #5B3FD0 6,4 · paid #8A5200 5,9 (sobre o bg).
+   Lima do curso "pode entrar" no claro: fica como preenchimento (navy sobre lima 11,9); como texto
+   o player já troca para a tinta escura calculada (`--im-ink-light`, oliva #3F5A00: 7,3 no bg).
+   =================================================================== */
+/* logo da marca: a versão clara aparece no tema claro, a branca no escuro (ver components/brand-logo.tsx) */
+.brand-logo-light { display: none; }
+:root[data-theme='light'] .brand-logo-light { display: block; }
+:root[data-theme='light'] .brand-logo-dark { display: none; }
+/* dentro do quadro claro do vídeo, sempre a versão clara */
+.theme-video .brand-logo-light { display: block; }
+.theme-video .brand-logo-dark { display: none; }
+
+:root.brand-dnawork { --brand-primary: #ff7a08; --page-platform: #12132f; }
+:root.brand-dnawork[data-theme='light'] { --page-platform: #f4f7fa; }
+
+/* escuro: navy em vez do marinho, laranja em vez da lima (texto navy sobre o laranja) */
+.brand-dnawork :is(.theme-studio, .theme-platform) {
+  --t-bg: #12132f;
+  --t-bg-2: #171840;
+  --t-surface: #1d1e4c;
+  --t-surface-2: #26285c;
+  --t-fg: #f5f6fb;
+  --t-fg-muted: #b8bad3;
+  --t-fg-faint: #a3a5c4;
+  --t-line: rgb(255 255 255 / 0.12);
+  --t-line-strong: rgb(255 255 255 / 0.22);
+  --t-danger: #ff8a7a;
+  --t-panel: rgb(29 30 76 / 0.78);
+  --t-panel-shadow: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -32px rgb(0 0 0 / 0.6);
+  --t-track: rgb(255 255 255 / 0.16);
+  --t-scrollbar: rgb(255 255 255 / 0.2);
+  --t-glow: radial-gradient(60rem 32rem at 85% -10%, rgb(255 122 8 / 0.16), transparent 70%), radial-gradient(40rem 28rem at -5% 105%, rgb(99 102 241 / 0.12), transparent 70%);
+}
+.brand-dnawork .theme-studio {
+  --t-accent: #ff7a08;
+  --t-accent-strong: #ff8f2a;
+  --t-accent-fg: #1d1e4c;
+  --t-accent-soft: rgb(255 122 8 / 0.14);
+  --t-accent-fill: #ff7a08;
+  --t-accent-fill-strong: #f07000;
+  --t-accent-fill-fg: #1d1e4c;
+  --t-selection: rgb(255 122 8 / 0.35);
+}
+.brand-dnawork .theme-platform {
+  /* acento herdado pelos cursos sem `branding.accent` (o player sobrescreve estas variáveis quando o curso define a sua) */
+  --im-accent: #ff7a08;
+  --im-on-accent: #1d1e4c;
+  --im-stage: #12132f;
+  --im-media-bg: #171840;
+  --im-media-empty: radial-gradient(60% 70% at 65% 40%, #2a2c64 0%, #171840 70%);
+  --im-scrim-x: linear-gradient(90deg, #12132f 0%, rgb(18 19 47 / 0.85) 30%, rgb(18 19 47 / 0.45) 46%, transparent 60%);
+  --im-scrim-top: linear-gradient(to bottom, rgb(18 19 47 / 0.55), transparent);
+  --im-scrim-bottom: linear-gradient(to top, rgb(18 19 47 / 0.8), transparent);
+  --im-card: rgb(18 19 47 / 0.7);
+  --im-chip: rgb(255 255 255 / 0.1);
+  --im-chip-line: rgb(255 255 255 / 0.12);
+  --im-disabled-base: #12132f;
+  --im-ctrl-solid: #12132f;
+  --im-sticky: rgb(18 19 47 / 0.95);
+  --im-overlay: rgb(8 9 28 / 0.7);
+  --im-cover-scrim: linear-gradient(90deg, #12132f 0%, #12132f 38%, rgb(18 19 47 / 0.82) 52%, rgb(18 19 47 / 0.2) 72%, transparent 85%);
+  --im-art-scrim-x: linear-gradient(90deg, #1d1e4c 0%, rgb(29 30 76 / 0.6) 30%, transparent 60%);
+  --im-art-scrim-y: linear-gradient(to top, #1d1e4c, transparent 50%);
+  --t-accent-fill-strong: color-mix(in oklab, var(--im-accent) 90%, #12132f);
+  --t-glow: radial-gradient(48rem 32rem at 85% -10%, rgb(255 122 8 / 0.16), transparent 70%), radial-gradient(36rem 28rem at -10% 110%, color-mix(in oklab, var(--im-accent) 10%, transparent), transparent 70%);
+}
+.brand-dnawork .theme-studio .panel-accent { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-accent) 35%, transparent), 0 24px 48px -32px rgb(0 0 0 / 0.6); }
+
+/* claro: fundo #F4F7FA, texto navy, laranja só como preenchimento; como texto, o laranja escuro #A84C00 */
+:root[data-theme='light'].brand-dnawork :is(.theme-studio, .theme-platform) {
+  --t-bg: #f4f7fa;
+  --t-bg-2: #ffffff;
+  --t-surface: #ffffff;
+  --t-surface-2: #eef1f6;
+  --t-fg: #1d1e4c;
+  --t-fg-muted: #4a4d6e;
+  --t-fg-faint: #5c5f80;
+  --t-line: #d8dce8;
+  --t-line-strong: #8a8da6;
+  --t-accent: #a84c00;
+  --t-accent-strong: #8a3e00;
+  --t-accent-fg: #ffffff;
+  --t-accent-soft: #fff0e3;
+  --t-accent-fill: #ff7a08;
+  --t-accent-fill-strong: #f07000;
+  --t-accent-fill-fg: #1d1e4c;
+  --t-danger: #b42318;
+  --t-panel: rgb(255 255 255 / 0.94);
+  --t-track: #d8dce8;
+  --t-progress-ring: rgb(168 76 0 / 0.4);
+  --t-scrollbar: rgb(29 30 76 / 0.22);
+  --t-selection: rgb(255 122 8 / 0.35);
+  --t-glow: radial-gradient(60rem 32rem at 85% -10%, rgb(29 30 76 / 0.07), transparent 70%), radial-gradient(40rem 28rem at -5% 105%, rgb(255 122 8 / 0.1), transparent 70%);
+  --t-flow-edge: rgb(29 30 76 / 0.32);
+  --t-flow-hover: #e3e7f0;
+  --t-flow-mask: rgb(244 247 250 / 0.7);
+  --t-flow-dots: rgb(29 30 76 / 0.14);
+}
+:root[data-theme='light'].brand-dnawork .theme-platform {
+  /* mesmas ligações do bloco claro base: o acento do curso (ou o do preset) continua mandando dentro do player */
+  --im-accent-ink: var(--im-ink-light, #a84c00);
+  --t-accent: var(--im-accent-ink);
+  --t-accent-strong: color-mix(in oklab, var(--im-accent-ink) 80%, #000);
+  --t-accent-soft: color-mix(in oklab, var(--im-accent) 24%, #fff);
+  --t-accent-fill: var(--im-accent);
+  --t-accent-fill-fg: var(--im-on-accent);
+  --t-accent-fill-strong: color-mix(in oklab, var(--im-accent) 88%, #1d1e4c);
+  --t-selection: color-mix(in oklab, var(--im-accent) 40%, transparent);
+  --im-stage: #e8ebf3;
+  --im-media-bg: #e1e5ef;
+  --im-media-empty: radial-gradient(60% 70% at 65% 40%, #ffffff 0%, #e1e5ef 70%);
+  --im-scrim-x: linear-gradient(90deg, #e8ebf3 0%, rgb(232 235 243 / 0.8) 28%, rgb(232 235 243 / 0.35) 44%, transparent 58%);
+  --im-glass-line: #b1b5c7;
+  --im-glass-line-hover: #8a8da6;
+  --im-card: #f4f7fa;
+  --im-chip: #eef1f6;
+  --im-chip-line: #d8dce8;
+  --im-control: #6b6e8c;
+  --im-control-hover: #4a4d6e;
+  --im-ctrl-line: #d8dce8;
+  --im-ctrl-fg: #1d1e4c;
+  --im-ctrl-muted: #4a4d6e;
+  --im-ctrl-hover: rgb(29 30 76 / 0.06);
+  --im-track: rgb(29 30 76 / 0.18);
+  --im-thumb: #1d1e4c;
+  --im-tag-fg: #1d1e4c;
+  --im-tag-muted: #4a4d6e;
+  --im-sticky: rgb(244 247 250 / 0.96);
+  --im-overlay: rgb(29 30 76 / 0.4);
+  --im-cover-scrim: linear-gradient(90deg, #f4f7fa 0%, #f4f7fa 38%, rgb(244 247 250 / 0.85) 52%, rgb(244 247 250 / 0.2) 72%, transparent 85%);
+}
+:root[data-theme='light'].brand-dnawork .theme-studio .panel-accent { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-accent) 35%, transparent), var(--t-panel-shadow); }
+
+html { color-scheme: light; }
+body { background: var(--t-bg); color: var(--t-fg); @apply antialiased; font-feature-settings: 'ss01', 'cv11'; }
+h1, h2, .display { font-family: var(--font-display); letter-spacing: -0.02em; font-weight: 700; }
+h1 { font-size: clamp(2rem, 1.2rem + 2.6vw, 3.25rem); line-height: 1.05; }
+
+/* foco visível e consistente para teclado */
+:focus-visible { outline: 3px solid var(--t-accent); outline-offset: 2px; border-radius: 8px; }
+/* alvo do link "Pular para o conteúdo": recebe foco programático sem contorno */
+main[tabindex='-1']:focus { outline: none; }
+
+/* abas roláveis no celular: esmaece as bordas para indicar que há mais conteúdo */
+.scroll-fade-x {
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 24px), transparent 100%);
+}
+.scroll-fade-x::-webkit-scrollbar { display: none; }
+@media (min-width: 640px) { .scroll-fade-x { mask-image: none; } }
+
+/* painel translúcido do estúdio */
+.panel { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--radius-card); box-shadow: var(--shadow-panel); backdrop-filter: blur(10px); }
+.theme-studio .panel { background: var(--t-panel); box-shadow: var(--t-panel-shadow); backdrop-filter: blur(14px); }
+.theme-studio .panel-accent { box-shadow: 0 0 0 1px color-mix(in oklab, var(--t-accent) 35%, transparent), 0 24px 48px -32px rgb(0 0 0 / 0.6); border-color: color-mix(in oklab, var(--t-accent) 45%, transparent); }
+.panel-accent { box-shadow: var(--shadow-glow); border-color: color-mix(in oklab, var(--t-accent) 45%, transparent); }
+
+/* um único momento de movimento por tela */
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--t-accent) 60%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
+.pulse-dot { animation: pulse-dot 1.6s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+.prose-lms h2 { @apply text-lg font-semibold mt-4 mb-2; }
+.prose-lms h3 { @apply text-base font-semibold mt-3 mb-1; }
+.prose-lms p { @apply my-2 leading-relaxed; }
+.prose-lms ul { @apply list-disc pl-5 my-2 space-y-1; }
+.prose-lms ol { @apply list-decimal pl-5 my-2 space-y-1; }
+.prose-lms strong { @apply font-semibold; }
+.prose-lms em { @apply italic; }
+
+/* placeholder do editor de texto rico (Tiptap) */
+.tiptap p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: var(--t-fg-faint); float: left; height: 0; pointer-events: none; }
+
+/* Assistente do estúdio: a pílula flutuante pede espaço no fim da página; o painel
+   lateral (≥ lg) empurra o conteúdo em vez de cobri-lo (atributos postos pelo AssistantDock) */
+.theme-studio[data-assistant-dock] .studio-main { padding-bottom: 6rem; }
+@media (min-width: 1024px) {
+  .theme-studio { transition: padding-right 200ms ease; }
+  .theme-studio[data-assistant-open='true'] { padding-right: var(--assistant-panel-width, 26rem); }
+}
+@media (prefers-reduced-motion: reduce) { .theme-studio { transition: none; } }
+
+/* React Flow no estúdio */
+.theme-studio .react-flow {
+  --xy-background-color: transparent; --xy-edge-stroke: var(--t-flow-edge, rgb(255 255 255 / 0.28)); --xy-edge-stroke-selected: var(--t-accent);
+  --xy-node-background-color: var(--t-surface); --xy-node-border: 1px solid var(--t-line-strong); --xy-node-color: var(--t-fg);
+  --xy-node-boxshadow-selected: 0 0 0 2px var(--t-accent);
+  --xy-controls-button-background-color: var(--t-surface-2); --xy-controls-button-background-color-hover: var(--t-flow-hover, #1d2c47);
+  --xy-controls-button-color: var(--t-fg); --xy-controls-button-border-color: var(--t-line);
+  --xy-minimap-background-color: var(--t-bg-2); --xy-minimap-mask-background-color: var(--t-flow-mask, rgb(11 20 36 / 0.6));
+  --xy-background-pattern-dots-color: var(--t-flow-dots, rgb(255 255 255 / 0.12)); --xy-attribution-background-color: transparent;
+  --xy-handle-background-color: var(--t-accent); --xy-handle-border-color: var(--t-bg);
+}
+
+/* Impressão de "Meu roteiro": enquanto html[data-print="recap"] está ligado, só a página do roteiro
+   (e seus ancestrais) existe no papel; cabeçalhos fixos, botões e o restante da aula somem. */
+@media print {
+  html[data-print='recap'] body *:not([data-print-target]):not([data-print-target] *):not(:has([data-print-target])) { display: none !important; }
+  html[data-print='recap'] body, html[data-print='recap'] body :has([data-print-target]) {
+    position: static !important; max-width: none !important; margin: 0 !important; padding: 0 !important;
+    background: #fff !important; box-shadow: none !important; border: 0 !important; overflow: visible !important; transform: none !important;
+  }
+  html[data-print='recap'] { --t-bg: #fff; --t-bg-2: #fff; --t-surface: #fff; --t-fg: #000; --t-fg-muted: #333; --t-fg-faint: #555; }
+  html[data-print='recap'] [data-print-target] { border: 0 !important; padding: 0 !important; box-shadow: none !important; color: #000; }
+  html[data-print='recap'] [data-print-target] .recap-actions { display: none !important; }
+  html[data-print='recap'] [data-print-target] li { break-inside: avoid; }
+  html[data-print='recap'] [data-print-target] input[type='checkbox'] { -webkit-appearance: checkbox; appearance: checkbox; }
+}
