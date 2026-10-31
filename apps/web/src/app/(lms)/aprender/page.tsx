@@ -6,6 +6,7 @@ import { requireViewer } from '@/server/viewer';
 import { cn, formatDate } from '@/lib/utils';
 import { ctaPrimary, lessonThumbUrl, Segments, StatusPill } from './_components/learner-ui';
 import { CourseTile, HeroBackdrop, type CourseTileData } from './_components/course-tile';
+import { Achievements, type TrailProgress } from './_components/achievements';
 import { CourseRail } from './_components/course-rail';
 
 export const metadata = { title: 'Meus cursos' };
@@ -108,6 +109,15 @@ export default async function MyCoursesPage() {
     ...(c.trail ? { trail: c.trail } : {}),
   });
 
+  const stats = await learning.learnerStats(db, enrollments.map((e) => e.id));
+  // selos: uma trilha está completa quando todos os cursos dela foram concluídos
+  const trailProgress: TrailProgress[] = [...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))]
+    .sort((a, b) => a.localeCompare(b, 'pt-BR'))
+    .map((trail) => {
+      const inTrail = courses.filter((c) => c.trail === trail);
+      return { trail, done: inTrail.filter((c) => c.isDone).length, total: inTrail.length };
+    });
+
   // Destaque: o curso em andamento mais recente; sem nenhum, o primeiro ainda não começado; senão, o primeiro da lista
   const byRecent = [...courses].sort((a, b) => b.lastActivity - a.lastActivity);
   const featured = byRecent.find((c) => c.started && !c.isDone) ?? courses.find((c) => !c.started) ?? courses[0];
@@ -139,6 +149,14 @@ export default async function MyCoursesPage() {
       ) : (
         <div className="space-y-10" data-testid="enrollment-list">
           <FeaturedCourse c={featured} />
+          <Achievements
+            coursesDone={courses.filter((c) => c.isDone).length}
+            coursesTotal={courses.length}
+            lessonsDone={courses.reduce((a, c) => a + c.completedLessons, 0)}
+            choices={stats.choices}
+            activeDays={stats.activeDays}
+            trails={trailProgress}
+          />
           {rows.map((r) => (
             <CourseRail key={r.testId} title={r.title} count={r.items.length} testId={r.testId}>
               {r.items.map((c) => (

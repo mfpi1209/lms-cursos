@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, ne } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, ne, sql } from 'drizzle-orm';
 import { allLessons, findLesson, migrateCourseDocument, scalarType, variableScope, type AnyNode, type CourseDocument, type LessonGraph, type Scalar } from '@lms/course-schema';
 import {
   applyIntent,
@@ -530,3 +530,23 @@ export function answeredNodeSummaries(document: CourseDocument, answers: Record<
   return out;
 }
 
+
+/**
+ * Números da faixa de conquistas do aluno: decisões tomadas (eventos `choose`) e dias com prática
+ * (qualquer evento) nos últimos `days` dias, como datas AAAA-MM-DD no fuso de São Paulo.
+ */
+export async function learnerStats(db: DbOrTx, enrollmentIds: string[], days = 7): Promise<{ choices: number; activeDays: string[] }> {
+  if (!enrollmentIds.length) return { choices: 0, activeDays: [] };
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const [row] = await db
+    .select({ choices: sql<number>`count(*) filter (where ${s.learnerEvents.type} = 'choose')::int` })
+    .from(s.learnerEvents)
+    .innerJoin(s.lessonAttempts, eq(s.lessonAttempts.id, s.learnerEvents.attemptId))
+    .where(inArray(s.lessonAttempts.enrollmentId, enrollmentIds));
+  const dayRows = await db
+    .selectDistinct({ day: sql<string>`to_char(${s.learnerEvents.createdAt} at time zone 'America/Sao_Paulo', 'YYYY-MM-DD')` })
+    .from(s.learnerEvents)
+    .innerJoin(s.lessonAttempts, eq(s.lessonAttempts.id, s.learnerEvents.attemptId))
+    .where(and(inArray(s.lessonAttempts.enrollmentId, enrollmentIds), gte(s.learnerEvents.createdAt, since)));
+  return { choices: row?.choices ?? 0, activeDays: dayRows.map((r) => r.day).sort() };
+}

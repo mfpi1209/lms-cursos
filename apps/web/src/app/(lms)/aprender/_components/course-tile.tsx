@@ -78,8 +78,9 @@ function Badge({ status }: { status: CourseTileData['status'] }) {
   if (status === 'new') return <span aria-hidden="true" className="absolute left-2.5 top-2.5 rounded-full bg-accent-fill px-2.5 py-0.5 text-xs font-semibold text-accent-fill-fg">Novo</span>;
   if (status === 'completed')
     return (
-      <span aria-hidden="true" className="absolute right-2.5 top-2.5 grid size-8 place-items-center rounded-full bg-accent-fill text-accent-fill-fg">
-        <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+      <span aria-hidden="true" className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-accent-fill py-0.5 pl-1.5 pr-2.5 text-xs font-semibold text-accent-fill-fg">
+        <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
+        Concluído
       </span>
     );
   return null;
@@ -225,13 +226,19 @@ export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }
                 <span className="text-5xl font-semibold lowercase text-fg/15">{c.title.trim().charAt(0)}</span>
               </div>
             )}
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0" />
+            {/* capa de pôster: o título em tipo grande sobre a instrutora, como a arte de um serviço de vídeo */}
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#0f1030]/95 via-[#0f1030]/35 via-50% to-transparent" />
             <Badge status={c.status} />
-            <span aria-hidden="true" className="absolute bottom-3 left-2.5 rounded-md bg-black/60 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white">{courseFacts(c)}</span>
+            <span aria-hidden="true" className="absolute inset-x-3 bottom-3.5 block">
+              <span className="font-display line-clamp-3 text-[19px] font-bold leading-[1.08] tracking-[-0.01em] text-white [text-wrap:balance] xl:text-[21px]">{c.title}</span>
+              {c.presenter && <span className="mt-1 block text-[13px] font-medium text-white/80">com {c.presenter}</span>}
+            </span>
             <ProgressEdge c={c} />
           </div>
-          <p className="mt-2.5 line-clamp-2 text-[17px] font-semibold leading-snug text-fg">{c.title}</p>
-          <p className="mt-0.5 text-sm text-fg-muted">{[c.presenter, c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas` : null].filter(Boolean).join(' · ') || c.cta}</p>
+          <p className="mt-2.5 text-sm tabular-nums text-fg-muted">
+            {courseFacts(c)}
+            {c.status === 'in_progress' && <span className="text-fg"> · {c.completed} de {c.lessons} aulas</span>}
+          </p>
         </Link>
         {/* camada com a mesma proporção da capa: o botão de detalhes fica no canto de baixo dela */}
         <div className="pointer-events-none absolute inset-x-0 top-0 aspect-video">
@@ -242,7 +249,7 @@ export function CourseTile({ c, testId }: { c: CourseTileData; testId?: string }
               dialogRef.current?.showModal();
             }}
             aria-label={`Detalhes de ${c.title}`}
-            className="pointer-events-auto absolute bottom-2 right-2 grid size-9 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="pointer-events-auto absolute right-2 top-2 grid size-9 place-items-center rounded-full bg-black/60 text-white hover:bg-black/80 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             <Info className="size-[18px]" aria-hidden="true" />
           </button>
