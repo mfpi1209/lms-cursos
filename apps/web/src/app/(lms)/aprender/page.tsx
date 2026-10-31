@@ -4,7 +4,8 @@ import { getDb, learning, publishing } from '@lms/db';
 import { allLessons } from '@lms/course-schema';
 import { requireViewer } from '@/server/viewer';
 import { cn, formatDate } from '@/lib/utils';
-import { CourseCard, ctaPrimary, lessonThumbUrl, Segments, StatusPill } from './_components/learner-ui';
+import { ctaPrimary, lessonThumbUrl, Segments, StatusPill } from './_components/learner-ui';
+import { CourseTile, HeroBackdrop, type CourseTileData } from './_components/course-tile';
 import { CourseRail } from './_components/course-rail';
 
 export const metadata = { title: 'Meus cursos' };
@@ -29,7 +30,21 @@ type CourseModel = {
   thumb?: string;
   presenter?: string;
   lastActivity: number;
+  /** vídeo da cena que abre a próxima aula (prévia no destaque) e da abertura do curso (prévia na ficha) */
+  heroVideo?: string;
+  openingVideo?: string;
+  decisions: number;
+  trail?: string;
 };
+
+/** Primeiro vídeo de cena de uma aula. */
+function firstVideo(lesson: { graph: { nodes: unknown[] } } | undefined): string | undefined {
+  for (const n of lesson?.graph.nodes ?? []) {
+    const m = (n as { media?: { kind?: string; assetId?: string } | null }).media;
+    if (m?.kind === 'video' && m.assetId) return m.assetId;
+  }
+  return undefined;
+}
 
 export default async function MyCoursesPage() {
   const viewer = await requireViewer();
@@ -67,16 +82,44 @@ export default async function MyCoursesPage() {
     const thumb = (lessons[0] && lessonThumbUrl(lessons[0], 0.15)) || presenterImg;
     const presenter = doc?.branding.presenterName?.trim() || doc?.presentation.avatarName?.trim() || undefined;
     const lastActivity = Math.max(0, ...attempts.map((a) => new Date(a.startedAt).getTime()));
-    return { enr, lessons, done, current: current === -1 ? undefined : current, completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, tagline: tagline || undefined, backdrop, thumb, presenter, lastActivity };
+    const nodes = lessons.flatMap((l) => l.graph.nodes as Array<{ type: string; media?: { kind?: string; assetId?: string } | null }>);
+    const decisions = nodes.filter((n) => n.type === 'choice').length;
+    const heroVideo = firstVideo(nextLesson ?? lessons[0]);
+    const openingVideo = firstVideo(lessons[0]);
+    return { enr, lessons, done, current: current === -1 ? undefined : current, completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, tagline: tagline || undefined, backdrop, thumb, presenter, lastActivity, heroVideo, openingVideo, decisions, trail: enr.courseTrail ?? undefined };
+  });
+  const tile = (c: CourseModel): CourseTileData => ({
+    id: c.enr.id,
+    href: c.startHref,
+    chaptersHref: `/aprender/${c.enr.id}`,
+    title: c.enr.courseTitle,
+    ...(c.tagline ? { summary: c.tagline } : {}),
+    ...(c.thumb ? { thumb: c.thumb } : {}),
+    ...(c.openingVideo ? { previewSrc: `/api/assets/${c.openingVideo}` } : {}),
+    ...(c.presenter ? { presenter: c.presenter } : {}),
+    lessons: c.totalLessons,
+    completed: c.completedLessons,
+    // mesma conta da página do curso ("cerca de N min"): o tempo estimado de cada aula
+    minutes: c.lessons.reduce((a, l) => a + l.estimatedMinutes, 0),
+    decisions: c.decisions,
+    lessonTitles: c.lessons.map((l) => l.title),
+    status: c.isDone ? 'completed' : c.started ? 'in_progress' : 'new',
+    cta: c.cta,
+    ...(c.trail ? { trail: c.trail } : {}),
   });
 
   // Destaque: o curso em andamento mais recente; sem nenhum, o primeiro ainda não começado; senão, o primeiro da lista
   const byRecent = [...courses].sort((a, b) => b.lastActivity - a.lastActivity);
   const featured = byRecent.find((c) => c.started && !c.isDone) ?? courses.find((c) => !c.started) ?? courses[0];
   const rest = courses.filter((c) => c !== featured);
+  // fileiras: em andamento, depois uma por trilha (cursos ainda não concluídos; trilhas com mais a fazer primeiro), concluídos no fim
+  const open = rest.filter((c) => !c.isDone);
+  const trails = [...new Set(open.map((c) => c.trail ?? 'Mais cursos'))]
+    .map((t) => ({ t, items: open.filter((c) => (c.trail ?? 'Mais cursos') === t) }))
+    .sort((a, b) => (a.t === 'Mais cursos' ? 1 : b.t === 'Mais cursos' ? -1 : b.items.filter((c) => !c.started).length - a.items.filter((c) => !c.started).length || a.t.localeCompare(b.t, 'pt-BR')));
   const rows: Array<{ title: string; testId: string; items: CourseModel[] }> = [
     { title: 'Continue de onde parou', testId: 'rail-in-progress', items: rest.filter((c) => c.started && !c.isDone).sort((a, b) => b.lastActivity - a.lastActivity) },
-    { title: 'Para começar', testId: 'rail-new', items: rest.filter((c) => !c.started && !c.isDone) },
+    ...trails.map(({ t, items }) => ({ title: t, testId: `rail-trail-${t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')}`, items: [...items].sort((a, b) => Number(a.started) - Number(b.started)) })),
     { title: 'Concluídos', testId: 'rail-done', items: rest.filter((c) => c.isDone) },
   ].filter((r) => r.items.length > 0);
 
@@ -99,18 +142,7 @@ export default async function MyCoursesPage() {
           {rows.map((r) => (
             <CourseRail key={r.testId} title={r.title} count={r.items.length} testId={r.testId}>
               {r.items.map((c) => (
-                <CourseCard
-                  key={c.enr.id}
-                  href={c.startHref}
-                  title={c.enr.courseTitle}
-                  thumb={c.thumb}
-                  presenter={c.presenter}
-                  lessons={c.totalLessons}
-                  completed={c.completedLessons}
-                  status={c.isDone ? 'completed' : c.started ? 'in_progress' : 'new'}
-                  cta={c.cta}
-                  testId={`enrollment-${c.enr.id}`}
-                />
+                <CourseTile key={c.enr.id} c={tile(c)} testId={`enrollment-${c.enr.id}`} />
               ))}
             </CourseRail>
           ))}
@@ -129,12 +161,9 @@ function FeaturedCourse({ c }: { c: CourseModel }) {
       data-testid={`enrollment-${enr.id}`}
       aria-labelledby={`course-${enr.id}`}
     >
-      {c.backdrop && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={c.backdrop} alt="" aria-hidden="true" className="absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[50%_30%] sm:w-[68%]" />
-      )}
+      <HeroBackdrop image={c.backdrop} videoSrc={c.heroVideo ? `/api/assets/${c.heroVideo}` : undefined} />
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0f1030] from-35% via-[#0f1030]/70 via-55% to-transparent" />
-      <div className="flex min-h-[340px] max-w-[640px] flex-col justify-end gap-4 p-6 sm:min-h-[400px] sm:p-10">
+      <div className="flex min-h-[340px] max-w-[680px] flex-col justify-end gap-4 p-6 sm:min-h-[420px] sm:p-10 xl:min-h-[500px] xl:p-14">
         <StatusPill label={c.isDone ? 'Concluído' : c.started ? 'Em andamento' : 'Novo'} tone={c.isDone ? 'done' : 'accent'} />
         <h2 id={`course-${enr.id}`} className="text-[30px] leading-[1.06] text-white sm:text-[44px]">
           {enr.courseTitle}

@@ -533,3 +533,4 @@ export async function aiSpendSince(db: DbOrTx, input: { workspaceId: string; cou
   const actualUsd = num(row?.actual);
   return { actualUsd, estimatedUsd: actualUsd + openEstimatedUsd, openEstimatedUsd, committedUsd: actualUsd + openEstimatedUsd, items: num(row?.items), openItems };
 }
+

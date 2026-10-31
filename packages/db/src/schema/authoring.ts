@@ -16,6 +16,8 @@ export const courses = pgTable(
     createdBy: text('created_by').notNull().references(() => user.id),
     /** versão publicada mais recente (desnormalizado para listagens) */
     latestVersionNumber: integer('latest_version_number').notNull().default(0),
+    /** trilha temática da vitrine do aluno (ex.: "Primeiro emprego"); fora do conteúdo versionado: mudar não exige republicar */
+    trail: text('trail'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
     archivedAt: timestamp('archived_at', { withTimezone: true }),

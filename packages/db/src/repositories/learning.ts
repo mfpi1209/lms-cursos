@@ -51,6 +51,7 @@ export async function listEnrollmentsForUser(db: DbOrTx, userId: string) {
       completedAt: s.enrollments.completedAt,
       courseId: s.courses.id,
       courseTitle: s.courses.title,
+      courseTrail: s.courses.trail,
       versionNumber: s.courseVersions.versionNumber,
       versionId: s.courseVersions.id,
     })

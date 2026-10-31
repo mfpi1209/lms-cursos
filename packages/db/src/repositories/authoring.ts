@@ -172,3 +172,22 @@ export async function setNodeMedia(
   }
   throw new DomainError('CONFLICT', 'Não foi possível anexar a mídia: rascunho em edição intensa');
 }
+
+/** Nome da trilha da vitrine: espaços normalizados, até 60 caracteres; vazio = sem trilha. */
+export function normalizeTrail(raw: string | null | undefined): string | null {
+  const t = (raw ?? '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  return t || null;
+}
+
+/** Trilha temática do curso na vitrine do aluno (fora do conteúdo versionado: vale na hora, sem republicar). */
+export async function setCourseTrail(db: DbOrTx, courseId: string, trail: string | null) {
+  const value = normalizeTrail(trail);
+  await db.update(s.courses).set({ trail: value, updatedAt: new Date() }).where(eq(s.courses.id, courseId));
+  return value;
+}
+
+/** Trilhas já usadas no workspace (para sugerir no estúdio), em ordem alfabética. */
+export async function listWorkspaceTrails(db: DbOrTx, workspaceId: string): Promise<string[]> {
+  const rows = await db.selectDistinct({ trail: s.courses.trail }).from(s.courses).where(eq(s.courses.workspaceId, workspaceId));
+  return rows.map((r) => r.trail).filter((t): t is string => !!t).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}

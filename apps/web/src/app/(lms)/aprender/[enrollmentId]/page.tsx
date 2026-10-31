@@ -154,7 +154,7 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
               <h3 className="text-xl font-semibold text-fg">{document.modules.length > 1 ? `Módulo ${mi + 1} · ${m.title}` : m.title}</h3>
               {m.description && <p className="mt-1 max-w-prose text-base text-fg-muted">{m.description}</p>}
             </div>
-            <ol className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:thin] sm:-mx-1 sm:px-1">
+            <ol className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-3 [scrollbar-width:thin] sm:-mx-8 sm:scroll-px-8 sm:px-8 xl:-mx-14 xl:scroll-px-14 xl:gap-5 xl:px-14">
               {m.lessons.map((lesson) => {
                 const i = lessons.findIndex((l) => l.id === lesson.id);
                 const st = statuses[i]!;

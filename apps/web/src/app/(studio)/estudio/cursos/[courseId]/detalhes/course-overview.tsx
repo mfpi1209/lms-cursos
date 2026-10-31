@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Card, Badge } from '@/components/ui/card';
 import { Checkbox, Field, Input, Select, Textarea, fieldHintId } from '@/components/ui/input';
 import { SaveStatus, useDraft } from '@/components/studio/draft-provider';
+import { TrailField } from '@/components/studio/trail-field';
 import { createLesson, createModule, createObjective, moveItem } from '@/components/studio/graph-ops';
 import { cn, formatDate } from '@/lib/utils';
 
@@ -62,6 +63,7 @@ export function CourseOverview({ courseId }: { courseId: string }) {
             <Field label="Descrição" htmlFor="course-description" hint="Aparece para o aluno na lista de cursos.">
               <Textarea id="course-description" aria-describedby={fieldHintId('course-description')} rows={3} maxLength={2000} value={doc.description} onChange={(e) => setField('description', e.target.value)} />
             </Field>
+            <TrailField courseId={courseId} />
           </Card>
 
           <Card className="space-y-6">

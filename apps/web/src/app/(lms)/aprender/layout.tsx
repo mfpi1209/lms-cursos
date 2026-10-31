@@ -22,7 +22,7 @@ export default async function LmsLayout({ children }: { children: React.ReactNod
     <div className="theme-platform flex min-h-dvh flex-col bg-bg text-fg">
       <SkipLink />
       <header className="lms-chrome border-b border-line">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:h-[72px] sm:gap-3 sm:px-6">
+        <div className="mx-auto flex h-16 max-w-[1760px] items-center justify-between gap-2 px-4 sm:h-[72px] sm:gap-3 sm:px-8 xl:px-14">
           <Link href="/aprender" className="inline-flex min-h-11 min-w-0 shrink items-center rounded-md" aria-label={`${brand.name}: meus cursos`}>
             <BrandLogo brand={brand} height={26} className="max-sm:[--logo-h:22px]" />
           </Link>
@@ -38,9 +38,9 @@ export default async function LmsLayout({ children }: { children: React.ReactNod
           </div>
         </div>
       </header>
-      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="lms-main mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12">{children}</main>
+      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="lms-main mx-auto w-full max-w-[1760px] flex-1 px-4 py-8 sm:px-8 sm:py-12 xl:px-14">{children}</main>
       <footer className="lms-chrome border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 text-sm text-fg-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-[1760px] flex-col gap-3 px-4 py-6 text-sm text-fg-muted sm:flex-row sm:items-center sm:justify-between sm:px-8 xl:px-14">
           <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1" data-testid="brand-footer">
             <span>Oferecido por</span>
             <BrandLogo brand={brand} height={18} />

@@ -92,6 +92,13 @@
       "when": 1793309451527,
       "tag": "0012_library_templates",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793446331456,
+      "tag": "0013_course_trail",
+      "breakpoints": true
     }
   ]
 }
