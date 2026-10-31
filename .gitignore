@@ -21,3 +21,4 @@ docs/qa/**/*.png
 docs/qa/**/*.jpg
 docs/qa/**/*.mp4
 docs/qa/**/*.webm
+*.tsbuildinfo
