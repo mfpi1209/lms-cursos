@@ -15,6 +15,8 @@ export interface CourseTileData {
   thumb?: string;
   /** quadro com a instrutora centrada (reação), para a capa em pé */
   posterThumb?: string;
+  /** capa em pé desenhada (título e marca já na arte): mostrada inteira, sem texto por cima */
+  posterArt?: string;
   /** vídeo de abertura do curso (prévia muda na ficha) */
   previewSrc?: string;
   presenter?: string;
@@ -236,28 +238,38 @@ export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileDat
         >
           {variant === 'poster' ? (
             <div className="relative aspect-[3/4] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
-              {c.posterThumb || c.thumb ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
-              ) : null}
-              {/* capa em pé: título manuscrito com pincelada laranja sobre a instrutora */}
-              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#12132f]/95 via-[#12132f]/30 via-45% to-transparent" />
-              <Badge status={c.status} />
-              <span aria-hidden="true" className="absolute inset-x-3.5 bottom-3.5 block">
-                <span className="font-hand line-clamp-3 -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
-                <Swoosh className="mt-1 h-3 w-[68%]" />
-                <span className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-white/90">
-                  <Clock3 className="size-4" aria-hidden="true" />
-                  {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
-                </span>
-              </span>
+              {c.posterArt ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={c.posterArt} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
+                  <Badge status={c.status} />
+                </>
+              ) : (
+                <>
+                  {(c.posterThumb || c.thumb) && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
+                  )}
+                  {/* capa em pé: título manuscrito com pincelada laranja sobre a instrutora */}
+                  <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#12132f]/95 via-[#12132f]/30 via-45% to-transparent" />
+                  <Badge status={c.status} />
+                  <span aria-hidden="true" className="absolute inset-x-3.5 bottom-3.5 block">
+                    <span className="font-hand line-clamp-3 -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
+                    <Swoosh className="mt-1 h-3 w-[68%]" />
+                    <span className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-white/90">
+                      <Clock3 className="size-4" aria-hidden="true" />
+                      {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
+                    </span>
+                  </span>
+                </>
+              )}
               <ProgressEdge c={c} />
             </div>
           ) : (
             <div className="relative flex aspect-[2.6/1] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
               {(c.posterThumb || c.thumb) && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="absolute inset-y-0 right-0 h-full w-[62%] object-cover object-[50%_20%]" />
+                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className={cn('absolute inset-y-0 right-0 h-full w-[62%] object-cover', c.posterArt ? 'object-[50%_8%]' : 'object-[50%_20%]')} />
               )}
               <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#1d1e4c] from-40% via-[#1d1e4c]/70 via-55% to-transparent" />
               <span aria-hidden="true" className="relative flex max-w-[62%] flex-col justify-center gap-1.5 p-4">
@@ -274,7 +286,19 @@ export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileDat
               <ProgressEdge c={c} />
             </div>
           )}
-          {variant === 'poster' && c.status === 'in_progress' && <p className="mt-2 text-sm tabular-nums text-fg-muted">{c.completed} de {c.lessons} aulas</p>}
+          {variant === 'poster' && (c.posterArt || c.status === 'in_progress') && (
+            <p className="mt-2 flex items-center gap-1.5 text-sm tabular-nums text-fg-muted">
+              {/* capa desenhada: o tempo vem aqui embaixo, para não cobrir o título da arte */}
+              {c.posterArt && (
+                <>
+                  <Clock3 className="size-4" aria-hidden="true" />
+                  {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
+                </>
+              )}
+              {c.posterArt && c.status === 'in_progress' && ' · '}
+              {c.status === 'in_progress' && `${c.completed} de ${c.lessons} aulas`}
+            </p>
+          )}
         </Link>
         {/* camada com a proporção da capa: o botão de detalhes fica no canto de cima dela */}
         <div className={cn('pointer-events-none absolute inset-x-0 top-0', variant === 'poster' ? 'aspect-[3/4]' : 'aspect-[2.6/1]')}>

@@ -99,6 +99,13 @@
       "when": 1793446331456,
       "tag": "0013_course_trail",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793449181090,
+      "tag": "0014_course_poster",
+      "breakpoints": true
     }
   ]
 }

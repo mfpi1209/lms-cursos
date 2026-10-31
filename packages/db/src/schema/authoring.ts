@@ -18,6 +18,8 @@ export const courses = pgTable(
     latestVersionNumber: integer('latest_version_number').notNull().default(0),
     /** trilha temática da vitrine do aluno (ex.: "Primeiro emprego"); fora do conteúdo versionado: mudar não exige republicar */
     trail: text('trail'),
+    /** capa em pé da vitrine (asset de imagem 3:4, com título e marca já na arte); vazio = quadro do vídeo */
+    posterAssetId: text('poster_asset_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
     archivedAt: timestamp('archived_at', { withTimezone: true }),

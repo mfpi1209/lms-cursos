@@ -22,6 +22,7 @@ export interface LearnerCourse {
   backdrop?: string;
   thumb?: string;
   posterThumb?: string;
+  posterArt?: string;
   presenter?: string;
   lastActivity: number;
   heroVideo?: string;
@@ -79,7 +80,9 @@ export async function loadLearnerCourses(userId: string) {
     const thumb = (lessons[0] && lessonThumbUrl(lessons[0], 0.15)) || presenterImg;
     const nodes = lessons.flatMap((l) => l.graph.nodes as unknown as MediaNode[]);
     const reaction = firstReaction(nodes);
-    const posterThumb = reaction ? `/api/assets/${reaction}/thumb?at=0.5` : thumb;
+    // capa em pé desenhada (com título e marca na arte) vence o quadro do vídeo
+    const posterArt = enr.coursePosterAssetId ? `/api/assets/${enr.coursePosterAssetId}` : undefined;
+    const posterThumb = posterArt ?? (reaction ? `/api/assets/${reaction}/thumb?at=0.5` : thumb);
     const presenter = doc?.branding.presenterName?.trim() || doc?.presentation.avatarName?.trim() || undefined;
     const lastActivity = Math.max(0, ...attempts.map((a) => new Date(a.startedAt).getTime()));
     const decisions = nodes.filter((n) => n.type === 'choice').length;
@@ -96,6 +99,7 @@ export async function loadLearnerCourses(userId: string) {
       ...(tagline ? { summary: tagline } : {}),
       ...(thumb ? { thumb } : {}),
       ...(posterThumb ? { posterThumb } : {}),
+      ...(posterArt ? { posterArt } : {}),
       ...(openingVideo ? { previewSrc: `/api/assets/${openingVideo}` } : {}),
       ...(presenter ? { presenter } : {}),
       lessons: totalLessons,
@@ -107,7 +111,7 @@ export async function loadLearnerCourses(userId: string) {
       cta,
       ...(trail ? { trail } : {}),
     };
-    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, minutes, ...(trail ? { trail } : {}), tile };
+    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, minutes, ...(trail ? { trail } : {}), tile };
   });
   const trails = [...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   return { enrollments, courses, trails };

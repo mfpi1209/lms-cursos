@@ -191,3 +191,8 @@ export async function listWorkspaceTrails(db: DbOrTx, workspaceId: string): Prom
   const rows = await db.selectDistinct({ trail: s.courses.trail }).from(s.courses).where(eq(s.courses.workspaceId, workspaceId));
   return rows.map((r) => r.trail).filter((t): t is string => !!t).sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }
+
+/** Capa em pé do curso na vitrine (asset de imagem); null volta ao quadro do vídeo. Sem republicar. */
+export async function setCoursePoster(db: DbOrTx, courseId: string, assetId: string | null) {
+  await db.update(s.courses).set({ posterAssetId: assetId, updatedAt: new Date() }).where(eq(s.courses.id, courseId));
+}

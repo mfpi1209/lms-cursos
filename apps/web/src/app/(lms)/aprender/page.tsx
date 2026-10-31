@@ -84,12 +84,13 @@ function Collage({ items }: { items: LearnerCourse[] }) {
           className={cn('group relative overflow-hidden rounded-[14px] border-[5px] border-white bg-[#1d1e4c] shadow-[0_22px_45px_-24px_rgba(29,30,76,0.6)] transition-transform duration-300 hover:rotate-0 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent motion-reduce:transition-none', frames[i])}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={c.posterThumb} alt="" className="h-full w-full origin-[50%_8%] scale-[1.25] object-cover object-[50%_12%]" />
-          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-          <span aria-hidden="true" className={cn('absolute block', i === 0 ? 'bottom-5 left-4 right-4' : 'bottom-3 right-4 text-right')}>
+          <img src={c.posterThumb} alt="" className={cn('h-full w-full object-cover', c.posterArt ? 'object-top' : 'origin-[50%_8%] scale-[1.25] object-[50%_12%]')} />
+          {/* a capa desenhada já traz título e marca: na foto grande, sem etiqueta por cima */}
+          {!(c.posterArt && i === 0) && <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />}
+          {!(c.posterArt && i === 0) && <span aria-hidden="true" className={cn('absolute block', i === 0 ? 'bottom-5 left-4 right-4' : 'bottom-3 right-4 text-right')}>
             <span className="font-hand block -rotate-3 text-[34px] font-bold leading-[0.9] text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] sm:text-[40px]">{c.trail ?? c.enr.courseTitle}</span>
             <Swoosh className={cn('mt-1 h-3 w-[70%]', i !== 0 && 'ml-auto')} />
-          </span>
+          </span>}
         </Link>
       ))}
     </div>

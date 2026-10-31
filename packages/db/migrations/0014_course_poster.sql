@@ -1,0 +1,1 @@
+ALTER TABLE "courses" ADD COLUMN "poster_asset_id" text;
