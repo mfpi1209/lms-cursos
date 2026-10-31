@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1.7
+FROM node:22.20.0-bookworm-slim AS base
+# ffmpeg/ffprobe: montagem das cenas dirigidas (H.264/AAC/MP3 via libx264/libmp3lame do Debian).
+# Fontes: os slides usam a Inter empacotada via npm (@fontsource/inter); DejaVu é o fallback do sistema.
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core \
+  && rm -rf /var/lib/apt/lists/*
+ENV FFMPEG_PATH=/usr/bin/ffmpeg FFPROBE_PATH=/usr/bin/ffprobe
+ENV PNPM_HOME=/pnpm PATH=/pnpm:$PATH
+RUN npm i -g pnpm@12.15.0
+WORKDIR /app
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
+COPY apps/worker/package.json apps/worker/
+COPY apps/web/package.json apps/web/
+COPY packages/course-schema/package.json packages/course-schema/
+COPY packages/course-engine/package.json packages/course-engine/
+COPY packages/db/package.json packages/db/
+COPY packages/ai/package.json packages/ai/
+COPY packages/media/package.json packages/media/
+RUN pnpm install --frozen-lockfile --filter @lms/worker... --filter @lms/db...
+COPY packages ./packages
+COPY apps/worker ./apps/worker
+ENV NODE_ENV=production
+RUN groupadd -r app && useradd -r -g app app && chown -R app:app /app
+USER app
+# "migrate" aplica as migrations; "worker" roda o consumidor do outbox.
+CMD ["pnpm", "--filter", "@lms/worker", "start"]

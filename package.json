@@ -1,0 +1,27 @@
+{
+  "name": "lms-cursos",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Construtor interno de cursos práticos, motor de experiências e LMS próprio",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @lms/web dev",
+    "dev:worker": "pnpm --filter @lms/worker dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r --if-present test",
+    "test:e2e": "pnpm --filter @lms/web test:e2e",
+    "test:e2e:headed": "pnpm --filter @lms/web exec playwright test --headed",
+    "db:migrate": "pnpm --filter @lms/db migrate",
+    "db:seed": "pnpm --filter @lms/db seed",
+    "db:seed:e2e": "DATABASE_URL=${E2E_DATABASE_URL:-postgres://localhost:5432/lms_cursos_e2e} pnpm --filter @lms/db exec tsx src/seed/e2e.ts",
+    "db:generate": "pnpm --filter @lms/db generate"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "26.6.5"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "@lms/web",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "web-seguro",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "MEDIA_SIMULATION=1",
+        "AI_PROVIDER=fake",
+        "HEYGEN_API_KEY=",
+        "ELEVENLABS_API_KEY=",
+        "OPENAI_API_KEY=",
+        "ANTHROPIC_API_KEY=",
+        "BETTER_AUTH_URL=http://localhost:3010",
+        "NEXT_PUBLIC_APP_URL=http://localhost:3010",
+        "pnpm",
+        "--filter",
+        "@lms/web",
+        "exec",
+        "next",
+        "dev",
+        "--port",
+        "3010"
+      ],
+      "port": 3010
+    }
+  ]
+}

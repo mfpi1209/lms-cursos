@@ -1,0 +1,34 @@
+# syntax=docker/dockerfile:1.7
+FROM node:22.20.0-bookworm-slim AS base
+ENV PNPM_HOME=/pnpm PATH=/pnpm:$PATH
+RUN npm i -g pnpm@12.15.0
+
+FROM base AS deps
+WORKDIR /app
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json .npmrc ./
+COPY apps/web/package.json apps/web/
+COPY apps/worker/package.json apps/worker/
+COPY packages/course-schema/package.json packages/course-schema/
+COPY packages/course-engine/package.json packages/course-engine/
+COPY packages/db/package.json packages/db/
+COPY packages/ai/package.json packages/ai/
+COPY packages/media/package.json packages/media/
+RUN pnpm install --frozen-lockfile
+
+FROM deps AS build
+WORKDIR /app
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm --filter @lms/web build
+
+FROM node:22.20.0-bookworm-slim AS runner
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
+RUN groupadd -r app && useradd -r -g app app
+COPY --from=build --chown=app:app /app/apps/web/.next/standalone ./
+COPY --from=build --chown=app:app /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build --chown=app:app /app/apps/web/public ./apps/web/public
+USER app
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+CMD ["node", "apps/web/server.js"]

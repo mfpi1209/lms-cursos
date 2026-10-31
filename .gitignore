@@ -1,0 +1,23 @@
+node_modules
+.pnpm-store
+dist
+.next
+.next-e2e
+out
+coverage
+playwright-report
+test-results
+.env
+.env.*.local
+*.log
+.DS_Store
+.data
+
+# rastros do navegador do Playwright MCP (QA)
+.playwright-mcp/
+
+# capturas e vídeos de QA (ficam só no disco; os relatórios .md entram)
+docs/qa/**/*.png
+docs/qa/**/*.jpg
+docs/qa/**/*.mp4
+docs/qa/**/*.webm
