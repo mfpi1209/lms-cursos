@@ -20,7 +20,7 @@ const norm = (t: string) => t.toLocaleLowerCase('pt-BR').normalize('NFD').replac
 export function Catalog({ items, trails, query }: { items: CatalogItem[]; trails: string[]; query?: string }) {
   const [trail, setTrail] = React.useState<string | null>(null);
   const q = norm(query?.trim() ?? '');
-  const visible = items.filter((i) => (!trail || i.trail === trail) && (!q || norm(`${i.tile.title} ${i.tile.presenter ?? ''} ${i.trail ?? ''}`).includes(q)));
+  const visible = items.filter((i) => (!trail || i.trail === trail) && (!q || norm(`${i.tile.title} ${i.tile.fullTitle} ${i.tile.presenter ?? ''} ${i.trail ?? ''}`).includes(q)));
   const open = visible.filter((i) => !i.done).sort((a, b) => Number(b.started) - Number(a.started));
   const short = visible.filter((i) => !i.done && i.tile.minutes > 0 && i.tile.minutes <= 12);
   const done = visible.filter((i) => i.done);
@@ -28,9 +28,9 @@ export function Catalog({ items, trails, query }: { items: CatalogItem[]; trails
     `inline-flex min-h-10 items-center rounded-full px-4 text-[15px] font-medium transition-colors focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent ${active ? 'bg-accent-fill text-accent-fill-fg shadow-[0_8px_18px_-10px_var(--im-accent)]' : 'border border-line bg-surface text-fg hover:border-fg/30'}`;
 
   return (
-    <div id="cursos" className="scroll-mt-24 space-y-9">
+    <div id="cursos" tabIndex={-1} aria-label="Catálogo de cursos" role="region" className="scroll-mt-24 space-y-9 outline-none">
       <div role="group" aria-label="Filtrar por trilha" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
-        <button type="button" aria-pressed={!trail} onClick={() => setTrail(null)} className={chip(!trail)}>
+        <button type="button" aria-pressed={!trail} onClick={() => setTrail(null)} className={`${chip(!trail)} shrink-0`}>
           Todos
         </button>
         {trails.map((t) => (

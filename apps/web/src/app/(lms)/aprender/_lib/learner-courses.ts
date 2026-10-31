@@ -2,6 +2,7 @@ import { getDb, learning, publishing } from '@lms/db';
 import { allLessons } from '@lms/course-schema';
 import { lessonThumbUrl } from '../_components/learner-ui';
 import type { CourseTileData } from '../_components/course-tile';
+import { shortTitleFor } from './short-titles';
 
 type Enrollment = Awaited<ReturnType<typeof learning.listEnrollmentsForUser>>[number];
 
@@ -30,6 +31,11 @@ export interface LearnerCourse {
   decisions: number;
   minutes: number;
   trail?: string;
+  /** título de apresentação (capas, vitrine, retomada); o canônico fica em `enr.courseTitle` */
+  shortTitle: string;
+  /** próxima aula (a em andamento ou a primeira não concluída), base 0; undefined quando concluído */
+  nextLessonIndex?: number;
+  nextLessonTitle?: string;
   tile: CourseTileData;
 }
 
@@ -72,7 +78,7 @@ export async function loadLearnerCourses(userId: string) {
     const nextLesson = isDone ? undefined : (inProgress ?? lessons.find((l) => !completedSet.has(l.id)));
     const nextIndex = nextLesson ? lessons.findIndex((l) => l.id === nextLesson.id) : -1;
     const startHref = nextLesson ? `/aprender/${enr.id}/aulas/${nextLesson.id}` : `/aprender/${enr.id}`;
-    const cta = isDone ? 'Ver o curso' : inProgress ? `Continuar aula ${nextIndex + 1}` : started ? `Começar aula ${nextIndex + 1}` : 'Começar';
+    const cta = isDone ? 'Rever o curso' : inProgress ? `Continuar aula ${nextIndex + 1}` : started ? `Começar aula ${nextIndex + 1}` : 'Começar';
     const rail = isDone ? 100 : totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
     const lessonsCopy = totalLessons > 0 ? `${totalLessons} ${totalLessons === 1 ? 'aula' : 'aulas'} · ${completedLessons} ${completedLessons === 1 ? 'concluída' : 'concluídas'}` : null;
     const tagline = doc?.learnerSummary?.trim() || doc?.branding.tagline?.trim() || doc?.description?.trim() || undefined;
@@ -91,11 +97,13 @@ export async function loadLearnerCourses(userId: string) {
     const heroVideo = firstVideo(nextLesson ?? lessons[0]);
     const openingVideo = firstVideo(lessons[0]);
     const trail = enr.courseTrail ?? undefined;
+    const shortTitle = shortTitleFor(enr.courseId, enr.courseTitle);
     const tile: CourseTileData = {
       id: enr.id,
       href: startHref,
       chaptersHref: `/aprender/${enr.id}`,
-      title: enr.courseTitle,
+      title: shortTitle,
+      fullTitle: enr.courseTitle,
       ...(tagline ? { summary: tagline } : {}),
       ...(thumb ? { thumb } : {}),
       ...(posterThumb ? { posterThumb } : {}),
@@ -107,11 +115,13 @@ export async function loadLearnerCourses(userId: string) {
       minutes,
       decisions,
       lessonTitles: lessons.map((l) => l.title),
+      lessonDone: done,
+      ...(nextIndex >= 0 ? { nextLessonIndex: nextIndex } : {}),
       status: isDone ? 'completed' : started ? 'in_progress' : 'new',
       cta,
       ...(trail ? { trail } : {}),
     };
-    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, minutes, ...(trail ? { trail } : {}), tile };
+    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, minutes, ...(trail ? { trail } : {}), shortTitle, ...(nextLesson && nextIndex >= 0 ? { nextLessonIndex: nextIndex, nextLessonTitle: nextLesson.title } : {}), tile };
   });
   const trails = [...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   return { enrollments, courses, trails };
