@@ -6,6 +6,7 @@ import { BookOpen, Check, Clock3, Info, ListVideo, Play, Sparkles, X } from 'luc
 import { cn } from '@/lib/utils';
 import { formatCourseVideo } from '@lms/course-schema';
 import { videoShort, videoSpoken, type CourseVideo } from '../_lib/video-text';
+import type { CoverArt } from '../_lib/course-art';
 
 export type { CourseVideo };
 
@@ -19,16 +20,21 @@ export interface CourseTileData {
   fullTitle: string;
   summary?: string;
   thumb?: string;
-  /** quadro com a instrutora centrada (reação), para a capa em pé sem arte */
+  /** quadro com a instrutora centrada (reação): retrato de reserva quando o curso não tem arte */
   posterThumb?: string;
-  /** capa em pé desenhada (título e marca já na arte): mostrada inteira, sem texto por cima */
+  /** capa em pé antiga (título na arte): só reserva */
   posterArt?: string;
-  /** imagem do cartão deitado: banner largo do instrutor, retrato no estúdio ou quadro do vídeo (nessa ordem); `fallback` entra se a imagem não carregar */
+  /** imagem antiga do cartão deitado (banner, retrato do estúdio ou quadro do vídeo): reserva quando o curso não tem arte */
   wide?: { src: string; kind: 'banner' | 'portrait' | 'frame'; fallback?: string };
-  /** vídeo de abertura do curso (prévia muda na ficha) */
+  /** arte da vitrine (WebP em `public/capas`, sem texto): título e dados são HTML sobre o cartão */
+  art?: CoverArt;
+  /** vídeo de abertura do curso (não usado nos cartões: sem vídeo automático na vitrine) */
   previewSrc?: string;
   presenter?: string;
+  /** aulas obrigatórias (base do progresso: "x de y concluídas"); para MOSTRAR o total use `lessonsTotal` */
   lessons: number;
+  /** TODAS as aulas da versão matriculada (inclusive as opcionais de quem já concluiu): é o número dos cartões e da ficha */
+  lessonsTotal: number;
   completed: number;
   /** tempo de vídeo do percurso publicado (segundos; faixa pelos ramos) */
   video: CourseVideo;
@@ -51,7 +57,7 @@ export interface CourseTileData {
 /** "Novo": sinal discreto de conteúdo novo num curso concluído (não vira pendente, nem muda a %). */
 export function NewContentChip({ news, className }: { news: NonNullable<CourseTileData['news']>; className?: string }) {
   return (
-    <span data-testid="new-content-chip" className={cn('inline-flex items-center gap-1 rounded-full bg-white py-0.5 px-2.5 text-xs font-bold text-[#1d1e4c]', className)}>
+    <span data-testid="new-content-chip" className={cn('inline-flex items-center gap-1 rounded-full bg-white px-2 py-1 text-xs font-bold leading-4 text-[#1d1e4c]', className)}>
       <Sparkles className="size-3.5" aria-hidden="true" />
       Novo
       <span className="sr-only">: conteúdo novo disponível{news.count > 1 ? ` (${news.count} aulas)` : ''}</span>
@@ -66,112 +72,101 @@ export function videoLabel(v: CourseVideo, withSuffix = true): string | null {
   return t ? (withSuffix ? `${t} de vídeo` : t) : null;
 }
 
-const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
 const aulas = (n: number) => `${n} ${n === 1 ? 'aula' : 'aulas'}`;
 
 /** "4 minutos de vídeo, 2 aulas, 6 decisões" (texto corrido, para rótulos acessíveis) */
-export function courseFacts(c: Pick<CourseTileData, 'video' | 'lessons' | 'decisions'>): string {
-  return [videoSpoken(c.video) ?? (c.video.unavailable ? 'duração indisponível' : null), aulas(c.lessons), c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter(Boolean).join(', ');
+export function courseFacts(c: Pick<CourseTileData, 'video' | 'lessonsTotal' | 'decisions'>): string {
+  return [videoSpoken(c.video) ?? (c.video.unavailable ? 'duração indisponível' : null), aulas(c.lessonsTotal), c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter(Boolean).join(', ');
 }
 
-/** Vídeo mudo em laço curto (prévia): só toca com movimento permitido; pausa fora da tela. */
-export function PreviewVideo({ src, poster, className, startAt = 2, seconds = 12, muted = true, onPlaying }: { src: string; poster?: string; className?: string; startAt?: number; seconds?: number; muted?: boolean; onPlaying?: () => void }) {
-  const ref = React.useRef<HTMLVideoElement>(null);
+const percentOf = (c: Pick<CourseTileData, 'status' | 'lessons' | 'completed'>) => (c.status === 'completed' ? 100 : c.lessons > 0 ? Math.round((c.completed / c.lessons) * 100) : 0);
+
+/**
+ * Imagem de um cartão ou quadro: a arte da vitrine e, se ela não carregar (ou o curso não tiver arte), os retratos de
+ * reserva em ordem; sem nenhum, um fundo marinho com a inicial. O quadro tem proporção fixa: nada muda de lugar quando a
+ * imagem chega ou falha. Só a primeira imagem da página pede prioridade (`priority`); as demais são preguiçosas.
+ */
+export function CoverImage({ art, fallbacks = [], format, title, priority = false, className, position }: { art?: CoverArt; fallbacks?: Array<string | undefined>; format: 'portrait' | 'landscape' | 'wide'; title: string; priority?: boolean; className?: string; position?: string }) {
+  const sources = React.useMemo(() => [...(art ? [art.src] : []), ...fallbacks.filter((s): s is string => !!s)], [art, fallbacks]);
+  const [i, setI] = React.useState(0);
+  const ref = React.useRef<HTMLImageElement>(null);
   React.useEffect(() => {
-    const v = ref.current;
-    if (!v || reducedMotion()) return;
-    const io = new IntersectionObserver(([e]) => {
-      if (e?.isIntersecting) void v.play().catch(() => undefined);
-      else v.pause();
-    }, { threshold: 0.35 });
-    io.observe(v);
-    return () => io.disconnect();
+    // erro que aconteceu antes de a página hidratar
+    const el = ref.current;
+    if (el && el.complete && el.naturalWidth === 0) setI((n) => n + 1);
   }, []);
-  React.useEffect(() => {
-    if (ref.current) ref.current.muted = muted;
-  }, [muted]);
+  const src = sources[i];
+  if (!src) {
+    return (
+      <span aria-hidden="true" data-testid="cover-missing" className={cn('absolute inset-0 -z-[2] grid place-items-center bg-[image:radial-gradient(60%_70%_at_65%_40%,#2a2c64_0%,#171840_70%)]', className)}>
+        <span className="text-[72px] font-bold leading-none text-white/15">{title.trim().charAt(0).toLocaleUpperCase('pt-BR')}</span>
+      </span>
+    );
+  }
+  const native = i === 0 && !!art;
+  const pos = native && art ? (position ?? art.position[format]) : '50% 20%';
   return (
-    <video
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       ref={ref}
-      src={`${src}#t=${startAt}`}
-      poster={poster}
-      muted={muted}
-      playsInline
-      preload="metadata"
-      aria-hidden="true"
-      tabIndex={-1}
-      className={className}
-      onPlaying={onPlaying}
-      onTimeUpdate={(e) => {
-        const v = e.currentTarget;
-        if (v.currentTime > startAt + seconds) v.currentTime = startAt;
-      }}
-      onEnded={(e) => {
-        e.currentTarget.currentTime = startAt;
-        void e.currentTarget.play().catch(() => undefined);
-      }}
+      key={src}
+      src={src}
+      alt=""
+      width={native ? art!.width : format === 'landscape' ? 1448 : 1086}
+      height={native ? art!.height : format === 'landscape' ? 1086 : 1448}
+      loading={priority ? 'eager' : 'lazy'}
+      {...(priority ? { fetchPriority: 'high' as const } : {})}
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={() => setI((n) => n + 1)}
+      className={cn('dna-card__img', className)}
+      style={{ objectPosition: pos }}
     />
   );
 }
 
-/** Pincelada laranja sob um título manuscrito. */
-export function Swoosh({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 18" preserveAspectRatio="none" aria-hidden="true" className={className}>
-      <path d="M3 12c38-6 92-9 194-5" fill="none" stroke="var(--im-accent)" strokeWidth="6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/** "🕒 6 min | 📖 2 aulas": ícones e texto curto para os olhos; o texto por extenso fica para o leitor de tela. */
-function Facts({ c, className, compact }: { c: Pick<CourseTileData, 'video' | 'lessons'>; className?: string; compact?: boolean }) {
+/** "🕒 6 min · 📖 2 aulas (· 1 de 2 concluídas)": ícones e texto curto para os olhos; o texto por extenso fica para o leitor de tela. */
+function CardMeta({ c }: { c: CourseTileData }) {
   const short = videoShort(c.video);
   const spoken = videoSpoken(c.video);
   return (
-    <span className={cn('flex flex-wrap items-center gap-y-0.5 text-[13px] leading-tight tabular-nums', compact ? 'gap-x-1.5 text-[12px] sm:gap-x-2 sm:text-[13px]' : 'gap-x-2', className)}>
+    <ul className="dna-card__meta" data-testid="card-meta">
       {short && (
-        <>
-          <span aria-hidden="true" className="inline-flex items-center gap-1 sm:gap-1.5">
-            <Clock3 className={cn('shrink-0', compact ? 'size-3.5 sm:size-4' : 'size-4')} />
-            {short}
-          </span>
-          <span className="sr-only">{spoken}, </span>
-          <span aria-hidden="true" className="opacity-50">|</span>
-        </>
+        <li>
+          <Clock3 className="size-4 shrink-0" aria-hidden="true" />
+          <span aria-hidden="true">{short}</span>
+          <span className="sr-only">{spoken}</span>
+        </li>
       )}
-      <span aria-hidden="true" className="inline-flex items-center gap-1.5">
-        <BookOpen className={cn('shrink-0', compact ? 'size-3.5 sm:size-4' : 'size-4')} />
-        {aulas(c.lessons)}
-      </span>
-      <span className="sr-only">{aulas(c.lessons)}.</span>
+      <li>
+        <BookOpen className="size-4 shrink-0" aria-hidden="true" />
+        {aulas(c.lessonsTotal)}
+      </li>
+    </ul>
+  );
+}
+
+/** Barra de progresso na borda de baixo do cartão: só a fração REAL concluída (curso novo não tem barra). */
+function ProgressEdge({ c }: { c: Pick<CourseTileData, 'status' | 'lessons' | 'completed'> }) {
+  const pct = percentOf(c);
+  if (c.status === 'new' || pct <= 0) return null;
+  return (
+    <span aria-hidden="true" className="dna-card__progress" data-testid="card-progress">
+      <span style={{ width: `${Math.min(100, pct)}%` }} />
     </span>
   );
 }
 
-const percentOf = (c: CourseTileData) => (c.status === 'completed' ? 100 : c.lessons > 0 ? Math.round((c.completed / c.lessons) * 100) : 0);
-
-function ProgressEdge({ c }: { c: CourseTileData }) {
-  if (c.status === 'new') return null;
+/** Quadro 16:9 da ficha: a arte (corte da parte de cima, onde está o rosto) ou o retrato de reserva. */
+function DetailsMedia({ c, className }: { c: CourseTileData; className?: string }) {
   return (
-    <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-white/25">
-      <span className="block h-full bg-[#FF7A08]" style={{ width: `${Math.max(4, percentOf(c))}%` }} />
-    </span>
-  );
-}
-
-/** Imagem da ficha: prévia em vídeo da abertura (com movimento permitido) ou o quadro do vídeo. */
-function DetailsMedia({ c, video, className }: { c: CourseTileData; video: boolean; className?: string }) {
-  return (
-    <div className={cn('relative shrink-0 overflow-hidden bg-[var(--im-media-bg)]', className)}>
-      {video && c.previewSrc && !reducedMotion() ? (
-        <PreviewVideo src={c.previewSrc} poster={c.thumb} className="h-full w-full object-cover object-[50%_30%]" />
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        c.thumb && <img src={c.thumb} alt="" className="h-full w-full object-cover object-[50%_30%]" />
+    <div className={cn('relative isolate shrink-0 overflow-hidden bg-[#1d1e4c]', className)}>
+      <CoverImage art={c.art} fallbacks={[c.thumb, c.wide?.src]} format="wide" title={c.title} />
+      {c.status !== 'new' && (
+        <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-white/25">
+          <span className="block h-full bg-[#FF7A08]" style={{ width: `${percentOf(c)}%` }} />
+        </span>
       )}
-      <ProgressEdge c={c} />
     </div>
   );
 }
@@ -193,12 +188,12 @@ function DetailsActions({ c, first }: { c: CourseTileData; first?: React.Ref<HTM
 }
 
 /**
- * Corpo da ficha (igual no computador e no celular), sem cortar nada: título curto e nome completo,
- * instrutor, duração · aulas · decisões, progresso, descrição, todas as aulas (com o estado de cada uma) e trilha.
+ * Corpo da ficha, sem cortar nada: título curto e nome completo, instrutor, duração · aulas · decisões, progresso,
+ * descrição, todas as aulas (com o estado de cada uma) e trilha.
  */
 function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string }) {
   const pct = percentOf(c);
-  const facts = [videoLabel(c.video), `${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}`, c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter((x): x is string => !!x);
+  const facts = [videoLabel(c.video), aulas(c.lessonsTotal), c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter((x): x is string => !!x);
   return (
     <div className="space-y-4">
       <div>
@@ -219,7 +214,7 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
       </div>
       <div className="space-y-1.5">
         <div role="progressbar" aria-label="Aulas concluídas" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-valuetext={`${c.completed} de ${c.lessons} aulas concluídas`} className="h-1.5 overflow-hidden rounded-full bg-fg/10">
-          <span className="block h-full rounded-full bg-accent-fill" style={{ width: `${c.status === 'new' ? 0 : Math.max(4, pct)}%` }} />
+          <span className="block h-full rounded-full bg-accent-fill" style={{ width: `${c.status === 'new' ? 0 : pct}%` }} />
         </div>
         <p className="text-sm text-fg-muted">
           {c.status === 'completed' ? 'Curso concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas concluídas` : 'Você ainda não começou'}
@@ -264,272 +259,128 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
 }
 
 /**
- * Imagem do cartão deitado, à direita. Banner largo do instrutor: cobre o cartão todo (o marinho já está na arte).
- * Retrato ou quadro do vídeo: ocupa a direita e funde no marinho pelo degradê do cartão. O retrato do estúdio vem
- * de um endereço que pode expirar: se não carregar, entra o quadro do vídeo de abertura.
+ * Ficha do curso numa janela (dialog nativo): título, descrição, duração e aulas reais e a ação Começar/Continuar/Rever.
+ * Abre por clique, toque ou teclado no botão ⓘ; Esc ou o X fecham e o foco volta ao botão. Só existe enquanto aberta
+ * (nenhuma imagem da ficha carrega antes de alguém abrir).
  */
-function WideImage({ c }: { c: CourseTileData }) {
-  const w = c.wide;
-  const [failed, setFailed] = React.useState(false);
-  const ref = React.useRef<HTMLImageElement>(null);
+function DetailsDialog({ c, headingId, onClose }: { c: CourseTileData; headingId: string; onClose: () => void }) {
+  const ref = React.useRef<HTMLDialogElement>(null);
   React.useEffect(() => {
-    // erro que aconteceu antes de a página hidratar
-    const el = ref.current;
-    if (el && el.complete && el.naturalWidth === 0) setFailed(true);
+    const d = ref.current;
+    // sem `close()` na limpeza: o StrictMode (dev) roda a limpeza logo depois de montar e o evento `close` desmontaria a ficha
+    if (d && !d.open) d.showModal();
   }, []);
-  if (!w) return null;
-  const useFallback = failed && !!w.fallback;
-  if (failed && !w.fallback) return null;
-  const src = useFallback ? w.fallback! : w.src;
-  const kind = useFallback ? 'frame' : w.kind;
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <dialog
       ref={ref}
-      src={src}
-      alt=""
-      loading="lazy"
-      referrerPolicy="no-referrer"
-      onError={() => setFailed(true)}
-      className={cn(
-        'absolute -z-[2] object-cover',
-        kind === 'banner' ? 'inset-0 h-full w-full object-right' : 'inset-y-0 right-0 h-full w-[68%]',
-        kind === 'portrait' && 'object-[50%_18%]',
-        kind === 'frame' && 'object-[50%_20%]',
-      )}
-    />
+      aria-labelledby={headingId}
+      data-testid="course-details"
+      className="m-auto max-h-[min(92dvh,860px)] w-[min(560px,calc(100vw-24px))] overflow-hidden rounded-[18px] border border-line bg-surface p-0 text-fg shadow-2xl backdrop:bg-black/60 open:flex open:flex-col max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:pb-[env(safe-area-inset-bottom)]"
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) e.currentTarget.close();
+      }}
+    >
+      <div className="relative shrink-0">
+        <DetailsMedia c={c} className="aspect-video max-h-[30dvh] w-full" />
+        <form method="dialog" className="absolute right-2 top-2">
+          <button aria-label="Fechar" className="grid size-11 place-items-center rounded-full bg-black/60 text-white hover:bg-black/75 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white">
+            <X className="size-5" aria-hidden="true" />
+          </button>
+        </form>
+      </div>
+      <div className="shrink-0 border-b border-line px-5 py-3">
+        <DetailsActions c={c} />
+      </div>
+      <div className="min-h-0 overflow-y-auto overscroll-contain p-5">
+        <DetailsBody c={c} headingId={headingId} />
+      </div>
+    </dialog>
   );
 }
 
-export type TileVariant = 'poster' | 'wide';
+export type TileVariant = 'landscape' | 'portrait';
 
 /**
- * Curso na fileira da vitrine. Computador: o mouse parado (ou o foco do teclado) no cartão abre a ficha
- * flutuante por cima, sem mexer no layout; dá para levar o ponteiro até ela; Esc fecha. Celular e botão ⓘ:
- * a mesma ficha completa numa janela. O botão ⓘ é irmão do link do cartão (nada interativo aninhado).
+ * Curso na vitrine: cartão com a arte ao fundo e TODO o conteúdo em HTML dentro dele (título inteiro, instrutor, duração,
+ * aulas, estado e progresso reais). `landscape` = 4:3 (seções de 3 cursos; as capas em pé são cortadas na parte de cima,
+ * onde está o rosto); `portrait` = 3:4 (fileira de 5).
+ *
+ * O título é o link e cobre o cartão inteiro (`after:` esticado); o botão ⓘ é IRMÃO do link, em camada própria, e abre a
+ * ficha completa por clique, toque ou teclado (sem popover por hover). O mouse só levanta o cartão (ponteiro fino).
  */
-export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileData; testId?: string; variant?: TileVariant }) {
-  const liRef = React.useRef<HTMLLIElement>(null);
-  const cardRef = React.useRef<HTMLDivElement>(null);
-  const linkRef = React.useRef<HTMLAnchorElement>(null);
-  const panelRef = React.useRef<HTMLDivElement>(null);
-  const dialogRef = React.useRef<HTMLDialogElement>(null);
-  const timer = React.useRef<number | undefined>(undefined);
-  const [anchor, setAnchor] = React.useState<DOMRect | null>(null);
-  const [pos, setPos] = React.useState<{ left: number; top: number; width: number; maxHeight: number } | null>(null);
-  React.useEffect(() => () => window.clearTimeout(timer.current), []);
-
-  const openSoon = (delay: number) => {
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => cardRef.current && setAnchor(cardRef.current.getBoundingClientRect()), delay);
-  };
-  const close = React.useCallback(() => {
-    window.clearTimeout(timer.current);
-    setAnchor(null);
-    setPos(null);
-  }, []);
-
-  // posição: centrada no cartão, presa à janela; a altura máxima vem da janela (o conteúdo rola por dentro)
-  React.useLayoutEffect(() => {
-    if (!anchor) return;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const width = Math.min(vw - 24, Math.max(380, anchor.width * 1.45));
-    const left = Math.max(12, Math.min(vw - width - 12, anchor.left + anchor.width / 2 - width / 2));
-    const maxHeight = vh - 24;
-    const natural = panelRef.current?.scrollHeight ?? 520;
-    const height = Math.min(natural, maxHeight);
-    const top = Math.max(12, Math.min(vh - 12 - height, anchor.top - anchor.height * 0.12));
-    setPos({ left, top, width, maxHeight });
-  }, [anchor]);
-
-  React.useEffect(() => {
-    if (!anchor) return;
-    const onScroll = (e: Event) => {
-      // rolar dentro da ficha não fecha; rolar a página ou a fileira, sim
-      if (e.target instanceof Node && panelRef.current?.contains(e.target)) return;
-      close();
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      const inside = liRef.current?.contains(document.activeElement);
-      close();
-      if (inside) linkRef.current?.focus();
-    };
-    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    window.addEventListener('resize', close);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('scroll', onScroll, { capture: true });
-      window.removeEventListener('resize', close);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [anchor, close]);
-
+export function CourseTile({ c, testId, variant = 'landscape', priority = false }: { c: CourseTileData; testId?: string; variant?: TileVariant; priority?: boolean }) {
+  const [open, setOpen] = React.useState(false);
+  const infoRef = React.useRef<HTMLButtonElement>(null);
   const headingId = `tile-${c.id}`;
-
   const done = c.status === 'completed';
-  const lessonsDone = c.status === 'in_progress' ? `${c.completed} de ${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}` : null;
+  const inProgress = c.status === 'in_progress';
+  const portrait = variant === 'portrait';
+  // a arte deitada (4:3) preenche o cartão e já traz o roxo embaixo; a em pé cortada em 4:3 perde o roxo e ganha um véu leve
+  const nativeFit = !!c.art && ((variant === 'landscape' && c.art.format === 'landscape') || (variant === 'portrait' && c.art.format === 'portrait'));
+  const fallbacks = React.useMemo(() => [c.posterThumb, c.wide?.src, c.thumb, c.wide?.fallback], [c.posterThumb, c.wide?.src, c.wide?.fallback, c.thumb]);
+  const status = done ? 'Concluído' : inProgress ? `Em andamento, ${c.completed} de ${c.lessons} aulas concluídas` : 'Ainda não começou';
 
   return (
-    <li
-      ref={liRef}
-      className={variant === 'poster' ? 'flex w-[44vw] max-w-[260px] shrink-0 snap-start sm:w-[220px] xl:w-[240px] 2xl:w-[260px]' : 'flex w-[85vw] max-w-[440px] shrink-0 snap-start sm:w-[380px] xl:w-[420px]'}
-      onMouseEnter={() => finePointer() && openSoon(450)}
-      onMouseLeave={close}
-      onFocus={(e) => {
-        // foco do teclado no cartão abre a ficha (a ficha fica dentro do <li>: a ordem do Tab segue a tela)
-        const t = e.target as Element;
-        if (finePointer() && t === linkRef.current && t.matches(':focus-visible')) openSoon(250);
-      }}
-      onBlur={(e) => {
-        if (!liRef.current?.contains(e.relatedTarget as Node | null)) close();
-      }}
-    >
-      <div ref={cardRef} className="relative w-full">
-        {/* um só controle por cartão: o link é o cartão inteiro e o "botão" é só visual (nada interativo dentro dele) */}
-        <Link
-          ref={linkRef}
-          href={c.href}
-          data-testid={testId}
-          className="group/cc block h-full rounded-[16px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
-        >
-          {variant === 'poster' ? (
-            <div className="relative flex h-full flex-col overflow-hidden rounded-[16px] bg-[#1d1e4c] text-white shadow-[0_22px_45px_-30px_rgba(29,30,76,0.6)] ring-1 ring-inset ring-white/10 transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
-              <div className="relative aspect-[3/4] overflow-hidden">
-                {c.news && <NewContentChip news={c.news} className="absolute left-2.5 top-2.5 z-10 shadow" />}
-                {c.posterArt ? (
-                  // a arte é 3:4 como o cartão: aparece inteira (título, nome e rosto), sem texto por cima
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={c.posterArt} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
-                ) : (
-                  <>
-                    {(c.posterThumb || c.thumb) && (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
-                    )}
-                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1d1e4c] via-[#1d1e4c]/30 via-45% to-transparent" />
-                    <span aria-hidden="true" className="absolute inset-x-3.5 bottom-2 block">
-                      <span className="font-hand line-clamp-3 block -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
-                      <Swoosh className="mt-1 h-3 w-[68%]" />
-                    </span>
-                  </>
-                )}
-              </div>
-              {/* dentro do cartão, embaixo do título: instrutor e a linha de duração e aulas */}
-              <span className="relative flex flex-1 flex-col justify-center gap-1 px-3 pb-3.5 pt-2.5 sm:px-3.5">
-                <span className="sr-only">{c.title}. </span>
-                {/* a capa desenhada já traz "com X" na arte: aqui só para leitor de tela (sem repetir na tela) */}
-                {c.presenter && <span className={c.posterArt ? 'sr-only' : 'text-[13px] leading-tight text-[#d9d8f5]'}>com {c.presenter}</span>}
-                <Facts c={c} className="text-white" compact />
-                <span className="sr-only">
-                  {done ? 'Concluído. ' : c.status === 'in_progress' ? `${lessonsDone} concluídas. ` : 'Novo. '}
-                  {c.cta}.
-                </span>
-              </span>
-              <ProgressEdge c={c} />
-            </div>
-          ) : (
-            <div className="relative isolate flex h-full min-h-[184px] overflow-hidden rounded-[16px] bg-[#1d1e4c] text-white shadow-[0_22px_45px_-30px_rgba(29,30,76,0.6)] ring-1 ring-inset ring-white/10 transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0 xl:min-h-[190px]">
-              <WideImage c={c} />
-              {/* a foto funde com o marinho: o texto fica sempre sobre marinho (contraste AA) */}
-              <div aria-hidden="true" className={cn('absolute inset-0 -z-[1] bg-gradient-to-r from-[#1d1e4c] via-[#1d1e4c]/90 to-[#1d1e4c]/0', c.wide?.kind === 'banner' ? 'from-30% via-48%' : 'from-38% via-56%')} />
-              {c.news && <NewContentChip news={c.news} className="absolute right-3 top-3 z-10 shadow" />}
+    <li className="dna-li" data-status={c.status}>
+      <div className={cn('dna-card', portrait ? 'dna-card--portrait' : 'dna-card--landscape')}>
+        <CoverImage art={c.art} fallbacks={fallbacks} format={variant} title={c.title} priority={priority} />
+        <span aria-hidden="true" className={cn('dna-card__scrim', nativeFit ? 'dna-card__scrim--soft' : 'dna-card__scrim--full')} />
+        <div className={cn('dna-card__box', portrait && 'dna-card__box--portrait')}>
+          {/* estado: só dado real (concluído, em andamento, conteúdo novo); curso que não começou não tem selo */}
+          {(done || inProgress || c.news) && (
+            <div className="dna-card__top">
               {done && (
-                <span className="absolute left-4 top-3.5 inline-flex items-center gap-1 rounded-full bg-[#FF7A08] py-0.5 pl-2 pr-3 text-xs font-bold text-[#1d1e4c]">
-                  <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+                <span className="dna-card__badge" data-testid="card-done">
+                  <span className="grid size-4 place-items-center rounded-full bg-[#FF7A08] text-[#1d1e4c]">
+                    <Check className="size-3" strokeWidth={3.5} aria-hidden="true" />
+                  </span>
                   Concluído
                 </span>
               )}
-              <span className={cn('relative flex w-[70%] max-w-[300px] flex-col justify-center gap-1.5 px-4 py-3.5 sm:w-[66%] sm:px-5', done && 'pt-11')}>
-                <span className="line-clamp-2 text-[18px] font-extrabold leading-[1.1] text-white [text-wrap:balance] sm:text-[20px]">{c.title}</span>
-                {c.presenter && <span className="text-[13px] leading-tight text-[#d9d8f5]">com {c.presenter}</span>}
-                <Facts c={c} className="text-white/90" />
-                <span className="sr-only">
-                  {done ? 'Concluído. ' : c.status === 'in_progress' ? `${lessonsDone} concluídas. ` : 'Novo. '}
-                </span>
-                <span className="mt-1 flex items-center gap-2.5 sm:gap-3">
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold sm:px-4 sm:text-[14px]',
-                      done ? 'border-2 border-white/85 text-white' : 'bg-[#FF7A08] text-[#1d1e4c] shadow-[0_10px_24px_-12px_#FF7A08]',
-                    )}
-                  >
-                    <Play className="size-3.5 fill-current" />
-                    {done ? 'Rever' : c.status === 'in_progress' ? 'Continuar' : 'Começar'}
+              {inProgress && (
+                <span className="dna-card__badge" data-testid="card-progress-badge">
+                  <span className="sr-only md:not-sr-only">Em andamento</span>
+                  <span className="font-semibold tabular-nums text-[#ffb070]">
+                    {c.completed}/{c.lessons}
+                    <span className="sr-only"> aulas concluídas{' '}(em andamento)</span>
                   </span>
-                  <span className="sr-only">{c.cta}.</span>
-                  {lessonsDone && (
-                    <span aria-hidden="true" className="whitespace-nowrap text-[12px] tabular-nums text-white/90 sm:text-[13px]">
-                      {lessonsDone}
-                    </span>
-                  )}
                 </span>
-              </span>
-              <ProgressEdge c={c} />
+              )}
+              {c.news && <NewContentChip news={c.news} />}
             </div>
           )}
-        </Link>
-        {/* o botão ⓘ é irmão do link (não fica dentro dele): abre a ficha completa, também no celular */}
-        <button
-          type="button"
-          onClick={() => {
-            close();
-            dialogRef.current?.showModal();
-          }}
-          aria-haspopup="dialog"
-          aria-label={`Detalhes de ${c.title}`}
-          className="absolute right-1.5 top-1.5 grid size-11 place-items-center rounded-full text-white focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-accent"
-        >
-          <span className="grid size-9 place-items-center rounded-full bg-black/45 backdrop-blur-sm hover:bg-black/70">
-            <Info className="size-[18px]" aria-hidden="true" />
+          <div className="dna-card__text">
+            <h3 className="dna-card__title">
+              <Link href={c.href} data-testid={testId} className="dna-card__link">
+                {c.title}
+                <span className="sr-only">
+                  . {status}. {c.cta}.
+                </span>
+              </Link>
+            </h3>
+            {c.presenter && <p className="dna-card__by">com {c.presenter}</p>}
+            <CardMeta c={c} />
+          </div>
+        </div>
+        <ProgressEdge c={c} />
+        {/* o botão ⓘ é irmão do link (nada interativo dentro dele): abre a ficha completa, também no celular e pelo teclado */}
+        <button type="button" ref={infoRef} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label={`Detalhes de ${c.title}`} className="dna-card__info" data-testid="card-info">
+          <span>
+            <Info className="size-5" aria-hidden="true" />
           </span>
         </button>
       </div>
-
-      {anchor && (
-        // ficha flutuante (computador): fixa na janela, fora do fluxo — abrir não mexe no catálogo
-        <div
-          ref={panelRef}
-          role="group"
-          aria-labelledby={`${headingId}-pop`}
-          className="fixed z-50 flex flex-col overflow-hidden rounded-[16px] border border-line bg-surface shadow-[0_30px_70px_-25px_rgba(15,16,48,0.6)] motion-safe:animate-[tile-in_180ms_ease-out]"
-          style={pos ? { left: pos.left, top: pos.top, width: pos.width, maxHeight: pos.maxHeight } : { left: -9999, top: 0, width: 400, visibility: 'hidden' }}
-        >
-          <DetailsMedia c={c} video className="aspect-video max-h-[34vh] w-full" />
-          <div className="border-b border-line px-4 py-3">
-            <DetailsActions c={c} />
-          </div>
-          <div className="min-h-0 overflow-y-auto overscroll-contain p-4">
-            <DetailsBody c={c} headingId={`${headingId}-pop`} />
-          </div>
-        </div>
+      {open && (
+        <DetailsDialog
+          c={c}
+          headingId={`${headingId}-dlg`}
+          onClose={() => {
+            setOpen(false);
+            infoRef.current?.focus();
+          }}
+        />
       )}
-
-      <dialog
-        ref={dialogRef}
-        aria-labelledby={`${headingId}-dlg`}
-        className="m-auto max-h-[min(92dvh,860px)] w-[min(560px,calc(100vw-24px))] overflow-hidden rounded-[18px] border border-line bg-surface p-0 text-fg shadow-2xl backdrop:bg-black/60 open:flex open:flex-col max-sm:mb-0 max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none max-sm:pb-[env(safe-area-inset-bottom)]"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) e.currentTarget.close();
-        }}
-      >
-        <div className="relative shrink-0">
-          <DetailsMedia c={c} video={false} className="aspect-video max-h-[30dvh] w-full" />
-          <form method="dialog" className="absolute right-2 top-2">
-            <button aria-label="Fechar" className="grid size-11 place-items-center rounded-full bg-black/60 text-white hover:bg-black/75 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white">
-              <X className="size-5" aria-hidden="true" />
-            </button>
-          </form>
-        </div>
-        <div className="shrink-0 border-b border-line px-5 py-3">
-          <DetailsActions c={c} />
-        </div>
-        <div className="min-h-0 overflow-y-auto overscroll-contain p-5">
-          <DetailsBody c={c} headingId={`${headingId}-dlg`} />
-        </div>
-      </dialog>
     </li>
   );
 }

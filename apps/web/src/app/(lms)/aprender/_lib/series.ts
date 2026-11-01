@@ -14,6 +14,9 @@ export type SeriesCourseInput = Pick<
   'slug' | 'trail' | 'enr' | 'shortTitle' | 'totalLessons' | 'completedLessons' | 'isDone' | 'started' | 'startHref' | 'cta' | 'lastActivity' | 'presenter' | 'portrait' | 'tagline' | 'lessons' | 'done' | 'nextLessonIndex'
 >;
 
+/** `lessonsTotal` (todas as aulas da versão, para mostrar nos cartões) é opcional: sem ele, vale o total obrigatório. */
+export type SeriesCourseInputWithTotal = SeriesCourseInput & Partial<Pick<LearnerCourse, 'lessonsTotal'>>;
+
 export interface SeriesPart {
   /** posição na série (Parte 1 = 1) */
   n: number;
@@ -47,6 +50,8 @@ export interface SeriesCardData {
   instructor?: string;
   /** aulas somadas das partes liberadas */
   lessons: number;
+  /** todas as aulas das partes liberadas (inclusive as opcionais de quem já concluiu): é o número mostrado nos cartões */
+  lessonsTotal: number;
   completed: number;
   percent: number;
   status: SeriesStatus;
@@ -82,7 +87,7 @@ export function partLabel(n: number, total: number): string {
  * Monta o cartão da série a partir dos cursos do aluno naquela trilha. Sem nenhum curso da série matriculado: null
  * (nada aparece, como hoje). Partes que o aluno ainda não recebeu entram na lista como "não liberadas".
  */
-export function buildSeriesCard(series: TrailSeries, courses: readonly SeriesCourseInput[], opts: { badge?: boolean; hasBadge?: boolean } = {}): SeriesCardData | null {
+export function buildSeriesCard(series: TrailSeries, courses: readonly SeriesCourseInputWithTotal[], opts: { badge?: boolean; hasBadge?: boolean } = {}): SeriesCardData | null {
   const key = trailSlug(series.trail);
   const mine = courses.filter((c) => c.trail && trailSlug(c.trail) === key);
   const parts: SeriesPart[] = series.courses.map((slug, i) => {
@@ -113,6 +118,7 @@ export function buildSeriesCard(series: TrailSeries, courses: readonly SeriesCou
   const href = `/aprender/trilhas/${key}`;
   const lessons = open.reduce((a, p) => a + p.lessons, 0);
   const completed = open.reduce((a, p) => a + p.completed, 0);
+  const lessonsTotal = open.reduce((a, p) => a + (mine.find((x) => x.slug === p.slug)?.lessonsTotal ?? p.lessons), 0);
   const partsDone = parts.filter((p) => p.status === 'completed').length;
   const allDone = parts.every((p) => p.available && p.status === 'completed');
   const started = open.some((p) => p.status !== 'new');
@@ -131,6 +137,7 @@ export function buildSeriesCard(series: TrailSeries, courses: readonly SeriesCou
     parts,
     ...(instructor ? { instructor } : {}),
     lessons,
+    lessonsTotal,
     completed,
     percent: allDone ? 100 : lessons > 0 ? Math.round((completed / lessons) * 100) : 0,
     status,
@@ -145,7 +152,7 @@ export function buildSeriesCard(series: TrailSeries, courses: readonly SeriesCou
 }
 
 /** As séries do aluno, na ordem dos nomes de trilha dados; trilhas que não são série não entram. */
-export function buildSeriesCards(courses: readonly SeriesCourseInput[], trails: readonly string[], badges: ReadonlySet<string>, hasBadge: (trail: string) => boolean): Map<string, SeriesCardData> {
+export function buildSeriesCards(courses: readonly SeriesCourseInputWithTotal[], trails: readonly string[], badges: ReadonlySet<string>, hasBadge: (trail: string) => boolean): Map<string, SeriesCardData> {
   const out = new Map<string, SeriesCardData>();
   for (const t of trails) {
     const series = seriesForTrail(t);

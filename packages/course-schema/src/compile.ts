@@ -8,6 +8,7 @@ import { scaffoldIssues } from './scaffold';
 import { resolveCameraPlacement } from './direction';
 import { mediaPresentationStale } from './presentation-fingerprint';
 import { callStatuses } from './bridge';
+import { externalImageRefs } from './own-origin';
 import { reactionStatuses } from './reaction';
 import type { Presentation } from './course';
 
@@ -380,6 +381,12 @@ export function compileCourse(doc: CourseDocument, copts: CompileCourseOptions =
   if (!doc.title.trim()) errors.push({ code: 'COURSE_NO_TITLE', message: 'O curso precisa de título' });
   if (!doc.brief.finalSkill.trim()) warnings.push({ code: 'BRIEF_NO_FINAL_SKILL', message: 'Briefing sem habilidade final observável' });
   if (!doc.brief.audience.trim()) warnings.push({ code: 'BRIEF_NO_AUDIENCE', message: 'Briefing sem público definido' });
+  // privacidade do aluno: retrato do apresentador em endereço de fora (HeyGen etc.) entrega IP e navegador a um terceiro e vence em dias
+  const outside = externalImageRefs(doc.presentation);
+  if (outside.length) {
+    const hosts = [...new Set(outside.map((o) => o.host))].join(', ');
+    warnings.push({ code: 'EXTERNAL_IMAGE', message: `${outside.length === 1 ? 'Uma imagem do apresentador aponta' : `${outside.length} imagens do apresentador apontam`} para fora da plataforma (${hosts}): o aluno não as verá, e o link do provedor vence em poucos dias. Guarde-as na plataforma antes de publicar (localizar-retratos).` });
+  }
   const lessonIds = new Set<string>();
   const moduleIds = new Set<string>();
   let lessonCount = 0;

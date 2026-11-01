@@ -1,4 +1,4 @@
-import { allLessons, type CourseDocument, type EndNode } from '@lms/course-schema';
+import { allLessons, ownImageUrl, type CourseDocument, type EndNode } from '@lms/course-schema';
 import type { BrandMark } from '@/config/brand';
 import type { LessonRunStatus, PlatformBumper, PlatformContext, RecapNodeRef } from './types';
 
@@ -107,7 +107,8 @@ export function buildPlatformContext({
     branding: { ...document.branding },
     ...(brandMark ? { brandMark } : {}),
     courseTitle: document.title,
-    posterUrl: document.presentation.avatarPreviewUrl || undefined,
+    // só do nosso domínio (privacidade do aluno): retrato com link de provedor não é pedido pelo navegador
+    posterUrl: ownImageUrl(document.presentation.avatarPreviewUrl),
     presenterPlacement: document.presentation.presenterPlacement ?? 'center',
     presenterPronoun: document.presentation.presenterPronoun,
     castPresenter: presenterFromCast(document),

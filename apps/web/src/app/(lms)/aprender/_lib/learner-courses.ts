@@ -1,7 +1,8 @@
 import { getDb, learning, publishing } from '@lms/db';
-import { allLessons, sortTrails } from '@lms/course-schema';
+import { allLessons, ownImageUrl, sortTrails } from '@lms/course-schema';
 import { lessonThumbUrl } from '../_components/learner-ui';
 import type { CourseTileData, CourseVideo } from '../_components/course-tile';
+import { courseArtFor, type CoverArt } from './course-art';
 import { HERO_BANNER_COURSE_IDS, shortTitleFor } from './short-titles';
 import { versionsRuntime } from '@/server/lesson-runtime';
 
@@ -15,6 +16,8 @@ export interface LearnerCourse {
   /** aulas obrigatórias concluídas / obrigatórias (conteúdo novo opcional de quem já concluiu não entra) */
   completedLessons: number;
   totalLessons: number;
+  /** TODAS as aulas da versão matriculada (inclusive as opcionais de quem já concluiu): só para mostrar nos cartões; regras de conclusão usam `totalLessons` */
+  lessonsTotal: number;
   /** conteúdo novo (aulas acrescentadas depois da conclusão) ainda não feito: índices em `lessons` */
   newLessonIndexes: number[];
   started: boolean;
@@ -40,6 +43,8 @@ export interface LearnerCourse {
   trail?: string;
   /** chave estável do curso (`courses.slug`): posição nas trilhas em série */
   slug: string;
+  /** arte da vitrine (WebP em `public/capas`), quando o curso tem uma */
+  art?: CoverArt;
   /** quadro com o instrutor (sem título na arte): imagem do cartão da série */
   portrait?: string;
   /** título de apresentação (capas, vitrine, retomada); o canônico fica em `enr.courseTitle` */
@@ -75,7 +80,8 @@ export async function loadLearnerCourses(userId: string) {
   const courses: LearnerCourse[] = enrollments.map((enr, i) => {
     const attempts = attemptsByEnrollment[i] ?? [];
     const doc = versions[i]?.document;
-    const presenterImg = doc?.presentation.avatarPreviewUrl;
+    // só imagem do nosso domínio: link de provedor (HeyGen) entregaria o IP do aluno a um terceiro e vence em dias
+    const presenterImg = ownImageUrl(doc?.presentation.avatarPreviewUrl);
     // Progresso = aulas concluídas (ao menos uma tentativa concluída, sem contar repetições) / aulas da versão matriculada.
     const lessons = doc ? allLessons(doc) : [];
     const lessonIds = new Set(lessons.map((l) => l.id));
@@ -128,6 +134,8 @@ export async function loadLearnerCourses(userId: string) {
           ? { src: wideFrame, kind: 'frame' }
           : undefined;
     const shortTitle = shortTitleFor(enr.courseId, enr.courseTitle);
+    // arte da vitrine (pacote da refatoração da home), pelo slug real do curso; sem arte: o retrato atual
+    const art = courseArtFor(enr.courseSlug);
     const tile: CourseTileData = {
       id: enr.id,
       href: startHref,
@@ -139,9 +147,11 @@ export async function loadLearnerCourses(userId: string) {
       ...(posterThumb ? { posterThumb } : {}),
       ...(posterArt ? { posterArt } : {}),
       ...(wide ? { wide } : {}),
+      ...(art ? { art } : {}),
       ...(openingVideo ? { previewSrc: `/api/assets/${openingVideo}` } : {}),
       ...(presenter ? { presenter } : {}),
       lessons: totalLessons,
+      lessonsTotal: lessons.length,
       completed: completedLessons,
       video,
       decisions,
@@ -153,7 +163,7 @@ export async function loadLearnerCourses(userId: string) {
       ...(newLessonIndexes.length ? { news: { count: newLessonIndexes.length, href: `/aprender/${enr.id}/aulas/${lessons[newLessonIndexes[0]!]!.id}`, title: lessons[newLessonIndexes[0]!]!.title, indexes: newLessonIndexes } } : {}),
       ...(trail ? { trail } : {}),
     };
-    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, newLessonIndexes, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, video, ...(nextLessonVideo && !nextLessonVideo.missing.length ? { nextLessonVideo: { minS: nextLessonVideo.minS, maxS: nextLessonVideo.maxS } } : {}), ...(trail ? { trail } : {}), slug: enr.courseSlug, ...(portrait ? { portrait } : {}), shortTitle, ...(nextLesson && nextIndex >= 0 ? { nextLessonIndex: nextIndex, nextLessonTitle: nextLesson.title } : {}), tile };
+    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, lessonsTotal: lessons.length, ...(art ? { art } : {}), newLessonIndexes, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, video, ...(nextLessonVideo && !nextLessonVideo.missing.length ? { nextLessonVideo: { minS: nextLessonVideo.minS, maxS: nextLessonVideo.maxS } } : {}), ...(trail ? { trail } : {}), slug: enr.courseSlug, ...(portrait ? { portrait } : {}), shortTitle, ...(nextLesson && nextIndex >= 0 ? { nextLessonIndex: nextIndex, nextLessonTitle: nextLesson.title } : {}), tile };
   });
   // trilhas na ordem de aprendizado (TRAIL_ORDER), não alfabética
   const trails = sortTrails([...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))]);

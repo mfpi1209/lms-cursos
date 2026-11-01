@@ -5,6 +5,7 @@ import { Mic, Pencil, RotateCcw, Square, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { clock } from './theme';
 import { ImButton, ImCard } from './ui';
+import { NOTE_PRIVACY_HINT } from '../privacy-hint';
 
 /**
  * Resposta aberta da decisão: escrever ou falar. É sempre OPCIONAL: a escolha
@@ -73,7 +74,7 @@ export function WriteAnswer({ initial = '', onSubmit, onCancel }: { initial?: st
           className="block min-h-28 w-full resize-none rounded-[16px] bg-transparent px-5 py-4 text-lg leading-relaxed text-fg outline-none! placeholder:text-fg-muted focus-visible:shadow-[inset_0_0_0_2px_var(--im-accent-ink)]"
         />
         <p id={hintId} className="flex items-center justify-between gap-3 border-t border-line px-5 py-2.5 text-[13px] text-fg/70">
-          <span>Use suas palavras. Ninguém dá nota para o jeito de escrever.</span>
+          <span>Use suas palavras. Ninguém dá nota para o jeito de escrever. {NOTE_PRIVACY_HINT}</span>
           <span className="shrink-0 tabular-nums" aria-live="off">
             {text.length}/{MAX_TEXT}
           </span>

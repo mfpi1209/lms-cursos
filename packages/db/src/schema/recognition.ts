@@ -34,7 +34,8 @@ export const trailBadges = pgTable(
     id: text('id').primaryKey(),
     code: text('code').notNull(),
     workspaceId: text('workspace_id').notNull().references(() => workspaces.id, { onDelete: 'cascade' }),
-    userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    /** `null` depois que a conta foi apagada a pedido (`dados:apagar`): o selo fica cancelado e sem nome, sem ligação com a pessoa */
+    userId: text('user_id').references(() => user.id, { onDelete: 'set null' }),
     trailKey: text('trail_key').notNull(),
     trailName: text('trail_name').notNull(),
     /** nome da pessoa no momento da emissão (a verificação pública não consulta o cadastro) */

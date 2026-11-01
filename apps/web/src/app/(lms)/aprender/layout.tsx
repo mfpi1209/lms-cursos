@@ -9,6 +9,7 @@ import { SignOutButton } from '@/components/sign-out-button';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { BrandLogo } from '@/components/brand-logo';
 import { getBrand } from '@/config/brand';
+import { LegalLinks } from '@/components/legal/legal-links';
 
 /**
  * Área do aluno no visual da marca do workspace (`.theme-platform` + preset de
@@ -23,11 +24,11 @@ export default async function LmsLayout({ children }: { children: React.ReactNod
   return (
     <div className="theme-platform flex min-h-dvh flex-col bg-bg text-fg">
       <SkipLink />
-      <header className="lms-chrome border-b border-line">
-        <div className="mx-auto flex h-16 max-w-[1760px] items-center justify-between gap-2 px-4 sm:h-[72px] sm:gap-3 sm:px-8 xl:px-14">
-          <div className="flex min-w-0 items-center gap-6 self-stretch lg:gap-12">
+      <header className="lms-chrome relative border-b border-line">
+        <div className="mx-auto flex h-16 max-w-[1416px] items-center justify-between gap-2 px-4 md:h-[72px] md:gap-3 md:px-8 xl:px-12">
+          <div className="flex min-w-0 items-center gap-6 self-stretch lg:gap-10">
             <Link href="/aprender" className="inline-flex min-h-11 min-w-0 shrink items-center self-center rounded-md" aria-label={`${brand.name}: explorar cursos`}>
-              <BrandLogo brand={brand} height={26} className="max-sm:[--logo-h:22px]" />
+              <BrandLogo brand={brand} height={24} className="max-md:[--logo-h:22px]" />
             </Link>
             <LmsTabs />
           </div>
@@ -42,14 +43,15 @@ export default async function LmsLayout({ children }: { children: React.ReactNod
           </div>
         </div>
       </header>
-      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="lms-main mx-auto w-full max-w-[1760px] flex-1 px-4 py-8 sm:px-8 sm:py-12 xl:px-14">{children}</main>
-      <footer className="lms-chrome border-t border-line">
-        <div className="mx-auto flex max-w-[1760px] flex-col gap-3 px-4 py-6 text-sm text-fg-muted sm:flex-row sm:items-center sm:justify-between sm:px-8 xl:px-14">
+      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="lms-main mx-auto w-full max-w-[1416px] flex-1 px-4 pb-8 pt-6 md:px-8 md:pt-8 xl:px-12">{children}</main>
+      <footer className="lms-chrome mt-12 border-t border-line">
+        <div className="mx-auto flex max-w-[1416px] flex-col gap-3 px-4 pb-[max(20px,env(safe-area-inset-bottom))] pt-5 text-sm text-fg-muted md:flex-row md:items-center md:justify-between md:px-8 md:py-6 xl:px-12">
           <p className="inline-flex flex-wrap items-center gap-x-2 gap-y-1" data-testid="brand-footer">
             <span>Oferecido por</span>
             <BrandLogo brand={brand} height={18} />
           </p>
           {brand.tagline ? <p>{brand.tagline}</p> : null}
+          <LegalLinks align="start" className="-mx-2 md:mx-0 md:-mr-2" />
         </div>
       </footer>
     </div>

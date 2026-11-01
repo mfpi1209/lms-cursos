@@ -14,6 +14,10 @@
     "generate": "drizzle-kit generate",
     "migrate": "tsx src/migrate.ts",
     "seed": "tsx src/seed/index.ts",
+    "dados:exportar": "tsx --env-file-if-exists=../../.env src/scripts/dados-exportar.ts",
+    "dados:apagar": "tsx --env-file-if-exists=../../.env src/scripts/dados-apagar.ts",
+    "dados:apagar-nota": "tsx --env-file-if-exists=../../.env src/scripts/dados-apagar-nota.ts",
+    "acesso:consultar": "tsx --env-file-if-exists=../../.env src/scripts/acesso-consultar.ts",
     "test": "vitest run"
   },
   "dependencies": {

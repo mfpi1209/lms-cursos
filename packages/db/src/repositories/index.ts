@@ -7,3 +7,6 @@ export * as sources from './sources';
 export * as agent from './agent';
 export * as library from './library';
 export * as recognition from './recognition';
+export * as privacy from './privacy';
+export * as access from './access';
+export * as retention from './retention';

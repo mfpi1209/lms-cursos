@@ -17,6 +17,7 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
   - `DATABASE_URL`
   - `BETTER_AUTH_SECRET` (≥ 32 caracteres aleatórios; `openssl rand -base64 48`)
   - `BETTER_AUTH_URL` = URL pública (ex.: `https://cursos.exemplo.com.br`)
+  - `TRUSTED_PROXIES` = IP/CIDR do Traefik na rede do EasyPanel (necessário para gravar o IP real no registro de acesso do Marco Civil; sem isso, um `X-Forwarded-For` com mais de um valor fica sem IP e o log avisa). Atrás do Cloudflare, `CLIENT_IP_HEADERS=cf-connecting-ip,x-forwarded-for`. Ver `.env.example`.
   - `NEXT_PUBLIC_APP_URL` = mesma URL pública
   - `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_PRIMARY` (opcionais)
   - `AI_PROVIDER=fake` (até a fase B)

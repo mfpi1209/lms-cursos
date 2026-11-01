@@ -43,10 +43,11 @@ export default async function MyTrailsPage() {
           count={g.series ? g.series.total : g.items.length}
           {...(g.series ? { countLabel: `trilha em ${g.series.total} partes` } : {})}
           testId={`trail-${trailSlug(g.title)}`}
+          layout={g.series ? 'trails' : 'cards'}
           progress={trailProgressCopy(g.done, g.total, g.series ? 'partes' : undefined)}
           {...(g.title !== 'Mais cursos' ? { href: `/aprender/trilhas/${trailSlug(g.title)}` } : {})}
         >
-          {g.series ? <SeriesTile s={g.series} testId={`series-${trailSlug(g.title)}`} /> : g.items.map((c) => <CourseTile key={c.enr.id} c={c.tile} variant="wide" />)}
+          {g.series ? <SeriesTile s={g.series} testId={`series-${trailSlug(g.title)}`} /> : g.items.map((c) => <CourseTile key={c.enr.id} c={c.tile} variant="landscape" />)}
         </CourseRail>
       ))}
     </div>

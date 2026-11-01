@@ -20,3 +20,4 @@ export * from './learner-sim';
 export * from './trails';
 export * from './video-runtime';
 export * from './trail-credentials';
+export * from './own-origin';

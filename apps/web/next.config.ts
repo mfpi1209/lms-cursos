@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
   distDir: process.env.NEXT_DIST_DIR || '.next',
   output: 'standalone',
   reactStrictMode: true,
+  // textos legais públicos (src/content/legal/*.md) são lidos do disco em tempo de execução: entram no pacote standalone
+  outputFileTracingIncludes: Object.fromEntries(['/privacidade', '/cookies', '/termos', '/seguranca'].map((r) => [r, ['./src/content/legal/**/*']])),
   agentRules: false,
   // dev: hosts extras que podem abrir o servidor de desenvolvimento (ex.: IP na rede local, para testar no celular)
   ...(process.env.DEV_ALLOWED_ORIGINS ? { allowedDevOrigins: process.env.DEV_ALLOWED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean) } : {}),

@@ -719,8 +719,8 @@ main[tabindex='-1']:focus { outline: none; }
 }
 
 /* Vitrine do aluno, "editorial claro": papel quente no tema claro (o escuro segue marinho) */
-:root[data-theme='light'].brand-dnawork .theme-platform:has(.lms-editorial) { --t-bg: #fbf8f4; }
-:root[data-theme='light'].brand-dnawork:has(.lms-editorial) { --page-platform: #fbf8f4; }
+:root[data-theme='light'].brand-dnawork .theme-platform:has(.lms-editorial) { --t-bg: #faf8f5; }
+:root[data-theme='light'].brand-dnawork:has(.lms-editorial) { --page-platform: #faf8f5; }
 .font-hand { font-family: var(--font-hand), 'Segoe Print', 'Bradley Hand', cursive; }
 
 /* ===================================================================
@@ -806,4 +806,163 @@ video[data-im-video] { animation: im-video-in 320ms ease-out both; }
 @media (prefers-reduced-motion: reduce) {
   .im-mission-in, .im-bridge-in, .im-closing-card, .im-badge-glow { animation: none; }
   .im-celebrate { display: none; }
+}
+
+/* ===================================================================
+   Vitrine do aluno — refatoração visual da home (pacote DNA Work, tokens adaptados ao design system).
+   Sans do app (Figtree) nos títulos; cartões com a arte ao fundo e TODO o texto em HTML dentro deles;
+   grades de 3 (4:3), 5 (3:4) e trilhas; trilho rolável abaixo dos pontos de quebra. Fundo/superfície/texto vêm dos
+   tokens do tema (claro e escuro); a arte já traz o roxo: só um véu leve embaixo quando o corte tira o roxo.
+   =================================================================== */
+.lms-editorial {
+  --dna-gutter: 16px;
+  --dna-gap: 12px;
+  --dna-focus: #6553c7;
+  --dna-radius: 14px;
+}
+:root[data-theme='dark'] .lms-editorial, :root:not([data-theme]) .lms-editorial { --dna-focus: #d2cbf6; }
+@media (min-width: 768px) { .lms-editorial { --dna-gutter: 32px; --dna-gap: 16px; --dna-radius: 16px; } }
+@media (min-width: 1280px) { .lms-editorial { --dna-gutter: 48px; --dna-gap: 20px; } }
+.lms-editorial :is(h1, h2, h3) { font-family: var(--font-platform), ui-sans-serif, system-ui, sans-serif; }
+.lms-editorial :focus-visible { outline: 2px solid var(--dna-focus); outline-offset: 3px; }
+
+/* hero: saudação e chamada à esquerda, destaque 16:9 à direita */
+.dna-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+@media (min-width: 768px) { .dna-hero { gap: 32px; } }
+@media (min-width: 1024px) { .dna-hero { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: center; min-height: 280px; } }
+
+/* seções */
+.dna-section { margin-top: 32px; }
+@media (min-width: 768px) { .dna-section { margin-top: 40px; } }
+
+/* cartão */
+.dna-li { display: flex; min-width: 0; }
+.dna-card {
+  position: relative; isolation: isolate; display: flex; flex-direction: column; width: 100%; overflow: hidden;
+  border-radius: var(--dna-radius); background: #1d1e4c; color: #fff;
+  box-shadow: 0 6px 20px rgb(29 30 76 / 0.08), 0 0 0 1px rgb(29 30 76 / 0.06);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.dna-card:has(:focus-visible) { outline: 2px solid var(--dna-focus); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .dna-card:hover { transform: translateY(-2px) scale(1.015); box-shadow: 0 12px 30px rgb(29 30 76 / 0.16), 0 0 0 1px rgb(29 30 76 / 0.06); }
+}
+.dna-card__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; display: block; }
+.dna-card__scrim { position: absolute; inset: auto 0 0; z-index: -1; pointer-events: none; }
+.dna-card__scrim--soft { height: 46%; background: linear-gradient(to top, rgb(29 30 76 / 0.5), transparent); }
+.dna-card__scrim--full { height: 58%; background: linear-gradient(to top, rgb(29 30 76 / 0.94) 0%, rgb(29 30 76 / 0.78) 38%, rgb(29 30 76 / 0.32) 72%, transparent 100%); }
+/* a caixa tem a proporção do cartão, mas cresce com o conteúdo (fonte maior, título longo): nada é cortado */
+.dna-card__box { display: flex; flex: 1; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 12px; aspect-ratio: 4 / 3; min-width: 0; }
+.dna-card--portrait .dna-card__box { aspect-ratio: 3 / 4; }
+@media (min-width: 768px) { .dna-card__box { padding: 16px; } }
+.dna-card__top { position: absolute; inset: 12px 56px auto 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+@media (max-width: 767px) { .dna-card__top { inset: 8px 52px auto 8px; } }
+.dna-card__badge {
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; border-radius: 999px; padding: 6px 8px; font-size: 12px; line-height: 16px; font-weight: 700;
+  background: rgb(29 30 76 / 0.82); color: #fff; backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18);
+}
+.dna-card__text { min-width: 0; }
+.dna-card__title { font-size: 16px; line-height: 21px; font-weight: 700; color: #fff !important; letter-spacing: -0.005em; overflow-wrap: anywhere; text-wrap: balance; }
+@media (min-width: 768px) { .dna-card--landscape .dna-card__title { font-size: 18px; line-height: 23px; } }
+.dna-card--portrait .dna-card__title { min-height: 63px; display: flex; align-items: flex-end; }
+.dna-card--portrait .dna-card__title > a { display: block; }
+.dna-card__link { color: inherit; text-decoration: none; }
+.dna-card__link::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.dna-card__link:focus-visible { outline: none; }
+.dna-card__by { margin-top: 8px; font-size: 12px; line-height: 17px; color: #e6e4fa; }
+.dna-card__meta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px; line-height: 17px; color: #f1f0fc; font-variant-numeric: tabular-nums; }
+.dna-card__meta > li { display: inline-flex; align-items: center; gap: 5px; }
+@media (min-width: 768px) {
+  .dna-card__by { font-size: 13px; line-height: 18px; }
+  .dna-card__meta { font-size: 13px; line-height: 18px; }
+}
+.dna-card__progress { position: absolute; inset: auto 0 0; z-index: 1; height: 3px; background: rgb(255 255 255 / 0.22); pointer-events: none; }
+.dna-card__progress > span { display: block; height: 100%; background: #ff7a08; }
+.dna-card__info {
+  position: absolute; z-index: 2; top: 4px; right: 4px; display: grid; width: 44px; height: 44px; place-items: center; border-radius: 999px; color: #fff; cursor: pointer;
+}
+@media (min-width: 768px) { .dna-card__info { top: 6px; right: 6px; } }
+.dna-card__info > span { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 999px; background: rgb(29 30 76 / 0.78); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.2); transition: background-color 120ms; }
+.dna-card__info:hover > span { background: rgb(29 30 76 / 0.95); }
+.dna-card__info:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+
+/* seções em fileira: trilho rolável (celular e tablet) que vira grade nos pontos de quebra */
+.dna-rail {
+  display: flex; gap: var(--dna-gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; list-style: none;
+  margin-inline: calc(var(--dna-gutter) * -1); padding: 6px var(--dna-gutter) 18px; scroll-padding-inline: var(--dna-gutter); scrollbar-width: none;
+}
+.dna-rail::-webkit-scrollbar { display: none; }
+.dna-rail > li { flex: 0 0 var(--dna-w, 280px); scroll-snap-align: start; }
+.dna-rail--cards { --dna-w: min(82vw, 320px); }
+.dna-rail--wide3 { --dna-w: min(82vw, 320px); }
+.dna-rail--portrait5 { --dna-w: clamp(172px, 46vw, 220px); }
+.dna-rail--trails { --dna-w: 300px; }
+@media (min-width: 768px) {
+  .dna-rail--cards { --dna-w: 340px; }
+  .dna-rail--wide3 { --dna-w: calc((100% - 2 * var(--dna-gap)) / 2.25); }
+  .dna-rail--portrait5 { --dna-w: 220px; }
+  .dna-rail--trails { --dna-w: min(430px, calc((100% - var(--dna-gap)) / 1.6)); }
+}
+@media (min-width: 1024px) {
+  .dna-rail--wide3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin-inline: 0; padding-inline: 0; padding-bottom: 8px; scroll-snap-type: none; }
+  .dna-rail--wide3 > li { flex: initial; }
+}
+@media (min-width: 1100px) {
+  .dna-rail--portrait5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); overflow: visible; margin-inline: 0; padding-inline: 0; padding-bottom: 8px; scroll-snap-type: none; }
+  .dna-rail--portrait5 > li { flex: initial; }
+}
+@media (min-width: 1360px) { .dna-rail--trails { --dna-w: calc((100% - 2 * var(--dna-gap)) / 3); } }
+@media (prefers-reduced-motion: reduce) { .dna-card { transition: none !important; transform: none !important; } }
+
+/* filtros */
+.dna-filters { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; overflow-x: auto; margin-inline: calc(var(--dna-gutter) * -1); padding: 4px var(--dna-gutter); scroll-padding-inline: var(--dna-gutter); scrollbar-width: none; }
+.dna-filters::-webkit-scrollbar { display: none; }
+@media (min-width: 768px) { .dna-filters { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding-inline: 0; } }
+
+/* cartão da trilha em série: a arte da trilha (roxo à esquerda, instrutor à direita) com o texto em HTML por cima */
+.dna-trail {
+  position: relative; isolation: isolate; display: flex; width: 100%; min-height: 220px; overflow: hidden; border-radius: var(--dna-radius); background: #1d1e4c; color: #fff;
+  box-shadow: 0 6px 20px rgb(29 30 76 / 0.08), 0 0 0 1px rgb(29 30 76 / 0.06); transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.dna-trail:has(:focus-visible) { outline: 2px solid var(--dna-focus); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .dna-trail:hover { transform: translateY(-2px) scale(1.015); box-shadow: 0 12px 30px rgb(29 30 76 / 0.16), 0 0 0 1px rgb(29 30 76 / 0.06); }
+}
+@media (min-width: 768px) { .dna-trail { min-height: 240px; } }
+@media (prefers-reduced-motion: reduce) { .dna-trail { transition: none !important; transform: none !important; } }
+.dna-trail__img { position: absolute; top: 0; right: 0; z-index: -2; height: 100%; width: auto; max-width: none; aspect-ratio: 1672 / 941; }
+.dna-trail__img--portrait { inset: 0 0 0 auto; width: 62%; aspect-ratio: auto; object-fit: cover; object-position: 50% 18%; }
+.dna-trail__fade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to right, #1d1e4c 40%, rgb(29 30 76 / 0.9) 58%, rgb(29 30 76 / 0.1)); }
+.dna-trail__body { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px; width: 50%; min-width: 0; padding: 16px 0 16px 16px; }
+@media (min-width: 768px) { .dna-trail__body { padding: 20px 0 20px 20px; width: 58%; gap: 8px; } }
+.dna-trail--banner { min-height: 280px; aspect-ratio: auto; height: clamp(280px, 24vw, 340px); }
+.dna-trail--banner .dna-trail__body { width: 46%; }
+.dna-trail__eyebrow { font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #ffb070; }
+.dna-trail__title { font-size: 20px; line-height: 25px; font-weight: 800; color: #fff !important; text-wrap: balance; overflow-wrap: anywhere; }
+.dna-trail--banner .dna-trail__title { font-size: 24px; line-height: 30px; }
+@media (min-width: 1024px) { .dna-trail--banner .dna-trail__title { font-size: 28px; line-height: 34px; } }
+.dna-trail__link { color: inherit; text-decoration: none; border-radius: 6px; }
+.dna-trail__link::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+.dna-trail__link:focus-visible { outline: none; }
+.dna-trail__benefit { font-size: 14px; line-height: 20px; color: #e6e4fa; }
+.dna-trail__meta { font-size: 13px; line-height: 18px; color: #e6e4fa; }
+.dna-trail__parts { display: flex; gap: 6px; width: 100%; max-width: 280px; }
+.dna-trail__actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; }
+.dna-trail__cta {
+  display: inline-flex; min-height: 44px; align-items: center; gap: 6px; border-radius: 999px; padding: 0 16px; font-size: 14px; line-height: 20px; font-weight: 700;
+  background: #ff7a08; color: #1d1e4c; box-shadow: 0 8px 20px -10px #ff7a08; text-decoration: none; transition: filter 120ms;
+}
+.dna-trail__cta:hover { filter: brightness(1.06); }
+.dna-trail__cta:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.dna-trail__cta--ghost { background: rgb(29 30 76 / 0.55); color: #fff; box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.8); }
+/* cartão da trilha escolhida no filtro (largura total): a arte cobre o cartão, com o rosto no alto */
+.dna-trail--banner .dna-trail__img { inset: 0; width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; object-position: 50% 10% !important; }
+
+/* celular e tablet (< 1024 px): a arte vai em cima (pessoa à direita) e o texto num bloco roxo embaixo: nada cobre o rosto nem o corpo */
+@media (max-width: 1023px) {
+  .dna-trail, .dna-trail--banner { flex-direction: column; min-height: 0; height: auto; }
+  .dna-trail__img, .dna-trail--banner .dna-trail__img { position: relative; inset: auto; z-index: 0; flex: none; width: 100%; height: 150px; aspect-ratio: auto; object-fit: cover; object-position: 82% 12% !important; }
+  .dna-trail__img, .dna-trail--banner .dna-trail__img { height: clamp(150px, 26vw, 200px); }
+  .dna-trail__body, .dna-trail--banner .dna-trail__body { position: static; width: 100%; padding: 14px 16px 16px; }
+  .dna-trail__eyebrow { white-space: nowrap; }
 }

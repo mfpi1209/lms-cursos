@@ -1,12 +1,16 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getViewer, homeFor } from '@/server/viewer';
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/ui/skip-link';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { BrandLogo } from '@/components/brand-logo';
 import { getBrand } from '@/config/brand';
+import { LegalLinks } from '@/components/legal/legal-links';
 import { LoginForm } from './login-form';
 
 export const metadata = { title: 'Entrar' };
+
+const legalLink = 'rounded-sm font-medium text-fg underline underline-offset-4 decoration-fg/40 hover:decoration-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
 /**
  * Entrada da plataforma no visual da marca do workspace (preset de config/brand.ts:
@@ -38,6 +42,11 @@ export default async function LoginPage() {
           <div className="mt-8 rounded-[20px] border border-line bg-surface/80 p-5 backdrop-blur-md sm:mt-10 sm:p-8">
             <LoginForm />
           </div>
+          {/* aceite dos termos e caminho para os textos legais (sem faixa etária até a classificação indicativa ser definida) */}
+          <p className="mt-5 text-sm leading-relaxed text-fg-muted" data-testid="login-legal">
+            Ao entrar, você concorda com os <Link href="/termos" prefetch={false} className={legalLink}>Termos de uso</Link>. Veja como cuidamos dos seus dados na <Link href="/privacidade" prefetch={false} className={legalLink}>Política de privacidade</Link>.
+          </p>
+          <LegalLinks only={['cookies', 'seguranca']} align="start" className="-ml-2 mt-1" />
           {brand.tagline ? <p className="mt-8 text-center text-sm text-fg-muted" data-testid="brand-tagline">{brand.tagline}</p> : null}
         </div>
       </main>

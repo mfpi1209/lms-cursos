@@ -21,7 +21,7 @@ export function ExploreButton({ className }: { className?: string }) {
         target.focus({ preventScroll: true });
         history.replaceState(null, '', '#cursos');
       }}
-      className={cn(ctaPrimary, 'min-h-13 px-7 text-[17px]', className)}
+      className={cn(ctaPrimary, 'min-h-12 px-5 text-[16px]', className)}
     >
       <Play className="size-5 fill-current" aria-hidden="true" />
       Explorar cursos

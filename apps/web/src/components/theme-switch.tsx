@@ -70,7 +70,7 @@ function Segmented({ pref, onChange, className }: { pref: ThemePref; onChange: (
             onClick={() => onChange(value)}
             onKeyDown={(e) => onKeyDown(e, i)}
             className={cn(
-              'inline-flex size-9 items-center justify-center rounded-full transition-colors focus-visible:outline-3! focus-visible:outline-offset-1! focus-visible:outline-accent!',
+              'inline-flex size-9 [.lms-chrome_&]:size-11 items-center justify-center rounded-full transition-colors focus-visible:outline-3! focus-visible:outline-offset-1! focus-visible:outline-accent!',
               on ? 'bg-accent-fill text-accent-fill-fg shadow-[inset_0_0_0_1px_var(--t-progress-ring)]' : 'text-fg-muted hover:bg-fg/8 hover:text-fg',
             )}
           >

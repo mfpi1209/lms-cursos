@@ -134,6 +134,13 @@
       "when": 1793513956634,
       "tag": "0018_mission_responses",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793547124099,
+      "tag": "0019_privacidade_acesso_titular",
+      "breakpoints": true
     }
   ]
 }

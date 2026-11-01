@@ -4,7 +4,7 @@ import { LESSON_RANGE_MIN_DIFF_S, formatCourseVideo, formatLessonVideo, seriesPa
 import { notFound } from 'next/navigation';
 import { ChevronLeft, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { getDb, learning, recognition, DomainError } from '@lms/db';
-import { allLessons, type Lesson } from '@lms/course-schema';
+import { allLessons, ownImageUrl, type Lesson } from '@lms/course-schema';
 import { computeProgress } from '@lms/course-engine';
 import { requireViewer, HttpError } from '@/server/viewer';
 import { requireOwnEnrollment } from '@/server/learner';
@@ -117,7 +117,7 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
           // eslint-disable-next-line @next/next/no-img-element
           <img src={heroThumb} alt="" aria-hidden="true" className="absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[50%_30%] sm:w-[68%]" />
         ) : (
-          <CourseArt src={document.presentation.avatarPreviewUrl} title={course.title} fade="none" className="absolute inset-0 -z-10" />
+          <CourseArt src={ownImageUrl(document.presentation.avatarPreviewUrl)} title={course.title} fade="none" className="absolute inset-0 -z-10" />
         )}
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0f1030] from-35% via-[#0f1030]/70 via-55% to-transparent" />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0f1030] via-transparent to-transparent" />

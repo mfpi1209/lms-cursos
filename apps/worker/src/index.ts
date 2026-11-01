@@ -5,6 +5,7 @@ import { describeMediaMode, mediaConfigFromEnv } from '@lms/media';
 import { dispatchQueuedJobs, pollRunningJobs, reconcileJob } from './media';
 import { processAgentRun } from './agent';
 import { ingestSource } from './sources';
+import { newRetentionState, runRetentionIfDue } from './retention';
 
 /**
  * Worker do incremento 1: consumidor idempotente do outbox transacional, por
@@ -87,6 +88,7 @@ async function main() {
   process.on('SIGINT', () => (stopping = true));
   let lastMediaPoll = 0;
   let lastSweep = 0;
+  const retentionState = newRetentionState();
   while (!stopping) {
     try {
       if (Date.now() - lastSweep > SWEEP_MS) {
@@ -101,6 +103,8 @@ async function main() {
           .returning({ id: schema.sourceDocuments.id });
         if (srcs.length) console.warn(`[sweep] ${srcs.length} fonte(s) marcadas como falhas por tempo`);
       }
+      // retenção de dados (LGPD / Marco Civil): diária, nunca lança
+      await runRetentionIfDue(retentionState);
       if (Date.now() - lastMediaPoll > MEDIA_POLL_MS) {
         lastMediaPoll = Date.now();
         await pollRunningJobs();

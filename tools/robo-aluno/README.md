@@ -108,3 +108,11 @@ O cache do travamento fica em `docs/qa/lancamento/robo/cache-trava.json`, indexa
 ## Missão "Leve para a vida real" (nó `mission`)
 
 Quando a aula tem a missão, o robô trata os dois estados: nos caminhos 3 e 4 toca "Vou fazer depois"; nos caminhos 1 e 2 toca "Já experimentei" (o 1 escreve "O que você percebeu?", o 2 deixa em branco) e salva. Em todos confere que a confirmação ("Missão registrada…" ou "Anotado…") só aparece depois do servidor, que "Continuar aula" segue e que a aula termina. Registra no bruto `missao` (estado, nota, medidas dos botões em 390 px, confirmação e capturas). Achados: `missao-sem-confirmacao` e `missao-rolagem-horizontal`. A missão não conta como "atividade no meio".
+
+## Varredura de privacidade (`externos.mjs`)
+
+`node tools/robo-aluno/externos.mjs [--curso C02] [--saida arquivo.json]` abre `/login`, `/aprender`, a página do curso, a aula (vídeo, pergunta, missão, fim da aula e do curso, pelo robô), `/aprender/trilhas`, a página da trilha e `/selo/<código>` (e o certificado), em desktop e celular, e lista todo pedido para fora do nosso domínio. Tem de dar zero (é o que a política de privacidade afirma).
+
+## Artes da vitrine (`conferir-capas.mts`)
+
+`set -a; . ./.env; set +a; packages/db/node_modules/.bin/tsx tools/robo-aluno/conferir-capas.mts` (só leitura): confere que os 26 cursos publicados, as 4 trilhas em série e o destaque resolvem para uma arte de `apps/web/public/capas/` (mapa em `apps/web/src/app/(lms)/aprender/_lib/course-art.ts`), que o arquivo existe e que o instrutor da arte é o do curso no banco.

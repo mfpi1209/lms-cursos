@@ -9,6 +9,7 @@ import { DomainError } from '@lms/db';
 let userId = 'usr_aluna';
 let ownerId = 'usr_aluna';
 const saved: Array<Record<string, unknown>> = [];
+const deletedNotes: Array<Record<string, unknown>> = [];
 let fail: DomainError | null = null;
 
 vi.mock('@/server/viewer', async () => {
@@ -29,6 +30,14 @@ vi.mock('@lms/db', async () => {
   return {
     ...actual,
     getDb: () => ({}),
+    privacy: {
+      ...actual.privacy,
+      deleteMissionNote: async (_db: unknown, input: Record<string, unknown>) => {
+        if (fail) throw fail;
+        deletedNotes.push(input);
+        return { deleted: true, lessonId: 'aula_1', status: 'done', revision: 4, updatedAt: new Date('2026-11-01T12:00:00Z') };
+      },
+    },
     learning: {
       ...actual.learning,
       saveMissionResponse: async (_db: unknown, input: Record<string, unknown>) => {
@@ -50,6 +59,7 @@ beforeEach(() => {
   userId = 'usr_aluna';
   ownerId = 'usr_aluna';
   saved.length = 0;
+  deletedNotes.length = 0;
   fail = null;
 });
 
@@ -83,5 +93,34 @@ describe('PUT /api/enrollments/[enrollmentId]/missions/[nodeId]', () => {
     fail = new DomainError('VALIDATION', 'Use no máximo 500 caracteres.');
     const v = await put({ status: 'done', note: 'a'.repeat(501), expectedRevision: 1 });
     expect(v.status).toBe(422);
+  });
+});
+
+describe('DELETE /api/enrollments/[enrollmentId]/missions/[nodeId] ("Apagar minha nota")', () => {
+  const del = async (enrollmentId = 'enr_1', nodeId = 'missao') => {
+    const { DELETE } = await import('./route');
+    const res = await DELETE(new Request('http://test/api/x', { method: 'DELETE' }), { params: Promise.resolve({ enrollmentId, nodeId }) });
+    return { status: res.status, json: (await res.json()) as { deleted?: boolean; mission?: Record<string, unknown>; error?: { code: string; message: string } } };
+  };
+
+  it('apaga a nota do próprio aluno e devolve o registro sem texto, com a revisão nova', async () => {
+    const r = await del();
+    expect(r.status).toBe(200);
+    expect(r.json).toMatchObject({ deleted: true, mission: { nodeId: 'missao', status: 'done', note: null, revision: 4, lessonId: 'aula_1' } });
+    expect(deletedNotes).toEqual([{ enrollmentId: 'enr_1', nodeId: 'missao', userId: 'usr_aluna', actorId: 'usr_aluna', via: 'aluno' }]);
+  });
+
+  it('só o dono da matrícula: outra conta recebe 404 e nada é apagado', async () => {
+    userId = 'usr_outra';
+    const r = await del();
+    expect(r.status).toBe(404);
+    expect(deletedNotes).toHaveLength(0);
+  });
+
+  it('erro do domínio (registro inexistente) chega com o código', async () => {
+    fail = new DomainError('NOT_FOUND', 'Não há registro desta missão.');
+    const r = await del();
+    expect(r.status).toBe(404);
+    expect(r.json.error?.code).toBe('NOT_FOUND');
   });
 });

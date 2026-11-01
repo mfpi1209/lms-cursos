@@ -15,6 +15,7 @@ import {
 } from '@lms/course-schema';
 import { cn } from '@/lib/utils';
 import { composeProgressText } from './compose-state';
+import { NOTE_PRIVACY_HINT } from './privacy-hint';
 
 export interface ComposedSentence {
   /** resposta montada (só vale para envio quando `complete`) */
@@ -292,7 +293,7 @@ function Group({
             placeholder={options[0] ?? ''}
           />
           <p id={`${inputId}-hint`} className="mt-1 flex justify-between gap-3 text-[13px] text-fg-muted">
-            <span>{customEmpty ? 'Escreva algo para completar esta parte.' : 'Ou volte e escolha uma das opções acima.'}</span>
+            <span>{customEmpty ? 'Escreva algo para completar esta parte.' : 'Ou volte e escolha uma das opções acima.'} {NOTE_PRIVACY_HINT}</span>
             <span className="tabular-nums" aria-hidden="true">
               {customText.length}/{slot.customMaxLength}
             </span>

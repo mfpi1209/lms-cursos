@@ -41,4 +41,17 @@ describe('MissionLogger (estados fora da aula)', () => {
     const h = html({ status: 'done', note: null, revision: 2 });
     expect(h).toMatch(/data-testid="mission-confirmed-missao"[^>]*><\/p>/);
   });
+  it('"Apagar minha nota" só aparece quando há nota escrita; sem nota ou "Vou fazer depois", não', () => {
+    expect(html({ status: 'done', note: 'Foi bom.', revision: 3 })).toContain('data-testid="mission-delete-missao"');
+    expect(html({ status: 'done', note: 'Foi bom.', revision: 3 })).toContain('Apagar minha nota');
+    expect(html({ status: 'done', note: null, revision: 2 })).not.toContain('mission-delete-missao');
+    expect(html({ status: 'later', note: null, revision: 1 })).not.toContain('mission-delete-missao');
+    // a confirmação só abre depois de tocar (não vem aberta)
+    expect(html({ status: 'done', note: 'Foi bom.', revision: 3 })).not.toContain('mission-delete-confirm-missao');
+  });
+
+  it('o aviso de privacidade fica junto ao campo de texto (aparece ao abrir o campo)', async () => {
+    const { NOTE_PRIVACY_HINT } = await import('./privacy-hint');
+    expect(NOTE_PRIVACY_HINT).toBe('Não escreva nomes de outras pessoas nem dados sensíveis.');
+  });
 });

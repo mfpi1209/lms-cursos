@@ -8,6 +8,13 @@ import { cn } from '@/lib/utils';
 export interface HeroSlide {
   id: string;
   image: string;
+  /** dimensões reais do arquivo (reservam o espaço: sem salto de layout) */
+  width: number;
+  height: number;
+  /** `object-position` do quadro 16:9 */
+  position?: string;
+  /** etiqueta: "Em destaque", ou "Para rever e praticar" só quando o curso (ou a trilha) está mesmo concluído */
+  label: string;
   title: string;
   tagline?: string;
   presenter?: string;
@@ -18,13 +25,14 @@ export interface HeroSlide {
 const ROTATE_MS = 7000;
 
 /**
- * Destaque do Explorar: banners largos (marinho à esquerda, instrutor à direita) em carrossel. O texto fica sobre
- * a parte marinho do próprio banner. Gira sozinho a cada 7 s, pausa com o ponteiro, o foco ou o botão de pausa, e
- * não gira com movimento reduzido. Setas e pontos para navegar; um slide visível por vez (os outros ficam inertes).
+ * Destaque do Explorar: quadros 16:9 (roxo à esquerda, instrutor à direita) em carrossel. O texto é HTML sobre a parte
+ * roxa da própria arte (no celular estreito, num bloco roxo abaixo da imagem, sem cobrir o rosto). NÃO gira sozinho: quem
+ * quiser liga a rotação pelo botão ▶ (que pausa com o ponteiro, o foco e movimento reduzido). Setas e pontos de 44 px no
+ * rodapé direito; um slide visível por vez (os outros ficam inertes). Só o primeiro quadro pede prioridade de carga.
  */
 export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [i, setI] = React.useState(0);
-  const [paused, setPaused] = React.useState(false);
+  const [auto, setAuto] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const [reduced, setReduced] = React.useState(false);
   const n = slides.length;
@@ -38,24 +46,25 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
     return () => mq.removeEventListener('change', on);
   }, []);
   React.useEffect(() => {
-    if (n < 2 || paused || hover || reduced) return;
+    if (n < 2 || !auto || hover || reduced) return;
     const t = window.setTimeout(() => go(i + 1), ROTATE_MS);
     return () => window.clearTimeout(t);
-  }, [i, n, paused, hover, reduced, go]);
+  }, [i, n, auto, hover, reduced, go]);
 
   if (!n) return null;
+  const btn = 'grid size-11 place-items-center rounded-full text-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white';
   return (
     <section
       aria-roledescription="carrossel"
       aria-label="Cursos em destaque"
-      className="relative overflow-hidden rounded-[20px] bg-[#1d1e4c] shadow-[0_22px_45px_-30px_rgba(29,30,76,0.6)]"
+      className="relative isolate overflow-hidden rounded-[14px] bg-[#1d1e4c] shadow-[0_6px_20px_rgba(29,30,76,0.12)] md:rounded-[16px]"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onFocus={() => setHover(true)}
       onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && setHover(false)}
       data-testid="explore-hero"
     >
-      <div className="relative aspect-[4/3] sm:aspect-[2/1]">
+      <div className="grid">
         {slides.map((s, k) => (
           <div
             key={s.id}
@@ -64,23 +73,30 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             aria-label={`${k + 1} de ${n}: ${s.title}`}
             aria-hidden={k !== i}
             inert={k !== i}
-            className={cn('absolute inset-0 transition-opacity duration-500 motion-reduce:transition-none', k === i ? 'opacity-100' : 'pointer-events-none opacity-0')}
+            data-testid="hero-slide"
+            className={cn('relative col-start-1 row-start-1 flex flex-col transition-opacity duration-500 motion-reduce:transition-none sm:aspect-video', k === i ? 'opacity-100' : 'pointer-events-none opacity-0')}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.image} alt="" className="absolute inset-0 h-full w-full object-cover object-[78%_20%] sm:object-right" loading={k === 0 ? 'eager' : 'lazy'} />
-            {/* no celular o instrutor ocupa mais o quadro: um véu marinho embaixo garante a leitura */}
-            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1d1e4c] via-[#1d1e4c]/55 to-transparent sm:hidden" />
-            <div className="absolute inset-0 flex flex-col justify-end p-5 sm:w-[52%] sm:justify-center sm:p-8 lg:p-10">
-              <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-[#ff9a3d]">Em destaque</p>
-              <h2 className="mt-1.5 text-[28px]! font-black! leading-[1.02]! tracking-[-0.02em]! text-white! sm:text-[clamp(1.75rem,1rem+2.4vw,3rem)]!">{s.title}</h2>
-              {s.tagline && <p className="mt-2 line-clamp-2 max-w-[38ch] text-[15px] leading-snug text-[#d9d8f5] sm:text-[17px]">{s.tagline}</p>}
-              {s.presenter && <p className="mt-2 text-[14px] text-[#b9b7e6]">com {s.presenter}</p>}
-              <div className="mt-4">
-                <Link
-                  href={s.href}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#FF7A08] px-6 text-[16px] font-semibold text-[#1d1e4c] shadow-[0_10px_24px_-12px_#FF7A08] hover:brightness-105 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  <Play className="size-4 fill-current" aria-hidden="true" />
+            <div className="relative aspect-video w-full overflow-hidden sm:absolute sm:inset-0 sm:aspect-auto">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={s.image}
+                alt=""
+                width={s.width}
+                height={s.height}
+                decoding="async"
+                {...(k === 0 ? { loading: 'eager' as const, fetchPriority: 'high' as const } : { loading: 'lazy' as const })}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: s.position ?? '100% 50%' }}
+              />
+            </div>
+            <div className="relative flex flex-col gap-2 px-[18px] pb-4 pt-[18px] sm:absolute sm:inset-y-0 sm:left-0 sm:w-[52%] sm:justify-center sm:p-7">
+              <p className="text-[12px] font-semibold uppercase leading-4 tracking-[0.1em] text-[#ffa257]" data-testid="hero-label">{s.label}</p>
+              <h2 className="text-[22px]! font-extrabold! leading-[26px]! tracking-[-0.015em]! text-white! [text-wrap:balance] sm:text-[clamp(1.375rem,0.6rem+1.9vw,2.25rem)]! sm:leading-[1.08]!">{s.title}</h2>
+              {s.tagline && <p className="line-clamp-3 max-w-[38ch] text-[14px] leading-5 text-[#e6e4fa] sm:line-clamp-2 sm:text-[15px] sm:leading-[22px] lg:max-xl:hidden xl:line-clamp-3">{s.tagline}</p>}
+              {s.presenter && <p className="text-[13px] leading-[18px] text-[#d2cbf6]">com {s.presenter}</p>}
+              <div className="mt-1.5">
+                <Link href={s.href} data-testid="hero-cta" className="inline-flex min-h-12 items-center gap-2 rounded-[12px] bg-[#FF7A08] px-5 py-3 text-[16px] font-semibold text-[#1d1e4c] shadow-[0_10px_24px_-12px_#FF7A08] hover:brightness-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                  <Play className="size-[18px] fill-current" aria-hidden="true" />
                   {s.cta}
                 </Link>
               </div>
@@ -89,30 +105,23 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         ))}
       </div>
       {n > 1 && (
-        <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-[#1d1e4c]/70 p-1 backdrop-blur sm:bottom-4 sm:right-4 sm:top-auto">
-          <button type="button" onClick={() => go(i - 1)} aria-label="Destaque anterior" className="grid size-9 place-items-center rounded-full text-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white">
-            <ChevronLeft className="size-5" aria-hidden="true" />
-          </button>
-          <div className="flex items-center gap-1.5 px-1" role="group" aria-label="Escolher destaque">
-            {slides.map((s, k) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => go(k)}
-                aria-label={`Destaque ${k + 1}: ${s.title}`}
-                aria-current={k === i ? 'true' : undefined}
-                className={cn('h-2 rounded-full transition-all motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white', k === i ? 'w-6 bg-[#FF7A08]' : 'w-2 bg-white/50 hover:bg-white/80')}
-              />
-            ))}
-          </div>
-          <button type="button" onClick={() => go(i + 1)} aria-label="Próximo destaque" className="grid size-9 place-items-center rounded-full text-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white">
-            <ChevronRight className="size-5" aria-hidden="true" />
-          </button>
-          {!reduced && (
-            <button type="button" onClick={() => setPaused((p) => !p)} aria-label={paused ? 'Retomar destaques automáticos' : 'Pausar destaques automáticos'} aria-pressed={paused} className="grid size-9 place-items-center rounded-full text-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-white">
-              {paused ? <Play className="size-4 fill-current" aria-hidden="true" /> : <Pause className="size-4 fill-current" aria-hidden="true" />}
+        <div className="relative z-10 flex items-center justify-end gap-0.5 px-2 pb-2 sm:absolute sm:bottom-2 sm:right-2 sm:p-0">
+          <div className="flex items-center gap-0.5 rounded-full bg-[#1d1e4c]/80 p-0.5 backdrop-blur-sm">
+            <button type="button" onClick={() => go(i - 1)} aria-label="Destaque anterior" className={btn}>
+              <ChevronLeft className="size-5" aria-hidden="true" />
             </button>
-          )}
+            <p className="min-w-[3.25rem] px-1 text-center text-[13px] font-semibold tabular-nums leading-none text-white" aria-live="polite" data-testid="hero-count">
+              {i + 1}<span aria-hidden="true"> / </span><span className="sr-only"> de </span>{n}
+            </p>
+            <button type="button" onClick={() => go(i + 1)} aria-label="Próximo destaque" className={btn}>
+              <ChevronRight className="size-5" aria-hidden="true" />
+            </button>
+            {!reduced && (
+              <button type="button" onClick={() => setAuto((p) => !p)} aria-label={auto ? 'Pausar a troca automática dos destaques' : 'Trocar os destaques automaticamente'} aria-pressed={auto} className={btn} data-testid="hero-auto">
+                {auto ? <Pause className="size-4 fill-current" aria-hidden="true" /> : <Play className="size-4 fill-current" aria-hidden="true" />}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </section>

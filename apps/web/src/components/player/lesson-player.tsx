@@ -21,6 +21,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/input';
+import { NOTE_PRIVACY_HINT } from './privacy-hint';
 import { RichText } from '@/components/rich-text';
 import type { LessonPlayerProps } from './types';
 import { findNode, prefersReducedMotion, usePlayerSession, type Carry, type PlayerSession, type RetryInfo } from './use-player-session';
@@ -604,7 +605,7 @@ function ReflectionView({ node, pending, fieldError, onSend }: { node: Reflectio
           className="min-h-48 rounded-[var(--radius-card)] p-4 text-lg leading-relaxed"
         />
         <div id={hintId} className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-fg-muted">
-          <span>Sua resposta fica registrada para você e para a equipe; não é avaliada automaticamente.</span>
+          <span>Sua resposta fica registrada para você e para a equipe; não é avaliada automaticamente. {NOTE_PRIVACY_HINT}</span>
           <span className={cn('tabular-nums', tooLong && 'text-danger', !tooLong && !tooShort && 'text-success')}>
             {len}/{node.maxLength}
             {node.minLength > 0 && tooShort && ` · mínimo ${node.minLength}`}
@@ -657,8 +658,11 @@ function MissionView({ node, pending, fieldError, onSend }: { node: MissionNode;
       {reporting && (
         <div>
           <label htmlFor={noteId} className="block text-base font-semibold text-fg">{MISSION_LABELS.note} <span className="font-normal text-fg-muted">(opcional)</span></label>
-          <Textarea id={noteId} data-testid="mission-note" value={note} onChange={(e) => setNote(e.target.value)} rows={4} maxLength={MISSION_NOTE_MAX} disabled={pending} className="mt-2 min-h-28 rounded-[var(--radius-card)] p-4 text-lg" />
-          <p className={cn('mt-1 text-right text-xs tabular-nums', tooLong ? 'text-danger' : 'text-fg-muted')}>{len}/{MISSION_NOTE_MAX}</p>
+          <Textarea id={noteId} data-testid="mission-note" value={note} onChange={(e) => setNote(e.target.value)} rows={4} maxLength={MISSION_NOTE_MAX} disabled={pending} aria-describedby={`${noteId}-dica`} className="mt-2 min-h-28 rounded-[var(--radius-card)] p-4 text-lg" />
+          <p className={cn('mt-1 flex justify-between gap-3 text-xs text-fg-muted')}>
+            <span id={`${noteId}-dica`}>{NOTE_PRIVACY_HINT}</span>
+            <span className={cn('tabular-nums', tooLong && 'text-danger')}>{len}/{MISSION_NOTE_MAX}</span>
+          </p>
         </div>
       )}
       {fieldError && <p role="alert" className="text-sm text-danger">{fieldError}</p>}

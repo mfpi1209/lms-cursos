@@ -51,6 +51,8 @@ import { saveButtonState } from '../compose-state';
 import { LessonMapDrawer, useLessonNav } from '../navigation';
 import { BrandBumper } from '../brand-bumper';
 import { bumperPlaysHere } from '../platform-context';
+import { LegalLinks } from '@/components/legal/legal-links';
+import { NOTE_PRIVACY_HINT } from '../privacy-hint';
 
 /**
  * Player da plataforma: cabeçalho com a marca, palco escuro com o vídeo (ou a
@@ -275,8 +277,12 @@ export function ImmersivePlayer({
         )}
       </div>
 
-      {fullscreen.active ? null : brand.tagline ? (
-        <footer className="px-4 py-4 text-center text-sm text-fg-muted md:py-[18px]">{brand.tagline}</footer>
+      {fullscreen.active ? null : brand.tagline || platform.enrollmentId ? (
+        <footer className="px-4 py-3 text-center text-sm text-fg-muted md:py-[14px]">
+          {brand.tagline ? <p className="py-1">{brand.tagline}</p> : null}
+          {/* textos legais (aluno logado): abrem em outra aba para a pessoa não perder o lugar na aula */}
+          {platform.enrollmentId ? <LegalLinks newTab /> : null}
+        </footer>
       ) : (
         <div aria-hidden="true" className="h-6 md:h-14" />
       )}
@@ -2031,7 +2037,7 @@ function ReflectionPanel({ node, carry, headingRef, headingId, pending, fieldErr
           )}
         />
         <p id={hintId} className="flex flex-wrap items-center justify-between gap-2 border-t border-fg/10 px-5 py-2.5 text-[13px] text-fg/70">
-          <span>{optional ? 'Opcional. Vai para o seu roteiro; não vale nota.' : 'Fica registrada para você e para a equipe; não é avaliada automaticamente.'}</span>
+          <span>{optional ? 'Opcional. Vai para o seu roteiro; não vale nota.' : 'Fica registrada para você e para a equipe; não é avaliada automaticamente.'} {NOTE_PRIVACY_HINT}</span>
           <span className={cn('tabular-nums', tooLong && 'text-danger', !tooLong && !tooShort && len > 0 && 'text-[var(--im-accent-ink)]')}>
             {len}/{node.maxLength}
             {node.minLength > 0 && tooShort && ` · mínimo ${node.minLength}`}
@@ -2399,7 +2405,7 @@ export function MissionPanel({
                   className="block min-h-28 w-full resize-none rounded-[16px] bg-transparent px-4 py-3 text-[18px] leading-relaxed text-fg outline-none! placeholder:text-fg-muted focus-visible:shadow-[inset_0_0_0_2px_var(--im-accent-ink)]"
                 />
                 <p id={countId} className="flex items-center justify-between gap-2 border-t border-fg/10 px-4 py-2 text-[13px] text-fg/70">
-                  <span>Só para você. Pode deixar em branco.</span>
+                  <span>Só para você. Pode deixar em branco. {NOTE_PRIVACY_HINT}</span>
                   <span className={cn('tabular-nums', tooLong && 'text-danger')}>
                     {len}/{MISSION_NOTE_MAX}
                   </span>
