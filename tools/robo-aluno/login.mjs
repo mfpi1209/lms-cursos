@@ -7,12 +7,13 @@ const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 export const EMAIL = 'aluna@demo.local';
 export async function login(base = 'http://localhost:3010') {
   const seed = readFileSync(resolve(raiz, 'packages/db/src/seed/seed.ts'), 'utf8');
-  const senha = seed.match(/SEED_PASSWORD\s*=\s*['"`]([^'"`]+)['"`]/)?.[1];
+  // ROBO_SENHA: conta de teste em outro ambiente (a senha do seed só vale no banco local)
+  const senha = process.env.ROBO_SENHA || seed.match(/SEED_PASSWORD\s*=\s*['"`]([^'"`]+)['"`]/)?.[1];
   if (!senha) throw new Error('SEED_PASSWORD não encontrada');
   const r = await fetch(`${base}/api/auth/sign-in/email`, { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ email: EMAIL, password: senha }) });
   if (!r.ok) throw new Error(`login falhou: ${r.status}`);
   const set = r.headers.getSetCookie();
-  const cookies = set.map((c) => { const [nv] = c.split(';'); const i = nv.indexOf('='); return { name: nv.slice(0, i), value: nv.slice(i + 1), domain: 'localhost', path: '/' }; });
+  const cookies = set.map((c) => { const [nv] = c.split(';'); const i = nv.indexOf('='); return { name: nv.slice(0, i), value: nv.slice(i + 1), domain: new URL(base).hostname, path: '/', secure: base.startsWith('https:') }; });
   if (!cookies.length) throw new Error('sem cookie de sessão');
   return cookies;
 }

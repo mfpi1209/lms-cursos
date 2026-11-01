@@ -25,6 +25,10 @@ RUN DATABASE_URL=postgres://build:build@127.0.0.1:5432/build pnpm --filter @lms/
 FROM node:22.20.0-bookworm-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
+# ffmpeg: miniaturas dos vídeos (/api/assets/[id]/thumb) e ajustes finos do estúdio
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
 RUN groupadd -r -g 10001 app && useradd -r -u 10001 -g app app
 COPY --from=build --chown=app:app /app/apps/web/.next/standalone ./
 COPY --from=build --chown=app:app /app/apps/web/.next/static ./apps/web/.next/static

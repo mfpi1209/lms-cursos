@@ -27,7 +27,7 @@ function vigiaErros(page, erros) {
   });
   page.on('response', (r) => {
     const u = r.url();
-    if (r.status() >= 400 && u.includes('localhost')) erros.push({ tipo: 'http', texto: `${r.status()} ${r.request().method()} ${u.replace(/^https?:\/\/[^/]+/, '')}`.slice(0, 300) });
+    if (r.status() >= 400 && !/^(data|blob):/.test(u)) erros.push({ tipo: 'http', texto: `${r.status()} ${r.request().method()} ${u.replace(/^https?:\/\/[^/]+/, '')}`.slice(0, 300) });
   });
   page.on('requestfailed', (r) => {
     const f = r.failure()?.errorText || '';
