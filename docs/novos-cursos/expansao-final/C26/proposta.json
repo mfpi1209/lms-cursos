@@ -1,0 +1,806 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C26",
+  "id": "crs_d5rsi8gt36rv0qbq",
+  "titulo": "Onde está o problema?",
+  "instrutora": "Flávia — Sua orientadora",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 44,
+  "notaRevisao": "A Fase 0 (instruções das práticas) subiu o rascunho de 44 para 45; a01, a02 e a03 já têm a instrução nova e ficam como estão."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 4 é APENDADA no fim. Nenhum nó novo entra nas aulas 1–3; os ids v01–v06, q01–q06, a01–a03 não mudam.",
+  "Nas aulas 1–3: regravam só v01/s4, v03/s3 e v05/s2 (anúncio da prática sem a fórmula), três planos com estrutura diferente entre si; o resto do vídeo é reaproveitado. Textos: fim_aula_01 e fim_aula_02 (frase de fechamento) e fim_aula_03 (deixa de ser fim do curso).",
+  "Planos de vídeo: falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_flavia6_34 com chamada na cam_flavia6_esq; explicação na cam_flavia6_esq; despedida na cam_flavia6_34.",
+  "q07 não ganha vídeo próprio: v07 termina com a chamada e o player pula o vídeo da pergunta.",
+  "q07 é a decisão S2 do banco (“o formulário falhou de novo; o que você faz com o registro da semana passada?”), com reação falada. A demonstração e a decisão do pacote (repetiam q06/v06) não entram.",
+  "a04 é missão fora da tela (“Leve para a vida real”): um problema de casa (celular, app, wi-fi) com sintoma, hipótese e uma verificação que não piora nada. “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "A explicação não repete “sem acesso, peça apoio e descreva o que observou” (já está em v04/s2); o novo é o que fazer quando o problema volta.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C26 (“Boa escolha”, “É por aí”, “Isso ajuda”, “Bom caminho”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "O curso ensina a parar antes de mexer, investigar uma hipótese por vez e registrar o que o teste provou (q06/v06), mas nunca mostra o registro sendo usado: o que acontece quando o problema volta uma semana depois.",
+  "Falta a pergunta que muda a investigação da segunda vez: não “o que eu mudo?”, mas “o que mudou?” (uso real, outra pessoa, outro horário).",
+  "Falta o registro da falha (não só do sucesso): hipótese testada, resultado, próximo ponto; e “uma mudança por vez, senão você não sabe qual fez efeito”.",
+  "As três práticas (a01 sinal, a02 investigação, a03 critério) são de tela sobre o formulário fictício; ninguém investiga um problema seu.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final…”): sem fecho da Flávia, sem a frase “parar antes de apagar, expor ou alterar… não é falta de iniciativa”."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Investigar causas com testes seguros, verificar a solução e usar o registro quando o problema volta. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_04",
+    "texto": "Quando um problema volta, comparar as condições com o registro anterior (o que mudou), registrar também as falhas e mudar uma coisa por vez."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Cleiton",
+    "Débora",
+    "Nathan"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Antes de mexer: dá para desfazer?",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s4",
+       "acao": "change",
+       "fala": "Qual risco faz você parar e perguntar antes de mexer? Daqui a pouco, essa resposta vai estar escrita com as suas palavras.",
+       "nota": "Anúncio da a01 sem a palavra “missão”; começa com pergunta (voz da Flávia).",
+       "antes": "No fim desta aula, tem uma missão para você: registre um sinal que indica quando você deve parar e pedir apoio.",
+       "palavras": 22,
+       "segundos": 8.4,
+       "camera": "cam_flavia6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.48
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Dá para desfazer? Alguém autorizou? Duas respostas antes de um clique."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Antes de consertar, investigue",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s3 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s3",
+       "acao": "change",
+       "fala": "Você vai montar uma investigação de três linhas: o sintoma, uma hipótese e uma verificação que não piora nada.",
+       "nota": "Anúncio da a02, com estrutura diferente do v01/s4 e do v05/s2.",
+       "antes": "No fim desta aula, tem uma missão para você: monte uma investigação com sintoma, hipótese e uma verificação segura.",
+       "palavras": 19,
+       "segundos": 7.3,
+       "camera": "cam_flavia6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.86
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Uma hipótese por vez. Mudar tudo esconde a causa."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "change",
+   "titulo": "Funcionou mesmo?",
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "q06",
+    "a03",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "fala": "Mais adiante, a pergunta é sua: o que conta como “funcionou”? E o que fica registrado depois do teste?",
+       "nota": "Anúncio da a03, com estrutura diferente dos outros dois.",
+       "antes": "No fim desta aula, tem uma missão para você: defina um critério de sucesso e o que você registraria após um teste.",
+       "palavras": 19,
+       "segundos": 7.3,
+       "camera": "cam_flavia6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.46
+      }
+     ]
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q06",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0. É o registro que a aula 4 usa."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Confirmar que funcionou é comparar o resultado com o objetivo e registrar o que foi verificado. Se você salvou, seu critério de sucesso fica no Meu roteiro. Na próxima aula, o formulário falha de novo, e o registro do Nathan entra em ação. Depois, você investiga um problema seu, em casa.",
+      "closingLine": "Funcionou no teste. Falta saber se funcionou para quem usa."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” vão para fim_aula_04."
+    }
+   ]
+  },
+  {
+   "numero": 4,
+   "id": "aula_04",
+   "acao": "add",
+   "modulo": "Onde está o problema?",
+   "titulo": "Voltou. E agora?",
+   "resumo": "O formulário falha de novo uma semana depois. Você usa o registro para não começar do zero e investiga um problema seu, em casa, sem piorar nada.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_04",
+    "texto": "Quando um problema volta, comparar as condições com o registro anterior (o que mudou), registrar também as falhas e mudar uma coisa por vez."
+   },
+   "caminhoPrincipal": [
+    "v07",
+    "q07",
+    "v08",
+    "a04",
+    "despedida",
+    "fim_aula_04"
+   ],
+   "nos": [
+    {
+     "id": "v07",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Voltou. E agora?",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "textoTela": "Uma semana depois",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já sabe parar, investigar e conferir. Falta a cena que todo mundo vive: o problema volta.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 17,
+       "segundos": 6.5,
+       "acao": "add"
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você investiga um problema de verdade, em casa: celular, aplicativo ou wi-fi. Com uma verificação que não piora nada.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Uma semana depois do teste do Nathan, alguém avisa: “o formulário não chegou de novo”.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 15,
+       "segundos": 5.7,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Ele abre o registro: ambiente de teste, destino corrigido, uso real não verificado. Isso a gente sabe. O motivo, ainda não.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_34",
+       "cartao": {
+        "titulo": "O registro do Nathan",
+        "topicos": [
+         "Onde: **ambiente de teste**",
+         "O que mudou: **destino corrigido**",
+         "Falta: **uso real** não verificado"
+        ]
+       },
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar do Nathan, o que você faz com esse registro?",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "palavras": 11,
+       "segundos": 4.2,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "O formulário falhou de novo, uma semana depois do teste que passou. O registro diz: ambiente de teste, destino corrigido, uso real não verificado. O que você faz com ele?",
+     "proximo": "q07",
+     "palavras": 85,
+     "segundos": 32.4,
+     "roteiroNovo": "Você já sabe parar, investigar e conferir. Falta a cena que todo mundo vive: o problema volta. No fim, você investiga um problema de verdade, em casa: celular, aplicativo ou wi-fi. Com uma verificação que não piora nada. Uma semana depois do teste do Nathan, alguém avisa: “o formulário não chegou de novo”. Ele abre o registro: ambiente de teste, destino corrigido, uso real não verificado. Isso a gente sabe. O motivo, ainda não. No lugar do Nathan, o que você faz com esse registro?"
+    },
+    {
+     "id": "q07",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar do Nathan, o que você faz com o registro?",
+     "apoioNaTela": "O formulário falhou de novo, uma semana depois do teste que passou. O registro da semana passada diz: ambiente de teste, destino corrigido, uso real não verificado.",
+     "bridge": {
+      "call": "No lugar do Nathan, o que você faz com esse registro?"
+     },
+     "video": "não gerar: v07 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Comparo: onde falhou agora, o que mudou desde o teste. E levo isso a quem tem acesso.”",
+       "qualidade": "strong",
+       "feedback": "O registro vira ponto de partida: ninguém começa do zero. Faça assim: anote onde falhou agora, o que mudou desde o teste, e leve isso a quem tem acesso.",
+       "reacao": {
+        "texto": "O registro virou ponto de partida. Ninguém começa do zero. A diferença entre teste e uso real é justamente a pista.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v08",
+       "caracteres": 87
+      },
+      {
+       "id": "b",
+       "rotulo": "“Refaço o ajuste do destino. Funcionou da outra vez.”",
+       "qualidade": "ok",
+       "feedback": "Pode não ser a mesma causa. Repetir a correção sem comparar esconde o que mudou, e pode mexer no que estava certo. Faça assim: compare antes de mexer.",
+       "reacao": {
+        "texto": "Funcionou da outra vez, naquelas condições. Pode não ser a mesma causa. Repetir a correção sem comparar esconde o que mudou.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v08",
+       "caracteres": 53
+      },
+      {
+       "id": "c",
+       "rotulo": "“Concluo que o teste da semana passada não valeu nada e começo do zero.”",
+       "qualidade": "weak",
+       "feedback": "O teste valeu para aquelas condições: ambiente de teste, aquele destino. A diferença entre lá e agora é justamente a pista. Faça assim: compare as condições em vez de jogar o registro fora.",
+       "reacao": {
+        "texto": "Valeu, sim: no ambiente de teste, com aquele destino. O registro diz até onde valeu. Jogar fora é perder pista.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v08",
+       "caracteres": 72
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele dá o registro; a decisão é usá-lo para comparar condições, em vez de repetir a correção (plausível: funcionou) ou descartá-lo (plausível: “não valeu”). Não repete q06 (registrar o teste que passou) nem q04 (próxima hipótese). Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 62,
+     "segundosReacoes": 23.7
+    },
+    {
+     "id": "v08",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "O que mudou?",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "textoTela": "O que mudou · O que o registro já descarta · Uma mudança por vez",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Quando o problema volta, a primeira pergunta não é “o que eu mudo?”. É “o que mudou?”. Uso real? Outra pessoa? Outro horário?",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Registre também o que falhou: hipótese testada, resultado, próximo ponto. E uma mudança por vez, senão você não sabe qual fez efeito.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_esq",
+       "cartao": {
+        "titulo": "Quando volta",
+        "topicos": [
+         "O que **mudou** desde o teste",
+         "O que o registro **já descarta**",
+         "Uma **mudança** por vez"
+        ]
+       },
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: um problema de casa. Celular, aplicativo ou wi-fi. Sintoma, hipótese, uma verificação que não piora nada.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a04.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a04",
+     "naoRepete": "Não repete v04 (uma hipótese por vez; sem acesso, peça apoio e descreva) nem v06 (registre o que foi verificado e a limitação). O novo: “o que mudou?” antes de “o que eu mudo?”, o registro da falha e o efeito de mudar várias coisas ao mesmo tempo.",
+     "palavras": 65,
+     "segundos": 24.8,
+     "roteiroNovo": "Quando o problema volta, a primeira pergunta não é “o que eu mudo?”. É “o que mudou?”. Uso real? Outra pessoa? Outro horário? Registre também o que falhou: hipótese testada, resultado, próximo ponto. E uma mudança por vez, senão você não sabe qual fez efeito. Agora é com você: um problema de casa. Celular, aplicativo ou wi-fi. Sintoma, hipótese, uma verificação que não piora nada."
+    },
+    {
+     "id": "a04",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Investigue um problema de casa sem piorar nada",
+     "tipoDeMissao": "FAZER fora da tela: um problema real de celular, app ou wi-fi, com sintoma, hipótese, uma verificação segura e o registro do resultado",
+     "intro": "O Nathan não começou do zero porque tinha o registro. Agora é um problema seu, de casa, do tamanho que dá para investigar sem estragar nada.",
+     "action": [
+      "Escolha um problema real e pequeno: o wi-fi que cai num cômodo, um app que fecha sozinho, o celular que descarrega rápido.",
+      "No bloco de notas: Sintoma (o que deveria acontecer e o que acontece) · Uma hipótese · Uma verificação que não apaga nada, não troca senha e não mexe no que é de outra pessoa.",
+      "Faça a verificação. Anote o resultado, mesmo que não confirme a hipótese, e o próximo ponto a olhar.",
+      "Se precisar de algo que você não tem (senha do roteador, acesso de administrador), pare e descreva o problema para quem tem.",
+      "Volte aqui, marque “Já experimentei” e conte o que a verificação mostrou."
+     ],
+     "alternative": "Não depende de emprego: celular, app e wi-fi de casa valem. Nada está com problema? Pegue o de alguém da família ou de um amigo e investigue só descrevendo e perguntando, sem mexer no aparelho dos outros. Se o problema voltar na semana seguinte, melhor ainda: compare com o que você anotou.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de um aluno",
+      "texto": "Sintoma: o wi-fi cai só no quarto. Hipótese: distância do roteador. Verificação: testar a velocidade na sala e no quarto, no mesmo horário. Resultado: na sala normal, no quarto caiu. Próximo ponto: parede ou micro-ondas no caminho. Não mexi no roteador.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: a verificação confirmou ou descartou a hipótese? Qual é o próximo ponto? Sem senhas nem dados de ninguém.",
+      "placeholder": "Ex.: o app fechava só com pouca memória; descartei a internet e o próximo ponto é limpar o cache.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a04 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "titulo": "Parar faz parte do raciocínio",
+     "textoTela": "Dá para desfazer? · Uma hipótese por vez · Funcionou para quem usa? · O que mudou?",
+     "posicao": "depois de a04 e antes de fim_aula_04",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "O botão que apaga, a tabela de preços, o formulário que voltou. Em todos, o primeiro passo foi parar e descrever a diferença.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "Guarde uma frase: parar antes de apagar, expor ou alterar algo importante faz parte do raciocínio, não falta de iniciativa.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Onde está o problema? Você não precisa saber na hora. Precisa de sintoma descrito, uma hipótese, um teste seguro. O resto se investiga.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina respondendo ao título do curso com uma orientação concreta (sintoma, hipótese, teste seguro) e guarda a frase memorável do banco; callback aos três casos em uma frase; sem recap, sem “você praticou”, sem “Meu roteiro” na fala, sem a fórmula “não é… é…”.",
+     "motionPrompt": "pausa curta depois de “Onde está o problema?”, mão aberta, sorriso tranquilo",
+     "palavras": 66,
+     "segundos": 25.2,
+     "roteiroNovo": "O botão que apaga, a tabela de preços, o formulário que voltou. Em todos, o primeiro passo foi parar e descrever a diferença. Guarde uma frase: parar antes de apagar, expor ou alterar algo importante faz parte do raciocínio, não falta de iniciativa. Onde está o problema? Você não precisa saber na hora. Precisa de sintoma descrito, uma hipótese, um teste seguro. O resto se investiga."
+    },
+    {
+     "id": "fim_aula_04",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O problema voltou? Não comece do zero. Pergunte o que mudou.",
+     "summary": "O que você levou\nAntes de mexer: dá para desfazer? alguém autorizou?\nPara investigar: sintoma, uma hipótese por vez, verificação segura, registro do que provou e do que falhou.\nQuando volta: o que mudou desde o teste? Uma mudança por vez.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu problema de casa",
+       "kind": "checklist",
+       "items": [
+        "escolhi um problema pequeno e real",
+        "anotei sintoma, hipótese e verificação segura",
+        "fiz a verificação e anotei o resultado",
+        "parei quando precisava de acesso que não tenho"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a04",
+       "composedNodeIds": [
+        "a04"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer a verificação, volte e conte o que ela mostrou."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de mexer: dá para desfazer? alguém autorizou?\nPara investigar: sintoma, uma hipótese por vez, verificação segura, registro do que provou e do que falhou.\nQuando volta: o que mudou desde o teste? Uma mudança por vez.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 11,
+   "palavras": 216,
+   "segundos": 82.4
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 62,
+   "segundos": 23.7
+  },
+  "aberturasTrocadas": {
+   "quantidade": 3,
+   "palavras": 60,
+   "segundos": 22.9,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s4",
+     "palavras": 22,
+     "segundos": 8.4,
+     "duracaoAntesS": 7.48
+    },
+    {
+     "no": "v03",
+     "plano": "s3",
+     "palavras": 19,
+     "segundos": 7.3,
+     "duracaoAntesS": 7.86
+    },
+    {
+     "no": "v05",
+     "plano": "s2",
+     "palavras": 19,
+     "segundos": 7.3,
+     "duracaoAntesS": 7.46
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 338,
+   "segundos": 129.0,
+   "usd": 2.36,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v07",
+    "planos": 5,
+    "palavras": 85,
+    "segundos": 32.4
+   },
+   {
+    "no": "q07 (3 reações)",
+    "planos": 3,
+    "palavras": 62,
+    "segundos": 23.7
+   },
+   {
+    "no": "v08",
+    "planos": 3,
+    "palavras": 65,
+    "segundos": 24.8
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 66,
+    "segundos": 25.2
+   },
+   {
+    "no": "aberturas trocadas (3 planos)",
+    "planos": 3,
+    "palavras": 60,
+    "segundos": 22.9
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 12,
+   "palavras": 137,
+   "segundos": 52.3,
+   "usd": 0.96,
+   "nota": "12 reações do C26 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Uma tentativa pode apagar conteúdo importante.",
+     "palavras": 6,
+     "segundos": 2.3
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Buscar informação ajuda, mas ‘parecer simples’ não diz se dá para desfazer.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você tenta limitar o risco, mas pode alterar um preço de verdade.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Em preços reais, “voltar depois” pode já ter afetado clientes.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Se voltar a funcionar, você não saberá qual era a causa, e pode criar outros problemas.",
+     "palavras": 16,
+     "segundos": 6.1
+    },
+    {
+     "no": "q03",
+     "opcao": "c",
+     "abertura": "Olhe isso com calma.",
+     "resto": "É uma hipótese possível, mas tratada como causa antes de ser testada.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Conferir de novo não custa, mas a hipótese já foi testada.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você escolhe uma causa sem testar, e a investigação para aí.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q05",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A mensagem confirma uma etapa, mas não necessariamente o recebimento esperado.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q05",
+     "opcao": "b",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Mais um teste ajuda, mas sem conferir o destino, nada está provado.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q06",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "O teste mostra que o destino foi corrigido, mas não prova todos os casos.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q06",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Repetir testes não prova que nunca falha e consome tempo.",
+     "palavras": 10,
+     "segundos": 3.8
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 213.9,
+    "maxS": 225.5,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 304.1,
+    "maxS": 316.1,
+    "texto": "cerca de 5.1–5.3 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 4 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 4; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 12 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 55.3 s, ≈ US$ 1.01). Recomendo (b); se não der, (a).",
+  "3. Três aberturas regravadas (v01/s4, v03/s3, v05/s2) em vez de duas: (a) regravar as três, como manda a regra (≈ 22 s) · (b) regravar só v01/s4 e v05/s2 e deixar v03/s3 com a fórmula (economiza ≈ 7 s). Recomendo (a): a fórmula repetida três vezes no mesmo curso é justamente o problema.",
+  "4. Missão a04 mexe em aparelho de casa: (a) manter, com os limites escritos (não apaga, não troca senha, não mexe no que é de outra pessoa; parar sem acesso) · (b) restringir a “só descrever, sem verificar”. Recomendo (a): a verificação segura é o que o curso ensina desde a aula 1."
+ ]
+}

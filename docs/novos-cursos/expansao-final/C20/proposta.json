@@ -1,0 +1,716 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C20",
+  "id": "crs_m60hsx8on6ebcyqg",
+  "titulo": "IA como aliada",
+  "instrutora": "Laís — Sua orientadora",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 31,
+  "notaRevisao": "A Fase 0 (instruções das práticas) subiu o rascunho de 31 para 32; a01 e a02 já têm a instrução nova e ficam como estão."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim. Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v04, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2: regravam só v01/s4 e v03/s2 (anúncio da prática sem a fórmula “No fim desta aula, tem uma missão para você”); o resto do vídeo é reaproveitado. Textos: fim_aula_01 (frase de fechamento) e fim_aula_02 (deixa de ser fim do curso).",
+  "a01 continua sendo a prática em que o aluno MONTA O PEDIDO à IA (blocos objetivo/contexto/formato). A seleção múltipla do pacote não entra; a revisão pediu para manter a escrita do pedido.",
+  "Planos de vídeo: id é o id do plano no direction da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_lais8_34 com chamada na cam_lais8_esq; explicação na cam_lais8_esq; despedida na cam_lais8_34 (padrão atual do C20).",
+  "q05 não ganha vídeo próprio: v05 termina com a chamada e o player pula o vídeo da pergunta (como nas 4 perguntas atuais).",
+  "a03 é missão fora da tela (“Leve para a vida real”): sem molde; o pedido é feito numa IA gratuita, com dados inventados. “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "A demonstração na tela (pedido vago → invenções → pedido bom → resposta honesta) é SIMULAÇÃO: o cartão deve dizer “simulação” e nenhum nome de produto de IA aparece.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C20 (“Boa escolha”, “É por aí”, “Isso ajuda”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "A aula 1 ensina a pedir e a aula 2 ensina a desconfiar, mas o curso nunca mostra o caso inteiro: pedido vago, resposta inventando, pedido com dados, resposta honesta (“o tema não foi informado”).",
+  "A q03 trata de UMA invenção óbvia (certificado). Falta a armadilha real: o detalhe inventado que parece útil (“inscrições até segunda”) e por isso fica no texto.",
+  "As duas práticas (a01 pedido, a02 checklist) são de tela; ninguém abre uma IA de verdade e vê o que ela acrescenta.",
+  "A regra “pergunte qual é a regra de uso de IA no seu trabalho” aparece só no meio da v02 e no feedback da q04; não está no fecho.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final. Revise o que preparou…”): sem fecho da Laís, sem retorno ao convite da oficina."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Pedir ajuda à IA, conferir a resposta com os dados de origem e proteger informações. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Comparar a resposta da IA com os dados de origem, retirar o que não tem origem (mesmo o que parece útil) e perguntar a regra de uso de IA do lugar onde trabalha."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Lorena",
+    "Samuel"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como pedir ajuda à IA",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 regrava (mesmo id). s1, s2, s3, s5 e chamada ficam.",
+     "planos": [
+      {
+       "id": "s4",
+       "acao": "change",
+       "fala": "Daqui a pouco você monta um pedido de verdade, peça por peça: o que quer, com quais dados, em que formato.",
+       "nota": "Continua sendo o anúncio da a01 (único anúncio falado da prática), sem a palavra “missão”.",
+       "antes": "No fim desta aula, tem uma missão para você: monte um pedido para organizar uma tarefa fictícia, com objetivo, contexto e formato.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "camera": "cam_lais8_34",
+       "layout": "presenter",
+       "duracaoAntesS": 8.64
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Fica: é a prática em que o aluno escreve o pedido (revisão pediu manter). Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Quanto mais claro o pedido, menos a IA precisa inventar."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Antes de usar, confira",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "fala": "Antes de terminar, você vai ter um checklist seu: três coisas para conferir antes de usar qualquer resposta de IA.",
+       "nota": "Anúncio da a02, com estrutura diferente do v01/s4.",
+       "antes": "No fim desta aula, tem uma missão para você: crie seu checklist de revisão de uma resposta de IA com três verificações.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "camera": "cam_lais8_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.56
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Antes de usar uma resposta de IA, confira os fatos e retire o que ninguém confirmou. Não cole cadastros, senhas nem documentos internos: troque por dados fictícios. Se você salvou, seu checklist fica no Meu roteiro. Na próxima aula, você vê a IA inventar num caso completo e testa isso numa IA de verdade.",
+      "closingLine": "Resposta bonita não é resposta confirmada."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” saem daqui e vão para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "IA como aliada",
+   "titulo": "A IA inventou. E agora?",
+   "resumo": "Você vê o caso completo, decide o que fazer com o detalhe inventado que parece útil e testa um pedido numa IA de verdade.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Comparar a resposta da IA com os dados de origem, retirar o que não tem origem (mesmo o que parece útil) e perguntar a regra de uso de IA do lugar onde trabalha."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "A IA inventou. E agora?",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Do pedido vago à resposta honesta",
+     "planos": [
+      {
+       "id": "promessa",
+       "fala": "Você já sabe pedir e já sabe desconfiar. Hoje você testa isso numa IA gratuita, só com dados inventados por você.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”. Abre a aula com a promessa e a ponte.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Pedido vago: “Faça um convite legal para a oficina”. Veio bonito, com certificado, duração e inscrição gratuita. Nada disso existia.",
+       "layout": "presenter_chips",
+       "camera": "cam_lais8_34",
+       "cartao": {
+        "titulo": "Simulação · pedido vago",
+        "topicos": [
+         "Pedido: “Faça um convite **legal** para a oficina”",
+         "Resposta acrescentou: **certificado** · **duração** · **inscrição gratuita**"
+        ]
+       },
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Pedido com dados: terça, dez horas, sala dois, equipe de apoio. “Use só isso; se faltar, avise.” Resposta: “tema não informado”.",
+       "layout": "presenter_chips",
+       "camera": "cam_lais8_34",
+       "cartao": {
+        "titulo": "Simulação · pedido com dados",
+        "topicos": [
+         "Só: **terça, 10h, sala 2, equipe de apoio**",
+         "“Se faltar informação, **avise**”",
+         "Resposta: “O tema **não foi informado**”"
+        ]
+       },
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s4",
+       "fala": "A Lorena pediu de novo, sem a última frase. Vieram “inscrições até segunda” e “certificado incluso”. Nada disso está nos dados.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Lorena, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "palavras": 8,
+       "segundos": 3.1,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "A resposta trouxe “inscrições até segunda” e “certificado incluso”. Nada disso está nos dados. No lugar da Lorena, o que você faz?",
+     "proximo": "q05",
+     "palavras": 91,
+     "segundos": 34.7,
+     "roteiroNovo": "Você já sabe pedir e já sabe desconfiar. Hoje você testa isso numa IA gratuita, só com dados inventados por você. Pedido vago: “Faça um convite legal para a oficina”. Veio bonito, com certificado, duração e inscrição gratuita. Nada disso existia. Pedido com dados: terça, dez horas, sala dois, equipe de apoio. “Use só isso; se faltar, avise.” Resposta: “tema não informado”. A Lorena pediu de novo, sem a última frase. Vieram “inscrições até segunda” e “certificado incluso”. Nada disso está nos dados. No lugar da Lorena, o que você faz?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Lorena, o que você faz?",
+     "apoioNaTela": "Dados confirmados: oficina interna, terça, 10h, sala 2, equipe de apoio. A resposta da IA acrescentou “inscrições até segunda” e “certificado incluso”.",
+     "bridge": {
+      "call": "No lugar da Lorena, o que você faz?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Tiro o certificado, mas deixo o prazo de inscrição: ajuda a organizar quem vai.”",
+       "qualidade": "ok",
+       "feedback": "O prazo parece útil, mas ninguém confirmou. Se ficar, alguém pode perder a oficina por uma data inventada. Faça assim: tire tudo o que não tem origem nos seus dados, mesmo o que parece ajudar.",
+       "reacao": {
+        "texto": "O prazo parece útil. Mas de onde ele veio? De lugar nenhum. Útil e confirmado são coisas diferentes: o prazo também sai.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v06",
+       "caracteres": 81
+      },
+      {
+       "id": "b",
+       "rotulo": "“Tiro as duas e confiro o resto, frase por frase, com os dados que eu tinha.”",
+       "qualidade": "strong",
+       "feedback": "Você revisou pelo que estava confirmado, não pelo que soava bem. Faça assim: antes de enviar, confira nomes, números e condições contra a origem, e guarde o que conferiu.",
+       "reacao": {
+        "texto": "Você revisou pelo que tinha na mão, não pelo que soava bem. É assim que a resposta vira texto seu.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v06",
+       "caracteres": 77
+      },
+      {
+       "id": "c",
+       "rotulo": "“Deixo as duas: todo convite tem isso, e o texto ficou bonito.”",
+       "qualidade": "weak",
+       "feedback": "O texto bonito cria duas promessas que ninguém pode cumprir: certificado e prazo. Faça assim: retire as duas e compare o resto, frase por frase, com os dados de origem.",
+       "reacao": {
+        "texto": "Bonito, sim. Confirmado, não. Segunda-feira chega alguém perguntando do certificado, e quem responde é você, não a ferramenta.",
+        "palavras": 18,
+        "segundos": 6.9
+       },
+       "vaiPara": "v06",
+       "caracteres": 63
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele diz quais dados são confirmados e o que a IA acrescentou; perceber que “útil” não é “confirmado” (o prazo) é a decisão. Não repete a q03 (uma invenção óbvia, três atitudes gerais): aqui a armadilha é a revisão pela metade. Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 60,
+     "segundosReacoes": 22.9
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Conferir contra a origem",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Texto da IA · Seus dados · Sem origem, sai",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Pedido melhor, menos invenção. Nunca zero. Conferir não é desconfiar da ferramenta: é a sua parte do trabalho.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Ponha o texto e os seus dados lado a lado. Cada nome, número e condição precisa ter origem. O que não tem, sai.",
+       "layout": "presenter_chips",
+       "camera": "cam_lais8_esq",
+       "cartao": {
+        "titulo": "Lado a lado",
+        "topicos": [
+         "**Texto** da IA",
+         "**Seus dados** de origem",
+         "Sem origem: **sai**"
+        ]
+       },
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "E antes de usar IA numa tarefa de verdade, pergunte a regra do lugar onde você trabalha. Cada empresa tem a sua.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "nota": "A regra do trabalho sai do meio da v02 e ganha lugar no fecho da aula, como a revisão pediu.",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: um pedido pequeno, numa IA gratuita, dados inventados. Depois volte e conte o que corrigiu.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a03.",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete v02 (estrutura do pedido) nem v04 (compare com a fonte; o que não entra). O novo: a revisão pela metade, “útil não é confirmado”, texto e dados lado a lado, e a regra do trabalho no fecho. Pedir a segunda versão com as mesmas regras fica na missão (passo 4), não no vídeo.",
+     "palavras": 82,
+     "segundos": 31.3,
+     "roteiroNovo": "Pedido melhor, menos invenção. Nunca zero. Conferir não é desconfiar da ferramenta: é a sua parte do trabalho. Ponha o texto e os seus dados lado a lado. Cada nome, número e condição precisa ter origem. O que não tem, sai. E antes de usar IA numa tarefa de verdade, pergunte a regra do lugar onde você trabalha. Cada empresa tem a sua. Agora é com você: um pedido pequeno, numa IA gratuita, dados inventados. Depois volte e conte o que corrigiu."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Peça um texto a uma IA e corrija o que ela inventou",
+     "tipoDeMissao": "FAZER fora da tela: um pedido pequeno numa IA gratuita, só com dados inventados, e a conferência frase por frase",
+     "intro": "A Lorena tirou o prazo e o certificado porque não tinham origem. Agora é a sua vez de ver, numa IA de verdade, o que ela acrescenta quando você não limita.",
+     "action": [
+      "Invente os dados de um evento que não existe: dia, hora, lugar, público. Nada real, nada seu.",
+      "Numa IA gratuita, peça um texto de três frases com esses dados e a regra: “Use só isso. Se faltar informação, avise.”",
+      "Compare a resposta, frase por frase, com os dados que você inventou. Marque o que apareceu sem origem.",
+      "Peça uma segunda versão, com as mesmas regras, e veja se a invenção sumiu.",
+      "Volte aqui, marque “Já experimentei” e conte o que precisou corrigir."
+     ],
+     "alternative": "Não precisa de emprego: qualquer conta gratuita serve, no celular ou no computador da escola. Sem acesso a nenhuma IA? Peça a alguém para abrir uma no celular por dois minutos, ou faça com o convite da oficina: pegue o texto do exemplo e marque o que não tem origem nos dados. Em nenhum caso cole dados reais, nem os seus.",
+     "tip": {
+      "rotulo": "Exemplo: a nota da Lorena",
+      "texto": "Dados inventados: feira de ciências, quinta, 14h, quadra, turma do 2º ano. Pedido: convite de três frases, só com isso, avisar se faltar. Veio: “…com premiação para os três melhores” — não existe. Pedi de novo com as mesmas regras: saiu “o critério de avaliação não foi informado”. Corrigi: a premiação.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: o que a IA acrescentou sem origem? A segunda versão melhorou? Só dados fictícios.",
+      "placeholder": "Ex.: ela inventou um prazo de inscrição; na segunda versão, avisou que faltava o tema.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "De onde veio este dado?",
+     "textoTela": "Pedir · Conferir · Buscar fora · Perguntar a regra",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Lembra do convite? O texto convencia. E o certificado? Veio de lugar nenhum. Essa pergunta vale para toda resposta.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "A IA ajuda a começar. O que sai no seu nome é decisão sua: o que pedir, o que conferir, o que buscar fora.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "palavras": 24,
+       "segundos": 9.2,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Quando um texto convencer você, pare um segundo e pergunte: de onde veio este dado? Até a próxima.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina com a pergunta-assinatura da Laís (“de onde veio este dado?”) e uma despedida curta; sem recap, sem “você praticou”, sem “Meu roteiro” na fala; o callback (convite, certificado) cabe em uma frase.",
+     "motionPrompt": "olhar curioso, leve inclinação de cabeça na pergunta final, sorriso",
+     "palavras": 61,
+     "segundos": 23.3,
+     "roteiroNovo": "Lembra do convite? O texto convencia. E o certificado? Veio de lugar nenhum. Essa pergunta vale para toda resposta. A IA ajuda a começar. O que sai no seu nome é decisão sua: o que pedir, o que conferir, o que buscar fora. Quando um texto convencer você, pare um segundo e pergunte: de onde veio este dado? Até a próxima."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O texto convence. Mas de onde veio este dado?",
+     "summary": "O que você levou\nPedir: resultado, dados confirmados, formato, e “se faltar, avise”.\nConferir: texto e dados lado a lado; sem origem, sai, mesmo o que parece útil.\nAntes de usar numa tarefa real: qual é a regra do lugar onde você trabalha?",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu pedido numa IA de verdade",
+       "kind": "checklist",
+       "items": [
+        "dados inventados por mim",
+        "pedido com “use só isso; se faltar, avise”",
+        "conferi frase por frase",
+        "pedi a segunda versão"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer o pedido, volte e conte o que precisou corrigir."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Pedir: resultado, dados confirmados, formato, e “se faltar, avise”.\nConferir: texto e dados lado a lado; sem origem, sai, mesmo o que parece útil.\nAntes de usar numa tarefa real: qual é a regra do lugar onde você trabalha?",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 234,
+   "segundos": 89.3
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 60,
+   "segundos": 22.9
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 41,
+   "segundos": 15.6,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s4",
+     "palavras": 21,
+     "segundos": 8.0,
+     "duracaoAntesS": 8.64
+    },
+    {
+     "no": "v03",
+     "plano": "s2",
+     "palavras": 20,
+     "segundos": 7.6,
+     "duracaoAntesS": 7.56
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 335,
+   "segundos": 127.9,
+   "usd": 2.34,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 91,
+    "segundos": 34.7
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 60,
+    "segundos": 22.9
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 82,
+    "segundos": 31.3
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 61,
+    "segundos": 23.3
+   },
+   {
+    "no": "aberturas trocadas (2 planos)",
+    "planos": 2,
+    "palavras": 41,
+    "segundos": 15.6
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 93,
+   "segundos": 35.5,
+   "usd": 0.65,
+   "nota": "8 reações do C20 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A ferramenta recebe pouca direção e pode devolver algo genérico.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Você pede o convite completo, mas abre espaço para detalhes inventados parecerem confirmados.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Resolve o tamanho, mas você pode cortar uma informação importante.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "O pedido continua sem direção e a resposta pode não mudar.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você desconfia, mas outra resposta da mesma ferramenta não substitui uma fonte confiável.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q03",
+     "opcao": "c",
+     "abertura": "Olhe isso com calma.",
+     "resto": "O texto pode criar uma expectativa que a equipe não consegue cumprir.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Você pensa em limpar, mas os dados já foram enviados.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A ferramenta não precisa de nomes e telefones para resumir, e você expõe clientes.",
+     "palavras": 14,
+     "segundos": 5.3
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 149.6,
+    "maxS": 158.9,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 245.2,
+    "maxS": 256.0,
+    "texto": "cerca de 4.1–4.3 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.3 s, ≈ US$ 0.66). Recomendo (b); se não der, (a).",
+  "3. Missão a03 exige acesso a uma IA gratuita: (a) como está, com a alternativa escrita (pedir o celular de alguém, computador da escola ou marcar o texto do exemplo) · (b) trocar a missão por “marcar o que não tem origem” num texto da tela, sem IA. Recomendo (a): é a única vez no curso em que o aluno vê uma IA de verdade inventar.",
+  "4. a01 continua sendo “montar o pedido” em blocos (o que a revisão pediu manter): (a) sim, intacta · (b) trocar por texto curto “escreva o pedido” com critérios (S1 do banco; depende do selfReview no motor). Recomendo (a): custo zero e a missão a03 já é o pedido escrito de verdade.",
+  "5. Prazo inventado como opção “média” (A) da q05: (a) manter, porque a armadilha “útil mas não confirmado” é o aprendizado da aula · (b) rebaixar A para fraca e criar uma média nova (“peço à IA a fonte do prazo”). Recomendo (a)."
+ ]
+}

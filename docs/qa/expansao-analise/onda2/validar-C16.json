@@ -1,0 +1,36 @@
+[
+ {
+  "codigo": "C16",
+  "id": "crs_2rt2rsoii8bpydp2",
+  "titulo": "Discordar sem brigar",
+  "revisao": 38,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ }
+]

@@ -1,0 +1,322 @@
+{
+  "schema_version": "dna-editorial-1.0",
+  "schema_notice": "Contrato editorial intermediário. Não é o schema nativo comprovado do motor. Adaptar após inspeção do projeto.",
+  "id": "dna-proposta-seus-dados-tambem-trabalham",
+  "slug_proposto": "seus-dados-tambem-trabalham",
+  "title": "Seus dados também trabalham",
+  "status": "draft",
+  "locale": "pt-BR",
+  "track_proposed": "Tecnologia com critério",
+  "objective": "Identificar informações expostas e escolher um compartilhamento adequado.",
+  "audience": "Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+  "prerequisites": "Leitura básica; não exige experiência profissional.",
+  "instructor_proposed": "Thiago",
+  "editorial_review": "Revisar sobreposição com redes sociais e mensagens profissionais.",
+  "duration_seconds": null,
+  "duration_status": "awaiting_media_measurement",
+  "assessment": {
+    "purpose": "formative",
+    "passing_score": null,
+    "certificate_claim": null,
+    "retry_allowed": true
+  },
+  "lessons": [
+    {
+      "id": "a01",
+      "title": "O que aparece no seu print?",
+      "objective": "Liste o que removeria de um print fictício antes de pedir ajuda.",
+      "entry_node": "a01-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a01-abertura",
+          "type": "video",
+          "title": "O que aparece no seu print?",
+          "speech": "Às vezes você quer mostrar um erro na tela e acaba mostrando muito mais. Antes de capturar e enviar, observe nomes, contatos, abas abertas e informações que não são necessárias para resolver a dúvida.",
+          "onscreen_text": "O que aparece no seu print?",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-situacao"
+        },
+        {
+          "id": "a01-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Você vai mandar um print para pedir ajuda. Ao fundo aparecem telefone de um cliente e uma conversa pessoal.",
+          "question": "Qual é a melhor preparação?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Envio inteiro para dar contexto.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Recorto ou oculto os dados desnecessários e reviso a imagem final.",
+              "recommended": true,
+              "feedback_node": "a01-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Envio e peço que apaguem depois.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a01-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O contexto extra expõe informações que não ajudam a resolver o problema.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você reduz a exposição e confere se o arquivo final realmente removeu o que não deve aparecer.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Depois do envio, você não controla todas as cópias ou visualizações.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Mostre só a parte necessária e use o canal autorizado. Se ocultar dados, confira a imagem exportada: o que foi coberto não deve continuar legível. Quando possível, reproduza o erro com informações fictícias. Não use dados reais nesta atividade.",
+          "onscreen_text": "Liste o que removeria de um print fictício antes de pedir ajuda.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-pratica"
+        },
+        {
+          "id": "a01-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Liste o que removeria de um print fictício antes de pedir ajuda.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Retirar telefone do cliente, conversa pessoal e abas desnecessárias. Manter apenas a mensagem de erro.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a01-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a01-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a01-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Na próxima aula, vamos avançar para outra situação.",
+          "next": "a02-abertura",
+          "next_label": "Ir para a aula 2"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "title": "Antes de enviar, confira o destino",
+      "objective": "Monte um checklist de envio: destinatário, conteúdo e acesso.",
+      "entry_node": "a02-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a02-abertura",
+          "type": "video",
+          "title": "Antes de enviar, confira o destino",
+          "speech": "Um arquivo correto enviado para a pessoa errada ainda pode causar um problema. O destinatário, a permissão do link e a necessidade de acesso fazem parte da tarefa.",
+          "onscreen_text": "Antes de enviar, confira o destino",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-situacao"
+        },
+        {
+          "id": "a02-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Você precisa compartilhar uma planilha interna. O link está configurado para qualquer pessoa com o link.",
+          "question": "Como você continua?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Envio, porque o nome do arquivo está correto.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Confirmo destinatários e ajusto o acesso conforme a orientação da organização.",
+              "recommended": true,
+              "feedback_node": "a02-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Publico no grupo mais amplo para alguém encaminhar.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a02-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O nome não controla quem consegue abrir o conteúdo.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você verifica se o acesso corresponde à finalidade do envio.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O grupo amplo aumenta a circulação sem resolver a necessidade de acesso.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Confira destinatário, arquivo e permissão antes de enviar. Se perceber um envio indevido, comunique pelo procedimento interno e peça ajuda para conter o acesso. Não esconda o ocorrido nem presuma que apagar sua mensagem resolve tudo.",
+          "onscreen_text": "Monte um checklist de envio: destinatário, conteúdo e acesso.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-pratica"
+        },
+        {
+          "id": "a02-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Monte um checklist de envio: destinatário, conteúdo e acesso.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Conferir quem recebe; revisar o conteúdo e anexos; verificar quem consegue acessar o link.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a02-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a02-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a02-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Você concluiu as duas situações do curso. Seu roteiro fica disponível para consultar e adaptar quando precisar.",
+          "next": "curso-concluido",
+          "next_label": "Concluir curso"
+        }
+      ]
+    }
+  ],
+  "end_node": {
+    "id": "curso-concluido",
+    "type": "summary",
+    "title": "Você chegou ao final",
+    "text": "Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+    "actions": [
+      "Abrir meu roteiro",
+      "Rever situações",
+      "Voltar aos cursos"
+    ],
+    "pending_message": "Você deixou uma atividade para depois. Ela continua disponível no seu roteiro.",
+    "completion_rule": "As duas decisões devem ter uma escolha confirmada e as duas aulas devem chegar ao fechamento. Práticas podem ficar pendentes. Se houver regras vigentes diferentes, mapear sem alterar certificados ou conclusão global silenciosamente."
+  }
+}

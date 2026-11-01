@@ -1,0 +1,845 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.405Z",
+ "curso": {
+  "codigo": "C25",
+  "id": "crs_0ua5onij460lpzs0",
+  "titulo": "Faz sentido?"
+ },
+ "status": "ok",
+ "revisaoAntes": 35,
+ "revisaoVistaPelaProposta": 34,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s3",
+   "estado": "aplicar",
+   "antes": "Um fato pode ser compatível com várias explicações. No fim desta aula, tem uma missão para você: separe uma observação fictícia de duas explicações possíveis.",
+   "depois": "Um fato pode ter várias explicações. Daqui a pouco você separa, num caso pequeno, o que foi observado de duas explicações possíveis."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "O “ok” é fato. O “achou ruim” é hipótese."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escreva uma conclusão provisória e duas informações que ajudariam a testá-la.",
+   "depois": "Quando esta aula acabar, você vai ter escrito uma conclusão provisória e duas informações capazes de derrubar essa conclusão."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Uma conclusão provisória e duas informações para testá-la já formam uma boa investigação. Se você salvou, ela fica no Meu roteiro.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Uma conclusão provisória e duas informações para testá-la já formam uma boa investigação. Se você salvou, ela fica no Meu roteiro. Na próxima aula, o Jonas encontra uma segunda explicação para a queda nas vendas, e você testa uma certeza sua."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Dois casos juntos contam uma história. Não provam uma causa."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Separar observação de conclusão e testar explicações. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Separar observação de conclusão, testar explicações e descobrir o que faria você mudar de ideia. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Manter duas explicações possíveis sem eliminar nenhuma antes de comparar, e escrever o que seria preciso encontrar para mudar de ideia."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 8
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que está confirmado?\" ainda não está na fala do vídeo \"O que está confirmado?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Aurora, o que você considera confirmado?\" ainda não está na fala do vídeo \"No lugar da Aurora, o que você considera confirmado?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual análise é mais cuidadosa?\" ainda não está na fala do vídeo \"Qual análise é mais cuidadosa?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Jonas, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Jonas, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 7,8 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que está confirmado?\" ainda não está na fala do vídeo \"O que está confirmado?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Aurora, o que você considera confirmado?\" ainda não está na fala do vídeo \"No lugar da Aurora, o que você considera confirmado?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual análise é mais cuidadosa?\" ainda não está na fala do vídeo \"Qual análise é mais cuidadosa?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Jonas, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Jonas, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~b"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão t",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "2. As 7 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 29.8 s, ≈ US$ 0.55). Recomend",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. A a02 continua generativa (conclusão provisória + 2 informações): (a) manter; a classificação de 5 itens do pacote não entra · (b) adotar a classificação (componente novo no motor, 3–5 dias, e corte do anúncio do v03)",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Despedida resolve a história do Jonas com um resultado inventado (“as duas pesaram”): (a) manter, porque mostra que as hipóteses podem coexistir · (b) terminar sem resolver (“o Jonas ainda está comparando”). Recomendo",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 5,
+   "recomendada": "a",
+   "texto": "5. Missão a03 trata de certezas sobre pessoas (pode mexer com emoção): (a) manter, com o passo “se der, pergunte à pessoa, com contexto” · (b) trocar por uma certeza sobre uma coisa (um app, um horário). Recomendo (a): é",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 238,
+  "palavrasReacoesNovas": 60,
+  "palavrasAberturasTrocadas": 41,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "O que me faria mudar de ideia?",
+  "description": "Apareceu uma segunda explicação para a queda nas vendas. Você decide o que ela prova, aprende a testar a própria ideia e faz isso com uma certeza sua.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "A segunda explicação",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Choveu. Faltou produto. E agora?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já separa o que viu do que supõe. E sabe que um caso não explica tudo. Falta testar a sua própria ideia. No fim, você pega uma certeza sua desta semana, sobre alguém, e escreve o que te faria mudar de ideia. De volta à loja do Jonas. Nos registros, ele achou algo: nos dois dias de chuva, o produto mais procurado estava em falta. Choveu, e faltou produto. Os outros dias, ninguém olhou ainda. O colega diz: “Viu? Então não foi a chuva.” No lugar do Jonas, o que você conclui?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já separa o que viu do que supõe. E sabe que um caso não explica tudo. Falta testar a sua própria ideia.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você pega uma certeza sua desta semana, sobre alguém, e escreve o que te faria mudar de ideia.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "De volta à loja do Jonas. Nos registros, ele achou algo: nos dois dias de chuva, o produto mais procurado estava em falta.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "O que o Jonas sabe",
+         "bullets": [
+          "Dois dias de **chuva**",
+          "Nos dois, o produto mais procurado **em falta**",
+          "Nos dois, **vendeu menos**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Choveu, e faltou produto. Os outros dias, ninguém olhou ainda. O colega diz: “Viu? Então não foi a chuva.”",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar do Jonas, o que você conclui?",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar do Jonas, o que você conclui?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Nos dois dias de chuva, a loja vendeu menos e o produto mais procurado estava em falta. Os outros dias ainda não foram comparados. O colega diz: “Então não foi a chuva.” No lugar do Jonas, o que você conclui?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Tenho duas explicações possíveis. Antes de escolher uma, comparo com dias sem chuva e sem falta.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você mantém a conclusão do tamanho do que já conferiu: duas explicações possíveis, nenhuma eliminada. Faça assim: compare dias de chuva com estoque cheio e dias sem chuva com falta."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Choveu, faltou produto, vendeu menos. Isso a gente sabe. Qual pesou mais, ainda não. Só comparar outros dias responde."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“A falta do produto explica tudo: a chuva não teve efeito nenhum.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Uma explicação possível não elimina a outra. A falta de produto é mais uma pista, não a prova final. Faça assim: trate as duas como hipóteses e compare com outros dias."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Apareceu uma explicação nova. Isso não apaga a antiga: chuva e falta podem ter pesado juntas. Trocar certeza não é investigar."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Anoto que a falta pode ter pesado, mas a chuva continua sendo a causa principal.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "“Principal” já é uma conclusão, e ainda não houve comparação nenhuma. Faça assim: escreva o que você precisaria encontrar para mudar de ideia e vá atrás disso."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "“Principal” já é conclusão. O que você comparou para chegar nela? Nada. A primeira ideia não ganha por chegar primeiro."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar do Jonas, o que você conclui?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Teste a própria ideia",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que eu sei · O que eu suponho · O que me faria mudar de ideia"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Hipótese não é erro por não estar provada. Ela guia a busca. O problema é só procurar o que confirma. Antes de olhar os dados, escreva: o que eu precisaria encontrar para mudar de ideia? Se nada serve, você não está investigando. Para o Jonas: “Se, com estoque cheio, a venda não cair na chuva, não foi a chuva.” Agora ele sabe o que procurar. Agora é com você: uma certeza sua desta semana, sobre alguém. O que você viu, e o que mudaria sua ideia.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Hipótese não é erro por não estar provada. Ela guia a busca. O problema é só procurar o que confirma.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Antes de olhar os dados, escreva: o que eu precisaria encontrar para mudar de ideia? Se nada serve, você não está investigando.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Teste a própria ideia",
+         "bullets": [
+          "O que eu **sei**",
+          "O que eu **suponho**",
+          "O que me faria **mudar de ideia**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "Para o Jonas: “Se, com estoque cheio, a venda não cair na chuva, não foi a chuva.” Agora ele sabe o que procurar.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: uma certeza sua desta semana, sobre alguém. O que você viu, e o que mudaria sua ideia.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Teste a própria ideia\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Uma certeza sua, e o que te faria mudar de ideia",
+     "type": "mission",
+     "intro": "O Jonas escreveu o que derrubaria a chuva. Agora é com uma certeza sua: aquela que apareceu rápido esta semana, sobre alguém.",
+     "action": "1. Pense numa certeza que você teve esta semana sobre alguém: “ela está brava comigo”, “ele não gostou”, “fizeram de propósito”.\n2. No bloco de notas, três linhas: O que eu vi (só o fato) · O que eu concluí · O que eu precisaria encontrar para mudar de ideia.\n3. Nos próximos dias, repare: apareceu o que mudaria sua ideia? Ou algo que confirmou?\n4. Se der, pergunte à pessoa, com contexto, em vez de esperar a resposta aparecer sozinha.\n5. Volte aqui, marque “Já experimentei” e conte o que apareceu.",
+     "alternative": "Não depende de emprego: família, escola, grupo de amigos e grupo de mensagens dão certeza rápida todo dia. Se nenhuma certeza aparecer, use a próxima vez que você pensar “com certeza ele…” e pare nessa hora. Se trabalha, escolha uma situação que só envolve você e a pessoa, sem expor terceiros.",
+     "example": "Vi: ele respondeu “ok” e nada mais. Concluí: achou ruim. Mudaria minha ideia: ele estar no meio de outra coisa, ou falar comigo normalmente amanhã. Dois dias depois: puxou assunto como sempre e perguntou do relatório. Era pressa."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Faz sentido? Quase tudo faz",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que eu sei · O que suponho · O que me faria mudar de ideia"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "O Jonas comparou. Chuva com estoque cheio: caiu um pouco. Falta de produto: caiu muito. As duas pesaram. Faz sentido? Quase tudo faz. A pergunta é outra: o que eu sei, o que suponho, o que me faria mudar de ideia. Nem sempre dá para esperar a resposta completa. Decida com o que tem. Mas anote o que falta.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "O Jonas comparou. Chuva com estoque cheio: caiu um pouco. Falta de produto: caiu muito. As duas pesaram.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "Faz sentido? Quase tudo faz. A pergunta é outra: o que eu sei, o que suponho, o que me faria mudar de ideia.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Nem sempre dá para esperar a resposta completa. Decida com o que tem. Mas anote o que falta.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Separe: o que foi observado, o que você supõe."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Dois acontecimentos juntos não provam qual causou qual; compare com outros casos."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de olhar os dados, escreva o que te faria mudar de ideia."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha certeza testada",
+       "kind": "checklist",
+       "items": [
+        "escolhi uma certeza desta semana",
+        "três linhas: vi, concluí, o que mudaria minha ideia",
+        "reparei nos dias seguintes (ou perguntei)",
+        "anotei o que apareceu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando testar a certeza, volte e conte o que apareceu."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Separe: o que foi observado, o que você supõe.\nDois acontecimentos juntos não provam qual causou qual; compare com outros casos.\nAntes de olhar os dados, escreva o que te faria mudar de ideia.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O que eu precisaria encontrar para mudar de ideia? Quem pergunta isso está investigando. Quem não pergunta, só confirmando."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b"
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 36,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que está confirmado?\" ainda não está na fala do vídeo \"O que está confirmado?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Aurora, o que você considera confirmado?\" ainda não está na fala do vídeo \"No lugar da Aurora, o que você considera confirmado?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual análise é mais cuidadosa?\" ainda não está na fala do vídeo \"Qual análise é mais cuidadosa?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Jonas, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Jonas, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

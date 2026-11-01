@@ -1,0 +1,690 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C15",
+  "id": "crs_t303ykqfmhj3yb1g",
+  "titulo": "O outro só é diferente",
+  "instrutor": "Mauro — Seu orientador",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 43
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou a fala do plano indicado (mesmo id, regrava só ele); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids não mudam.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. layout/camera seguem o padrão atual do curso.",
+  "A pergunta nova não ganha vídeo próprio: a cena anterior termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais).",
+  "A missão nova é fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; draftFromNodeId fica null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Aberturas: o plano 'missao'/'s4'/'s2' indicado troca de fala (mesmo id) por uma promessa concreta sem a palavra 'missão'. A regra do robô-aluno 'missao-sem-anuncio' precisa aceitar o anúncio sem a palavra (como no piloto C01).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "Reações novas: nenhuma usa as aberturas atuais do C15 ('Boa escolha', 'É por aí', 'Isso ajuda', 'Isso protege') nem as de frasesRepetidasEmVariosCursos.",
+  "Personagem novo: Davi (vaquinha). Carla só é citada como aniversariante. Dani, Murilo, Fernanda, Otávio, Rodrigo e Isadora continuam."
+ ],
+ "diagnostico": [
+  "As duas práticas (a01, a02) são montagem de blocos; nada acontece fora da tela, e o convite escrito na a02 nunca é feito.",
+  "O v04 já diz “você não precisa saber o motivo” e “convide sem cobrar”; o que falta é a cobrança disfarçada do dia a dia (“ah, mas é só dez reais”) e o que fazer quando ela aparece.",
+  "O curso nunca separa convivência de informação de trabalho: quem recusa o almoço pode ficar sem as decisões que se tomam lá, e isso não é tratado.",
+  "As aberturas das duas aulas usam a fórmula “No fim desta aula, tem uma missão para você”.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final. Revise o que preparou…”): sem fecho do Mauro."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Separar diferenças pessoais de comportamentos que prejudicam a convivência, convidar sem cobrar e garantir que a informação de trabalho chegue a todos. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Convidar sem transformar a recusa em cobrança e garantir que a informação de trabalho chegue a quem não participa do encontro."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Dani",
+    "Fernanda",
+    "Otávio",
+    "Murilo",
+    "Rodrigo",
+    "Isadora"
+   ],
+   "novos": [
+    "Davi (não entra na vaquinha)",
+    "Carla (aniversariante, só citada)"
+   ]
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Diferente de mim não significa errado",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 troca de fala; os demais planos ficam (ajuste fino atual continua).",
+     "planos": [
+      {
+       "id": "s4",
+       "fala": "Daqui a pouco, você escreve uma pergunta com dois jeitos de participar. É ela que você usa quando alguém parecer ausente.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "change",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva uma pergunta que ofereça formas diferentes de participar.",
+       "duracaoAnteriorS": 6.7
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com frase repetida em 12–13 cursos (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com frase repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução: o componente é de blocos, mas o texto diz 'Escreva uma resposta curta' (defeito em 26 práticas). Molde, blocos e título ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Falar pouco não é se importar pouco. Pergunte como a pessoa prefere participar."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null). Resumo e roteiro ficam."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Respeitar diferenças também exige limites",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 troca de fala.",
+     "planos": [
+      {
+       "id": "s2",
+       "fala": "O que você leva desta aula é um convite pronto: curto, e que a pessoa pode recusar sem dar explicação.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "change",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva um convite que a pessoa possa recusar sem se explicar.",
+       "duracaoAnteriorS": 6.8
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com frase repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com frase repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução (mesmo defeito da a01). Molde e blocos ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Respeitar diferenças é convidar sem cobrar e ouvir quando alguém diz que algo incomoda. Se você salvou, seu convite fica no Meu roteiro. Na próxima aula, o convite sai da tela: você convida alguém de verdade, e vê o que acontece quando a recusa vira cobrança.",
+      "closingLine": "Convide sem cobrar. Aceite o não. Não faça da pessoa assunto."
+     },
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' e 'Você chegou ao final…' passam para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "O outro só é diferente",
+   "titulo": "Convite não é dívida",
+   "resumo": "Você vê a recusa virar cobrança, decide o que fazer quando a decisão foi tomada no almoço e faz um convite de verdade nesta semana.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Convidar sem transformar a recusa em cobrança e garantir que a informação de trabalho chegue a quem não participa do encontro."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Quando o não vira cobrança",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Convite não é dívida",
+     "planos": [
+      {
+       "id": "promessa",
+       "fala": "Nesta última aula, você leva o convite para fora da tela: um convite real, que a pessoa pode recusar sem explicar.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Faz o papel do antigo anúncio, sem a fórmula e sem a palavra 'missão'."
+      },
+      {
+       "id": "s1",
+       "fala": "A equipe junta dinheiro para o presente da Carla. O Davi diz que não vai participar. Alguém solta: ‘Ah, mas é só dez reais’.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s2",
+       "fala": "Parece pouco, mas já virou cobrança. Dá para fazer diferente: ‘Quem quiser entrar, fala comigo até quinta’. O motivo é do Davi.",
+       "layout": "presenter_chips",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "cartao": {
+        "titulo": "Vaquinha sem cobrança",
+        "topicos": [
+         "Quem quiser, **fala comigo até quinta**",
+         "A equipe precisa saber **quem participa**",
+         "O **motivo** é da pessoa"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "Agora, o Murilo, que nunca vai ao almoço de sexta. Nesse almoço, a equipe combinou mudar a ordem das entregas. Ele não estava.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "chamada",
+       "fala": "Segunda, o Murilo entrega na ordem antiga. No lugar de quem estava no almoço, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9
+      }
+     ],
+     "cartaoPerguntaSeguinte": "A equipe mudou a ordem das entregas no almoço de sexta. O Murilo, que nunca vai, entregou na ordem antiga. No lugar de quem estava no almoço, o que você faz?",
+     "proximo": "q05",
+     "palavras": 108,
+     "segundos": 41.2,
+     "roteiroNovo": "Nesta última aula, você leva o convite para fora da tela: um convite real, que a pessoa pode recusar sem explicar. A equipe junta dinheiro para o presente da Carla. O Davi diz que não vai participar. Alguém solta: ‘Ah, mas é só dez reais’. Parece pouco, mas já virou cobrança. Dá para fazer diferente: ‘Quem quiser entrar, fala comigo até quinta’. O motivo é do Davi. Agora, o Murilo, que nunca vai ao almoço de sexta. Nesse almoço, a equipe combinou mudar a ordem das entregas. Ele não estava. Segunda, o Murilo entrega na ordem antiga. No lugar de quem estava no almoço, o que você faz?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar de quem estava no almoço, o que você faz?",
+     "apoioNaTela": "A equipe mudou a ordem das entregas durante o almoço de sexta. O Murilo, que nunca vai ao almoço, não ficou sabendo e entregou na ordem antiga.",
+     "bridge": {
+      "call": "No lugar de quem estava no almoço, o que você faz?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Aviso o Murilo do que mudou e proponho que combinados de trabalho passem a ser registrados no grupo.”",
+       "qualidade": "strong",
+       "feedback": "O Murilo continua fora do almoço e dentro do trabalho. Faça assim: conte o que mudou hoje e proponha um lugar fixo para os combinados, como o grupo ou a reunião.",
+       "reacao": {
+        "texto": "Você separou duas coisas: o almoço é escolha; o combinado de trabalho é da equipe inteira. Registrar no grupo resolve para todo mundo.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v06",
+       "caracteres": 102
+      },
+      {
+       "id": "b",
+       "rotulo": "“Explico ao Murilo o que mudou e peço que, da próxima vez, ele pergunte o que foi decidido.”",
+       "qualidade": "ok",
+       "feedback": "Você resolve esta entrega, mas a próxima decisão de almoço vai pegá-lo de novo. Faça assim: avise hoje e proponha que combinados de trabalho sejam registrados onde todos veem.",
+       "reacao": {
+        "texto": "Explicar hoje ajuda. Mas repare: você deixou com ele a tarefa de adivinhar quando algo foi decidido num lugar onde ele não vai.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v06",
+       "caracteres": 92
+      },
+      {
+       "id": "c",
+       "rotulo": "“Digo que, se ele fosse ao almoço como todo mundo, ficaria sabendo.”",
+       "qualidade": "weak",
+       "feedback": "A recusa de um encontro vira castigo no trabalho. Faça assim: avise o Murilo do que mudou e leve os combinados para um lugar onde todos veem.",
+       "reacao": {
+        "texto": "Qual outra explicação cabe aqui? Ele não foi avisado. A frase transforma uma preferência pessoal em prova de pertencimento, e isso é cobrança.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v06",
+       "caracteres": 68
+      }
+     ],
+     "porQueFunciona": "A resposta não está no enunciado: ele diz que o Murilo não foi avisado, não diz de quem é a tarefa de avisar. A opção B é tentadora porque parece justa (“ele que pergunte”). Sem vídeo próprio da pergunta."
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Convivência e trabalho são coisas diferentes",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Convide sem cobrar · Informe a todos",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Respeitar uma preferência não significa deixar alguém sem informação de trabalho. Se as decisões acontecem só no almoço, a equipe precisa de outro canal.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s2",
+       "fala": "Separe as duas coisas: convivência é escolha; o que a pessoa precisa para trabalhar não é. Dá para recusar o encontro e continuar contribuindo.",
+       "layout": "presenter_chips",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2,
+       "cartao": {
+        "titulo": "Duas coisas separadas",
+        "topicos": [
+         "**Convivência**: a pessoa escolhe",
+         "**Informação de trabalho**: chega a todos",
+         "Escolha pessoal **não é prova** de pertencimento"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "O cuidado é não transformar uma escolha pessoal em prova permanente de pertencimento. Ninguém precisa almoçar junto para fazer parte.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: nesta semana, convide alguém de verdade. Deixe claro que não tem problema recusar. Depois, volte e conte como foi.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra. A aula segue para a03."
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete o v04 (“você não precisa saber o motivo”; convide sem cobrar): o novo é a cobrança disfarçada (“é só dez reais”), a separação convivência × informação de trabalho e o canal para os combinados.",
+     "palavras": 91,
+     "segundos": 34.7,
+     "roteiroNovo": "Respeitar uma preferência não significa deixar alguém sem informação de trabalho. Se as decisões acontecem só no almoço, a equipe precisa de outro canal. Separe as duas coisas: convivência é escolha; o que a pessoa precisa para trabalhar não é. Dá para recusar o encontro e continuar contribuindo. O cuidado é não transformar uma escolha pessoal em prova permanente de pertencimento. Ninguém precisa almoçar junto para fazer parte. Agora é com você: nesta semana, convide alguém de verdade. Deixe claro que não tem problema recusar. Depois, volte e conte como foi."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Faça um convite que dá para recusar",
+     "tipoDeMissao": "FAZER fora da tela: um convite real nesta semana, com espaço para o não, e reparar se a informação chega a quem não vai",
+     "intro": "Você já montou um convite na aula 2. Agora ele sai do papel: um convite real, nesta semana, com espaço para o não.",
+     "action": [
+      "Escolha um convite real desta semana: almoço, jogo, grupo de estudo, um café.",
+      "Convide deixando claro que não tem problema recusar. Por exemplo: “Quer ir? Se não der, tranquilo.”",
+      "Se a pessoa disser não, responda só “tranquilo, a gente se vê”. Sem perguntar o motivo.",
+      "Se o grupo decidir alguma coisa nesse encontro, repare: quem não foi ficou sabendo?",
+      "Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Sem trabalho? Serve com a turma, a família ou o time: convidar para um jogo, um trabalho em grupo, um lanche depois da aula. Só precisa ser um convite de verdade, para alguém que pode dizer não.",
+     "tip": {
+      "rotulo": "Exemplo de convite",
+      "texto": "Sexta tem almoço da equipe. Quer ir com a gente? Se preferir não ir, tudo bem, a gente se vê depois. (Se vier um não: “Tranquilo, a gente se vê.”)",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Uma ou duas frases: a pessoa aceitou ou recusou? Como foi para você não perguntar o motivo?",
+      "placeholder": "Ex.: ela disse que não dava, eu respondi “tranquilo” e ficou leve.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó: título da seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; o nó e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Convite não é dívida",
+     "textoTela": "Convite abre possibilidade · Não cria dívida",
+     "posicao": "depois da missão e antes do fim",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "A Dani contribui por escrito. O Murilo almoça em outro lugar. O Davi ficou fora da vaquinha. Nada disso diz quanto cada um se importa.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "d2",
+       "fala": "Diferença pessoal e desrespeito não são a mesma coisa. Imitação, pressão e humilhação pedem limite. Um não pede só respeito.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d3",
+       "fala": "Leve uma frase: um convite abre uma possibilidade; não cria uma dívida. Boa semana.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 14,
+       "segundos": 5.3
+      }
+     ],
+     "palavras": 59,
+     "segundos": 22.5,
+     "forma": "termina com uma imagem curta para guardar (“convite abre possibilidade; não cria dívida”), depois de nomear o limite (imitação, pressão, humilhação). Sem recap de habilidades, sem “você praticou”, sem “Meu roteiro”.",
+     "motionPrompt": "mão aberta, gesto curto de oferecer; sorriso leve",
+     "roteiroNovo": "A Dani contribui por escrito. O Murilo almoça em outro lugar. O Davi ficou fora da vaquinha. Nada disso diz quanto cada um se importa. Diferença pessoal e desrespeito não são a mesma coisa. Imitação, pressão e humilhação pedem limite. Um não pede só respeito. Leve uma frase: um convite abre uma possibilidade; não cria uma dívida. Boa semana."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Um convite abre uma possibilidade. Não cria uma dívida.",
+     "summary": "O que você levou\nAntes de supor, pergunte como a pessoa prefere participar.\nConvide sem cobrar; aceite o não sem pedir motivo.\nO que é de trabalho chega a todos, inclusive a quem não vai ao almoço.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu convite desta semana",
+       "kind": "checklist",
+       "items": [
+        "convite feito, com espaço para o não",
+        "se veio um não, respondi só “tranquilo”",
+        "reparei se a informação chegou a quem não foi"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer o convite, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de supor, pergunte como a pessoa prefere participar.\nConvide sem cobrar; aceite o não sem pedir motivo.\nO que é de trabalho chega a todos, inclusive a quem não vai ao almoço.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos \"keep\" custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 258,
+   "segundos": 98.5
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 69,
+   "segundos": 26.3
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 41,
+   "segundos": 15.6,
+   "duracaoAnteriorS": 13.5
+  },
+  "totalNovoFalado": {
+   "palavras": 368,
+   "segundos": 140.4,
+   "usd": 2.57
+  },
+  "teto": "150 s (alvo 90–130 s)",
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 108,
+    "segundos": 41.2
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 69,
+    "segundos": 26.3
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 91,
+    "segundos": 34.7
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "aberturas trocadas (aulas existentes)",
+    "planos": 2,
+    "palavras": 41,
+    "segundos": 15.6
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 7,
+   "palavras": 87,
+   "segundos": 33.2,
+   "usd": 0.61,
+   "nota": "Reações atuais que abrem com frase repetida em vários cursos. (b) cortar a primeira frase, se o ajuste fino aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no total acima.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você deixa de considerar as sugestões que Dani já enviou: falar pouco não prova desinteresse.",
+     "palavras": 15,
+     "segundos": 5.7
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "A pergunta vira cobrança por uma explicação pessoal que Dani pode não querer dar.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você respeita o horário combinado, mas uma urgência pode ficar sem resposta.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você atribui uma intenção e expõe a colega sem ter conversado com ela.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q03",
+     "opcao": "c",
+     "abertura": "Olhe isso com calma.",
+     "resto": "A pressão trata uma escolha pessoal como falta de interesse.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Você corta a imitação, mas sem saber o que a Isadora quer, pode expô-la.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "O sorriso sem graça não prova que ela gosta.",
+     "palavras": 9,
+     "segundos": 3.4
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 159.7,
+    "maxS": 165.8,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 269.0,
+    "maxS": 275.1,
+    "texto": "cerca de 4.5–4.6 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença das aberturas trocadas (nova − gravada)."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+  "2. Decisão da aula 3: (a) o combinado feito no almoço que o Murilo não soube (conteúdo novo: informação de trabalho chega a todos) · (b) a decisão do pacote (colega quer perguntar o motivo do Murilo para convencê-lo), que repete o caso da q03. Recomendo (a).",
+  "3. Reações atuais com abertura repetida (ver custos): (a) deixar · (b) cortar a primeira frase, se o ajuste fino aceitar vídeo de reação (grátis) · (c) regravar a segunda frase. Recomendo (b); se não der, (a).",
+  "4. Personagem da vaquinha: (a) Davi, novo (um nome a mais, mas evita sobrecarregar o Murilo com dois casos) · (b) reaproveitar a Dani. Recomendo (a)."
+ ]
+}

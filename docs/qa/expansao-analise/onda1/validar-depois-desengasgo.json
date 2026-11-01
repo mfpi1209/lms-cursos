@@ -1,0 +1,381 @@
+[
+ {
+  "codigo": "C01",
+  "id": "crs_99hpdsc8w88osiuh",
+  "titulo": "Meu primeiro dia",
+  "revisao": 106,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 8,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q05",
+   "aula_03/q04",
+   "aula_03/q05",
+   "aula_04/q06",
+   "aula_04/q07",
+   "aula_04/q06",
+   "aula_04/q07"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_04",
+  "nosUltimaAula": [
+   "v06:scenario",
+   "q06:choice",
+   "v07:content",
+   "q07:choice",
+   "m04:reflection",
+   "despedida:content",
+   "fim_aula_04:end"
+  ]
+ },
+ {
+  "codigo": "C02",
+  "id": "crs_arbeohlw3xp5v3zx",
+  "titulo": "Que roupa eu uso?",
+  "revisao": 97,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C03",
+  "id": "crs_hd4jnnpx3oj0xf14",
+  "titulo": "Celular no trabalho",
+  "revisao": 100,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C04",
+  "id": "crs_4z17p0m6d43qxmmo",
+  "titulo": "WhatsApp sem complicação",
+  "revisao": 122,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C05",
+  "id": "crs_4tj8a3q3g9gudgb7",
+  "titulo": "Horário é combinado",
+  "revisao": 104,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C06",
+  "id": "crs_b8zeh4b2gguseghq",
+  "titulo": "Brincadeiras têm limite",
+  "revisao": 139,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_04/q06",
+   "aula_04/q06"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_03/q04",
+   "CALL_NOT_SPOKEN aula_03/q05"
+  ],
+  "ultimaAula": "aula_04",
+  "nosUltimaAula": [
+   "v06:scenario",
+   "q06:choice",
+   "v07:content",
+   "a04:mission",
+   "despedida:content",
+   "fim_aula_04:end"
+  ]
+ },
+ {
+  "codigo": "C07",
+  "id": "crs_bmf11akamtxoti28",
+  "titulo": "Como falar com a equipe",
+  "revisao": 110,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C08",
+  "id": "crs_8g0csi2hflfztfge",
+  "titulo": "O espaço também é do outro",
+  "revisao": 103,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C09",
+  "id": "crs_gjn468p3y6hwua4f",
+  "titulo": "Posso postar isso?",
+  "revisao": 117,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C10",
+  "id": "crs_q52zsimeeahpa9bq",
+  "titulo": "Terminei. E agora?",
+  "revisao": 107,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C11",
+  "id": "crs_u4nfw88a4n2n0ubv",
+  "titulo": "Não entendi. Posso perguntar?",
+  "revisao": 107,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ }
+]

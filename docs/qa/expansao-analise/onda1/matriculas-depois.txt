@@ -1,0 +1,22 @@
+aluna@demo.local | crs_4tj8a3q3g9gudgb7 | completed | ["aula_03"] | 13 | 15
+aluno@demo.local | crs_4tj8a3q3g9gudgb7 | active | [] |  | 15
+aluna@demo.local | crs_4z17p0m6d43qxmmo | completed | ["aula_03"] | 11 | 14
+aluno@demo.local | crs_4z17p0m6d43qxmmo | completed | ["aula_03"] | 11 | 14
+aluna@demo.local | crs_8g0csi2hflfztfge | completed | ["aula_03"] | 12 | 14
+aluno@demo.local | crs_8g0csi2hflfztfge | completed | ["aula_03"] | 12 | 14
+aluna@demo.local | crs_99hpdsc8w88osiuh | completed | ["aula_03", "aula_04"] | 12 | 13
+aluno@demo.local | crs_99hpdsc8w88osiuh | completed | ["aula_03", "aula_04"] | 12 | 13
+aluna@demo.local | crs_arbeohlw3xp5v3zx | completed | ["aula_03"] | 11 | 12
+aluno@demo.local | crs_arbeohlw3xp5v3zx | active | [] |  | 12
+aluna@demo.local | crs_b8zeh4b2gguseghq | completed | ["aula_04"] | 10 | 12
+aluno@demo.local | crs_b8zeh4b2gguseghq | active | [] |  | 12
+aluna@demo.local | crs_bmf11akamtxoti28 | completed | ["aula_03"] | 12 | 15
+aluno@demo.local | crs_bmf11akamtxoti28 | completed | ["aula_03"] | 12 | 15
+aluna@demo.local | crs_gjn468p3y6hwua4f | completed | ["aula_03"] | 12 | 15
+aluno@demo.local | crs_gjn468p3y6hwua4f | active | [] |  | 15
+aluna@demo.local | crs_hd4jnnpx3oj0xf14 | completed | ["aula_03"] | 11 | 13
+aluno@demo.local | crs_hd4jnnpx3oj0xf14 | completed | ["aula_03"] | 11 | 13
+aluna@demo.local | crs_q52zsimeeahpa9bq | completed | ["aula_03"] | 12 | 14
+aluno@demo.local | crs_q52zsimeeahpa9bq | completed | ["aula_03"] | 12 | 14
+aluna@demo.local | crs_u4nfw88a4n2n0ubv | completed | ["aula_03"] | 12 | 15
+aluno@demo.local | crs_u4nfw88a4n2n0ubv | completed | ["aula_03"] | 12 | 15

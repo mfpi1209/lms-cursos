@@ -1,0 +1,32 @@
+{
+ "geradoEm": "2026-11-01T12:39:25.715Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "Faz sentido?",
+   "courseId": "crs_0ua5onij460lpzs0",
+   "rascunhoRevAntes": 44,
+   "varredura": {
+    "rascunho": {
+     "videos": 23,
+     "assets": 23,
+     "ge200": 0,
+     "tolerados": 5
+    },
+    "publicada": {
+     "versao": 3,
+     "videos": 23,
+     "assets": 23,
+     "ge200": 0,
+     "tolerados": 5,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  }
+ ]
+}

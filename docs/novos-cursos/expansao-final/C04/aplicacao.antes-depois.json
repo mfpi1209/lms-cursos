@@ -1,0 +1,894 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:45.976Z",
+ "curso": {
+  "codigo": "C04",
+  "id": "crs_4z17p0m6d43qxmmo",
+  "titulo": "WhatsApp sem complicação"
+ },
+ "status": "ok",
+ "revisaoAntes": 113,
+ "revisaoVistaPelaProposta": 110,
+ "versaoPublicadaComparada": 13,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte uma mensagem de trabalho.",
+   "depois": "Daqui a pouco você monta a sua primeira mensagem de trabalho. Curta, com quem fala, assunto e pedido."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_01/m01.instrucoes",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Um oi sozinho é uma notificação. Com assunto e pedido, vira mensagem."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v02/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: retome um pedido.",
+   "depois": "E você sai desta aula com a retomada escrita: pedido, motivo, e uma saída se a resposta não vier."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_02/m02.instrucoes",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nAcompanhe com base no prazo e na necessidade.\nConfira destinatário, conteúdo e anexos.",
+   "depois": "Retomar sem pressionar é lembrar o pedido e dizer por que ele importa. Se você salvou, sua retomada fica no Meu roteiro. Na próxima aula, a resposta chega, mas não resolve: o que fazer, e como fechar a conversa."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Cobrar cinco vezes é barulho. Explicar por que importa é informação."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Envie mensagens claras e escolha o canal e o formato adequados à conversa. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue escrever uma solicitação profissional curta e acompanha a resposta sem cobranças repetidas.",
+   "depois": "Envie mensagens claras, acompanhe um pedido sem cobranças repetidas e saiba o que fazer quando a resposta chega, mas não resolve. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Agir quando a resposta vem incompleta e o prazo passa, levando o bloqueio a quem decide, e fechar a conversa quando a orientação chega."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": "O Pedro precisa fazer um pedido, mas não sabe se a pessoa pode ouvir um áudio longo. O que você faria?"
+   },
+   "depois": {
+    "teaser": "O Pedro precisa fazer um pedido, mas não sabe se a pessoa pode ouvir um áudio longo. O que você faria?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": "O Pedro pediu uma confirmação de manhã para a tarefa da tarde e ainda não tem resposta. Qual é o próximo passo?"
+   },
+   "depois": {
+    "teaser": "O Pedro pediu uma confirmação de manhã para a tarefa da tarde e ainda não tem resposta. Qual é o próximo passo?"
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v02"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Monte uma mensagem de trabalho\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Iara, como você começa essa conversa?\" ainda não está na fala do vídeo \"No lugar da Iara, como você começa essa conversa?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Pedro, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Pedro, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Retome um pedido\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Pedro, qual é o seu próximo passo?\" ainda não está na fala do vídeo \"No lugar do Pedro, qual é o seu próximo passo?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Iara, como você começa essa conversa?\" ainda não está na fala do vídeo \"No lugar da Iara, como você começa essa conversa?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Pedro, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Pedro, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Pedro, qual é o seu próximo passo?\" ainda não está na fala do vídeo \"No lugar do Pedro, qual é o seu próximo passo?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~a"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Missão m03: (a) um pedido seu que ficou sem resposta, ou o próximo pedido que for fazer (evita reenviar algo já respondido) · (b) “a última mensagem em que você pediu algo”, reescrita e reenviada, como os revisores es",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. v03/s5 “Agora, monte a sua mensagem de retomada.” (2,2 s): (a) manter: m02 continua logo depois · (b) tirar por drop + remontagem (grátis). Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "3. As 5 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~28.6 s, ≈ US$ 0.52). Recomendo (b); se não der, (a).",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Cartão da retomada do Pedro em v04/s3: (a) mostrar a mensagem completa no cartão (o aluno lê enquanto o Thiago fala) · (b) só a fala. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 14,
+  "palavrasPlanosAulaNova": 240,
+  "palavrasReacoesNovas": 59,
+  "palavrasAberturasTrocadas": 37,
+  "palavrasTotal": 336,
+  "segundos": 128.2,
+  "usdEstimado": 2.35,
+  "nos": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Quando a resposta não resolve",
+  "description": "Você vê uma resposta que não resolve, decide o que fazer quando o prazo passa, aprende a fechar a conversa e reescreve um pedido seu de verdade.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v04",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Vou ver",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Resposta · Prazo · Bloqueio"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Agora, o que acontece toda semana: você pergunta, a pessoa responde, e a resposta não resolve. No fim, você pega uma mensagem real que já mandou, pedindo algo a alguém, e manda a versão melhor. O Pedro pediu o procedimento da tarefa da tarde. A resposta: vou ver. Duas palavras. Ele retoma: preciso da confirmação até as duas para entregar às quatro. Se não der, quem pode me orientar? Duas da tarde, nada. Duas e meia, nada. A entrega é às quatro. No lugar do Pedro, o que você faz agora?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Agora, o que acontece toda semana: você pergunta, a pessoa responde, e a resposta não resolve.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você pega uma mensagem real que já mandou, pedindo algo a alguém, e manda a versão melhor.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "O Pedro pediu o procedimento da tarefa da tarde. A resposta: vou ver. Duas palavras.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Ele retoma: preciso da confirmação até as duas para entregar às quatro. Se não der, quem pode me orientar?",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "A retomada do Pedro",
+         "bullets": [
+          "**Obrigado.** Preciso dessa confirmação **até as 14h** para entregar **às 16h**.",
+          "Se não for possível, **quem pode me orientar?**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "s4",
+        "line": "Duas da tarde, nada. Duas e meia, nada. A entrega é às quatro.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar do Pedro, o que você faz agora?",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar do Pedro, o que você faz agora?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Duas e meia. O Pedro já retomou com prazo e motivo e não teve resposta. A entrega é às quatro. No lugar do Pedro, o que você faz agora?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Mando a mesma mensagem de novo, para ela voltar ao topo.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Pode chamar atenção, mas não acrescenta nada e não abre outro caminho. Faça assim: avise quem acompanha a tarefa que a confirmação está pendente."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Mesma mensagem, mesma informação. Quem lê não ganha nada novo. O que muda é outra pessoa saber que você travou."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Aviso quem acompanha a tarefa que a confirmação não veio e pergunto como seguir.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você leva o bloqueio a quem pode decidir, sem cobrar a pessoa de novo. Faça assim: diga o que pediu, a quem, e o que precisa até as quatro."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você não cobrou de novo: avisou quem decide. Uma mensagem: pedi, não veio, preciso até as quatro. A tarefa anda."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Escolho um procedimento por conta própria para não atrasar.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A iniciativa parece boa, mas, se o procedimento precisava de confirmação, vira retrabalho às cinco. Faça assim: antes de decidir sozinho, avise quem acompanha a tarefa."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Resolver sozinho dá alívio às três e retrabalho às cinco. Se precisava de confirmação, precisava. Avise antes de escolher."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar do Pedro, o que você faz agora?"
+     }
+    },
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Resposta incompleta e conversa fechada",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Prazo · Canal · Pendente · Fechar"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Mensagem clara também recebe resposta incompleta. Não quer dizer que você escreveu mal. A conversa só não acabou. O próximo passo depende de duas coisas: o prazo e o canal da equipe. Silêncio não é acusação. Descreva o que está pendente. E quando a orientação chega, feche a conversa: recebi, vou seguir esse procedimento. Três segundos para escrever. Sem isso, a pessoa continua procurando uma solução que você já tem. Conversa boa termina fechada. Sua vez: ache um pedido seu sem resposta, ou o próximo que for fazer. Escreva quem fala, assunto, pedido. E mande.",
+     "motionPrompt": "leans in slightly, curious",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Mensagem clara também recebe resposta incompleta. Não quer dizer que você escreveu mal. A conversa só não acabou.",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s2",
+        "line": "O próximo passo depende de duas coisas: o prazo e o canal da equipe. Silêncio não é acusação. Descreva o que está pendente.",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Resposta incompleta",
+         "bullets": [
+          "Veja o **prazo**",
+          "Use o **canal** da equipe",
+          "Descreva o que está **pendente**",
+          "Quando chegar, **feche**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "s3",
+        "line": "E quando a orientação chega, feche a conversa: recebi, vou seguir esse procedimento. Três segundos para escrever.",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "s4",
+        "line": "Sem isso, a pessoa continua procurando uma solução que você já tem. Conversa boa termina fechada.",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "lancamento",
+        "line": "Sua vez: ache um pedido seu sem resposta, ou o próximo que for fazer. Escreva quem fala, assunto, pedido. E mande.",
+        "cameraId": "cam_thiago8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Resposta incompleta\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Reescreva um pedido de verdade",
+     "type": "mission",
+     "intro": "O Pedro retomou com prazo e motivo, e fechou a conversa quando a resposta veio. Agora é com uma mensagem sua.",
+     "action": "1. Abra suas conversas e ache um pedido seu que ficou sem resposta. Ou pense no próximo pedido que vai fazer: escola, família, curso, trabalho.\n2. Reescreva numa mensagem só: quem fala (se a pessoa não te conhece bem), o assunto e o pedido. Se tem prazo, diga por que ele importa.\n3. Mande.\n4. Quando a resposta vier, feche: “Recebi, obrigado. Vou fazer assim.”\n5. Volte aqui, marque “Já experimentei” e conte o que mudou.",
+     "alternative": "Não trabalha? Serve o pedido de um documento na secretaria da escola, a dúvida com o professor, o combinado com alguém da família. Qualquer pedido real. Se trabalha, escolha um pedido que já está parado há mais de um dia.",
+     "example": "Antes: “oi, tudo bem? então…”. Depois: “Oi, professora, é o Luan do 2º B. Sobre o trabalho de história: posso entregar quinta? Sexta tenho prova de manhã.” Resposta: “Pode.” Fechei: “Recebido, entrego quinta. Obrigado!”"
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Mensagem boa",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Quem fala? · Qual assunto? · O que precisa acontecer?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "A Iara começou uma conversa. O Pedro continuou uma, e fechou. Três momentos, uma regra: quem lê entende sem perguntar. Antes de enviar: quem fala? Qual é o assunto? O que precisa acontecer? Se tem prazo, por que importa. Mensagem boa é a que a pessoa responde sem precisar perguntar nada. Até a próxima.",
+     "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "A Iara começou uma conversa. O Pedro continuou uma, e fechou. Três momentos, uma regra: quem lê entende sem perguntar.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "d2",
+        "line": "Antes de enviar: quem fala? Qual é o assunto? O que precisa acontecer? Se tem prazo, por que importa.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "d3",
+        "line": "Mensagem boa é a que a pessoa responde sem precisar perguntar nada. Até a próxima.",
+        "cameraId": "cam_thiago8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Primeira mensagem: quem fala, assunto, pedido."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Retomada: o pedido, o prazo e por que importa."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Resposta incompleta e prazo chegando: avise quem acompanha."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Orientação chegou: “Recebi, vou seguir.”"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu pedido reescrito",
+       "kind": "checklist",
+       "items": [
+        "pedido escolhido (sem resposta, ou o próximo)",
+        "reescrito: quem fala, assunto, pedido",
+        "enviado",
+        "conversa fechada quando a resposta veio"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m03",
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Primeira mensagem: quem fala, assunto, pedido.\nRetomada: o pedido, o prazo e por que importa.\nResposta incompleta e prazo chegando: avise quem acompanha.\nOrientação chegou: “Recebi, vou seguir.”",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Resposta incompleta não encerra o pedido. Resposta recebida, sim: feche a conversa."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v04",
+     "from": "v04",
+     "to": "q04"
+    },
+    {
+     "id": "e_q04_a",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q04_b",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q04_c",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "m03"
+    },
+    {
+     "id": "e_m03",
+     "from": "m03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v04": {
+      "x": 0,
+      "y": 0
+     },
+     "q04": {
+      "x": 0,
+      "y": 180
+     },
+     "v05": {
+      "x": 0,
+      "y": 360
+     },
+     "m03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 114,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Iara, como você começa essa conversa?\" ainda não está na fala do vídeo \"No lugar da Iara, como você começa essa conversa?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Pedro, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Pedro, o que você faria?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Pedro, qual é o seu próximo passo?\" ainda não está na fala do vídeo \"No lugar do Pedro, qual é o seu próximo passo?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

@@ -1,0 +1,322 @@
+{
+  "schema_version": "dna-editorial-1.0",
+  "schema_notice": "Contrato editorial intermediário. Não é o schema nativo comprovado do motor. Adaptar após inspeção do projeto.",
+  "id": "dna-proposta-errei-e-agora",
+  "slug_proposto": "errei-e-agora",
+  "title": "Errei. E agora?",
+  "status": "draft",
+  "locale": "pt-BR",
+  "track_proposed": "Autonomia no trabalho",
+  "objective": "Comunicar erros, reduzir impactos e melhorar o processo.",
+  "audience": "Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+  "prerequisites": "Leitura básica; não exige experiência profissional.",
+  "instructor_proposed": "Beatriz",
+  "editorial_review": "Sem prometer ausência de consequências; foco em reparação.",
+  "duration_seconds": null,
+  "duration_status": "awaiting_media_measurement",
+  "assessment": {
+    "purpose": "formative",
+    "passing_score": null,
+    "certificate_claim": null,
+    "retry_allowed": true
+  },
+  "lessons": [
+    {
+      "id": "a01",
+      "title": "Percebi o erro: qual é o próximo passo?",
+      "objective": "Escreva um aviso de erro com fato, possível impacto e próximo passo.",
+      "entry_node": "a01-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a01-abertura",
+          "type": "video",
+          "title": "Percebi o erro: qual é o próximo passo?",
+          "speech": "Perceber um erro dá aquele frio na barriga. A prioridade é entender o que aconteceu e avisar quem pode ajudar a reduzir o impacto. Esconder ou tentar consertar sem entender pode aumentar o problema.",
+          "onscreen_text": "Percebi o erro: qual é o próximo passo?",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-situacao"
+        },
+        {
+          "id": "a01-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Você enviou uma versão antiga de um arquivo para a equipe, que pode começar a trabalhar com ela.",
+          "question": "Como você reage?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Espero alguém perceber.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Aviso qual versão foi enviada e indico a correta, seguindo o procedimento da equipe.",
+              "recommended": true,
+              "feedback_node": "a01-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Apago meu arquivo e finjo que não enviei.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a01-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A equipe pode continuar usando a versão errada.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você torna o problema visível e ajuda a interromper o uso incorreto.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Apagar sua cópia não corrige o que já chegou às outras pessoas.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Descreva fatos: o arquivo enviado, quem recebeu e o que pode estar incorreto. Se não souber o impacto, diga que ainda precisa verificar. Evite prometer que está tudo resolvido antes de confirmar.",
+          "onscreen_text": "Escreva um aviso de erro com fato, possível impacto e próximo passo.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-pratica"
+        },
+        {
+          "id": "a01-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Escreva um aviso de erro com fato, possível impacto e próximo passo.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Enviei a versão anterior do arquivo. Ela pode conter dados desatualizados. Vou indicar a versão correta e confirmar quem já utilizou a anterior.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a01-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a01-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a01-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Na próxima aula, vamos avançar para outra situação.",
+          "next": "a02-abertura",
+          "next_label": "Ir para a aula 2"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "title": "Como corrigir e aprender",
+      "objective": "Escolha uma mudança no processo e diga como verificar se ela reduziu o erro.",
+      "entry_node": "a02-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a02-abertura",
+          "type": "video",
+          "title": "Como corrigir e aprender",
+          "speech": "Depois de conter o problema, vale olhar para o processo. 'Vou prestar mais atenção' é uma intenção. Uma mudança concreta ajuda a perceber o erro antes do próximo envio.",
+          "onscreen_text": "Como corrigir e aprender",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-situacao"
+        },
+        {
+          "id": "a02-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Duas versões estavam com nomes quase iguais. Isso contribuiu para o envio errado.",
+          "question": "Qual ajuste é mais útil?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Prometer que nunca mais vai errar.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Combinar uma identificação clara da versão final e uma conferência antes do envio.",
+              "recommended": true,
+              "feedback_node": "a02-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Guardar todas as versões com o nome final.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a02-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A promessa não muda a condição que favoreceu a confusão.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você atua sobre uma causa concreta e cria uma verificação.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O mesmo nome mantém a dúvida sobre qual arquivo usar.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Confirme se a correção chegou a quem precisava e proponha uma mudança proporcional. Não é necessário criar dez etapas para todo erro pequeno. Escolha uma verificação que realmente ajude e confira se funcionou.",
+          "onscreen_text": "Escolha uma mudança no processo e diga como verificar se ela reduziu o erro.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-pratica"
+        },
+        {
+          "id": "a02-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Escolha uma mudança no processo e diga como verificar se ela reduziu o erro.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Identificar a versão final com o padrão da equipe e conferir essa identificação antes dos próximos envios.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a02-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a02-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a02-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Você concluiu as duas situações do curso. Seu roteiro fica disponível para consultar e adaptar quando precisar.",
+          "next": "curso-concluido",
+          "next_label": "Concluir curso"
+        }
+      ]
+    }
+  ],
+  "end_node": {
+    "id": "curso-concluido",
+    "type": "summary",
+    "title": "Você chegou ao final",
+    "text": "Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+    "actions": [
+      "Abrir meu roteiro",
+      "Rever situações",
+      "Voltar aos cursos"
+    ],
+    "pending_message": "Você deixou uma atividade para depois. Ela continua disponível no seu roteiro.",
+    "completion_rule": "As duas decisões devem ter uma escolha confirmada e as duas aulas devem chegar ao fechamento. Práticas podem ficar pendentes. Se houver regras vigentes diferentes, mapear sem alterar certificados ou conclusão global silenciosamente."
+  }
+}

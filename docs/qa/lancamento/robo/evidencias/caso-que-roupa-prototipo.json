@@ -1,0 +1,454 @@
+{
+ "como": "protótipo robo.mjs rodado de novo em 2026-10-31 com um gravador extra (ouvintes de mídia na fase de captura, por elemento)",
+ "videos_registrados_pelo_prototipo": [
+  {
+   "src": "ast_vmr2h2o3lssx20a1",
+   "dur": 39.5,
+   "max": 39.5,
+   "ended": 1,
+   "plays": 1,
+   "restarts": 0,
+   "palco": true
+  },
+  {
+   "src": "ast_bysvlf5c6yt789dn",
+   "dur": 7.9,
+   "max": 7.9,
+   "ended": 1,
+   "plays": 0,
+   "restarts": 0,
+   "palco": true
+  }
+ ],
+ "eventos_reais_de_midia": [
+  {
+   "t": 0.3,
+   "evento": "loadstart",
+   "arquivo": "ast_nqxnu5wobnckp4cc",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 0.3,
+   "evento": "loadstart",
+   "arquivo": "ast_isnkjoslub83i9mo",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 0.3,
+   "evento": "loadstart",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 0.3,
+   "evento": "loadstart",
+   "arquivo": "ast_ar5192j2r0omulbf",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 0.3,
+   "evento": "loadstart",
+   "arquivo": "ast_vmr2h2o3lssx20a1",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 3.4,
+   "evento": "play",
+   "arquivo": "ast_vmr2h2o3lssx20a1",
+   "currentTime": 0.1,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 3.4,
+   "evento": "playing",
+   "arquivo": "ast_vmr2h2o3lssx20a1",
+   "currentTime": 0.1,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 23.1,
+   "evento": "pause",
+   "arquivo": "ast_vmr2h2o3lssx20a1",
+   "currentTime": 39.5,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 23.1,
+   "evento": "ended",
+   "arquivo": "ast_vmr2h2o3lssx20a1",
+   "currentTime": 39.5,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 23.5,
+   "evento": "loadstart",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "loadstart",
+   "arquivo": "ast_695i31djaxa2o4lb",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "loadstart",
+   "arquivo": "ast_i22rqcyum3kvif3j",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "loadstart",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "loadstart",
+   "arquivo": "ast_1rmxac0pbw26k5qd",
+   "currentTime": 0,
+   "dentro_de": "video-prefetch",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "loadstart",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "play",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 24.9,
+   "evento": "playing",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 0.1,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 28.9,
+   "evento": "pause",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 7.9,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 28.9,
+   "evento": "ended",
+   "arquivo": "ast_bysvlf5c6yt789dn",
+   "currentTime": 7.9,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 28.9,
+   "evento": "loadstart",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 28.9,
+   "evento": "play",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 29,
+   "evento": "playing",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 0.1,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 48.8,
+   "evento": "pause",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 39.6,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 48.8,
+   "evento": "ended",
+   "arquivo": "ast_0kjdpkr4eswjh3bm",
+   "currentTime": 39.6,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 48.8,
+   "evento": "loadstart",
+   "arquivo": "ast_17oyy1lw72w7sf0m",
+   "currentTime": 0,
+   "dentro_de": "brand-bumper",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 48.8,
+   "evento": "play",
+   "arquivo": "ast_17oyy1lw72w7sf0m",
+   "currentTime": 0,
+   "dentro_de": "brand-bumper",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 48.8,
+   "evento": "playing",
+   "arquivo": "ast_17oyy1lw72w7sf0m",
+   "currentTime": 0,
+   "dentro_de": "brand-bumper",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 50.9,
+   "evento": "pause",
+   "arquivo": "ast_17oyy1lw72w7sf0m",
+   "currentTime": 4,
+   "dentro_de": "brand-bumper",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 50.9,
+   "evento": "ended",
+   "arquivo": "ast_17oyy1lw72w7sf0m",
+   "currentTime": 4,
+   "dentro_de": "brand-bumper",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 51.5,
+   "evento": "loadstart",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 51.5,
+   "evento": "play",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 0,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": false,
+   "velocidade": 1
+  },
+  {
+   "t": 51.6,
+   "evento": "playing",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 0.1,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 55.2,
+   "evento": "pause",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 7.5,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  },
+  {
+   "t": 55.2,
+   "evento": "ended",
+   "arquivo": "ast_njtbpxfrxm9uby9q",
+   "currentTime": 7.5,
+   "dentro_de": "stage-media",
+   "hook_do_prototipo": true,
+   "velocidade": 2
+  }
+ ],
+ "cliques": [
+  {
+   "t": 1.17,
+   "pedido": "Começar aula",
+   "clicou": {
+    "testid": "player-watch",
+    "texto": "Começar aula"
+   },
+   "antes": {
+    "node": "v00",
+    "phase": "idle",
+    "reacao": null,
+    "outro": false,
+    "video": "ast_vmr2h2o3lssx20a1@0.1 pausado"
+   },
+   "depois": {
+    "node": "v00",
+    "phase": "playing",
+    "reacao": null,
+    "outro": false,
+    "video": "ast_vmr2h2o3lssx20a1@0.8 tocando"
+   }
+  },
+  {
+   "t": 21.251,
+   "pedido": "Continuar",
+   "clicou": {
+    "testid": "player-continue",
+    "texto": "Continuar"
+   },
+   "antes": {
+    "node": "v00",
+    "phase": "ended",
+    "reacao": null,
+    "outro": false,
+    "video": "ast_vmr2h2o3lssx20a1@39.5 pausado"
+   },
+   "depois": {
+    "node": "q01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   }
+  },
+  {
+   "t": 22.622,
+   "pedido": "Confirmar escolha",
+   "clicou": {
+    "testid": "player-submit",
+    "texto": "Confirmar escolha"
+   },
+   "antes": {
+    "node": "q01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   },
+   "depois": {
+    "reacao": "playing",
+    "outro": false,
+    "video": "ast_bysvlf5c6yt789dn@0.6 tocando"
+   }
+  },
+  {
+   "t": 49.268,
+   "pedido": "Confirmar escolha",
+   "clicou": {
+    "testid": "player-submit",
+    "texto": "Confirmar escolha"
+   },
+   "antes": {
+    "node": "q02",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   },
+   "depois": {
+    "reacao": "playing",
+    "outro": false,
+    "video": "ast_njtbpxfrxm9uby9q@0.6 tocando"
+   }
+  },
+  {
+   "t": 53.485,
+   "pedido": "Salvar no meu roteiro",
+   "clicou": {
+    "testid": "player-submit",
+    "texto": "Salvar no meu roteiro"
+   },
+   "antes": {
+    "node": "m01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   },
+   "depois": {
+    "node": "fim_aula_01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   }
+  },
+  {
+   "t": 54.629,
+   "pedido": "Continuar aula",
+   "clicou": {
+    "testid": "compose-continue",
+    "texto": "Continuar aula"
+   },
+   "antes": {
+    "node": "fim_aula_01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   },
+   "depois": {
+    "node": "fim_aula_01",
+    "reacao": null,
+    "outro": false,
+    "video": null
+   }
+  }
+ ]
+}

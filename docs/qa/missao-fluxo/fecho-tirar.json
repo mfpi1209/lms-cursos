@@ -1,0 +1,138 @@
+{
+ "geradoEm": "2026-11-01T12:39:15.329Z",
+ "modo": "apply",
+ "registros": [
+  {
+   "alvo": "C24/aula_03/despedida",
+   "courseId": "crs_dp9s7pdro9j6e3m0",
+   "esperadoS": 0,
+   "aberturaEm": [],
+   "planosAntes": [
+    "d1",
+    "d2",
+    "d3",
+    "fecho"
+   ],
+   "planoAnterior": "d3",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": null,
+   "estado": "aplicado",
+   "assetId": "ast_6d3mkdq4kffu1cxz",
+   "duracaoDepoisS": 28.6,
+   "timeline": [
+    {
+     "id": "d1",
+     "start": 0,
+     "duration": 9.44,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "d2",
+     "start": 9.44,
+     "duration": 9.04,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "d3",
+     "start": 18.48,
+     "duration": 10.04,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "d1",
+     "headTrim": 0,
+     "tailTrim": 0.016000000000000014,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "d2",
+     "headTrim": 0.08,
+     "tailTrim": 0.023999999999999133,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "d3",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Lembra da sala de reunião? Reservar parecia um começo. Era um chute. E o sorteio da Bia: mudou a lista, mudou só o sorteio. Por onde eu começo? Agora você sabe: pelo que precisa conseguir e pelo que ainda falta saber. Depois, um passo de cada vez. E quando algo mudar no meio, e vai mudar, não recomece. Pergunte: o que isso alcança? Essa pergunta agora é sua. Boa semana."
+  },
+  {
+   "alvo": "C25/aula_03/despedida",
+   "courseId": "crs_0ua5onij460lpzs0",
+   "esperadoS": 0,
+   "aberturaEm": [],
+   "planosAntes": [
+    "d1",
+    "d2",
+    "d3",
+    "fecho"
+   ],
+   "planoAnterior": "d3",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": null,
+   "estado": "aplicado",
+   "assetId": "ast_6556kw8ba3vowmfw",
+   "duracaoDepoisS": 23.3,
+   "timeline": [
+    {
+     "id": "d1",
+     "start": 0,
+     "duration": 8.88,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "d2",
+     "start": 8.88,
+     "duration": 8.44,
+     "audioDelay": 0,
+     "clipStart": 0.04
+    },
+    {
+     "id": "d3",
+     "start": 17.32,
+     "duration": 5.96,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    }
+   ],
+   "joins": [
+    {
+     "id": "d1",
+     "headTrim": 0,
+     "tailTrim": 0.017999999999998906,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "d2",
+     "headTrim": 0.04,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "d3",
+     "headTrim": 0.2,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "O Jonas comparou. Chuva com estoque cheio: caiu um pouco. Falta de produto: caiu muito. As duas pesaram. Faz sentido? Quase tudo faz. A pergunta é outra: o que eu sei, o que suponho, o que me faria mudar de ideia. Nem sempre dá para esperar a resposta completa. Decida com o que tem. Mas anote o que falta."
+  }
+ ]
+}

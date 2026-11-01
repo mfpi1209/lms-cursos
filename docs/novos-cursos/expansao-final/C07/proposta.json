@@ -1,0 +1,615 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C07",
+  "id": "crs_bmf11akamtxoti28",
+  "titulo": "Como falar com a equipe",
+  "instrutor": "Gustavo — Seu orientador",
+  "versaoPublicada": 12,
+  "revisaoDoRascunho": 97
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado (ou, em plano, a fala nova com o mesmo id); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes há mudanças de texto (fins de aula, campos de prática) e a troca de fala do plano de abertura da prática (mesmo id, sem a palavra \"missão\"), que continua sendo o anúncio da prática daquela aula.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62; cena na cam_gustavo7_34 com chamada na cam_gustavo7_esq; explicação na cam_gustavo7_esq; despedida na cam_gustavo7_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): sem molde; 'Como foi?' é o único campo de texto; draftFromNodeId null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso ('Boa escolha', 'Isso mesmo', 'Exatamente', 'Bom começo', 'Quase lá', 'É por aí').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de frase em blocos; nada acontece fora da tela.",
+  "O curso ensina a pedir orientação e a esclarecer um prazo, mas para quando o prazo fica claro. Não trata o que vem em seguida: falta o acesso ao arquivo, e esse é o tipo de coisa que o jovem esconde.",
+  "Não diz que confirmar entendimento não é concordar com o impossível: dá para dizer “entendi” e, na mesma frase, “me falta isto”.",
+  "As aberturas das duas aulas usam a fórmula “No fim desta aula, tem uma missão para você: …”; os missao_fim de v01 e v03 já saíram na Fase 0.",
+  "O curso termina numa tela de texto genérica: sem fecho do Gustavo, sem as duas perguntas que são a marca dele."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Escolha o momento, organize sua fala para pedir orientação ou apresentar uma diferença, e diga o que falta para começar sem esconder nada. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Confirmar o entendimento e, na mesma conversa, dizer o que falta para começar (acesso, material, orientação, tempo)."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Elisa",
+    "André"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como pedir orientação no momento certo",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: peça uma conversa.",
+       "para": "O pedido de conversa com quem orienta você, você monta hoje: assunto, motivo e um horário possível.",
+       "camera": "cam_gustavo7_34",
+       "layout": "presenter",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim já tirado na Fase 0 (cortes.md §A, n 21): não mexer."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução: o componente é de blocos."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Urgência de verdade passa na frente. O resto espera o canal combinado."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como esclarecer uma diferença de entendimento",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: apresente uma diferença.",
+       "para": "Daqui a pouco, a frase é sua: o que você entendeu, o que mudou e o que vocês precisam confirmar.",
+       "camera": "cam_gustavo7_34",
+       "layout": "presenter",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim (“A seguir, a sua missão: apresente uma diferença.”) já tirado na Fase 0 (cortes.md §A, n 23): não mexer. m02 continua logo depois, com a ponte escrita e a abertura nova de v02."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução. Título “Apresente uma diferença” fica: a prática não muda."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Uma diferença se esclarece com fatos e uma proposta, sem provar quem errou. Se você salvou, sua frase fica no Meu roteiro. Na próxima aula, o prazo está claro, mas falta uma coisa para começar, e é a que a gente costuma esconder.",
+      "closingLine": "Esclarecer o prazo, sim. Provar quem errou, não."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” passa para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Prazo confirmado. E o que falta para começar?",
+   "resumo": "O prazo está claro, mas falta o acesso. Você decide se diz ou esconde, vê que confirmar não é concordar com o impossível e devolve uma orientação real com suas palavras.",
+   "estimativaMin": 4,
+   "obrigatoria": "obrigatória para quem está no curso; quem já concluiu vê como conteúdo novo (DECISOES-AUTONOMAS §1, mesma regra do C24)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Confirmar o entendimento e, na mesma conversa, dizer o que falta para começar (acesso, material, orientação, tempo)."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Acesso negado",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Prazo · Acesso · A segunda pergunta",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "A Elisa esclareceu o prazo: é hoje. Pronto? Ainda não. Tem uma segunda pergunta, e essa a gente engole.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "promessa",
+       "fala": "Antes de terminar, você pega uma orientação real e devolve com suas palavras: o quê, até quando, o que falta.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "nota": "Faz o papel do antigo plano \"missao\", sem a fórmula.",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "Ela abre a pasta para começar a lista. Acesso negado. O arquivo está numa área que ela não abre.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s3",
+       "fala": "Quem confirmou o prazo ainda está na sala. A Elisa já disse que entendeu: é hoje.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Elisa, o que você acrescenta à conversa?",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_esq",
+       "acao": "add",
+       "palavras": 10,
+       "segundos": 3.8
+      }
+     ],
+     "roteiroNovo": "A Elisa esclareceu o prazo: é hoje. Pronto? Ainda não. Tem uma segunda pergunta, e essa a gente engole. Antes de terminar, você pega uma orientação real e devolve com suas palavras: o quê, até quando, o que falta. Ela abre a pasta para começar a lista. Acesso negado. O arquivo está numa área que ela não abre. Quem confirmou o prazo ainda está na sala. A Elisa já disse que entendeu: é hoje. No lugar da Elisa, o que você acrescenta à conversa?",
+     "cartaoPerguntaSeguinte": "O prazo foi confirmado: é hoje. A Elisa não tem acesso ao arquivo da lista. Quem confirmou ainda está na sala. O que você acrescenta?",
+     "proximo": "q04",
+     "palavras": 84,
+     "segundos": 32.1
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Elisa, o que você acrescenta à conversa?",
+     "apoioNaTela": "O prazo foi confirmado: é hoje. A Elisa não tem acesso ao arquivo da lista. Quem confirmou ainda está na sala.",
+     "bridge": {
+      "call": "No lugar da Elisa, o que você acrescenta à conversa?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C07)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Nada. Confirmo o prazo e tento conseguir o acesso depois, por conta própria.”",
+       "qualidade": "weak",
+       "feedback": "O prazo fica confirmado, mas ninguém sabe que sem o arquivo nada começa. Se o acesso demorar, a culpa parece sua. Faça assim: diga agora o que falta para começar.",
+       "reacao": {
+        "texto": "Você confirmou o prazo e escondeu o problema. Se o acesso demorar, às cinco a pergunta será: por que não avisou?",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 78
+      },
+      {
+       "id": "b",
+       "rotulo": "“Digo que vou tentar entregar hoje e peço o acesso pelo grupo da equipe.”",
+       "qualidade": "ok",
+       "feedback": "Você já sinaliza o acesso, mas “vou tentar” não diz que sem o arquivo nada começa, e o grupo pode demorar. Faça assim: diga direto, a quem confirmou: preciso do acesso para começar.",
+       "reacao": {
+        "texto": "Você falou do acesso, bom. Mas “vou tentar” esconde o tamanho do problema. Sem o arquivo, não começa. Diga isso.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v05",
+       "caracteres": 73
+      },
+      {
+       "id": "c",
+       "rotulo": "“Confirmo o prazo e aviso que preciso do acesso ao arquivo para conseguir começar.”",
+       "qualidade": "strong",
+       "feedback": "Você mostra o que falta e dá à pessoa a chance de resolver agora. Faça assim: “entendi, é hoje; preciso do acesso à pasta para começar. Quem libera?”",
+       "reacao": {
+        "texto": "Duas informações, uma frase: é hoje, e falta o acesso. Agora a pessoa pode resolver. Confirmar não é concordar com o impossível.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v05",
+       "caracteres": 83
+      }
+     ],
+     "respostaForaDoEnunciado": "A resposta não está no enunciado: ele diz que o prazo está confirmado e que falta o acesso; perceber que a falta de acesso é informação para quem confirmou, agora, e não um problema para resolver depois sozinha, é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Confirmar não é concordar com o impossível",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Qual é o prazo? · O que falta para começar?",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Aqui existem duas perguntas. Qual é o prazo? E o que falta para começar? A primeira a gente faz. A segunda, esconde.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "s2",
+       "fala": "Confirmar entendimento não é concordar com algo impossível. Diga o que entendeu, e o que falta: acesso, material, orientação, tempo.",
+       "layout": "presenter_chips",
+       "camera": "cam_gustavo7_esq",
+       "cartao": {
+        "titulo": "Duas perguntas",
+        "topicos": [
+         "**Qual é o prazo?**",
+         "**O que falta para começar?**",
+         "Falta: acesso · material · orientação · tempo"
+        ]
+       },
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s3",
+       "fala": "Depois, registre o combinado numa frase: começo a lista quando o acesso chegar, e revisamos o prazo do relatório.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_esq",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s4",
+       "fala": "Vale para escola, curso, casa. Alguém te pede algo? Devolva: entendi isso, até tal dia, e me falta aquilo.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_esq",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "lancamento",
+       "fala": "Então, na próxima orientação que receber, antes de executar, devolva com suas palavras: o quê, até quando, o que falta.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_esq",
+       "nota": "Faz o papel do antigo \"missao_fim\", sem a palavra \"missão\". A aula segue para m03.",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      }
+     ],
+     "roteiroNovo": "Aqui existem duas perguntas. Qual é o prazo? E o que falta para começar? A primeira a gente faz. A segunda, esconde. Confirmar entendimento não é concordar com algo impossível. Diga o que entendeu, e o que falta: acesso, material, orientação, tempo. Depois, registre o combinado numa frase: começo a lista quando o acesso chegar, e revisamos o prazo do relatório. Vale para escola, curso, casa. Alguém te pede algo? Devolva: entendi isso, até tal dia, e me falta aquilo. Então, na próxima orientação que receber, antes de executar, devolva com suas palavras: o quê, até quando, o que falta.",
+     "proximo": "m03",
+     "palavras": 100,
+     "segundos": 38.2,
+     "naoRepete": "Não repete v01 (assunto, necessidade, prazo; urgência) nem v03 (qual prazo vale; confirmar o novo combinado; ofensa → apoio, que por isso não volta aqui). O novo: a segunda pergunta; confirmar sem concordar com o impossível; registrar o combinado; devolver com as próprias palavras."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Devolva a orientação com suas palavras",
+     "tipoDeMissao": "FAZER fora da tela: na próxima orientação real que receber, devolver o quê, até quando e o que falta antes de executar",
+     "intro": "A Elisa disse o que entendeu e o que faltava, na mesma frase. Agora é na sua semana, com uma orientação de verdade.",
+     "action": [
+      "Espere a próxima orientação que você receber: um pedido na escola, no curso, em casa, no trabalho.",
+      "Antes de executar, devolva, em voz alta ou por mensagem: “Entendi que é [o quê], até [quando]. Para começar, me falta [o quê].” Se não falta nada, diga isso também.",
+      "Repare na resposta: a pessoa corrigiu algo? Liberou o que faltava?",
+      "Volte aqui, marque “Já experimentei” e conte o que aconteceu."
+     ],
+     "alternative": "Não trabalha? Serve a professora que passou um trabalho, alguém da família que pediu uma coisa, o instrutor do curso. Orientação é o que não falta. Se trabalha, escolha a próxima tarefa que vier com prazo.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de um aluno",
+      "texto": "Minha mãe: “resolve o negócio do banco”. Devolvi: “Entendi: levar o comprovante na agência até sexta. Me falta o comprovante, que está com você.” Ela riu e me deu o papel.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "O que você devolveu, e a pessoa corrigiu ou liberou alguma coisa?",
+      "placeholder": "Ex.: o professor disse “até sexta”, mas quando repeti ele lembrou que era quinta.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a missão e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Duas perguntas",
+     "textoTela": "Qual é o prazo? · O que falta para começar?",
+     "posicao": "depois de m03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "A Elisa pediu orientação na hora certa, mostrou dois prazos sem acusar, e disse o que faltava. Nunca precisou brigar.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d2",
+       "fala": "Falar com a equipe é separar assunto, dúvida e pedido. E não esconder o que falta. Preparado é quem avisa.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d3",
+       "fala": "Qual é o prazo? E o que falta para começar? São duas perguntas. Faça as duas.",
+       "layout": "presenter",
+       "camera": "cam_gustavo7_34",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      }
+     ],
+     "roteiroNovo": "A Elisa pediu orientação na hora certa, mostrou dois prazos sem acusar, e disse o que faltava. Nunca precisou brigar. Falar com a equipe é separar assunto, dúvida e pedido. E não esconder o que falta. Preparado é quem avisa. Qual é o prazo? E o que falta para começar? São duas perguntas. Faça as duas.",
+     "palavras": 56,
+     "segundos": 21.4,
+     "forma": "termina com as duas perguntas do Gustavo, entregues ao aluno como orientação concreta; abertura por callback (as três cenas da Elisa). Sem recap, sem “Meu roteiro”, sem link para outro curso na fala.",
+     "motionPrompt": "levanta um dedo em cada pergunta, pausa antes de “Faça as duas”"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Confirmar o prazo é fácil. Dizer o que falta é o que faz a entrega acontecer.",
+     "summary": "O que você levou\nPeça orientação com assunto, prazo e canal.\nDiferença de entendimento: fatos, escuta, proposta.\nConfirmar não é concordar com o impossível.\nDuas perguntas: qual é o prazo? O que falta para começar?",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha orientação devolvida",
+       "kind": "checklist",
+       "items": [
+        "recebi uma orientação",
+        "devolvi: o quê, até quando, o que falta",
+        "reparei na resposta",
+        "comecei só depois de confirmar"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Peça orientação com assunto, prazo e canal.\nDiferença de entendimento: fatos, escuta, proposta.\nConfirmar não é concordar com o impossível.\nDuas perguntas: qual é o prazo? O que falta para começar?",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 15,
+   "palavras": 277,
+   "segundos": 105.7,
+   "nota": "inclui as aberturas trocadas (mesmo id de plano, fala nova)"
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 63,
+   "segundos": 24.0
+  },
+  "totalNovoFalado": {
+   "palavras": 340,
+   "segundos": 129.8,
+   "usd": 2.38,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v04",
+    "planos": 5,
+    "palavras": 84,
+    "segundos": 32.1
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 63,
+    "segundos": 24.0
+   },
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 100,
+    "segundos": 38.2
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 56,
+    "segundos": 21.4
+   },
+   {
+    "no": "aberturas trocadas (v00/missao, v02/missao)",
+    "planos": 2,
+    "palavras": 37,
+    "segundos": 14.1
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 5,
+   "quais": "q01 C, q02 A, q02 C, q03 A, q03 B",
+   "segundos": 31.3,
+   "usd": 0.57,
+   "nota": "Aberturas: \"Vamos olhar isso com calma\", \"Tem um caminho ainda melhor\", \"Muita gente responderia assim\", \"Faz sentido, mas dá para ir além\", \"Faz sentido pensar assim, mas repara\". (b) cortar a 1ª frase se o ajustador aceitar (grátis); (c) regravar só o resto."
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 186.7,
+    "maxS": 194.0,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 291.6,
+    "maxS": 299.7,
+    "texto": "cerca de 4.9–5.0 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação da q04 (mínima/máxima) + diferença das aberturas trocadas (+5.6 s). O “antes” é o raio-x das 02:33; a Fase 0 tirou os missao_fim de v01 e v03 (−7.5 s), não descontados aqui."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Missão m03 depende de uma orientação chegar na semana: (a) manter como está, com “Vou fazer depois” cobrindo quem não receber nenhuma · (b) pedir que o aluno provoque uma (peça uma tarefa a alguém) para garantir a ação. Recomendo (a): orientação é o que não falta.",
+  "2. Opção A da decisão (“Nada. Confirmo e tento conseguir depois”): (a) manter como fraca (é o que acontece de verdade) · (b) usar a do pacote “Prometo entregar hoje e tento conseguir o arquivo depois” (mais explícita, menos realista). Recomendo (a).",
+  "3. As 5 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~31.3 s, ≈ US$ 0.57). Recomendo (b); se não der, (a).",
+  "4. Fim da despedida: (a) terminar nas duas perguntas (“Faça as duas.”) · (b) terminar em “Preparado é quem avisa.” Recomendo (a): é a marca do Gustavo."
+ ]
+}

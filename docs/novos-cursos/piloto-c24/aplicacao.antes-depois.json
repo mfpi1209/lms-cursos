@@ -1,0 +1,777 @@
+{
+ "script": "piloto-c24",
+ "modo": "aplicado",
+ "geradoEm": "2026-11-01T06:43:40.309Z",
+ "courseId": "crs_dp9s7pdro9j6e3m0",
+ "revisaoAntes": 44,
+ "versaoPublicadaComparada": 3,
+ "onlyAppendedLessons": true,
+ "contagem": {
+  "planosAula3": 17,
+  "palavrasFaladasPlanos": 380,
+  "reacoesNovas": 3,
+  "palavrasReacoes": 67,
+  "nos": 6,
+  "tiposDosNos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "nosEditadosAulas1e2": [
+  "aula_01/a01",
+  "aula_01/fim_aula_01",
+  "aula_02/a02",
+  "aula_02/fim_aula_02"
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "antes": null,
+   "depois": null,
+   "igual": true
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "antes": null,
+   "depois": null,
+   "igual": true
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "antes": null,
+   "depois": null,
+   "igual": true
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "antes": null,
+   "depois": null,
+   "igual": true
+  }
+ ],
+ "reacoesAberturaRepetida": {
+  "decisao": "mantidas (sem regravar, sem cortar)",
+  "motivo": "o ajuste fino de reação só apara as aberturas de REACTION_OPENERS (\"Boa escolha!\"…); nenhuma das 8 reações com abertura repetida começa com uma delas",
+  "cortaveis": []
+ },
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Natália, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Natália, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual sequência evita retrabalho?\" ainda não está na fala do vídeo \"Qual sequência evita retrabalho?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Yuri, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Yuri, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,6 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Natália, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Natália, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual sequência evita retrabalho?\" ainda não está na fala do vídeo \"Qual sequência evita retrabalho?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Yuri, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Yuri, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "aula3": {
+  "id": "aula_03",
+  "title": "Faça e repare o que mudou",
+  "description": "Você escolhe uma tarefa sua desta semana, escreve os passos, faz e anota o que precisou mudar.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Quando o plano encontra a vida",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Do papel para a semana"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Até aqui, você planejou no papel: reunião, apresentação, kits. Nesta última aula, o plano sai do papel. E a vida mexe nele. No fim, você escolhe uma tarefa sua, desta semana. Escreve os passos, faz, e repara no que precisou mudar. É isso que a gente treina. A Bia combinou um amigo-secreto com a turma. Ela fez como você: lista de quem entra, valor combinado, sorteio, data da troca. Quatro etapas. E perguntou de que cada etapa depende. O sorteio depende da lista. A data, de todo mundo. Terça, a lista fechou. Quarta, ela sorteou. Quinta, duas pessoas avisam: não vão mais participar. O sorteio já foi feito. O valor e a data continuam de pé. No lugar da Bia, o que você faz?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Até aqui, você planejou no papel: reunião, apresentação, kits. Nesta última aula, o plano sai do papel. E a vida mexe nele.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "opens both palms, honest",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você escolhe uma tarefa sua, desta semana. Escreve os passos, faz, e repara no que precisou mudar. É isso que a gente treina.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "brings both hands together, focused",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s2",
+        "line": "A Bia combinou um amigo-secreto com a turma. Ela fez como você: lista de quem entra, valor combinado, sorteio, data da troca. Quatro etapas.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "nods slowly, warm",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s3",
+        "line": "E perguntou de que cada etapa depende. O sorteio depende da lista. A data, de todo mundo. Terça, a lista fechou. Quarta, ela sorteou.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+        "slide": {
+         "title": "O plano da Bia",
+         "bullets": [
+          "**Lista** de quem entra",
+          "**Valor** combinado",
+          "**Sorteio** (depende da lista)",
+          "**Data** da troca (depende de todos)"
+         ],
+         "style": "checklist"
+        },
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s4",
+        "line": "Quinta, duas pessoas avisam: não vão mais participar. O sorteio já foi feito. O valor e a data continuam de pé.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "brings both hands together, focused",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar da Bia, o que você faz?",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "tilts the head slightly, inviting",
+        "transitionIn": "cut"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Bia, o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "A Bia planejou o amigo-secreto da turma em quatro etapas e já fez o sorteio. Na quinta, duas pessoas saem. O valor e a data continuam valendo. No lugar da Bia, o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Refaço só o sorteio com quem ficou e aviso a turma hoje.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você volta só até a etapa que a mudança alcança. Faça assim: refaça o sorteio, avise a turma no mesmo dia e anote o que mudou."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "O que mudou? A lista. O que depende dela? Só o sorteio. Você refez exatamente isso, e o resto continuou de pé."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Espero até sexta, para ver se mais alguém sai, e aí refaço.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você evita refazer duas vezes, mas o resto do plano fica parado esperando. Faça assim: refaça hoje; se alguém sair depois, refaz só o sorteio."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Esperar parece prudente. Mas, sem sorteio, ninguém compra nada. Refaça hoje. Se alguém sair depois, você refaz só o sorteio de novo."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Cancelo o sorteio e recomeço o plano do zero, para não errar de novo.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você gasta tempo em etapas que não mudaram: valor e data continuam valendo. Faça assim: pergunte o que a mudança alcança e volte só até ali."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Recomeçar dá sensação de controle. Mas o valor e a data não mudaram. Antes de apagar tudo, pergunte: o que essa mudança alcança?"
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Bia, o que você faz?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Fazer e reparar",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Escolher · Escrever · Fazer · Anotar"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Um plano não é promessa. É um chute organizado. Ele serve para você perceber, cedo, onde a vida foi diferente do que imaginou. São quatro movimentos: escolher uma tarefa pequena, escrever os passos, fazer, e anotar o que mudou. Simples de falar. Vamos ver cada um. Pequena quer dizer: cabe nesta semana e termina. Um capítulo para a prova, o armário do quarto, um trabalho da escola, um pedido no estágio. Antes de começar, uma pergunta: como eu vou saber que terminou? Capítulo lido não é prova feita. Caixa cheia não é kit certo. Escreva de três a cinco passos. Nos que dependem de alguém, ou de algo que você ainda não sabe, ponha um ponto de interrogação. No meio do caminho, algo vai sair diferente. Não empurre. Pare dez segundos e pergunte: o que isso alcança? Um passo, ou todos? No fim, compare com o que escreveu. O que mudou é o que você aprendeu sobre a tarefa. Da próxima vez, o chute começa melhor. Agora é a sua vez: escolha a tarefa, escreva os passos e faça. Depois, volte aqui e conte como foi.",
+     "motionPrompt": "leans in slightly, curious",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Um plano não é promessa. É um chute organizado. Ele serve para você perceber, cedo, onde a vida foi diferente do que imaginou.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "leans in slightly, curious",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s2",
+        "line": "São quatro movimentos: escolher uma tarefa pequena, escrever os passos, fazer, e anotar o que mudou. Simples de falar. Vamos ver cada um.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "motionPrompt": "smiles softly, welcoming",
+        "slide": {
+         "title": "Quatro movimentos",
+         "bullets": [
+          "**Escolher** uma tarefa pequena",
+          "**Escrever** os passos",
+          "**Fazer**",
+          "**Anotar** o que mudou"
+         ],
+         "style": "checklist"
+        },
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s3",
+        "line": "Pequena quer dizer: cabe nesta semana e termina. Um capítulo para a prova, o armário do quarto, um trabalho da escola, um pedido no estágio.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "opens both palms, honest",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s4",
+        "line": "Antes de começar, uma pergunta: como eu vou saber que terminou? Capítulo lido não é prova feita. Caixa cheia não é kit certo.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "moves both hands gently while explaining, calm",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s5",
+        "line": "Escreva de três a cinco passos. Nos que dependem de alguém, ou de algo que você ainda não sabe, ponha um ponto de interrogação.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "nods slowly, warm",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s6",
+        "line": "No meio do caminho, algo vai sair diferente. Não empurre. Pare dez segundos e pergunte: o que isso alcança? Um passo, ou todos?",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "s7",
+        "line": "No fim, compare com o que escreveu. O que mudou é o que você aprendeu sobre a tarefa. Da próxima vez, o chute começa melhor.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "brings both hands together, focused",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é a sua vez: escolha a tarefa, escreva os passos e faça. Depois, volte aqui e conte como foi.",
+        "cameraId": "cam_flavia6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "leans in slightly, curious",
+        "transitionIn": "cut"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Quatro movimentos\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Faça uma tarefa sua com plano e repare o que mudou",
+     "type": "mission",
+     "intro": "A Bia refez só o sorteio, e o amigo-secreto aconteceu. Agora é com uma tarefa sua, de verdade, desta semana. Da escola, de casa, do curso ou do estágio.",
+     "action": "1. Escolha uma tarefa que termina nesta semana.\n2. No bloco de notas do celular, escreva “Pronto quando: …” e de três a cinco passos. Ponha “?” no passo que depende de alguém ou de algo que você ainda não sabe.\n3. Faça a tarefa.\n4. Quando algo sair diferente do escrito, anote em uma linha: o que mudou e até onde a mudança alcançou.\n5. Terminou, ou travou? Volte aqui, marque “Já experimentei” e conte como foi.",
+     "alternative": "A tarefa pode ser da escola, de casa ou de um curso. Estudar para a prova de sexta, fazer a sua parte do trabalho em grupo, resolver um documento pelo app, preparar o almoço de domingo. Só precisa ter um fim e caber na semana. Se trabalha, escolha algo que você já faz sozinho, sem precisar de autorização nova.",
+     "example": "A nota da Bia para o amigo-secreto da turma. Pronto quando: todo mundo com um nome e a data marcada. Passos: 1) fechar a lista (?) · 2) combinar o valor · 3) sortear · 4) marcar a data (?). O que mudou: duas pessoas saíram na quinta. Refiz só o sorteio e avisei no grupo."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Por onde eu começo? Agora você sabe",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que preciso · O que falta · De que depende · O que alcança"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Lembra da sala de reunião? Reservar parecia um começo. Era um chute. E o sorteio da Bia: mudou a lista, mudou só o sorteio. Por onde eu começo? Agora você sabe: pelo que precisa conseguir e pelo que ainda falta saber. Depois, um passo de cada vez. E quando algo mudar no meio, e vai mudar, não recomece. Pergunte: o que isso alcança? Essa pergunta agora é sua. Boa semana.",
+     "motionPrompt": "smiles softly, welcoming",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Lembra da sala de reunião? Reservar parecia um começo. Era um chute. E o sorteio da Bia: mudou a lista, mudou só o sorteio.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "smiles softly, welcoming",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "d2",
+        "line": "Por onde eu começo? Agora você sabe: pelo que precisa conseguir e pelo que ainda falta saber. Depois, um passo de cada vez.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "nods slowly, warm",
+        "transitionIn": "cut"
+       },
+       {
+        "id": "d3",
+        "line": "E quando algo mudar no meio, e vai mudar, não recomece. Pergunte: o que isso alcança? Essa pergunta agora é sua. Boa semana.",
+        "cameraId": "cam_flavia6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "motionPrompt": "opens both palms, honest",
+        "transitionIn": "cut"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de começar: o que preciso conseguir, o que já sei, o que falta."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Cada passo: de que depende?"
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Quando mudar: o que isso alcança?"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha tarefa desta semana",
+       "kind": "checklist",
+       "items": [
+        "tarefa escolhida e anotada no celular",
+        "passos escritos, com “?” no que dependia de alguém",
+        "tarefa feita (ou travou, e eu sei onde)",
+        "anotei o que mudou"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando fizer a tarefa, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de começar: o que preciso conseguir, o que já sei, o que falta.\nCada passo: de que depende?\nQuando mudar: o que isso alcança?",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "closingLine": "Toda tarefa muda no meio. Quem escreveu os passos percebe cedo e volta só até onde precisa.",
+     "outcomeLabel": "Curso concluído"
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 45,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Natália, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Natália, o que você faz?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual sequência evita retrabalho?\" ainda não está na fala do vídeo \"Qual sequência evita retrabalho?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Yuri, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Yuri, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

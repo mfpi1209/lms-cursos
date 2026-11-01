@@ -1,0 +1,209 @@
+{
+ "script": "piloto-c01",
+ "modo": "aplicado",
+ "geradoEm": "2026-11-01T05:18:08.390Z",
+ "courseId": "crs_99hpdsc8w88osiuh",
+ "revisaoAntes": 92,
+ "versaoPublicadaComparada": 12,
+ "onlyAppendedLessons": true,
+ "contagem": {
+  "planosTrocados": 4,
+  "planosNovosAulas1e2": 6,
+  "planosAulas3e4": 29,
+  "nosNovos": 13,
+  "aulasNovas": 2,
+  "perguntasNovas": 4,
+  "reacoesNovas": 12
+ },
+ "planosAlterados": [
+  "aula_01/v00/missao",
+  "aula_01/v01/missao_fim",
+  "aula_01/v01/ex1 (novo)",
+  "aula_01/v01/ex2 (novo)",
+  "aula_01/v01/ex3 (novo)",
+  "aula_02/v02/missao",
+  "aula_02/v03/missao_fim",
+  "aula_02/v03/ex1 (novo)",
+  "aula_02/v03/ex2 (novo)",
+  "aula_02/v03/ex3 (novo)"
+ ],
+ "nos": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "trocados": [
+    "missao"
+   ],
+   "novos": [],
+   "carry": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true,
+    "perdas": []
+   },
+   "narracaoConfere": true
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "trocados": [
+    "missao_fim"
+   ],
+   "novos": [
+    "ex1",
+    "ex2",
+    "ex3"
+   ],
+   "carry": {
+    "antes": {
+     "teaser": "O Davi tem o original, mas não conseguiu fazer a cópia pedida para amanhã. O que você faria no lugar dele?"
+    },
+    "depois": {
+     "teaser": "O Davi tem o original, mas não conseguiu fazer a cópia pedida para amanhã. O que você faria no lugar dele?"
+    },
+    "igual": true,
+    "perdas": []
+   },
+   "narracaoConfere": true
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "trocados": [
+    "missao"
+   ],
+   "novos": [],
+   "carry": {
+    "antes": {
+     "teaser": "É o primeiro dia da Luana. O ônibus parou e ela ainda não tem previsão. Como você avisaria que pode atrasar?"
+    },
+    "depois": {
+     "teaser": "É o primeiro dia da Luana. O ônibus parou e ela ainda não tem previsão. Como você avisaria que pode atrasar?"
+    },
+    "igual": true,
+    "perdas": []
+   },
+   "narracaoConfere": true
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "trocados": [
+    "missao_fim"
+   ],
+   "novos": [
+    "ex1",
+    "ex2",
+    "ex3"
+   ],
+   "narracaoConfere": true
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_01/v01",
+  "aula_02/v02",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 1,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Confirme sua chegada\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Luana, o que você ainda precisa confirmar?\" ainda não está na fala do vídeo \"No lugar da Luana, o que você ainda precisa confirmar?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Davi, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Davi, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Luana, como você avisa que pode atrasar?\" ainda não está na fala do vídeo \"No lugar da Luana, como você avisa que pode atrasar?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 4,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 13
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Luana, o que você ainda precisa confirmar?\" ainda não está na fala do vídeo \"No lugar da Luana, o que você ainda precisa confirmar?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Davi, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Davi, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Luana, como você avisa que pode atrasar?\" ainda não está na fala do vídeo \"No lugar da Luana, como você avisa que pode atrasar?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "revisaoDepois": 93,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 4,
+   "simulated": 0,
+   "missing": 13,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Luana, o que você ainda precisa confirmar?\" ainda não está na fala do vídeo \"No lugar da Luana, o que você ainda precisa confirmar?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Davi, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Davi, o que você faria?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Luana, como você avisa que pode atrasar?\" ainda não está na fala do vídeo \"No lugar da Luana, como você avisa que pode atrasar?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

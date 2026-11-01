@@ -1,0 +1,322 @@
+{
+  "schema_version": "dna-editorial-1.0",
+  "schema_notice": "Contrato editorial intermediário. Não é o schema nativo comprovado do motor. Adaptar após inspeção do projeto.",
+  "id": "dna-proposta-discordar-sem-brigar",
+  "slug_proposto": "discordar-sem-brigar",
+  "title": "Discordar sem brigar",
+  "status": "draft",
+  "locale": "pt-BR",
+  "track_proposed": "Convivência e respeito",
+  "objective": "Discordar de uma proposta com respeito e negociar um próximo passo.",
+  "audience": "Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+  "prerequisites": "Leitura básica; não exige experiência profissional.",
+  "instructor_proposed": "Gustavo",
+  "editorial_review": "Possível expansão de Como falar com a equipe; revisar antes de publicar.",
+  "duration_seconds": null,
+  "duration_status": "awaiting_media_measurement",
+  "assessment": {
+    "purpose": "formative",
+    "passing_score": null,
+    "certificate_claim": null,
+    "retry_allowed": true
+  },
+  "lessons": [
+    {
+      "id": "a01",
+      "title": "Dá para pensar diferente",
+      "objective": "Escreva uma discordância com objetivo comum, preocupação e proposta.",
+      "entry_node": "a01-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a01-abertura",
+          "type": "video",
+          "title": "Dá para pensar diferente",
+          "speech": "Discordar não precisa virar disputa pessoal. Você pode reconhecer o objetivo da outra pessoa e explicar uma preocupação concreta. A conversa melhora quando fica claro sobre o que vocês discordam.",
+          "onscreen_text": "Dá para pensar diferente",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-situacao"
+        },
+        {
+          "id": "a01-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Um colega quer enviar um material hoje. Você percebeu que falta confirmar uma informação importante.",
+          "question": "Como começa a conversa?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Você sempre faz tudo correndo.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Também quero entregar hoje. Falta confirmar este dado; podemos verificar antes do envio?",
+              "recommended": true,
+              "feedback_node": "a01-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Fico em silêncio, mesmo achando que o dado pode estar errado.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a01-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O comentário generaliza o comportamento e aumenta a tensão.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você conecta a preocupação ao objetivo comum e propõe uma ação.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O risco continua sem que a equipe tenha chance de avaliá-lo.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Fale da proposta, do dado ou do efeito esperado. Evite adivinhar intenções. Uma pergunta concreta pode abrir espaço para informação que você ainda não tem. Discordar também inclui ouvir uma explicação nova.",
+          "onscreen_text": "Escreva uma discordância com objetivo comum, preocupação e proposta.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-pratica"
+        },
+        {
+          "id": "a01-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Escreva uma discordância com objetivo comum, preocupação e proposta.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Também quero entregar hoje. Este dado ainda não foi confirmado. Podemos verificá-lo antes do envio?",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a01-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a01-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a01-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Na próxima aula, vamos avançar para outra situação.",
+          "next": "a02-abertura",
+          "next_label": "Ir para a aula 2"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "title": "Como sair do impasse",
+      "objective": "Defina dois critérios e uma pergunta que ajudariam a resolver um impasse.",
+      "entry_node": "a02-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a02-abertura",
+          "type": "video",
+          "title": "Como sair do impasse",
+          "speech": "Quando duas opções continuam em disputa, repetir o argumento mais alto não resolve. Vocês podem comparar critérios, fazer um teste ou pedir uma decisão a quem tem essa responsabilidade.",
+          "onscreen_text": "Como sair do impasse",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-situacao"
+        },
+        {
+          "id": "a02-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Você e um colega preferem formatos diferentes para um relatório. Os dois atendem ao pedido, mas o destinatário não indicou preferência.",
+          "question": "O que ajuda a avançar?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Continuar discutindo até alguém desistir.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Comparar clareza e prazo; se necessário, confirmar a preferência com quem vai usar.",
+              "recommended": true,
+              "feedback_node": "a02-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Escolher o meu formato sem avisar.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a02-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A discussão consome tempo sem criar um critério de escolha.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você aproxima a decisão da finalidade do trabalho.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A escolha unilateral pode gerar retrabalho e desgaste.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Definam o critério antes de defender o formato: quem vai usar, para quê e até quando. Se a decisão couber a outra pessoa, apresentem as opções de forma clara. Depois, registrem o combinado.",
+          "onscreen_text": "Defina dois critérios e uma pergunta que ajudariam a resolver um impasse.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-pratica"
+        },
+        {
+          "id": "a02-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Defina dois critérios e uma pergunta que ajudariam a resolver um impasse.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Comparar clareza e tempo de preparação. Perguntar ao destinatário qual formato atende melhor ao uso esperado.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a02-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a02-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a02-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Você concluiu as duas situações do curso. Seu roteiro fica disponível para consultar e adaptar quando precisar.",
+          "next": "curso-concluido",
+          "next_label": "Concluir curso"
+        }
+      ]
+    }
+  ],
+  "end_node": {
+    "id": "curso-concluido",
+    "type": "summary",
+    "title": "Você chegou ao final",
+    "text": "Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+    "actions": [
+      "Abrir meu roteiro",
+      "Rever situações",
+      "Voltar aos cursos"
+    ],
+    "pending_message": "Você deixou uma atividade para depois. Ela continua disponível no seu roteiro.",
+    "completion_rule": "As duas decisões devem ter uma escolha confirmada e as duas aulas devem chegar ao fechamento. Práticas podem ficar pendentes. Se houver regras vigentes diferentes, mapear sem alterar certificados ou conclusão global silenciosamente."
+  }
+}

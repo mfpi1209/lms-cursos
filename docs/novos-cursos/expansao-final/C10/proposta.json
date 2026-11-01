@@ -1,0 +1,608 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C10",
+  "id": "crs_q52zsimeeahpa9bq",
+  "titulo": "Terminei. E agora?",
+  "instrutora": "Beatriz — Sua orientadora",
+  "versaoPublicada": 12,
+  "revisaoDoRascunho": 95
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo/plano indicado; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova (aula_03) é APENDADA no fim. Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes só há: troca de fala do plano 'missao' (mesmo id, regrava só esse plano) e mudanças de texto nos nós 'end'. Os planos 'missao_fim' já estão sendo tirados na Fase 0 (cortes.md, status a): não mexer neles aqui.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_beatriz7_34 com chamada na cam_beatriz7_esq; explicação na cam_beatriz7_esq; despedida na cam_beatriz7_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; botões 'Já experimentei' e 'Vou fazer depois'. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso.",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de blocos; nada acontece fora da tela, e a m02 repete em parte a m01 (o que concluí + o que proponho).",
+  "O curso ensina a avisar a pendência, mas não o que acontece com ela depois: pendência avisada vira pendência esquecida se ninguém tem nome, prazo e dono.",
+  "Falta fechar a entrega perguntando pelo próximo passo numa mensagem só, sem assumir acesso que não foi combinado (a aula 2 ensina a proposta, a aula 1 o aviso; ninguém junta os dois).",
+  "Todos os casos são de trabalho (lista, pasta, supervisão): quem ainda não trabalha não tem para onde levar.",
+  "O curso termina numa tela de texto genérica: sem fecho da Beatriz, sem resolver a história do Henrique."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Confira sua entrega, comunique a conclusão, alinhe o próximo passo sem agir fora do combinado e não deixe uma pendência avisada virar pendência esquecida. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue comunicar a conclusão de uma tarefa, propor uma próxima atividade adequada e acompanhar uma pendência até ela fechar."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Acompanhar uma pendência avisada até ela fechar (quem responde, até quando, quem fecha) e encerrar uma entrega real com o que fez, onde está, o que falta e o próximo passo."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Henrique",
+    "Jéssica"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como entregar e avisar onde está o resultado",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Hoje você sai daqui com o aviso de entrega pronto: o que fez, onde deixou, o que falta.",
+       "de": "No fim desta aula, tem uma missão para você: comunique sua entrega.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0 (cortes.md, status a). Nada a fazer aqui."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Só acrescenta a frase de fechamento (hoje null).",
+     "campos_alterados": {
+      "closingLine": "Entrega sem a pendência avisada parece pronta. É aí que mora o retrabalho."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como escolher a próxima tarefa",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Antes de a aula acabar, você monta a pergunta que pede a próxima tarefa sem atropelar ninguém.",
+       "de": "No fim desta aula, tem uma missão para você: alinhe a próxima atividade.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim ('Sua missão agora é…') sai na Fase 0. O vídeo passa a terminar em s4."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' passa para fim_aula_03.",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Consulte as próximas atividades autorizadas. Proponha melhorias antes de mudar procedimentos. Na próxima aula, o Henrique volta três dias depois: a pendência que ele avisou ninguém respondeu. E você fecha uma entrega sua de verdade.",
+      "closingLine": "Iniciativa boa cabe no que já foi combinado."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Pendência avisada não é pendência fechada",
+   "resumo": "Você aprende a dar nome, prazo e dono a uma pendência e fecha uma entrega sua com uma mensagem de quatro linhas.",
+   "estimativaMin": 4,
+   "obrigatoria": "sim (mesma decisão do piloto C24: quem está fazendo passa pela aula; quem já concluiu vê como conteúdo novo)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Acompanhar uma pendência avisada até ela fechar (quem responde, até quando, quem fecha) e encerrar uma entrega real com o que fez, onde está, o que falta e o próximo passo."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Três dias depois",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Pendência · Dono · Prazo",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já entrega dizendo o que falta e pede a próxima tarefa. Nesta última aula, o que some fácil: a pendência de ontem.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você fecha uma entrega sua de verdade, desta semana, com quatro linhas. E vê o que acontece depois.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Faz o papel do antigo plano 'missao', sem a fórmula."
+      },
+      {
+       "id": "s2",
+       "fala": "O Henrique avisou: lista pronta, dois registros sem telefone, dependem da outra equipe. Passaram três dias. A resposta não chegou. Ninguém perguntou.",
+       "layout": "presenter_chips",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "cartao": {
+        "titulo": "Três dias depois",
+        "topicos": [
+         "Lista **pronta** na pasta",
+         "**2 registros** sem telefone",
+         "Resposta da outra equipe: **não chegou**",
+         "Alguém perguntou? **Ninguém**"
+        ]
+       }
+      },
+      {
+       "id": "s4",
+       "fala": "Hoje ele ouve que a lista vai ser usada amanhã, para mandar uma mensagem a todos. Os dois continuam sem telefone.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar do Henrique, o que você faz hoje?",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_esq",
+       "acao": "add",
+       "palavras": 9,
+       "segundos": 3.4
+      }
+     ],
+     "roteiroNovo": "Você já entrega dizendo o que falta e pede a próxima tarefa. Nesta última aula, o que some fácil: a pendência de ontem. No fim, você fecha uma entrega sua de verdade, desta semana, com quatro linhas. E vê o que acontece depois. O Henrique avisou: lista pronta, dois registros sem telefone, dependem da outra equipe. Passaram três dias. A resposta não chegou. Ninguém perguntou. Hoje ele ouve que a lista vai ser usada amanhã, para mandar uma mensagem a todos. Os dois continuam sem telefone. No lugar do Henrique, o que você faz hoje?",
+     "palavras": 95,
+     "segundos": 36.3,
+     "cartaoPerguntaSeguinte": "A lista será usada amanhã. Dois registros seguem sem telefone e a outra equipe não respondeu em três dias. O que você faz hoje?",
+     "proximo": "q04"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar do Henrique, o que você faz hoje?",
+     "apoioNaTela": "A lista do Henrique vai ser usada amanhã. Dois registros continuam sem telefone: a outra equipe não respondeu em três dias, e ele já avisou isso quando entregou.",
+     "bridge": {
+      "call": "No lugar do Henrique, o que você faz hoje?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C10)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Aviso quem vai usar a lista amanhã: dois registros ainda estão sem telefone.”",
+       "qualidade": "ok",
+       "feedback": "Quem usa a lista amanhã fica sabendo, mas ninguém está encarregado de resolver. Faça assim: além de avisar, volte uma vez na outra equipe com prazo e combine quem fecha.",
+       "reacao": {
+        "texto": "Quem vai usar fica sabendo, e isso evita o pior. Mas a pendência continua sem dono e sem data. Amanhã ela volta igualzinha.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v05",
+       "caracteres": 78
+      },
+      {
+       "id": "b",
+       "rotulo": "“Volto na outra equipe com prazo e combino, com quem pediu a lista, quem fecha os dois.”",
+       "qualidade": "strong",
+       "feedback": "A pendência ganhou dono, prazo e caminho. Faça assim: uma mensagem curta para a outra equipe com data, outra para quem pediu a lista dizendo o que acontece se não vier.",
+       "reacao": {
+        "texto": "Pendência com nome, prazo e dono. Você voltou uma vez, com educação, e combinou quem fecha. Agora ela tem como acabar.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 88
+      },
+      {
+       "id": "c",
+       "rotulo": "“Já avisei no dia da entrega. Quem usa a lista amanhã sabe que faltam dois.”",
+       "qualidade": "weak",
+       "feedback": "O aviso de três dias atrás não está na cabeça de quem usa a lista amanhã. Faça assim: volte ao assunto uma vez, com prazo, e combine quem fecha os dois registros.",
+       "reacao": {
+        "texto": "Você avisou, é verdade. Três dias depois, ninguém lembra. Aviso antigo não protege a lista de amanhã. Pendência precisa de dono.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 76
+      }
+     ],
+     "porQueNaoEstaNoEnunciado": "A resposta não está no enunciado: ele diz que a pendência foi avisada e que a lista será usada amanhã; perceber que avisar o uso não basta, e que a pendência precisa de prazo e de alguém que feche, é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Pendência com dono e data",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Quem responde · Até quando · Quem fecha",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Pendência registrada não pode virar pendência esquecida. Anote na própria lista quem precisa responder e até quando.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "s2",
+       "fala": "Se a resposta não chegar, volte ao assunto uma vez, com educação, em vez de deixar o buraco lá. E combine quem fecha.",
+       "layout": "presenter_chips",
+       "camera": "cam_beatriz7_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "cartao": {
+        "titulo": "Para a pendência acabar",
+        "topicos": [
+         "**Quem** responde",
+         "**Até quando**",
+         "**Quem fecha**"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "Enquanto isso, siga só no que já foi autorizado. Parecer ocupado não é o objetivo.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_esq",
+       "acao": "add",
+       "palavras": 15,
+       "segundos": 5.7
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, uma entrega sua. Quatro linhas: o que fez, onde está, o que falta e com quem, e qual é o próximo passo.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra 'missão'. A aula segue para m03."
+      }
+     ],
+     "roteiroNovo": "Pendência registrada não pode virar pendência esquecida. Anote na própria lista quem precisa responder e até quando. Se a resposta não chegar, volte ao assunto uma vez, com educação, em vez de deixar o buraco lá. E combine quem fecha. Enquanto isso, siga só no que já foi autorizado. Parecer ocupado não é o objetivo. Agora, uma entrega sua. Quatro linhas: o que fez, onde está, o que falta e com quem, e qual é o próximo passo.",
+     "palavras": 78,
+     "segundos": 29.8,
+     "proximo": "m03",
+     "naoRepete": "É o aprofundamento novo dos revisores (S3), em planos. Não repete v01 (compare com o pedido; local, versão, pendência) nem v03 (lista autorizada; não precisa provar valor). O novo: quem responde, até quando, voltar uma vez, quem fecha."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Feche uma entrega sua com quatro linhas",
+     "tipoDeMissao": "FAZER fora da tela: uma entrega real desta semana, fechada com uma mensagem de quatro linhas",
+     "intro": "O Henrique fechou a pendência dando a ela dono e data. Agora é com uma entrega sua desta semana: da escola, de casa, do curso ou do estágio.",
+     "action": [
+      "Escolha uma entrega que termina nesta semana: trabalho da escola, tarefa que alguém de casa pediu, pedido no estágio.",
+      "Quando terminar, mande a quem pediu uma mensagem com quatro linhas: o que fez; onde está; o que ainda falta, com quem e até quando; qual é o próximo passo, ou se pode seguir.",
+      "Se ficou pendência, anote quem responde e até quando. Se passar da data, volte ao assunto uma vez.",
+      "Volte aqui, marque “Já experimentei” e conte o que aconteceu depois da mensagem."
+     ],
+     "alternative": "Não trabalha? Serve igual: o trabalho em grupo da escola (mande no grupo), a tarefa que alguém de casa te pediu, a sua parte num projeto do curso. Se não tem nada para entregar esta semana, combine com alguém uma coisa pequena para entregar até sexta, e feche com as quatro linhas.",
+     "tip": {
+      "rotulo": "Exemplo: a mensagem do Henrique",
+      "texto": "A lista está organizada por nome na pasta combinada. Dois registros estão sem telefone: pedi à equipe de cadastro até amanhã de manhã; se não vier, eu ligo para os dois. Posso seguir com a próxima tarefa da lista ou existe outra prioridade?",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "O que aconteceu depois da mensagem? A pessoa respondeu? A pendência fechou ou ficou com você?",
+      "placeholder": "Ex.: mandei no grupo do trabalho; a Lu ficou de mandar a parte dela até quinta.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; m03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Entrega fechada, próximo passo claro",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "O que fiz · Onde está · O que falta · Próximo passo",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Terminar não é só parar de mexer na tarefa. É mostrar onde ela está, dizer o que falta, e dar um dono ao que falta.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "d2",
+       "fala": "O Henrique entregou a mesma lista três vezes neste curso. Na última, os dois registros tinham prazo e dono. Saiu completa.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "d3",
+       "fala": "Na sua próxima entrega, quatro linhas. Sem pendência, três. Quem continua depois de você vai saber de onde seguir.",
+       "layout": "presenter",
+       "camera": "cam_beatriz7_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      }
+     ],
+     "roteiroNovo": "Terminar não é só parar de mexer na tarefa. É mostrar onde ela está, dizer o que falta, e dar um dono ao que falta. O Henrique entregou a mesma lista três vezes neste curso. Na última, os dois registros tinham prazo e dono. Saiu completa. Na sua próxima entrega, quatro linhas. Sem pendência, três. Quem continua depois de você vai saber de onde seguir.",
+     "palavras": 65,
+     "segundos": 24.8,
+     "forma": "abre com a frase do pacote que os revisores aprovaram (“Terminar não é só parar de mexer na tarefa”), resolve a história do Henrique e fecha com uma orientação concreta (quatro linhas). Sem “Meu roteiro” na fala; o link para “Minha ideia também conta” fica só na tela, se o curso estiver disponível.",
+     "motionPrompt": "quatro dedos contando devagar, depois mão aberta de “é com você”",
+     "required": true,
+     "posicao": "depois de m03 e antes de fim_aula_03"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Pendência com dono e data acaba. Pendência avisada só fica esperando.",
+     "summary": "O que você levou\nAo entregar: o que fez, onde está, o que falta, próximo passo.\nPendência: quem responde, até quando, quem fecha.\nSe a resposta não vier, volte uma vez.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha entrega desta semana",
+       "kind": "checklist",
+       "items": [
+        "escolhi uma entrega que termina nesta semana",
+        "mandei a mensagem de quatro linhas",
+        "anotei quem responde a pendência e até quando",
+        "voltei uma vez, se precisou"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fechar a entrega, volte e conte o que aconteceu."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Ao entregar: o que fez, onde está, o que falta, próximo passo.\nPendência: quem responde, até quando, quem fecha.\nSe a resposta não vier, volte uma vez.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos 'keep' custam zero. A pergunta nova não gera vídeo próprio. As aberturas trocadas regravam só o plano 'missao' de cada aula existente.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 238,
+   "segundos": 90.8
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 65,
+   "segundos": 24.8
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 35,
+   "segundos": 13.4
+  },
+  "totalNovoFalado": {
+   "palavras": 338,
+   "segundos": 129.0,
+   "usd": 2.36,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoAlvo": true,
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v00/missao (abertura)",
+    "planos": 1,
+    "palavras": 18,
+    "segundos": 6.9
+   },
+   {
+    "no": "v02/missao (abertura)",
+    "planos": 1,
+    "palavras": 17,
+    "segundos": 6.5
+   },
+   {
+    "no": "v04",
+    "planos": 5,
+    "palavras": 95,
+    "segundos": 36.3
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 65,
+    "segundos": 24.8
+   },
+   {
+    "no": "v05",
+    "planos": 4,
+    "palavras": 78,
+    "segundos": 29.8
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 65,
+    "segundos": 24.8
+   }
+  ],
+  "videoDoCurso": {
+   "antes": {
+    "minS": 195.1,
+    "maxS": 200.8,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 294.0,
+    "maxS": 300.5,
+    "texto": "cerca de 4.9–5.0 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação de q04 (mínima/máxima). As aberturas trocadas têm duração parecida com a atual; as aulas existentes não mudam de duração de forma relevante."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Situação da decisão: (a) “três dias depois, a lista vai ser usada amanhã” (nova; mostra a pendência esquecida) · (b) a do pacote revisado, “a pessoa de referência está em reunião” (repete a q03, em que a referência também está ocupada). Recomendo (a).",
+  "2. Link para o curso “Minha ideia também conta” (C17): (a) só na tela do fim, e só se o curso estiver disponível ao aluno · (b) também na fala da despedida. Recomendo (a).",
+  "3. Exemplo da missão (“Ver um exemplo”): (a) mensagem do Henrique com “se não vier, eu ligo para os dois” (mostra o dono da pendência) · (b) o exemplo dos revisores, sem o dono (“marquei para revisão”). Recomendo (a).",
+  "4. Frase de fechamento do fim_aula_01: (a) “Entrega sem a pendência avisada parece pronta. É aí que mora o retrabalho.” · (b) deixar null. Recomendo (a)."
+ ]
+}

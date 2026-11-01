@@ -1,0 +1,1695 @@
+{
+ "geradoEm": "2026-11-01T00:52:16.645Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "C01",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "rascunhoRevAntes": 90,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 1
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 1,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "asset": "ast_tkkmi4m4lyut1g2w",
+     "trechos": 1
+    }
+   ],
+   "ignoradas": [
+    "aula_02/v03 ast_tkkmi4m4lyut1g2w: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ]
+  },
+  {
+   "curso": "C02",
+   "courseId": "crs_arbeohlw3xp5v3zx",
+   "rascunhoRevAntes": 87,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C03",
+   "courseId": "crs_hd4jnnpx3oj0xf14",
+   "nota": "tratado numa execução anterior (teste do script); rascunho 88 -> 89",
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q02",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_4rwsj3b6d8pas70u",
+     "para": "ast_1v65pb9494q3vmkh",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 42,
+       "inicio": 1.56,
+       "ms": 360,
+       "quadro": 39,
+       "quadros": 9,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3183441,
+      "tamanhoDepois": 3491994,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ]
+  },
+  {
+   "curso": "C04",
+   "courseId": "crs_4z17p0m6d43qxmmo",
+   "rascunhoRevAntes": 109,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 12
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 5,
+     "tolerados": 12,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q01",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_t5ouqpd2ynnf4ifb",
+     "para": "ast_mw3xqpiq02saq9dh",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 12,
+       "ok": true,
+       "dmaxAB": 19,
+       "inicio": 1.36,
+       "ms": 240,
+       "quadro": 34,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 2837785,
+      "tamanhoDepois": 3138847,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_01",
+     "no": "q02",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_kyq4j7lokwaq7ccn",
+     "para": "ast_39d02rdprgtsoakr",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 24,
+       "inicio": 1.56,
+       "ms": 280,
+       "quadro": 39,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 30,
+       "inicio": 5.44,
+       "ms": 200,
+       "quadro": 136,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 2976842,
+      "tamanhoDepois": 3305535,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "q03",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_1cagp3ft0zqt5fsb",
+     "para": "ast_oou4xv3pvugszzs8",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 12,
+       "ok": true,
+       "dmaxAB": 20,
+       "inicio": 1.36,
+       "ms": 240,
+       "quadro": 34,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3621556,
+      "tamanhoDepois": 3992343,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "tipo": "cena",
+     "de": "ast_jo8fc7tx33gppvk6",
+     "para": "ast_xwzv2vxf0qki77jh",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 29,
+       "inicio": 5.76,
+       "ms": 200,
+       "quadro": 144,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 6390513,
+      "tamanhoDepois": 8809183,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [],
+   "rascunhoRevDepois": 110
+  },
+  {
+   "curso": "C05",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "rascunhoRevAntes": 93,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 0
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 0,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C07",
+   "courseId": "crs_bmf11akamtxoti28",
+   "rascunhoRevAntes": 94,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 5,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q02",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_0t126ulhcb0cqkb1",
+     "para": "ast_2ifvgl5gw2vxa0wv",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 28,
+       "inicio": 1.72,
+       "ms": 320,
+       "quadro": 43,
+       "quadros": 8,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 4132088,
+      "tamanhoDepois": 4332047,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "v02",
+     "tipo": "cena",
+     "de": "ast_gerodxikj9twwa7y",
+     "para": "ast_jobzxnssungs7w5w",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 15,
+       "inicio": 35.28,
+       "ms": 240,
+       "quadro": 882,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 16112473,
+      "tamanhoDepois": 20426067,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "q03",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_t6j3gbuntpxmkjk8",
+     "para": "ast_lofp5xc6o3dxur0h",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 18,
+       "inicio": 1.24,
+       "ms": 200,
+       "quadro": 31,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 12,
+       "inicio": 1.6,
+       "ms": 360,
+       "quadro": 40,
+       "quadros": 9,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 5152662,
+      "tamanhoDepois": 5433838,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "asset": "ast_aeehyxsqnllc1ot6",
+     "trechos": 2
+    }
+   ],
+   "ignoradas": [
+    "aula_02/v03 ast_aeehyxsqnllc1ot6: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ],
+   "rascunhoRevDepois": 95
+  },
+  {
+   "curso": "C08",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "rascunhoRevAntes": 89,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 2
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 2,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C09",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "rascunhoRevAntes": 97,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 3,
+     "tolerados": 8
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 3,
+     "tolerados": 8,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q01",
+     "tipo": "reacao",
+     "opcao": "a",
+     "de": "ast_0hdtdg6kxvvb02ay",
+     "para": "ast_brnc8ps0g209or0o",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 35,
+       "inicio": 3.04,
+       "ms": 280,
+       "quadro": 76,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3103656,
+      "tamanhoDepois": 3207700,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "q03",
+     "tipo": "reacao",
+     "opcao": "a",
+     "de": "ast_nl0edtn6u5qzl6nu",
+     "para": "ast_i00k8pm5kja0yx3c",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 44,
+       "inicio": 4.48,
+       "ms": 280,
+       "quadro": 112,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 5762205,
+      "tamanhoDepois": 5912467,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "asset": "ast_m3lmr05w5tmftcsd",
+     "trechos": 1
+    }
+   ],
+   "ignoradas": [
+    "aula_02/v03 ast_m3lmr05w5tmftcsd: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ],
+   "rascunhoRevDepois": 98
+  },
+  {
+   "curso": "C10",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "rascunhoRevAntes": 92,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C11",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "rascunhoRevAntes": 88,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 6,
+     "tolerados": 13
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 6,
+     "tolerados": 13,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q01",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_euycwgi5v8wvx8fq",
+     "para": "ast_d5ssees0oc2s91v1",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 16,
+       "inicio": 6.72,
+       "ms": 200,
+       "quadro": 168,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 12,
+       "inicio": 7.52,
+       "ms": 200,
+       "quadro": 188,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 6062955,
+      "tamanhoDepois": 5978082,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_01",
+     "no": "q01",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_qcx0940sxe90knm4",
+     "para": "ast_71zumxj8brk56o5f",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 19,
+       "inicio": 1.4,
+       "ms": 320,
+       "quadro": 35,
+       "quadros": 8,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 30,
+       "inicio": 4.28,
+       "ms": 240,
+       "quadro": 107,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 5663470,
+      "tamanhoDepois": 5591437,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "q03",
+     "tipo": "reacao",
+     "opcao": "a",
+     "de": "ast_a5nz6mwkun20yqzb",
+     "para": "ast_1iv0zhhijzl4j4et",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 20,
+       "inicio": 2.52,
+       "ms": 320,
+       "quadro": 63,
+       "quadros": 8,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 14,
+       "inicio": 8.8,
+       "ms": 200,
+       "quadro": 220,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 6119925,
+      "tamanhoDepois": 6050025,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_02",
+     "no": "q03",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_yr6lcv53yb2c2a1o",
+     "para": "ast_vb3nr3x4uwc9cmgb",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 18,
+       "inicio": 1.48,
+       "ms": 320,
+       "quadro": 37,
+       "quadros": 8,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 6214054,
+      "tamanhoDepois": 6163023,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_01",
+     "no": "v01",
+     "asset": "ast_ovb478vofcrsnawf",
+     "trechos": 1
+    },
+    {
+     "aula": "aula_02",
+     "no": "v02",
+     "asset": "ast_hbhht9y6z6hgkt6y",
+     "trechos": 1
+    }
+   ],
+   "ignoradas": [
+    "aula_01/v01 ast_ovb478vofcrsnawf: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_02/v02 ast_hbhht9y6z6hgkt6y: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ],
+   "rascunhoRevDepois": 89
+  },
+  {
+   "curso": "C12",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "rascunhoRevAntes": 90,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 7
+    },
+    "publicada": {
+     "versao": 12,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 7,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "tipo": "cena",
+     "de": "ast_qi9qxx86riz30qlc",
+     "para": "ast_9zm79wydgi8xcrsh",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 15,
+       "inicio": 4.16,
+       "ms": 440,
+       "quadro": 104,
+       "quadros": 11,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 28,
+       "inicio": 7.76,
+       "ms": 280,
+       "quadro": 194,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 22,
+       "inicio": 37.8,
+       "ms": 200,
+       "quadro": 945,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 15695423,
+      "tamanhoDepois": 20516842,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [],
+   "rascunhoRevDepois": 91
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "rascunhoRevAntes": 172,
+   "varredura": {
+    "rascunho": {
+     "videos": 56,
+     "assets": 56,
+     "ge200": 11,
+     "tolerados": 14
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 56,
+     "assets": 56,
+     "ge200": 11,
+     "tolerados": 14,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "q11",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_gzqhrnvdon4nlrg4",
+     "para": "ast_2w0kvfahgbtjl0vw",
+     "antes": 2,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 15,
+       "inicio": 1.56,
+       "ms": 360,
+       "quadro": 39,
+       "quadros": 9,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 21,
+       "inicio": 3.32,
+       "ms": 240,
+       "quadro": 83,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "so-zoom",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 0,
+       "inicio": 5.6,
+       "ms": 200,
+       "quadro": 140,
+       "quadros": 5,
+       "cauda": true,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 2234354,
+      "tamanhoDepois": 2524609,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_04",
+     "no": "v06",
+     "tipo": "cena",
+     "de": "ast_8d1ax308cxn5pqaz",
+     "para": "ast_sf7oy1crm76wzsut",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 13,
+       "inicio": 30.64,
+       "ms": 200,
+       "quadro": 766,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 12632378,
+      "tamanhoDepois": 16508421,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_04",
+     "no": "q07",
+     "tipo": "pergunta",
+     "de": "ast_zhgtroae24pamvt7",
+     "para": "ast_izqmhfp6nq6hatj8",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 24,
+       "inicio": 2.72,
+       "ms": 280,
+       "quadro": 68,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 11,
+       "inicio": 8.8,
+       "ms": 200,
+       "quadro": 220,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 33,
+       "inicio": 9,
+       "ms": 200,
+       "quadro": 225,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 5564451,
+      "tamanhoDepois": 6114205,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_04",
+     "no": "q07",
+     "tipo": "reacao",
+     "opcao": "a",
+     "de": "ast_di5i3cty7e5zz50t",
+     "para": "ast_ncxkby0a63i4ekub",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 31,
+       "inicio": 1.56,
+       "ms": 360,
+       "quadro": 39,
+       "quadros": 9,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3929019,
+      "tamanhoDepois": 4212645,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "v08",
+     "tipo": "cena",
+     "de": "ast_ddcsa8ofmtu5rvbf",
+     "para": "ast_wyelt94xmvwdvw9y",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 18.96,
+       "ms": 400,
+       "quadro": 474,
+       "quadros": 10,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 12773976,
+      "tamanhoDepois": 16762084,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "q08",
+     "tipo": "pergunta",
+     "de": "ast_5benb2urf8it9e3j",
+     "para": "ast_kihbb43ohwb82rwe",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "so-zoom",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 0,
+       "inicio": 16.8,
+       "ms": 200,
+       "quadro": 420,
+       "quadros": 5,
+       "cauda": true,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 7410037,
+      "tamanhoDepois": 8019135,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "q08",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_a67e89k913a3thbg",
+     "para": "ast_dlt2w6dqlilytmmo",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 22,
+       "inicio": 5.16,
+       "ms": 240,
+       "quadro": 129,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3419315,
+      "tamanhoDepois": 3727648,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "q09",
+     "tipo": "pergunta",
+     "de": "ast_drg4ko5qyauwouzh",
+     "para": "ast_5o9ihyytb8hj3k9m",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 23,
+       "inicio": 10.68,
+       "ms": 400,
+       "quadro": 267,
+       "quadros": 10,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 6311602,
+      "tamanhoDepois": 6843209,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "q09",
+     "tipo": "reacao",
+     "opcao": "b",
+     "de": "ast_avro558t6d4vf5p2",
+     "para": "ast_t1m8hg6j0b7k8fym",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0098,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 29,
+       "inicio": 1.64,
+       "ms": 440,
+       "quadro": 41,
+       "quadros": 11,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3505532,
+      "tamanhoDepois": 3817456,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_06",
+     "no": "q10",
+     "tipo": "reacao",
+     "opcao": "c",
+     "de": "ast_xak0b2491pt99yk9",
+     "para": "ast_q51te45zgkfa5zfg",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 19,
+       "inicio": 1.76,
+       "ms": 360,
+       "quadro": 44,
+       "quadros": 9,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 3980399,
+      "tamanhoDepois": 4386403,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_05",
+     "no": "v09",
+     "asset": "ast_n5z1zdz24q93dha7",
+     "trechos": 1
+    }
+   ],
+   "ignoradas": [
+    "aula_05/v09 ast_n5z1zdz24q93dha7: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ],
+   "rascunhoRevDepois": 173
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "rascunhoRevAntes": 407,
+   "varredura": {
+    "rascunho": {
+     "videos": 120,
+     "assets": 120,
+     "ge200": 11,
+     "tolerados": 24
+    },
+    "publicada": {
+     "versao": 12,
+     "videos": 120,
+     "assets": 120,
+     "ge200": 11,
+     "tolerados": 24,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_01",
+     "no": "v01",
+     "tipo": "cena",
+     "de": "ast_dz861t5ymusk7uh1",
+     "para": "ast_t554zppchcadtpxf",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 2.68,
+       "ms": 200,
+       "quadro": 67,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 33,
+       "inicio": 14.2,
+       "ms": 280,
+       "quadro": 355,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 17,
+       "inicio": 30,
+       "ms": 200,
+       "quadro": 750,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0063,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 15,
+       "inicio": 36.32,
+       "ms": 280,
+       "quadro": 908,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 15333099,
+      "tamanhoDepois": 20319354,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_05",
+     "no": "v09",
+     "tipo": "cena",
+     "de": "ast_e8ghw5hfek0uwe9r",
+     "para": "ast_3fjevtzohv35en79",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 13,
+       "inicio": 20.2,
+       "ms": 200,
+       "quadro": 505,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 71,
+       "inicio": 47.28,
+       "ms": 280,
+       "quadro": 1182,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 20561754,
+      "tamanhoDepois": 26359710,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_07",
+     "no": "v12",
+     "tipo": "cena",
+     "de": "ast_oi032kl018ghtqbn",
+     "para": "ast_lkftz51bd543rpac",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 42,
+       "inicio": 23.76,
+       "ms": 280,
+       "quadro": 594,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 30,
+       "inicio": 27.32,
+       "ms": 200,
+       "quadro": 683,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 22,
+       "inicio": 30.12,
+       "ms": 240,
+       "quadro": 753,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 26,
+       "inicio": 49.72,
+       "ms": 240,
+       "quadro": 1243,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 21244358,
+      "tamanhoDepois": 27206727,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_08",
+     "no": "v14",
+     "tipo": "cena",
+     "de": "ast_px822lqdw3injg5p",
+     "para": "ast_kv7neuv9vj2iytqx",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 29,
+       "inicio": 21.04,
+       "ms": 280,
+       "quadro": 526,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 19,
+       "inicio": 23.6,
+       "ms": 200,
+       "quadro": 590,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 15992735,
+      "tamanhoDepois": 20580272,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_10",
+     "no": "v18",
+     "tipo": "cena",
+     "de": "ast_70vot8bj90kmcx6a",
+     "para": "ast_q16m2595gepnaatp",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": true,
+       "metodo": "so-zoom",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 216,
+       "inicio": 11.36,
+       "ms": 200,
+       "quadro": 284,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 41,
+       "inicio": 16.2,
+       "ms": 280,
+       "quadro": 405,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 20,
+       "inicio": 29.08,
+       "ms": 280,
+       "quadro": 727,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 19329514,
+      "tamanhoDepois": 24478005,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [
+    {
+     "aula": "aula_04",
+     "no": "v08",
+     "asset": "ast_f9tswvb54xtu5cf8",
+     "trechos": 1
+    },
+    {
+     "aula": "aula_05",
+     "no": "v10",
+     "asset": "ast_wndwb6ii3ry4l7n3",
+     "trechos": 2
+    },
+    {
+     "aula": "aula_06",
+     "no": "v11",
+     "asset": "ast_z8ocxnvxajvb1mle",
+     "trechos": 1
+    },
+    {
+     "aula": "aula_07",
+     "no": "v13",
+     "asset": "ast_xf2fp4mg07du3lod",
+     "trechos": 1
+    },
+    {
+     "aula": "aula_09",
+     "no": "v17",
+     "asset": "ast_i8cxhza4xiwnyjr9",
+     "trechos": 1
+    },
+    {
+     "aula": "aula_10",
+     "no": "v19",
+     "asset": "ast_b2v9hvjpqx4nd6oa",
+     "trechos": 1
+    }
+   ],
+   "ignoradas": [
+    "aula_04/v08 ast_f9tswvb54xtu5cf8: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_05/v10 ast_wndwb6ii3ry4l7n3: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_06/v11 ast_z8ocxnvxajvb1mle: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_07/v13 ast_xf2fp4mg07du3lod: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_09/v17 ast_i8cxhza4xiwnyjr9: cena na lista da missão falada (o asset novo chega pela gravação)",
+    "aula_10/v19 ast_b2v9hvjpqx4nd6oa: cena na lista da missão falada (o asset novo chega pela gravação)"
+   ],
+   "rascunhoRevDepois": 408
+  }
+ ]
+}

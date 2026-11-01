@@ -1,0 +1,627 @@
+[
+ {
+  "codigo": "C12",
+  "id": "crs_5vccpfypr6fmxojb",
+  "titulo": "Recebi uma correção. E agora?",
+  "revisao": 97,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q04",
+   "aula_03/q04"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v00",
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v02",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "MEDIA_IN_PROGRESS aula_03/v04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C13",
+  "id": "crs_gujuaiykqcsl2n31",
+  "titulo": "Comecei a trabalhar",
+  "revisao": 188,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 9
+  },
+  "ausentes": [
+   "aula_07/q12",
+   "aula_07/q12"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v00",
+   "EMPTY_BODY aula_01/m01",
+   "MEDIA_IN_PROGRESS aula_02/v02",
+   "MEDIA_IN_PROGRESS aula_03/v04",
+   "MEDIA_IN_PROGRESS aula_04/v06",
+   "EMPTY_BODY aula_04/m04",
+   "MEDIA_IN_PROGRESS aula_05/v08",
+   "EMPTY_BODY aula_05/m05",
+   "MEDIA_IN_PROGRESS aula_06/v10",
+   "MEDIA_IN_PROGRESS aula_07/v12",
+   "MEDIA_IN_PROGRESS aula_07/v13",
+   "MEDIA_IN_PROGRESS aula_07/despedida"
+  ],
+  "ultimaAula": "aula_07",
+  "nosUltimaAula": [
+   "v12:scenario",
+   "q12:choice",
+   "v13:content",
+   "m07:mission",
+   "despedida:content",
+   "fim_aula_07:end"
+  ]
+ },
+ {
+  "codigo": "C14",
+  "id": "crs_hvvgkvtd1rb2um0l",
+  "titulo": "Minha primeira vaga",
+  "revisao": 443,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 13
+  },
+  "ausentes": [
+   "aula_13/q26",
+   "aula_13/q26"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v00",
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "CALL_NOT_SPOKEN aula_03/q05",
+   "CALL_NOT_SPOKEN aula_03/q06",
+   "MEDIA_IN_PROGRESS aula_04/v07",
+   "EMPTY_BODY aula_04/m03",
+   "CALL_NOT_SPOKEN aula_04/q07",
+   "CALL_NOT_SPOKEN aula_04/q08",
+   "MEDIA_IN_PROGRESS aula_05/v09",
+   "CALL_NOT_SPOKEN aula_05/q09",
+   "CALL_NOT_SPOKEN aula_05/q10",
+   "MEDIA_IN_PROGRESS aula_06/v11",
+   "CALL_NOT_SPOKEN aula_06/q11",
+   "CALL_NOT_SPOKEN aula_06/q12",
+   "MEDIA_IN_PROGRESS aula_07/v12",
+   "EMPTY_BODY aula_07/m06",
+   "CALL_NOT_SPOKEN aula_07/q13",
+   "CALL_NOT_SPOKEN aula_07/q14",
+   "MEDIA_IN_PROGRESS aula_08/v14",
+   "CALL_NOT_SPOKEN aula_08/q15",
+   "MEDIA_IN_PROGRESS aula_09/v16",
+   "EMPTY_BODY aula_09/m08",
+   "CALL_NOT_SPOKEN aula_09/q17",
+   "CALL_NOT_SPOKEN aula_09/q18",
+   "MEDIA_IN_PROGRESS aula_10/v18",
+   "EMPTY_BODY aula_10/m09",
+   "CALL_NOT_SPOKEN aula_10/q19",
+   "CALL_NOT_SPOKEN aula_10/q20",
+   "MEDIA_IN_PROGRESS aula_11/v20",
+   "EMPTY_BODY aula_11/m10",
+   "CALL_NOT_SPOKEN aula_11/q21",
+   "CALL_NOT_SPOKEN aula_11/q22",
+   "CALL_NOT_SPOKEN aula_11/q23",
+   "CALL_NOT_SPOKEN aula_12/q24",
+   "CALL_NOT_SPOKEN aula_12/q25",
+   "MEDIA_IN_PROGRESS aula_13/v24",
+   "MEDIA_IN_PROGRESS aula_13/v25",
+   "MEDIA_IN_PROGRESS aula_13/despedida"
+  ],
+  "ultimaAula": "aula_13",
+  "nosUltimaAula": [
+   "v24:scenario",
+   "q26:choice",
+   "v25:content",
+   "m11:mission",
+   "despedida:content",
+   "fim_aula_13:end"
+  ]
+ },
+ {
+  "codigo": "C15",
+  "id": "crs_t303ykqfmhj3yb1g",
+  "titulo": "O outro só é diferente",
+  "revisao": 45,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C16",
+  "id": "crs_2rt2rsoii8bpydp2",
+  "titulo": "Discordar sem brigar",
+  "revisao": 33,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C17",
+  "id": "crs_5k5upah2xphlfvi5",
+  "titulo": "Minha ideia também conta",
+  "revisao": 34,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C18",
+  "id": "crs_tg9iqz8wmmf5pw77",
+  "titulo": "Seus dados também trabalham",
+  "revisao": 45,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C19",
+  "id": "crs_au1463izc386by27",
+  "titulo": "Parece verdade. Será?",
+  "revisao": 34,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C20",
+  "id": "crs_m60hsx8on6ebcyqg",
+  "titulo": "IA como aliada",
+  "revisao": 33,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C21",
+  "id": "crs_4jh683s5h351z2db",
+  "titulo": "Tudo é urgente?",
+  "revisao": 46,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/v07",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v06:scenario",
+   "q05:choice",
+   "v07:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C22",
+  "id": "crs_njtlqq7y7fyfeqcr",
+  "titulo": "Errei. E agora?",
+  "revisao": 33,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C23",
+  "id": "crs_gl0hjkmqfgnnur9y",
+  "titulo": "Aprender faz parte do trabalho",
+  "revisao": 33,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C24",
+  "id": "crs_dp9s7pdro9j6e3m0",
+  "titulo": "Por onde eu começo?",
+  "revisao": 45,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 3
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C25",
+  "id": "crs_0ua5onij460lpzs0",
+  "titulo": "Faz sentido?",
+  "revisao": 36,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 5
+  },
+  "ausentes": [
+   "aula_03/q05",
+   "aula_03/q05"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "MEDIA_IN_PROGRESS aula_03/v06",
+   "MEDIA_IN_PROGRESS aula_03/despedida"
+  ],
+  "ultimaAula": "aula_03",
+  "nosUltimaAula": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ {
+  "codigo": "C26",
+  "id": "crs_d5rsi8gt36rv0qbq",
+  "titulo": "Onde está o problema?",
+  "revisao": 46,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 6
+  },
+  "ausentes": [
+   "aula_04/q07",
+   "aula_04/q07"
+  ],
+  "stale": [],
+  "outros": [
+   "MEDIA_IN_PROGRESS aula_01/v01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "MEDIA_IN_PROGRESS aula_02/v03",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "MEDIA_IN_PROGRESS aula_03/v05",
+   "CALL_NOT_SPOKEN aula_03/q05",
+   "CALL_NOT_SPOKEN aula_03/q06",
+   "MEDIA_IN_PROGRESS aula_04/v07",
+   "MEDIA_IN_PROGRESS aula_04/v08",
+   "MEDIA_IN_PROGRESS aula_04/despedida"
+  ],
+  "ultimaAula": "aula_04",
+  "nosUltimaAula": [
+   "v07:scenario",
+   "q07:choice",
+   "v08:content",
+   "a04:mission",
+   "despedida:content",
+   "fim_aula_04:end"
+  ]
+ }
+]

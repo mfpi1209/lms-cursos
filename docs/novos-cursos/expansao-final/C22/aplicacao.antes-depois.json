@@ -1,0 +1,852 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.372Z",
+ "curso": {
+  "codigo": "C22",
+  "id": "crs_njtlqq7y7fyfeqcr",
+  "titulo": "Errei. E agora?"
+ },
+ "status": "ok",
+ "revisaoAntes": 32,
+ "revisaoVistaPelaProposta": 31,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [
+  "personagem novo sem nome próprio, fora do elenco: \"a colega do grupo da equipe (sem nome)\""
+ ],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s4",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escreva um aviso de erro com fato, possível impacto e próximo passo.",
+   "depois": "Antes de terminar, você monta um aviso de erro pronto para mandar: o fato, o possível impacto, o próximo passo."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_01/a01.prompt",
+   "estado": "aplicar",
+   "antes": "Você digitou R$ 480 no lugar de R$ 840 no orçamento, e o cliente já aceitou. Monte o aviso para a referência responsável, escolhendo uma opção em cada grupo. Você ainda não tem autorização para alterar as condições com o cliente.",
+   "depois": "Você digitou R$ 480 no lugar de R$ 840 no orçamento, e o cliente já aceitou. Monte o aviso para a pessoa responsável, escolhendo uma opção em cada grupo. Você ainda não tem autorização para alterar as condições com o cliente."
+  },
+  {
+   "tipo": "pergunta-do-campo",
+   "onde": "aula_01/a01.campos.pedido.pergunta",
+   "estado": "aplicar",
+   "antes": "O que você pede à referência?",
+   "depois": "O que você pede à pessoa responsável?"
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Fato, impacto, próximo passo. Sem desculpa no meio."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escolha uma mudança no processo e diga como verificar se ela reduziu o erro.",
+   "depois": "Daqui a pouco, a pergunta é outra: que mudança pequena evita esse erro, e como você vai saber se funcionou?"
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Corrigir também é olhar o processo: uma mudança pequena e uma conferência já ajudam. Se você salvou, sua escolha fica no Meu roteiro para acompanhar.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Corrigir também é olhar o processo: uma mudança pequena e uma conferência já ajudam. Se você salvou, sua escolha fica no Meu roteiro para acompanhar. Na próxima aula: o arquivo já corrigido, o cliente ainda não avisado, e um erro seu de verdade."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Mudança pequena, conferência certa. Lista de dez etapas ninguém segue."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Comunicar erros, reduzir impactos e melhorar o processo. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Comunicar erros, dizer o que já foi corrigido e o que ainda falta, e mudar o processo na causa. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Ao comunicar uma correção, separar o que já foi feito do que ainda depende de decisão, sem prometer pelo outro, e registrar o erro para ver se a prevenção atacou a causa."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 9
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz?\" ainda não está na fala do vídeo \"O que você faz?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Gisele, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Gisele, o que você responde?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual ajuste é mais útil?\" ainda não está na fala do vídeo \"Qual ajuste é mais útil?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Elaine, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Elaine, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,4 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz?\" ainda não está na fala do vídeo \"O que você faz?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Gisele, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Gisele, o que você responde?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual ajuste é mais útil?\" ainda não está na fala do vídeo \"Qual ajuste é mais útil?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Elaine, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Elaine, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão t",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.6 s, ≈ US$ 0.67). Recomend",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Prompt da a01 (Fase 0) diz “referência responsável”, termo que a regra de conteúdo veta: (a) trocar por “pessoa responsável” (texto, grátis) · (b) deixar. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Opção A da q05 (“Resolvi, já está tudo certo”) como média e C (“tá tudo parado”) como fraca: (a) manter · (b) inverter (A fraca, porque faz alguém parar de acompanhar; C média, porque pelo menos não cria falsa seguran",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 237,
+  "palavrasReacoesNovas": 62,
+  "palavrasAberturasTrocadas": 40,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Resolveu aquilo?",
+  "description": "Você corrigiu o seu arquivo, o cliente ainda não foi avisado e alguém pergunta “resolveu?”. Depois, um erro seu de verdade e a conferência que o evitaria.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Resolveu aquilo?",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Corrigido no arquivo. E o cliente?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já avisou o erro e já escolheu uma conferência. Falta o meio: corrigido no seu arquivo, mas o caso não acabou. No fim, você pega um erro pequeno seu, de verdade, monta a conferência que teria evitado e usa essa conferência nesta semana. De volta ao orçamento. Você corrigiu o valor no seu arquivo. O cliente ainda não foi avisado: isso está com o gestor. No grupo da equipe, uma colega pergunta: “Resolveu aquilo do orçamento?” Agora, responda: o que você escreve no grupo?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já avisou o erro e já escolheu uma conferência. Falta o meio: corrigido no seu arquivo, mas o caso não acabou.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você pega um erro pequeno seu, de verdade, monta a conferência que teria evitado e usa essa conferência nesta semana.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "De volta ao orçamento. Você corrigiu o valor no seu arquivo. O cliente ainda não foi avisado: isso está com o gestor.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Onde o caso está",
+         "bullets": [
+          "**Feito**: valor corrigido no arquivo (R$ 840)",
+          "**Pendente**: aviso ao cliente, com o gestor"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "No grupo da equipe, uma colega pergunta: “Resolveu aquilo do orçamento?”",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "Agora, responda: o que você escreve no grupo?",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O que você escreve no grupo?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Você conferiu o valor e corrigiu o orçamento no seu arquivo. O cliente ainda não foi avisado; isso depende do gestor. Uma colega pergunta no grupo: “Resolveu aquilo do orçamento?” O que você escreve no grupo?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Resolvi, já está tudo certo.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O arquivo foi corrigido, mas o cliente ainda não. “Tudo certo” pode fazer alguém parar de acompanhar. Faça assim: separe o que você fez do que ainda depende de decisão."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Tudo certo para você. Para o cliente, ainda não. Quem lê “tudo certo” para de acompanhar, e aí o erro cresce."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Corrigi o valor no arquivo. O contato com o cliente está com o gestor; aviso quando fechar.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você informa o fato e o que ainda está em aberto, sem prometer pelo gestor. Faça assim: quando o contato com o cliente fechar, volte ao grupo e encerre o assunto."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Duas frases, duas informações: o que você fez, o que depende de alguém. Ninguém promete pelo gestor, ninguém para de acompanhar."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Ainda não, tá tudo parado.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Parte já foi feita. Esconder o avanço confunde quem acompanha tanto quanto esconder o erro. Faça assim: diga o que foi feito e o que falta."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Parado não está: o arquivo foi corrigido. Esconder o avanço confunde tanto quanto esconder o erro. Diga feito e pendente."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "Agora, responda: o que você escreve no grupo?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Feito, pendente, causa",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Conter · Dizer em que etapa está · Prevenir na causa"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Corrigir tem etapas. Primeiro, conter: o erro para de se espalhar. Depois, prevenir. E, no meio, dizer em que etapa você está. “O orçamento foi revisado” não quer dizer que o cliente foi avisado. Separe sempre: o que eu fiz, o que depende de outros. E anote o tipo do erro e onde passou a conferir. Em um mês, você vê se a conferência atacou a causa. Agora é com você: um erro pequeno seu, recente. O que aconteceu, quem foi afetado, que conferência evitaria. Use essa conferência esta semana.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Corrigir tem etapas. Primeiro, conter: o erro para de se espalhar. Depois, prevenir. E, no meio, dizer em que etapa você está.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "“O orçamento foi revisado” não quer dizer que o cliente foi avisado. Separe sempre: o que eu fiz, o que depende de outros.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Ao avisar a correção",
+         "bullets": [
+          "**Feito**: o que você já corrigiu",
+          "**Pendente**: o que depende de alguém",
+          "**Quando** você avisa de novo"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "E anote o tipo do erro e onde passou a conferir. Em um mês, você vê se a conferência atacou a causa.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: um erro pequeno seu, recente. O que aconteceu, quem foi afetado, que conferência evitaria. Use essa conferência esta semana.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Ao avisar a correção\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Um erro seu, uma conferência sua",
+     "type": "mission",
+     "intro": "No orçamento, a conferência certa era comparar com a origem. Agora é um erro seu: pequeno, recente, de qualquer lugar. E a conferência que teria evitado.",
+     "action": "1. Lembre um erro pequeno e recente, de qualquer lugar: mensagem para a pessoa errada, material esquecido, conta errada, horário perdido.\n2. No bloco de notas, três linhas: o que aconteceu · quem foi afetado (mesmo que só você) · que conferência de dez segundos teria evitado.\n3. Nesta semana, use essa conferência uma vez, antes de entregar ou enviar algo parecido.\n4. Se alguém perguntar “resolveu?”, responda com o feito e o que falta.\n5. Volte aqui, marque “Já experimentei” e conte como foi.",
+     "alternative": "Não depende de emprego: erro de escola, de casa ou do grupo de amigos serve. Não lembra nenhum? Use o próximo erro pequeno que aparecer nesta semana; ele vai aparecer. Se trabalha, escolha um erro que só envolveu você, sem expor nome de cliente ou colega.",
+     "example": "Erro: mandei o trabalho do grupo na versão antiga. Afetou: o grupo, que revisou coisa velha. Conferência: abrir o arquivo e olhar a data antes de anexar. Usei na quinta: peguei a versão errada de novo, antes de enviar."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Errei. E agora? Três perguntas",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que aconteceu? · Quem pode estar usando essa informação? · Qual é a ação segura agora?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Errei. E agora? No orçamento, você viu: o número errado era o menor problema. O que pesou foi o que veio depois. Ninguém promete nunca mais errar. O que dá para prometer: contar o fato, separar feito de pendente, mexer na causa. Na próxima falha, três perguntas: o que aconteceu? Quem pode estar usando essa informação? Qual é a ação segura agora?",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Errei. E agora? No orçamento, você viu: o número errado era o menor problema. O que pesou foi o que veio depois.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "Ninguém promete nunca mais errar. O que dá para prometer: contar o fato, separar feito de pendente, mexer na causa.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Na próxima falha, três perguntas: o que aconteceu? Quem pode estar usando essa informação? Qual é a ação segura agora?",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Avisar: fato, possível impacto, próximo passo."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Corrigir: conter primeiro; dizer em que etapa está (feito × pendente); prevenir na causa."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Na próxima falha: o que aconteceu? quem pode estar usando essa informação? qual é a ação segura agora?"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu erro, minha conferência",
+       "kind": "checklist",
+       "items": [
+        "escolhi um erro pequeno e recente",
+        "três linhas: o que, quem, que conferência",
+        "usei a conferência uma vez nesta semana",
+        "respondi “resolveu?” com feito e pendente"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando usar a conferência, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Avisar: fato, possível impacto, próximo passo.\nCorrigir: conter primeiro; dizer em que etapa está (feito × pendente); prevenir na causa.\nNa próxima falha: o que aconteceu? quem pode estar usando essa informação? qual é a ação segura agora?",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Corrigido no seu arquivo não é resolvido para o cliente. Diga o que foi feito e o que falta."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 33,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz?\" ainda não está na fala do vídeo \"O que você faz?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Gisele, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Gisele, o que você responde?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual ajuste é mais útil?\" ainda não está na fala do vídeo \"Qual ajuste é mais útil?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Elaine, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Elaine, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

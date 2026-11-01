@@ -1,0 +1,618 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C12",
+  "id": "crs_5vccpfypr6fmxojb",
+  "titulo": "Recebi uma correção. E agora?",
+  "instrutora": "Helena — Sua orientadora",
+  "versaoPublicada": 14,
+  "revisaoDoRascunho": 94
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo/plano indicado; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova (aula_03) é APENDADA no fim. Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes só há: troca de fala do plano 'missao' (mesmo id, regrava só esse plano) e mudanças de texto nos nós 'end'. Os planos 'missao_fim' já estão sendo tirados na Fase 0 (cortes.md, status a): não mexer neles aqui.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_helena8_34 com chamada na cam_helena8_esq; explicação na cam_helena8_esq; despedida na cam_helena8_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; botões 'Já experimentei' e 'Vou fazer depois'. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso.",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de blocos; nada acontece fora da tela, e a m02 monta o combinado que a q03-C acabou de dar.",
+  "O curso ensina a pedir exemplo e a combinar a mudança, mas não o passo seguinte: conferir se a mudança funcionou. Silêncio não é confirmação.",
+  "Falta mostrar a passagem inteira de um comentário vago (“mais atenção”) para algo observável (“em qual parte?” → “duas datas” → “conferir antes de enviar”) e o gesto de checar “estamos olhando o mesmo arquivo?”.",
+  "Todos os casos são de trabalho (atendimento, lista): quem ainda não trabalha recebe correção de professor e de família, e não tem para onde levar.",
+  "O curso termina numa tela de texto genérica: sem fecho da Helena, sem retorno à Alana e ao Vitor."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Entenda o comportamento apontado, combine um ajuste, confira se ele funcionou e reconheça quando pedir apoio. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir um exemplo de correção, combinar uma mudança observável, verificar o efeito dela e buscar apoio diante de desrespeito."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Transformar um comentário vago em algo observável, verificar com uma pergunta se o ajuste funcionou (silêncio não é confirmação) e separar fato, ajuste e forma da conversa."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Alana",
+    "Vitor"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como entender o que precisa mudar",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Hoje você monta a pergunta que transforma “mais postura” em algo que dá para fazer.",
+       "de": "No fim desta aula, tem uma missão para você: peça uma correção concreta.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "palavras": 15,
+       "segundos": 5.7,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0 (cortes.md, status a). Nada a fazer aqui."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Só acrescenta a frase de fechamento (hoje null).",
+     "campos_alterados": {
+      "closingLine": "Uma orientação não define quem você é. Ela aponta um fato."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como combinar uma mudança e buscar apoio",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Antes de sair, você vai ter o seu combinado: uma ação pequena e o momento de conferir se funcionou.",
+       "de": "No fim desta aula, tem uma missão para você: combine sua próxima ação.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "Não tem missao_fim; o s5 termina com 'Agora, monte o seu próximo combinado', que continua valendo para a m02."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' passa para fim_aula_03.",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Combine uma mudança que possa praticar e revisar. Busque apoio diante de insulto ou exposição. Na próxima aula, o Vitor volta: ele mudou o que combinou, e ninguém disse se funcionou.",
+      "closingLine": "Combine a mudança. Combine também quando conferir."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Mudou. Funcionou?",
+   "resumo": "Você acompanha uma correção vaga virar ação, aprende a conferir se a mudança funcionou e faz isso na próxima correção que receber.",
+   "estimativaMin": 4,
+   "obrigatoria": "sim (mesma decisão do piloto C24: quem está fazendo passa pela aula; quem já concluiu vê como conteúdo novo)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Transformar um comentário vago em algo observável, verificar com uma pergunta se o ajuste funcionou (silêncio não é confirmação) e separar fato, ajuste e forma da conversa."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "A revisão que não diz nada",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Vago · Observável · Conferido",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já sabe pedir um exemplo e combinar uma mudança. Nesta última aula, o passo que quase ninguém dá: conferir se funcionou.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você usa isso na próxima correção que receber. De um professor, de alguém de casa, de um colega.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Faz o papel do antigo plano 'missao', sem a fórmula."
+      },
+      {
+       "id": "s2",
+       "fala": "O Vitor ouviu: você precisa ter mais atenção. Perguntou: em qual parte? Resposta: duas datas estavam diferentes do pedido.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s3",
+       "fala": "Agora tinha o que fazer: comparar as datas com a fonte antes de enviar. Ele combinou isso e fez, nas duas listas seguintes.",
+       "layout": "presenter_chips",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "cartao": {
+        "titulo": "De vago a observável",
+        "topicos": [
+         "“Mais atenção”",
+         "→ “em qual parte?”",
+         "→ “duas datas erradas”",
+         "→ **conferir as datas antes de enviar**"
+        ]
+       }
+      },
+      {
+       "id": "s4",
+       "fala": "Na revisão, só ouve: continue melhorando. Nada sobre as datas. O Vitor não sabe se resolveu.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar do Vitor, como você descobre se funcionou?",
+       "layout": "presenter",
+       "camera": "cam_helena8_esq",
+       "acao": "add",
+       "palavras": 9,
+       "segundos": 3.4
+      }
+     ],
+     "roteiroNovo": "Você já sabe pedir um exemplo e combinar uma mudança. Nesta última aula, o passo que quase ninguém dá: conferir se funcionou. No fim, você usa isso na próxima correção que receber. De um professor, de alguém de casa, de um colega. O Vitor ouviu: você precisa ter mais atenção. Perguntou: em qual parte? Resposta: duas datas estavam diferentes do pedido. Agora tinha o que fazer: comparar as datas com a fonte antes de enviar. Ele combinou isso e fez, nas duas listas seguintes. Na revisão, só ouve: continue melhorando. Nada sobre as datas. O Vitor não sabe se resolveu. No lugar do Vitor, como você descobre se funcionou?",
+     "palavras": 109,
+     "segundos": 41.6,
+     "cartaoPerguntaSeguinte": "O Vitor passou a conferir as datas. Na revisão, só ouviu “continue melhorando”. Como você descobre se funcionou?",
+     "proximo": "q04"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar do Vitor, como você descobre se funcionou?",
+     "apoioNaTela": "O Vitor combinou conferir as datas antes de enviar e fez isso nas duas listas seguintes. Na revisão, a pessoa diz “continue melhorando” e não comenta as datas.",
+     "bridge": {
+      "call": "No lugar do Vitor, como você descobre se funcionou?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C12)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Mudo também a fonte e a cor da lista, para mostrar que estou me esforçando.”",
+       "qualidade": "ok",
+       "feedback": "Essas mudanças não verificam o ponto que foi combinado, e podem até distrair dele. Faça assim: pergunte direto sobre as datas e peça um exemplo do que ainda falta.",
+       "reacao": {
+        "texto": "Esforço aparece, mas não responde à pergunta. A correção era sobre datas. Fonte e cor não mostram se elas estão certas agora.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v05",
+       "caracteres": 77
+      },
+      {
+       "id": "b",
+       "rotulo": "“Pergunto se a conferência das datas resolveu e se tem um exemplo do que ainda falta.”",
+       "qualidade": "strong",
+       "feedback": "A conversa volta ao comportamento específico, e a resposta vira informação. Faça assim: “a conferência das datas resolveu? Tem algum exemplo do que ainda falta?”",
+       "reacao": {
+        "texto": "Você voltou ao ponto acompanhado. Agora a pessoa precisa dizer sim ou não, e você sai sabendo onde está.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v05",
+       "caracteres": 86
+      },
+      {
+       "id": "c",
+       "rotulo": "“Considero resolvido: se ninguém reclamou das datas de novo, deve estar bom.”",
+       "qualidade": "weak",
+       "feedback": "Silêncio não é confirmação. Sem perguntar, você não sabe se o ajuste funcionou ou se só ninguém olhou. Faça assim: pergunte pelo ponto combinado, numa frase.",
+       "reacao": {
+        "texto": "Silêncio não é confirmação. Pode ser que resolveu. Pode ser que ninguém olhou. Sem perguntar, você não sabe qual dos dois.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 77
+      }
+     ],
+     "porQueNaoEstaNoEnunciado": "A resposta não está no enunciado: ele diz que a revisão foi vaga; perceber que a verificação precisa voltar ao ponto combinado, e que silêncio não confirma nada, é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Mesmo arquivo, mesmo ponto",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "O fato · O ajuste · A forma",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Dá para reconhecer um ponto sem concordar com tudo. Se o fato for outro, mostre: aqui a data está assim; é o mesmo arquivo?",
+       "layout": "presenter",
+       "camera": "cam_helena8_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s2",
+       "fala": "Isso permite conferir, sem briga. Fato, ajuste e forma da conversa são três assuntos. Separar ajuda a decidir qual resolver.",
+       "layout": "presenter_chips",
+       "camera": "cam_helena8_esq",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6,
+       "cartao": {
+        "titulo": "Três assuntos",
+        "topicos": [
+         "**O fato**: o que aconteceu",
+         "**O ajuste**: o que muda",
+         "**A forma**: como foi dito"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "Ofensa ou exposição é outro assunto, e pode exigir apoio.",
+       "layout": "presenter",
+       "camera": "cam_helena8_esq",
+       "acao": "add",
+       "palavras": 10,
+       "segundos": 3.8
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, a próxima correção que você receber. Duas perguntas: em qual parte? E, depois de mudar: resolveu?",
+       "layout": "presenter",
+       "camera": "cam_helena8_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra 'missão'. A aula segue para m03."
+      }
+     ],
+     "roteiroNovo": "Dá para reconhecer um ponto sem concordar com tudo. Se o fato for outro, mostre: aqui a data está assim; é o mesmo arquivo? Isso permite conferir, sem briga. Fato, ajuste e forma da conversa são três assuntos. Separar ajuda a decidir qual resolver. Ofensa ou exposição é outro assunto, e pode exigir apoio. Agora, a próxima correção que você receber. Duas perguntas: em qual parte? E, depois de mudar: resolveu?",
+     "palavras": 71,
+     "segundos": 27.1,
+     "proximo": "m03",
+     "naoRepete": "É o aprofundamento do pacote (aprovado), em planos. Não repete v01 (em qual situação; comportamento observável) nem v03 (discordar com fatos; apoio em caso de insulto; adulto de confiança). O novo: “estamos olhando o mesmo arquivo?” e a separação fato / ajuste / forma."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Na próxima correção, pergunte “em qual parte?”",
+     "tipoDeMissao": "FAZER fora da tela: na próxima correção que você receber, em até 7 dias",
+     "intro": "O Vitor transformou “mais atenção” em datas conferidas, e depois perguntou se resolveu. Agora é com a próxima correção que chegar para você.",
+     "action": [
+      "Na próxima vez que alguém te corrigir (professor, alguém da família, colega, quem orienta você), respire e pergunte: “em qual parte?” ou “me dá um exemplo?”.",
+      "Combine uma coisa pequena para fazer diferente. Uma só.",
+      "Faça.",
+      "Depois, pergunte: “aquilo resolveu?”. Não espere o silêncio virar resposta.",
+      "Volte aqui, marque “Já experimentei” e conte o que combinou e o que ouviu de volta."
+     ],
+     "alternative": "Ninguém te corrigiu nesta semana? Peça: “tem alguma coisa que eu podia fazer diferente em…?” para alguém que viu você fazer algo (um trabalho, um treino, uma tarefa de casa). E aí siga os passos. Se a correção vier com ofensa, o passo é outro: procure uma pessoa de confiança.",
+     "tip": {
+      "rotulo": "Exemplo: a nota do Vitor",
+      "texto": "Correção: “mais atenção”. Perguntei: em qual parte? Eram duas datas diferentes do pedido. Combinei: conferir as datas com a fonte antes de enviar. Fiz em duas listas. Perguntei se resolveu: sim, e pediram para olhar também os nomes.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "O que você combinou de fazer diferente? Quando perguntou se resolveu, o que ouviu?",
+      "placeholder": "Ex.: a professora disse “mais capricho”; perguntei em qual parte: era a letra nos títulos. Combinei isso.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; m03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Correção é informação, não rótulo",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Em qual parte? · O que muda · Resolveu?",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Uma correção pode causar desconforto, principalmente quando você está começando. Isso não impede que ela produza uma informação útil.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "d2",
+       "fala": "A Alana saiu de mais postura para escutar até o fim. O Vitor, de mais atenção para conferir as datas. E perguntaram: resolveu?",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "d3",
+       "fala": "Uma correção não é uma definição sobre você. É uma informação sobre algo que você ainda está aprendendo. Até a próxima.",
+       "layout": "presenter",
+       "camera": "cam_helena8_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      }
+     ],
+     "roteiroNovo": "Uma correção pode causar desconforto, principalmente quando você está começando. Isso não impede que ela produza uma informação útil. A Alana saiu de mais postura para escutar até o fim. O Vitor, de mais atenção para conferir as datas. E perguntaram: resolveu? Uma correção não é uma definição sobre você. É uma informação sobre algo que você ainda está aprendendo. Até a próxima.",
+     "palavras": 63,
+     "segundos": 24.0,
+     "forma": "abre com a frase do pacote aprovada pelos revisores, faz o callback aos dois personagens (Alana e Vitor) e termina com a frase da ficha da Helena (correção é informação, não rótulo), que é o título. Sem recap de “você praticou”, sem “Meu roteiro” na fala.",
+     "motionPrompt": "ritmo tranquilo, mãos abertas na frase final, pausa antes da despedida",
+     "required": true,
+     "posicao": "depois de m03 e antes de fim_aula_03"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Silêncio não é confirmação. Pergunte: resolveu?",
+     "summary": "O que você levou\nDe vago a observável: “em qual parte?”\nDepois de mudar: “resolveu?”. Silêncio não é confirmação.\nFato, ajuste e forma são três assuntos.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha próxima correção",
+       "kind": "checklist",
+       "items": [
+        "perguntei “em qual parte?”",
+        "combinei uma coisa pequena",
+        "fiz",
+        "perguntei se resolveu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando receber uma correção, volte e conte o que combinou."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "De vago a observável: “em qual parte?”\nDepois de mudar: “resolveu?”. Silêncio não é confirmação.\nFato, ajuste e forma são três assuntos.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos 'keep' custam zero. A pergunta nova não gera vídeo próprio. As aberturas trocadas regravam só o plano 'missao' de cada aula existente.",
+  "planosNovos": {
+   "quantidade": 13,
+   "palavras": 243,
+   "segundos": 92.7
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 62,
+   "segundos": 23.7
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 34,
+   "segundos": 13.0
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoAlvo": true,
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v00/missao (abertura)",
+    "planos": 1,
+    "palavras": 15,
+    "segundos": 5.7
+   },
+   {
+    "no": "v02/missao (abertura)",
+    "planos": 1,
+    "palavras": 19,
+    "segundos": 7.3
+   },
+   {
+    "no": "v04",
+    "planos": 6,
+    "palavras": 109,
+    "segundos": 41.6
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 62,
+    "segundos": 23.7
+   },
+   {
+    "no": "v05",
+    "planos": 4,
+    "palavras": 71,
+    "segundos": 27.1
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 63,
+    "segundos": 24.0
+   }
+  ],
+  "videoDoCurso": {
+   "antes": {
+    "minS": 193.2,
+    "maxS": 205.8,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 293.2,
+    "maxS": 306.9,
+    "texto": "cerca de 4.9–5.1 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação de q04 (mínima/máxima). As aberturas trocadas têm duração parecida com a atual; as aulas existentes não mudam de duração de forma relevante."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Missão, quando ninguém corrige na semana: (a) a pessoa pede feedback (“tem algo que eu podia fazer diferente em…?”) e segue os passos · (b) só “Vou fazer depois” e esperar. Recomendo (a): quem não trabalha recebe menos correção espontânea, e pedir é a habilidade da aula 1.",
+  "2. Explicação, frase sobre ofensa: (a) manter uma frase (“ofensa ou exposição é outro assunto, e pode exigir apoio”) · (b) cortar, porque o v03 já trata de apoio. Recomendo (a): uma frase, porque a separação fato / ajuste / forma precisa desse terceiro caso.",
+  "3. Opção média (A) da decisão: (a) “mudo a fonte e a cor para mostrar esforço” (do pacote; os revisores acharam plausível para a idade) · (b) “pergunto se a pessoa gostou da lista no geral” (vaga, não volta ao ponto). Recomendo (a).",
+  "4. Frase de fechamento do fim_aula_01: (a) “Uma orientação não define quem você é. Ela aponta um fato.” · (b) deixar null. Recomendo (a)."
+ ]
+}

@@ -1,0 +1,357 @@
+{
+ "geradoEm": "2026-11-01T00:49:46.173Z",
+ "modo": "varredura",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "C01",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "rascunhoRevAntes": 90,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 1
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 1,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C02",
+   "courseId": "crs_arbeohlw3xp5v3zx",
+   "rascunhoRevAntes": 87,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C03",
+   "courseId": "crs_hd4jnnpx3oj0xf14",
+   "rascunhoRevAntes": 88,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 2
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 2,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C04",
+   "courseId": "crs_4z17p0m6d43qxmmo",
+   "rascunhoRevAntes": 109,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 12
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 5,
+     "tolerados": 12,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C05",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "rascunhoRevAntes": 93,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 0
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 0,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C06",
+   "courseId": "crs_b8zeh4b2gguseghq",
+   "rascunhoRevAntes": 117,
+   "varredura": {
+    "rascunho": {
+     "videos": 26,
+     "assets": 26,
+     "ge200": 1,
+     "tolerados": 7
+    },
+    "publicada": {
+     "versao": 8,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 2,
+     "tolerados": 6,
+     "diferemDoRascunho": 5
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C07",
+   "courseId": "crs_bmf11akamtxoti28",
+   "rascunhoRevAntes": 94,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 4,
+     "tolerados": 5,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C08",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "rascunhoRevAntes": 89,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 2
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 2,
+     "diferemDoRascunho": 1
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C09",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "rascunhoRevAntes": 97,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 3,
+     "tolerados": 8
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 3,
+     "tolerados": 8,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C10",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "rascunhoRevAntes": 92,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 11,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 6,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C11",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "rascunhoRevAntes": 88,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 6,
+     "tolerados": 13
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 6,
+     "tolerados": 13,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C12",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "rascunhoRevAntes": 90,
+   "varredura": {
+    "rascunho": {
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 7
+    },
+    "publicada": {
+     "versao": 12,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 1,
+     "tolerados": 7,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "rascunhoRevAntes": 172,
+   "varredura": {
+    "rascunho": {
+     "videos": 56,
+     "assets": 56,
+     "ge200": 11,
+     "tolerados": 14
+    },
+    "publicada": {
+     "versao": 10,
+     "videos": 56,
+     "assets": 56,
+     "ge200": 11,
+     "tolerados": 14,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "rascunhoRevAntes": 407,
+   "varredura": {
+    "rascunho": {
+     "videos": 120,
+     "assets": 120,
+     "ge200": 11,
+     "tolerados": 24
+    },
+    "publicada": {
+     "versao": 12,
+     "videos": 120,
+     "assets": 120,
+     "ge200": 11,
+     "tolerados": 24,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  }
+ ]
+}

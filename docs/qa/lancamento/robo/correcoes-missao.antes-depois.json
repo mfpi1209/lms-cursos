@@ -1,0 +1,73 @@
+{
+ "resumo": {
+  "script": "qa-missao",
+  "modo": "aplicado",
+  "geradoEm": "2026-10-31T20:42:02.871Z",
+  "total": 5,
+  "aplicar": 5,
+  "jaAplicado": 0,
+  "divergente": 0
+ },
+ "mudancas": [
+  {
+   "codigo": "P036",
+   "curso": "crs_gjn468p3y6hwua4f",
+   "aula": "aula_02",
+   "no": "m02",
+   "campo": "intro",
+   "estado": "aplicar",
+   "antes": "Você viu que, se algo escapou, o caminho é parar a divulgação e avisar. Agora monte o seu aviso.",
+   "depois": "Esta é a missão da aula. Você viu que, se algo escapou, o caminho é parar a divulgação e avisar. Agora monte o seu aviso.",
+   "revisaoAntes": 94,
+   "revisaoDepois": 95
+  },
+  {
+   "codigo": "P050",
+   "curso": "crs_u4nfw88a4n2n0ubv",
+   "aula": "aula_02",
+   "no": "m02",
+   "campo": "intro",
+   "estado": "aplicar",
+   "antes": "Você viu que orientações diferentes se resolvem confirmando qual vale. Agora monte a pergunta para esclarecer a sua.",
+   "depois": "Esta é a missão da aula. Você viu que orientações diferentes se resolvem confirmando qual vale. Agora monte a pergunta para esclarecer a sua.",
+   "revisaoAntes": 85,
+   "revisaoDepois": 86
+  },
+  {
+   "codigo": "P104",
+   "curso": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_06",
+   "no": "m05",
+   "campo": "intro",
+   "estado": "aplicar",
+   "antes": "Você viu que uma mensagem curta e um pedido simples abrem conversas. Agora monte a sua mensagem.",
+   "depois": "Esta é a missão da aula. Você viu que uma mensagem curta e um pedido simples abrem conversas. Agora monte a sua mensagem.",
+   "revisaoAntes": 403,
+   "revisaoDepois": 404
+  },
+  {
+   "codigo": "P115",
+   "curso": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_09",
+   "no": "m08",
+   "campo": "intro",
+   "estado": "aplicar",
+   "antes": "Você viu que a apresentação cabe em três frases ligadas à vaga. Agora monte a sua.",
+   "depois": "Esta é a missão da aula. Você viu que a apresentação cabe em três frases ligadas à vaga. Agora monte a sua.",
+   "revisaoAntes": 403,
+   "revisaoDepois": 404
+  },
+  {
+   "codigo": "P125",
+   "curso": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_11",
+   "no": "m10",
+   "campo": "intro",
+   "estado": "aplicar",
+   "antes": "Você viu que um ponto a melhorar convence quando é real e tem uma ação. Agora monte o seu.",
+   "depois": "Esta é a missão da aula. Você viu que um ponto a melhorar convence quando é real e tem uma ação. Agora monte o seu.",
+   "revisaoAntes": 403,
+   "revisaoDepois": 404
+  }
+ ]
+}

@@ -1,0 +1,1953 @@
+{
+ "resumo": {
+  "script": "qa-revisao-pedagogica",
+  "modo": "aplicado",
+  "geradoEm": "2026-11-01T02:16:18.067Z",
+  "rascunho": {
+   "trocas": 28,
+   "aplicar": 28,
+   "jaAplicado": 0,
+   "divergenteOuLigado": 0,
+   "cenasDesatualizadasAntesDepois": [
+    {
+     "curso": "crs_hvvgkvtd1rb2um0l",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_arbeohlw3xp5v3zx",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_4tj8a3q3g9gudgb7",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_bmf11akamtxoti28",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_u4nfw88a4n2n0ubv",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_5vccpfypr6fmxojb",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_99hpdsc8w88osiuh",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_gujuaiykqcsl2n31",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_4jh683s5h351z2db",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_dp9s7pdro9j6e3m0",
+     "staleAntes": 0,
+     "staleDepois": 0
+    },
+    {
+     "curso": "crs_8g0csi2hflfztfge",
+     "staleAntes": 0,
+     "staleDepois": 0
+    }
+   ]
+  },
+  "trilhas": {
+   "aplicar": 39,
+   "jaAplicado": 0,
+   "divergente": 0,
+   "aindaMaisLongas": [
+    "pe2 (1.35×)",
+    "pe3 (1.2×)",
+    "pe5 (1.1×)",
+    "pe6 (1.45×)",
+    "rc3 (1.17×)",
+    "rc4 (1.09×)",
+    "rc5 (1.44×)",
+    "rc6 (4.06×, ALERTA)",
+    "ip3 (1.12×)",
+    "ip4 (1.42×)",
+    "ip5 (1.16×)",
+    "ip6 (1.12×)",
+    "cv3 (1.26×)",
+    "cv4 (1.35×)",
+    "cv5 (1.26×)",
+    "cv6 (1.26×)"
+   ]
+  }
+ },
+ "rascunho": [
+  {
+   "item": "P4",
+   "onde": "C14·A5·fim_aula_05 checklist \"Meu LinkedIn\"",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "antes": "dez conexões",
+   "depois": "primeiras conexões",
+   "estado": "aplicar",
+   "caminho": "modules.1.lessons.1.graph.nodes.5.recap.1.items.3",
+   "revisaoAntes": 428,
+   "revisaoDepois": 429
+  },
+  {
+   "item": "P5",
+   "onde": "C14·A12·fim_aula_12 checklist \"Dia da entrevista\"",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "antes": "mensagem de agradecimento escrita",
+   "depois": "agradecimento enviado, se houver canal",
+   "estado": "aplicar",
+   "caminho": "modules.3.lessons.3.graph.nodes.4.recap.0.items.4",
+   "revisaoAntes": 428,
+   "revisaoDepois": 429
+  },
+  {
+   "item": "P6",
+   "onde": "C14·A12·q24·C retorno",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "antes": "Apoie o aparelho e procure uma posição confortável que mantenha imagem e som estáveis. Adapte o enquadramento às suas condições.",
+   "depois": "Deitado e com o celular na mão, a imagem treme e o enquadramento fica estranho para quem entrevista. Faça assim: apoie o aparelho na altura dos olhos e, se puder, sente-se; adapte o enquadramento às suas condições.",
+   "estado": "aplicar",
+   "caminho": "modules.3.lessons.3.graph.nodes.1.options.2.feedback.content.0.content.0.text",
+   "revisaoAntes": 428,
+   "revisaoDepois": 429
+  },
+  {
+   "item": "P29",
+   "onde": "C14·A9·m08 hoje #4",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "antes": "terminei os estudos",
+   "depois": "já concluí o ensino médio",
+   "estado": "aplicar",
+   "caminho": "modules.3.lessons.0.graph.nodes.4.scaffold.slots.0.options.3",
+   "revisaoAntes": 428,
+   "revisaoDepois": 429
+  },
+  {
+   "item": "P7",
+   "onde": "C02 descrição (Objetivo final)",
+   "courseId": "crs_arbeohlw3xp5v3zx",
+   "antes": "Entenda a orientação do ambiente e escolha uma opção possível sem comprar por suposição. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue consulta a orientação de vestimenta e combina alternativas quando necessário.",
+   "depois": "Entenda a orientação do ambiente e escolha uma opção possível sem comprar por suposição. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue consultar a orientação de vestimenta e combinar alternativas quando necessário.",
+   "estado": "aplicar",
+   "caminho": "description",
+   "revisaoAntes": 87,
+   "revisaoDepois": 88
+  },
+  {
+   "item": "P7",
+   "onde": "C02 brief.finalSkill",
+   "courseId": "crs_arbeohlw3xp5v3zx",
+   "antes": "Ao final, a pessoa consegue consulta a orientação de vestimenta e combina alternativas quando necessário.",
+   "depois": "Ao final, a pessoa consegue consultar a orientação de vestimenta e combinar alternativas quando necessário.",
+   "estado": "aplicar",
+   "caminho": "brief.finalSkill",
+   "revisaoAntes": 87,
+   "revisaoDepois": 88
+  },
+  {
+   "item": "P31",
+   "onde": "C05 descrição (Objetivo final)",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "antes": "Organize sua chegada e comunique mudanças de horário antes que virem surpresa. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue planejar a chegada e comunica atraso, intervalo ou ausência pelo canal combinado.",
+   "depois": "Organize sua chegada e comunique mudanças de horário antes que virem surpresa. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue planejar a chegada e comunicar atraso, intervalo ou ausência pelo canal combinado.",
+   "estado": "aplicar",
+   "caminho": "description",
+   "revisaoAntes": 93,
+   "revisaoDepois": 94
+  },
+  {
+   "item": "P31",
+   "onde": "C05 brief.finalSkill",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "antes": "Ao final, a pessoa consegue planejar a chegada e comunica atraso, intervalo ou ausência pelo canal combinado.",
+   "depois": "Ao final, a pessoa consegue planejar a chegada e comunicar atraso, intervalo ou ausência pelo canal combinado.",
+   "estado": "aplicar",
+   "caminho": "brief.finalSkill",
+   "revisaoAntes": 93,
+   "revisaoDepois": 94
+  },
+  {
+   "item": "P32",
+   "onde": "C07 descrição (Objetivo final)",
+   "courseId": "crs_bmf11akamtxoti28",
+   "antes": "Escolha o momento e organize sua fala para pedir orientação ou apresentar uma diferença. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir uma conversa com contexto e apresenta uma discordância respeitosa.",
+   "depois": "Escolha o momento e organize sua fala para pedir orientação ou apresentar uma diferença. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir uma conversa com contexto e apresentar uma discordância respeitosa.",
+   "estado": "aplicar",
+   "caminho": "description",
+   "revisaoAntes": 96,
+   "revisaoDepois": 97
+  },
+  {
+   "item": "P32",
+   "onde": "C07 brief.finalSkill",
+   "courseId": "crs_bmf11akamtxoti28",
+   "antes": "Ao final, a pessoa consegue pedir uma conversa com contexto e apresenta uma discordância respeitosa.",
+   "depois": "Ao final, a pessoa consegue pedir uma conversa com contexto e apresentar uma discordância respeitosa.",
+   "estado": "aplicar",
+   "caminho": "brief.finalSkill",
+   "revisaoAntes": 96,
+   "revisaoDepois": 97
+  },
+  {
+   "item": "P33",
+   "onde": "C11 descrição (Objetivo final)",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "antes": "Transforme uma orientação vaga em um combinado que você consegue aplicar. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir esclarecimento, compara informações diferentes e confirma a regra aplicável.",
+   "depois": "Transforme uma orientação vaga em um combinado que você consegue aplicar. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir esclarecimento, comparar informações diferentes e confirmar a regra aplicável.",
+   "estado": "aplicar",
+   "caminho": "description",
+   "revisaoAntes": 94,
+   "revisaoDepois": 95
+  },
+  {
+   "item": "P33",
+   "onde": "C11 brief.finalSkill",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "antes": "Ao final, a pessoa consegue pedir esclarecimento, compara informações diferentes e confirma a regra aplicável.",
+   "depois": "Ao final, a pessoa consegue pedir esclarecimento, comparar informações diferentes e confirmar a regra aplicável.",
+   "estado": "aplicar",
+   "caminho": "brief.finalSkill",
+   "revisaoAntes": 94,
+   "revisaoDepois": 95
+  },
+  {
+   "item": "P34",
+   "onde": "C12 descrição (Objetivo final)",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "antes": "Entenda o comportamento apontado, combine um ajuste e reconheça quando pedir apoio. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir um exemplo de correção, combina uma mudança observável e busca apoio diante de desrespeito.",
+   "depois": "Entenda o comportamento apontado, combine um ajuste e reconheça quando pedir apoio. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir um exemplo de correção, combinar uma mudança observável e buscar apoio diante de desrespeito.",
+   "estado": "aplicar",
+   "caminho": "description",
+   "revisaoAntes": 93,
+   "revisaoDepois": 94
+  },
+  {
+   "item": "P34",
+   "onde": "C12 brief.finalSkill",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "antes": "Ao final, a pessoa consegue pedir um exemplo de correção, combina uma mudança observável e busca apoio diante de desrespeito.",
+   "depois": "Ao final, a pessoa consegue pedir um exemplo de correção, combinar uma mudança observável e buscar apoio diante de desrespeito.",
+   "estado": "aplicar",
+   "caminho": "brief.finalSkill",
+   "revisaoAntes": 93,
+   "revisaoDepois": 94
+  },
+  {
+   "item": "P24",
+   "onde": "C01·A2·m02 molde",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "antes": "Aconteceu {imprevisto}. Minha previsão está {previsao}. Vou {retorno}.",
+   "depois": "Aconteceu {imprevisto}. Minha previsão de chegada está {previsao}. Vou {retorno}.",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.template",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  },
+  {
+   "item": "P24",
+   "onde": "C01·A2·m02 previsão #1",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "antes": "ainda indefinida",
+   "depois": "indefinida",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.slots.1.options.0",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  },
+  {
+   "item": "P24",
+   "onde": "C01·A2·m02 previsão #2",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "antes": "sujeita à retomada do transporte",
+   "depois": "presa à retomada do transporte",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.slots.1.options.1",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  },
+  {
+   "item": "P24",
+   "onde": "C01·A2·m02 previsão #3",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "antes": "dependente de uma nova rota",
+   "depois": "dependendo de uma nova rota",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.slots.1.options.2",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  },
+  {
+   "item": "P25",
+   "onde": "C13·A2·m02 instruções",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "antes": "Para aprender uma tarefa: observe um exemplo, anote o que importa, pratique dentro dos seus acessos e confira o resultado. Se precisar de ajuda, explique onde travou.",
+   "depois": "Antes de enviar, confira se a mensagem diz o que você está fazendo, o que já tentou e qual decisão precisa tomar. Se houver prazo, avise também.",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.4.prompt.content.0.content.0.text",
+   "revisaoAntes": 179,
+   "revisaoDepois": 180
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·q04·B rótulo",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "“Para concluir A preciso de uma autorização; avanço em B. Podemos rever o prazo?”",
+   "depois": "“Para concluir a tarefa 1 preciso de uma autorização; enquanto isso avanço na tarefa 2. Podemos rever o prazo?”",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.options.1.label",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·a02 situação #1",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "A depende de autorização",
+   "depois": "A tarefa 1 depende de autorização",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.5.scaffold.slots.0.options.0",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·a02 situação #2",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "A está esperando uma resposta",
+   "depois": "A tarefa 1 está esperando uma resposta",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.5.scaffold.slots.0.options.1",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·a02 situação #3",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "A precisa de material que ainda não chegou",
+   "depois": "A tarefa 1 precisa de material que ainda não chegou",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.5.scaffold.slots.0.options.2",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·a02 alternativa #1",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "Enquanto isso posso avançar em B",
+   "depois": "Enquanto isso posso avançar na tarefa 2",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.5.scaffold.slots.2.options.0",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P26",
+   "onde": "C21·A2·a02 pedido #1",
+   "courseId": "crs_4jh683s5h351z2db",
+   "antes": "confirmar essa ordem e rever o prazo de A",
+   "depois": "confirmar essa ordem e rever o prazo da tarefa 1",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.5.scaffold.slots.3.options.0",
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "item": "P27",
+   "onde": "C24·A2·a02 ponte",
+   "courseId": "crs_dp9s7pdro9j6e3m0",
+   "antes": "Você viu que algumas etapas dependem de uma confirmação. Agora monte um plano de quatro etapas, da primeira à última.",
+   "depois": "Você viu que algumas etapas dependem de uma confirmação. Agora monte um plano de quatro etapas: a primeira é o que precisa ser confirmado antes de começar.",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.4.intro",
+   "revisaoAntes": 42,
+   "revisaoDepois": 43
+  },
+  {
+   "item": "P28",
+   "onde": "C08·A2·m02 problema #2",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "antes": "uma condição que precisa de avaliação",
+   "depois": "um cabo com a parte exposta",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.slots.0.options.1",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  },
+  {
+   "item": "P28",
+   "onde": "C08·A2·m02 problema #3",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "antes": "um item que parece inadequado para uso",
+   "depois": "um equipamento que parece inseguro",
+   "estado": "aplicar",
+   "caminho": "modules.0.lessons.1.graph.nodes.3.scaffold.slots.0.options.2",
+   "revisaoAntes": 91,
+   "revisaoDepois": 92
+  }
+ ],
+ "trilhas": [
+  {
+   "item": "P9",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe1",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Respondo o e-mail confirmando horário, entrada e quem devo procurar.”",
+   "depois": "“Confirmo por e-mail horário, entrada e quem procurar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P9",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe1",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Chego cedo e pergunto na porta.”",
+   "depois": "“Chego cedo e pergunto na porta a alguém que estiver passando.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P10",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe4",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Explico o que estou fazendo, o que já tentei e a mensagem de erro.”",
+   "depois": "“Conto o que fiz, o que já tentei e o erro que aparece.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P10",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe4",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Digo que o sistema não funciona.”",
+   "depois": "“Digo que o sistema não funciona e espero alguém consertar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P11",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe5",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Aviso quem recebeu, digo o que está errado e proponho enviar a versão corrigida.”",
+   "depois": "“Aviso quem recebeu o que está errado e mando a versão corrigida.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P11",
+   "trilha": "primeiro-emprego",
+   "situacao": "pe5",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Corrijo no meu arquivo e não falo nada.”",
+   "depois": "“Corrijo só no meu arquivo e espero alguém perguntar pela lista.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P12",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip1",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Pergunto se há orientação de roupa e de calçado para a área.”",
+   "depois": "“Pergunto se há orientação de roupa e calçado.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P12",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip1",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Vou com a roupa que uso no dia a dia.”",
+   "depois": "“Vou com a roupa que uso no dia a dia, que deve servir.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P13",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip2",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Aviso que só tenho a cinza-escura e pergunto se serve ou qual alternativa usar.”",
+   "depois": "“Aviso que só tenho a cinza-escura e pergunto se serve.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P13",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip2",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Vou com a cinza e não falo nada.”",
+   "depois": "“Vou com a cinza-escura e não comento nada com ninguém.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P13",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip2",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Falto no sábado.”",
+   "depois": "“Falto no sábado para não aparecer com a roupa errada.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P14",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip3",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Pergunto em qual situação isso aconteceu e o que esperam que eu faça diferente.”",
+   "depois": "“Pergunto em qual situação foi e o que esperam que eu faça.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P14",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip3",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Digo que vou melhorar e mudo tudo um pouco.”",
+   "depois": "“Digo que vou melhorar e tento mudar um pouco de tudo.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P14",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip3",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Digo que sempre fui assim.”",
+   "depois": "“Digo que sempre fui assim e que isso não vai mudar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P15",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip4",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Digo com calma que posso conversar sobre a tarefa, mas não sobre esse comentário, e procuro a pessoa de referência.”",
+   "depois": "“Digo que falo sobre a tarefa, não sobre esse comentário, e procuro apoio.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P15",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip4",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Respondo no mesmo tom.”",
+   "depois": "“Respondo no mesmo tom, na frente de todo mundo.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P15",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip4",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Finjo que não ouvi e deixo pra lá.”",
+   "depois": "“Finjo que não ouvi e deixo pra lá, para não criar clima.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P16",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip5",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Não posto essa foto e pergunto se posso tirar outra, com autorização de quem aparece.”",
+   "depois": "“Não posto essa e tiro outra, com autorização de quem aparece.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P16",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip5",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Posto só para os amigos próximos.”",
+   "depois": "“Posto só para os amigos próximos, que não vão espalhar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P17",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip6",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Apago o vídeo, aviso o colega e sigo a orientação da empresa se precisar.”",
+   "depois": "“Apago o vídeo, aviso o colega e sigo a orientação da empresa.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P17",
+   "trilha": "imagem-e-postura",
+   "situacao": "ip6",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Deixo, porque já tem muitas visualizações.”",
+   "depois": "“Deixo no ar, porque já tem muitas visualizações e ficou bom.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P18",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc1",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Aviso que terminei, onde está o arquivo e o que ficou pendente.”",
+   "depois": "“Aviso que terminei, onde está e o que ficou pendente.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P18",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc1",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Não aviso: quem precisar vai achar na pasta.”",
+   "depois": "“Não aviso: quem precisar vai achar o arquivo na pasta.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P18",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc1",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Digo só ‘feito!’.”",
+   "depois": "“Mando só ‘feito!’ no grupo e volto para outra tarefa.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P19",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc2",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Pergunto um exemplo do que pode e do que não pode na minha função.”",
+   "depois": "“Peço um exemplo do que pode e do que não pode no balcão.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P19",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc2",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Faço como os colegas fazem.”",
+   "depois": "“Faço como os colegas fazem, porque eles já conhecem a regra.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P19",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc2",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Não uso o celular nunca, para não errar.”",
+   "depois": "“Não uso o celular nunca no trabalho, para não errar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P20",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc3",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Conto as duas orientações a quem orienta meu trabalho e pergunto qual seguir.”",
+   "depois": "“Mostro as duas orientações a quem me orienta e pergunto qual vale.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P20",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc3",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Envio pelos dois caminhos, por garantia.”",
+   "depois": "“Envio pelos dois caminhos, por garantia, e não pergunto nada.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P20",
+   "trilha": "rotina-e-combinados",
+   "situacao": "rc3",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Escolho o que achar mais fácil.”",
+   "depois": "“Escolho o caminho que achar mais fácil e envio logo.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P21",
+   "trilha": "convivencia",
+   "situacao": "cv1",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Pergunto se ela tem um minuto, digo o assunto e que o prazo é hoje.”",
+   "depois": "“Peço um minuto, digo o assunto e que o prazo é hoje.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P21",
+   "trilha": "convivencia",
+   "situacao": "cv1",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Interrompo e falo tudo de uma vez.”",
+   "depois": "“Interrompo na hora e falo tudo de uma vez, sem avisar.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P22",
+   "trilha": "convivencia",
+   "situacao": "cv2",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Digo que entendi sexta e pergunto como podemos alinhar o prazo.”",
+   "depois": "“Digo que entendi sexta e pergunto como alinhar o prazo.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P22",
+   "trilha": "convivencia",
+   "situacao": "cv2",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Digo que ela está errada.”",
+   "depois": "“Digo que ela está errada e que o prazo sempre foi sexta.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P22",
+   "trilha": "convivencia",
+   "situacao": "cv2",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Faço correndo, sem comentar.”",
+   "depois": "“Faço correndo, sem comentar a diferença com ninguém.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P23",
+   "trilha": "convivencia",
+   "situacao": "cv6",
+   "opcao": "a",
+   "campo": "label",
+   "antes": "“Digo com calma que prefiro que ele não comente minha roupa e, se continuar, procuro a pessoa de referência.”",
+   "depois": "“Peço com calma que ele pare e, se continuar, procuro a pessoa de referência.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P23",
+   "trilha": "convivencia",
+   "situacao": "cv6",
+   "opcao": "b",
+   "campo": "label",
+   "antes": "“Rio junto para não criar clima.”",
+   "depois": "“Rio junto para não criar clima e deixo passar mais uma vez.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P23",
+   "trilha": "convivencia",
+   "situacao": "cv6",
+   "opcao": "c",
+   "campo": "label",
+   "antes": "“Faço um comentário sobre a roupa dele também.”",
+   "depois": "“Faço um comentário sobre a roupa dele também, para ele sentir.”",
+   "estado": "aplicar"
+  },
+  {
+   "item": "P30",
+   "trilha": "convivencia",
+   "situacao": "cv3",
+   "opcao": "c",
+   "campo": "feedback",
+   "antes": "Foi você. Resolva e siga em frente.",
+   "depois": "Foi você quem sujou: limpe e siga em frente, sem precisar levar isso ao grupo.",
+   "estado": "aplicar"
+  }
+ ],
+ "tamanhoDasOpcoes": {
+  "antes": [
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.72,
+    "alerta": true,
+    "tamanhos": {
+     "a": 31,
+     "b*": 68,
+     "c": 48
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.35,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 73,
+     "b": 41,
+     "c": 67
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a": 45,
+     "b*": 51,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.52,
+    "alerta": true,
+    "tamanhos": {
+     "a": 32,
+     "b": 55,
+     "c*": 66
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.74,
+    "alerta": true,
+    "tamanhos": {
+     "a*": 80,
+     "b": 39,
+     "c": 53
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.45,
+    "alerta": false,
+    "tamanhos": {
+     "a": 35,
+     "b*": 58,
+     "c": 45
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.07,
+    "alerta": true,
+    "tamanhos": {
+     "a*": 63,
+     "b": 44,
+     "c": 17
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.97,
+    "alerta": true,
+    "tamanhos": {
+     "a": 27,
+     "b*": 66,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.17,
+    "alerta": true,
+    "tamanhos": {
+     "a": 40,
+     "b": 31,
+     "c*": 77
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.09,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 65,
+     "b": 59,
+     "c": 60
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.44,
+    "alerta": false,
+    "tamanhos": {
+     "a": 31,
+     "b*": 65,
+     "c": 59
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 4.06,
+    "alerta": true,
+    "tamanhos": {
+     "a": 25,
+     "b*": 134,
+     "c": 41
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.69,
+    "alerta": true,
+    "tamanhos": {
+     "a": 37,
+     "b": 34,
+     "c*": 60
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 3.29,
+    "alerta": true,
+    "tamanhos": {
+     "a*": 79,
+     "b": 32,
+     "c": 16
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.29,
+    "alerta": true,
+    "tamanhos": {
+     "a": 43,
+     "b*": 79,
+     "c": 26
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 4.11,
+    "alerta": true,
+    "tamanhos": {
+     "a": 22,
+     "b": 34,
+     "c*": 115
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.05,
+    "alerta": true,
+    "tamanhos": {
+     "a": 50,
+     "b*": 85,
+     "c": 33
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.6,
+    "alerta": true,
+    "tamanhos": {
+     "a*": 73,
+     "b": 42,
+     "c": 49
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.7,
+    "alerta": true,
+    "tamanhos": {
+     "a": 34,
+     "b*": 67,
+     "c": 45
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.38,
+    "alerta": true,
+    "tamanhos": {
+     "a": 25,
+     "b": 28,
+     "c*": 63
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.26,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 48,
+     "b": 30,
+     "c": 46
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.35,
+    "alerta": false,
+    "tamanhos": {
+     "a": 34,
+     "b*": 50,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.26,
+    "alerta": false,
+    "tamanhos": {
+     "a": 37,
+     "b*": 48,
+     "c": 39
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 2.82,
+    "alerta": true,
+    "tamanhos": {
+     "a*": 107,
+     "b": 31,
+     "c": 45
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.28,
+    "alerta": false,
+    "tamanhos": {
+     "a": 52,
+     "b*": 70,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.23,
+    "alerta": false,
+    "tamanhos": {
+     "a": 45,
+     "b": 66,
+     "c*": 68
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.29,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 84,
+     "b": 70,
+     "c": 60
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.22,
+    "alerta": false,
+    "tamanhos": {
+     "a": 58,
+     "b*": 64,
+     "c": 47
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 73,
+     "b": 67,
+     "c*": 73
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.06,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 71,
+     "b": 77,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 69,
+     "b": 62,
+     "c*": 68
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.88,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 52,
+     "b": 55,
+     "c": 63
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc3",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 42,
+     "b*": 55,
+     "c": 64
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.02,
+    "alerta": false,
+    "tamanhos": {
+     "a": 59,
+     "b": 61,
+     "c*": 61
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.95,
+    "alerta": false,
+    "tamanhos": {
+     "a": 34,
+     "b*": 46,
+     "c": 63
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 62,
+     "b": 64,
+     "c": 39
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.12,
+    "alerta": false,
+    "tamanhos": {
+     "a": 52,
+     "b*": 61,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.11,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 73,
+     "b": 52,
+     "c": 80
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au3",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.91,
+    "alerta": false,
+    "tamanhos": {
+     "a": 57,
+     "b": 71,
+     "c*": 58
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.85,
+    "alerta": false,
+    "tamanhos": {
+     "a": 69,
+     "b*": 59,
+     "c": 70
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.96,
+    "alerta": false,
+    "tamanhos": {
+     "a": 57,
+     "b": 77,
+     "c*": 64
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.15,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 64,
+     "b": 71,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.15,
+    "alerta": false,
+    "tamanhos": {
+     "a": 50,
+     "b": 46,
+     "c*": 55
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.16,
+    "alerta": false,
+    "tamanhos": {
+     "a": 48,
+     "b*": 58,
+     "c": 52
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.28,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 50,
+     "b": 30,
+     "c": 48
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a": 33,
+     "b": 50,
+     "c*": 50
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.13,
+    "alerta": false,
+    "tamanhos": {
+     "a": 68,
+     "b*": 66,
+     "c": 49
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.43,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 66,
+     "b": 40,
+     "c": 52
+    }
+   }
+  ],
+  "depoisDasTrocas": [
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.97,
+    "alerta": false,
+    "tamanhos": {
+     "a": 61,
+     "b*": 53,
+     "c": 48
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.35,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 73,
+     "b": 41,
+     "c": 67
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a": 45,
+     "b*": 51,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.96,
+    "alerta": false,
+    "tamanhos": {
+     "a": 58,
+     "b": 55,
+     "c*": 54
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.1,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 64,
+     "b": 63,
+     "c": 53
+    }
+   },
+   {
+    "trilha": "primeiro-emprego",
+    "situacao": "pe6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.45,
+    "alerta": false,
+    "tamanhos": {
+     "a": 35,
+     "b*": 58,
+     "c": 45
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.99,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 53,
+     "b": 54,
+     "c": 53
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1,
+    "alerta": false,
+    "tamanhos": {
+     "a": 60,
+     "b*": 56,
+     "c": 52
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.17,
+    "alerta": false,
+    "tamanhos": {
+     "a": 61,
+     "b": 52,
+     "c*": 66
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.09,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 65,
+     "b": 59,
+     "c": 60
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.44,
+    "alerta": false,
+    "tamanhos": {
+     "a": 31,
+     "b*": 65,
+     "c": 59
+    }
+   },
+   {
+    "trilha": "rotina-e-combinados",
+    "situacao": "rc6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 4.06,
+    "alerta": true,
+    "tamanhos": {
+     "a": 25,
+     "b*": 134,
+     "c": 41
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.02,
+    "alerta": false,
+    "tamanhos": {
+     "a": 54,
+     "b": 34,
+     "c*": 45
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.01,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 54,
+     "b": 54,
+     "c": 53
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.12,
+    "alerta": false,
+    "tamanhos": {
+     "a": 53,
+     "b*": 58,
+     "c": 51
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.42,
+    "alerta": false,
+    "tamanhos": {
+     "a": 47,
+     "b": 56,
+     "c*": 73
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.16,
+    "alerta": false,
+    "tamanhos": {
+     "a": 50,
+     "b*": 61,
+     "c": 55
+    }
+   },
+   {
+    "trilha": "imagem-e-postura",
+    "situacao": "ip6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.12,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 61,
+     "b": 60,
+     "c": 49
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.05,
+    "alerta": false,
+    "tamanhos": {
+     "a": 54,
+     "b*": 52,
+     "c": 45
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.02,
+    "alerta": false,
+    "tamanhos": {
+     "a": 56,
+     "b": 52,
+     "c*": 55
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.26,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 48,
+     "b": 30,
+     "c": 46
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.35,
+    "alerta": false,
+    "tamanhos": {
+     "a": 34,
+     "b*": 50,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv5",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.26,
+    "alerta": false,
+    "tamanhos": {
+     "a": 37,
+     "b*": 48,
+     "c": 39
+    }
+   },
+   {
+    "trilha": "convivencia",
+    "situacao": "cv6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.26,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 76,
+     "b": 59,
+     "c": 62
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.28,
+    "alerta": false,
+    "tamanhos": {
+     "a": 52,
+     "b*": 70,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.23,
+    "alerta": false,
+    "tamanhos": {
+     "a": 45,
+     "b": 66,
+     "c*": 68
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.29,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 84,
+     "b": 70,
+     "c": 60
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd4",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.22,
+    "alerta": false,
+    "tamanhos": {
+     "a": 58,
+     "b*": 64,
+     "c": 47
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 73,
+     "b": 67,
+     "c*": 73
+    }
+   },
+   {
+    "trilha": "respeito-e-dialogo",
+    "situacao": "rd6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.06,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 71,
+     "b": 77,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc1",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 69,
+     "b": 62,
+     "c*": 68
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.88,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 52,
+     "b": 55,
+     "c": 63
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc3",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.04,
+    "alerta": false,
+    "tamanhos": {
+     "a": 42,
+     "b*": 55,
+     "c": 64
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.02,
+    "alerta": false,
+    "tamanhos": {
+     "a": 59,
+     "b": 61,
+     "c*": 61
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.95,
+    "alerta": false,
+    "tamanhos": {
+     "a": 34,
+     "b*": 46,
+     "c": 63
+    }
+   },
+   {
+    "trilha": "tecnologia-com-criterio",
+    "situacao": "tc6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 62,
+     "b": 64,
+     "c": 39
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.12,
+    "alerta": false,
+    "tamanhos": {
+     "a": 52,
+     "b*": 61,
+     "c": 57
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au2",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.11,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 73,
+     "b": 52,
+     "c": 80
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au3",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.91,
+    "alerta": false,
+    "tamanhos": {
+     "a": 57,
+     "b": 71,
+     "c*": 58
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.85,
+    "alerta": false,
+    "tamanhos": {
+     "a": 69,
+     "b*": 59,
+     "c": 70
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 0.96,
+    "alerta": false,
+    "tamanhos": {
+     "a": 57,
+     "b": 77,
+     "c*": 64
+    }
+   },
+   {
+    "trilha": "autonomia-no-trabalho",
+    "situacao": "au6",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.15,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 64,
+     "b": 71,
+     "c": 40
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr1",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.15,
+    "alerta": false,
+    "tamanhos": {
+     "a": 50,
+     "b": 46,
+     "c*": 55
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr2",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.16,
+    "alerta": false,
+    "tamanhos": {
+     "a": 48,
+     "b*": 58,
+     "c": 52
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr3",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.28,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 50,
+     "b": 30,
+     "c": 48
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr4",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.2,
+    "alerta": false,
+    "tamanhos": {
+     "a": 33,
+     "b": 50,
+     "c*": 50
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr5",
+    "corretaEhAMaisLonga": false,
+    "corretaSobreMediaDasOutras": 1.13,
+    "alerta": false,
+    "tamanhos": {
+     "a": 68,
+     "b*": 66,
+     "c": 49
+    }
+   },
+   {
+    "trilha": "pensar-e-resolver",
+    "situacao": "pr6",
+    "corretaEhAMaisLonga": true,
+    "corretaSobreMediaDasOutras": 1.43,
+    "alerta": false,
+    "tamanhos": {
+     "a*": 66,
+     "b": 40,
+     "c": 52
+    }
+   }
+  ]
+ }
+}

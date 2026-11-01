@@ -1,0 +1,883 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.136Z",
+ "curso": {
+  "codigo": "C12",
+  "id": "crs_5vccpfypr6fmxojb",
+  "titulo": "Recebi uma correção. E agora?"
+ },
+ "status": "ok",
+ "revisaoAntes": 96,
+ "revisaoVistaPelaProposta": 94,
+ "versaoPublicadaComparada": 15,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: peça uma correção concreta.",
+   "depois": "Hoje você monta a pergunta que transforma “mais postura” em algo que dá para fazer."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Uma orientação não define quem você é. Ela aponta um fato."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v02/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: combine sua próxima ação.",
+   "depois": "Antes de sair, você vai ter o seu combinado: uma ação pequena e o momento de conferir se funcionou."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nCombine uma mudança que possa praticar e revisar.\nBusque apoio diante de insulto ou exposição.",
+   "depois": "Combine uma mudança que possa praticar e revisar. Busque apoio diante de insulto ou exposição. Na próxima aula, o Vitor volta: ele mudou o que combinou, e ninguém disse se funcionou."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Combine a mudança. Combine também quando conferir."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Entenda o comportamento apontado, combine um ajuste e reconheça quando pedir apoio. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir um exemplo de correção, combinar uma mudança observável e buscar apoio diante de desrespeito.",
+   "depois": "Entenda o comportamento apontado, combine um ajuste, confira se ele funcionou e reconheça quando pedir apoio. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir um exemplo de correção, combinar uma mudança observável, verificar o efeito dela e buscar apoio diante de desrespeito."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Transformar um comentário vago em algo observável, verificar com uma pergunta se o ajuste funcionou (silêncio não é confirmação) e separar fato, ajuste e forma da conversa."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": "O Vitor foi corrigido por não responder uma mensagem quando estava sem acesso ao celular. Quando ele explica isso?"
+   },
+   "depois": {
+    "teaser": "O Vitor foi corrigido por não responder uma mensagem quando estava sem acesso ao celular. Quando ele explica isso?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v02"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Peça uma correção concreta\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Alana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Alana, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Vitor, quando você explica esse contexto?\" ainda não está na fala do vídeo \"No lugar do Vitor, quando você explica esse contexto?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Combine sua próxima ação\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Alana, que combinado você pode fazer?\" ainda não está na fala do vídeo \"No lugar da Alana, que combinado você pode fazer?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Peça uma correção concreta\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Alana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Alana, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Vitor, quando você explica esse contexto?\" ainda não está na fala do vídeo \"No lugar do Vitor, quando você explica esse contexto?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Combine sua próxima ação\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Alana, que combinado você pode fazer?\" ainda não está na fala do vídeo \"No lugar da Alana, que combinado você pode fazer?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~a"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Missão, quando ninguém corrige na semana: (a) a pessoa pede feedback (“tem algo que eu podia fazer diferente em…?”) e segue os passos · (b) só “Vou fazer depois” e esperar. Recomendo (a): quem não trabalha recebe meno",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Explicação, frase sobre ofensa: (a) manter uma frase (“ofensa ou exposição é outro assunto, e pode exigir apoio”) · (b) cortar, porque o v03 já trata de apoio. Recomendo (a): uma frase, porque a separação fato / ajust",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Opção média (A) da decisão: (a) “mudo a fonte e a cor para mostrar esforço” (do pacote; os revisores acharam plausível para a idade) · (b) “pergunto se a pessoa gostou da lista no geral” (vaga, não volta ao ponto). Re",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Frase de fechamento do fim_aula_01: (a) “Uma orientação não define quem você é. Ela aponta um fato.” · (b) deixar null. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 13,
+  "palavrasPlanosAulaNova": 243,
+  "palavrasReacoesNovas": 62,
+  "palavrasAberturasTrocadas": 34,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Mudou. Funcionou?",
+  "description": "Você acompanha uma correção vaga virar ação, aprende a conferir se a mudança funcionou e faz isso na próxima correção que receber.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v04",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "A revisão que não diz nada",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Vago · Observável · Conferido"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já sabe pedir um exemplo e combinar uma mudança. Nesta última aula, o passo que quase ninguém dá: conferir se funcionou. No fim, você usa isso na próxima correção que receber. De um professor, de alguém de casa, de um colega. O Vitor ouviu: você precisa ter mais atenção. Perguntou: em qual parte? Resposta: duas datas estavam diferentes do pedido. Agora tinha o que fazer: comparar as datas com a fonte antes de enviar. Ele combinou isso e fez, nas duas listas seguintes. Na revisão, só ouve: continue melhorando. Nada sobre as datas. O Vitor não sabe se resolveu. No lugar do Vitor, como você descobre se funcionou?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já sabe pedir um exemplo e combinar uma mudança. Nesta última aula, o passo que quase ninguém dá: conferir se funcionou.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você usa isso na próxima correção que receber. De um professor, de alguém de casa, de um colega.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "O Vitor ouviu: você precisa ter mais atenção. Perguntou: em qual parte? Resposta: duas datas estavam diferentes do pedido.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Agora tinha o que fazer: comparar as datas com a fonte antes de enviar. Ele combinou isso e fez, nas duas listas seguintes.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "De vago a observável",
+         "bullets": [
+          "“Mais atenção”",
+          "→ “em qual parte?”",
+          "→ “duas datas erradas”",
+          "→ **conferir as datas antes de enviar**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "s4",
+        "line": "Na revisão, só ouve: continue melhorando. Nada sobre as datas. O Vitor não sabe se resolveu.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar do Vitor, como você descobre se funcionou?",
+        "cameraId": "cam_helena8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar do Vitor, como você descobre se funcionou?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O Vitor combinou conferir as datas antes de enviar e fez isso nas duas listas seguintes. Na revisão, a pessoa diz “continue melhorando” e não comenta as datas. No lugar do Vitor, como você descobre se funcionou?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Mudo também a fonte e a cor da lista, para mostrar que estou me esforçando.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Essas mudanças não verificam o ponto que foi combinado, e podem até distrair dele. Faça assim: pergunte direto sobre as datas e peça um exemplo do que ainda falta."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Esforço aparece, mas não responde à pergunta. A correção era sobre datas. Fonte e cor não mostram se elas estão certas agora."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Pergunto se a conferência das datas resolveu e se tem um exemplo do que ainda falta.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A conversa volta ao comportamento específico, e a resposta vira informação. Faça assim: “a conferência das datas resolveu? Tem algum exemplo do que ainda falta?”"
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você voltou ao ponto acompanhado. Agora a pessoa precisa dizer sim ou não, e você sai sabendo onde está."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Considero resolvido: se ninguém reclamou das datas de novo, deve estar bom.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Silêncio não é confirmação. Sem perguntar, você não sabe se o ajuste funcionou ou se só ninguém olhou. Faça assim: pergunte pelo ponto combinado, numa frase."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Silêncio não é confirmação. Pode ser que resolveu. Pode ser que ninguém olhou. Sem perguntar, você não sabe qual dos dois."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar do Vitor, como você descobre se funcionou?"
+     }
+    },
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Mesmo arquivo, mesmo ponto",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O fato · O ajuste · A forma"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Dá para reconhecer um ponto sem concordar com tudo. Se o fato for outro, mostre: aqui a data está assim; é o mesmo arquivo? Isso permite conferir, sem briga. Fato, ajuste e forma da conversa são três assuntos. Separar ajuda a decidir qual resolver. Ofensa ou exposição é outro assunto, e pode exigir apoio. Agora, a próxima correção que você receber. Duas perguntas: em qual parte? E, depois de mudar: resolveu?",
+     "motionPrompt": "leans in slightly, curious",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Dá para reconhecer um ponto sem concordar com tudo. Se o fato for outro, mostre: aqui a data está assim; é o mesmo arquivo?",
+        "cameraId": "cam_helena8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s2",
+        "line": "Isso permite conferir, sem briga. Fato, ajuste e forma da conversa são três assuntos. Separar ajuda a decidir qual resolver.",
+        "cameraId": "cam_helena8_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Três assuntos",
+         "bullets": [
+          "**O fato**: o que aconteceu",
+          "**O ajuste**: o que muda",
+          "**A forma**: como foi dito"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "s3",
+        "line": "Ofensa ou exposição é outro assunto, e pode exigir apoio.",
+        "cameraId": "cam_helena8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora, a próxima correção que você receber. Duas perguntas: em qual parte? E, depois de mudar: resolveu?",
+        "cameraId": "cam_helena8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Três assuntos\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Na próxima correção, pergunte “em qual parte?”",
+     "type": "mission",
+     "intro": "O Vitor transformou “mais atenção” em datas conferidas, e depois perguntou se resolveu. Agora é com a próxima correção que chegar para você.",
+     "action": "1. Na próxima vez que alguém te corrigir (professor, alguém da família, colega, quem orienta você), respire e pergunte: “em qual parte?” ou “me dá um exemplo?”.\n2. Combine uma coisa pequena para fazer diferente. Uma só.\n3. Faça.\n4. Depois, pergunte: “aquilo resolveu?”. Não espere o silêncio virar resposta.\n5. Volte aqui, marque “Já experimentei” e conte o que combinou e o que ouviu de volta.",
+     "alternative": "Ninguém te corrigiu nesta semana? Peça: “tem alguma coisa que eu podia fazer diferente em…?” para alguém que viu você fazer algo (um trabalho, um treino, uma tarefa de casa). E aí siga os passos. Se a correção vier com ofensa, o passo é outro: procure uma pessoa de confiança.",
+     "example": "Correção: “mais atenção”. Perguntei: em qual parte? Eram duas datas diferentes do pedido. Combinei: conferir as datas com a fonte antes de enviar. Fiz em duas listas. Perguntei se resolveu: sim, e pediram para olhar também os nomes."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Correção é informação, não rótulo",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Em qual parte? · O que muda · Resolveu?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Uma correção pode causar desconforto, principalmente quando você está começando. Isso não impede que ela produza uma informação útil. A Alana saiu de mais postura para escutar até o fim. O Vitor, de mais atenção para conferir as datas. E perguntaram: resolveu? Uma correção não é uma definição sobre você. É uma informação sobre algo que você ainda está aprendendo. Até a próxima.",
+     "motionPrompt": "nods slowly, warm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Uma correção pode causar desconforto, principalmente quando você está começando. Isso não impede que ela produza uma informação útil.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d2",
+        "line": "A Alana saiu de mais postura para escutar até o fim. O Vitor, de mais atenção para conferir as datas. E perguntaram: resolveu?",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "d3",
+        "line": "Uma correção não é uma definição sobre você. É uma informação sobre algo que você ainda está aprendendo. Até a próxima.",
+        "cameraId": "cam_helena8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "De vago a observável: “em qual parte?”"
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Depois de mudar: “resolveu?”. Silêncio não é confirmação."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Fato, ajuste e forma são três assuntos."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha próxima correção",
+       "kind": "checklist",
+       "items": [
+        "perguntei “em qual parte?”",
+        "combinei uma coisa pequena",
+        "fiz",
+        "perguntei se resolveu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m03",
+       "emptyText": "Você deixou para depois. Quando receber uma correção, volte e conte o que combinou."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "De vago a observável: “em qual parte?”\nDepois de mudar: “resolveu?”. Silêncio não é confirmação.\nFato, ajuste e forma são três assuntos.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Silêncio não é confirmação. Pergunte: resolveu?"
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v04",
+     "from": "v04",
+     "to": "q04"
+    },
+    {
+     "id": "e_q04_a",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q04_b",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q04_c",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "m03"
+    },
+    {
+     "id": "e_m03",
+     "from": "m03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v04": {
+      "x": 0,
+      "y": 0
+     },
+     "q04": {
+      "x": 0,
+      "y": 180
+     },
+     "v05": {
+      "x": 0,
+      "y": 360
+     },
+     "m03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 97,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Peça uma correção concreta\" está sem texto",
+    "nodeId": "m01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Alana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Alana, o que você faria?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Vitor, quando você explica esse contexto?\" ainda não está na fala do vídeo \"No lugar do Vitor, quando você explica esse contexto?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Combine sua próxima ação\" está sem texto",
+    "nodeId": "m02",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Alana, que combinado você pode fazer?\" ainda não está na fala do vídeo \"No lugar da Alana, que combinado você pode fazer?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

@@ -1,0 +1,863 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.055Z",
+ "curso": {
+  "codigo": "C08",
+  "id": "crs_8g0csi2hflfztfge",
+  "titulo": "O espaço também é do outro"
+ },
+ "status": "ok",
+ "revisaoAntes": 95,
+ "revisaoVistaPelaProposta": 92,
+ "versaoPublicadaComparada": 13,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: combine o cuidado com o espaço.",
+   "depois": "Daqui a pouco, você monta o seu combinado: o que faz depois de usar um espaço, e a quem pergunta."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Área comum não quer dizer que tudo ali é de todo mundo."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v02/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: avise sobre um problema no espaço.",
+   "depois": "Hoje você sai com um aviso pronto: o que percebeu, onde, e o que precisa confirmar antes de usar."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nComunique uma condição inadequada antes de usar.\nNão improvise reparos sem orientação.",
+   "depois": "Comunique uma condição inadequada antes de usar. Não improvise reparos sem orientação. Na próxima aula, o problema não tem causa clara: você aprende a avisar com o que viu, e leva isso para um espaço seu."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Avisar não é reclamar. É dar a quem pode agir o que ela precisa para agir."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Use os espaços coletivos considerando quem vem depois e comunique problemas com cuidado. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue organizar o espaço que utilizou e comunicar uma condição que não consegue resolver.",
+   "depois": "Use os espaços coletivos considerando quem vem depois, comunique problemas com cuidado e avise um problema sem causa clara com informação que permite agir. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue organizar o espaço que utilizou, comunicar uma condição que não consegue resolver e acompanhar o retorno do aviso."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Avisar um problema sem causa conhecida com local, fato observado e apoio necessário, sem assumir o reparo, e acompanhar o retorno."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": "A Sara achou na geladeira da copa um alimento sem nome e sem aviso de uso coletivo. O que você faria?"
+   },
+   "depois": {
+    "teaser": "A Sara achou na geladeira da copa um alimento sem nome e sem aviso de uso coletivo. O que você faria?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": "A Sara percebeu uma parte exposta no cabo de um equipamento da mesa nova. O que você faria no lugar dela?"
+   },
+   "depois": {
+    "teaser": "A Sara percebeu uma parte exposta no cabo de um equipamento da mesa nova. O que você faria no lugar dela?"
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v02"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Combine o cuidado com o espaço\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Luan, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Luan, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Avise sobre um problema no espaço\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Combine o cuidado com o espaço\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Luan, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Luan, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Avise sobre um problema no espaço\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~a",
+  "aula_01/q01~b",
+  "aula_01/q02~b"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Opção fraca (C) da decisão: (a) “seco atrás da geladeira e depois aviso” (plausível para quem quer ajudar; é o risco de segurança que a aula ensina) · (b) “aviso que a geladeira está vazando e peço para trocarem” (inv",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Cena: (a) geladeira ligada (concreta, dá para imaginar) · (b) “um equipamento ligado” genérico, como no pacote. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Missão sem problema encontrado: (a) a pessoa conclui contando só o que ajeitou e quem usa depois (como está) · (b) exigir um aviso real para marcar “Já experimentei”. Recomendo (a): avisar depende de existir um proble",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Frase de fechamento do fim_aula_01: (a) “Área comum não quer dizer que tudo ali é de todo mundo.” · (b) deixar null como hoje. Recomendo (a): custo zero.",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 11,
+  "palavrasPlanosAulaNova": 217,
+  "palavrasReacoesNovas": 59,
+  "palavrasAberturasTrocadas": 39,
+  "palavrasTotal": 315,
+  "segundos": 120.2,
+  "usdEstimado": 2.2,
+  "nos": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Avise com o que você viu, não com o que você acha",
+  "description": "Você aprende a avisar um problema sem causa clara em três partes e faz isso num espaço que divide de verdade.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v04",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Água na copa",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Onde · O que você viu · Qual apoio"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já sabe deixar o espaço pronto e avisar um defeito. Nesta última aula, ninguém sabe a causa do problema. No fim, você faz isso de verdade, num lugar que divide com outras pessoas. Hoje ou amanhã. O Luan chega na copa: água no chão, perto da porta, do lado da geladeira ligada. Ele não sabe de onde vem. Alguém pode escorregar. E secar atrás de uma geladeira ligada não é com ele. Quem recebe o aviso precisa de três coisas. No lugar do Luan, que aviso você manda?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já sabe deixar o espaço pronto e avisar um defeito. Nesta última aula, ninguém sabe a causa do problema.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você faz isso de verdade, num lugar que divide com outras pessoas. Hoje ou amanhã.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "O Luan chega na copa: água no chão, perto da porta, do lado da geladeira ligada. Ele não sabe de onde vem.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Alguém pode escorregar. E secar atrás de uma geladeira ligada não é com ele. Quem recebe o aviso precisa de três coisas.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Um aviso que permite agir",
+         "bullets": [
+          "**Onde** está",
+          "**O que** você viu",
+          "**Qual apoio** precisa"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar do Luan, que aviso você manda?",
+        "cameraId": "cam_aline6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar do Luan, que aviso você manda?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Água no chão perto da porta da copa, ao lado da geladeira ligada. O Luan não sabe de onde vem. No lugar do Luan, que aviso você manda?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Tem água no chão perto da porta da copa, do lado da geladeira. Não sei de onde vem. Quem chamo?”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Quem recebe sabe onde ir, o que vai encontrar e que a causa ainda não foi descoberta. Faça assim: local, o que viu, quem chama. Depois, acompanhe o retorno."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Onde, o que viu e quem chama. Ninguém precisa adivinhar, e você não inventou a causa. Aviso assim vira ação."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Coloco um aviso de chão molhado e volto para a minha mesa.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você protege quem passa, e isso já ajuda. Mas ninguém foi chamado para ver a origem, e a água perto da geladeira continua lá. Faça assim: coloque o aviso e chame quem pode olhar."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Proteger quem passa conta. Mas a água continua lá, perto da geladeira ligada, e ninguém foi chamado para olhar."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Seco atrás da geladeira para ninguém escorregar e depois aviso.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Sem saber de onde vem a água, mexer perto de um equipamento ligado pode machucar você. Faça assim: afaste as pessoas, avise quem cuida do local e espere a orientação."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Dá vontade de resolver. Mas água atrás de um equipamento ligado pode machucar você. Seu papel é avisar, não consertar."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar do Luan, que aviso você manda?"
+     }
+    },
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Três coisas e o retorno",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Onde · O que viu · Qual apoio · Retorno"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Guarde três coisas: onde está, o que você viu, qual apoio precisa. Se não sabe a causa, diga que não sabe. Depois do aviso, o retorno. Resolveu? Avise quem acompanhava. Ainda não? Não diga que está seguro só porque parou de pingar. Agora, num lugar de verdade: a cozinha de casa, a sala de aula, a quadra. Deixe pronto e, se achar um problema, avise assim.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Guarde três coisas: onde está, o que você viu, qual apoio precisa. Se não sabe a causa, diga que não sabe.",
+        "cameraId": "cam_aline6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Depois do aviso, o retorno. Resolveu? Avise quem acompanhava. Ainda não? Não diga que está seguro só porque parou de pingar.",
+        "cameraId": "cam_aline6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Depois do aviso",
+         "bullets": [
+          "**Resolveu**: avise quem acompanhava",
+          "**Não resolveu**: não diga que está seguro"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora, num lugar de verdade: a cozinha de casa, a sala de aula, a quadra. Deixe pronto e, se achar um problema, avise assim.",
+        "cameraId": "cam_aline6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Depois do aviso\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Deixe pronto e avise o que não é seu de consertar",
+     "type": "mission",
+     "intro": "O Luan avisou onde, o que viu e quem chamar. Agora é num espaço que você divide de verdade: copa, cozinha de casa, sala de aula, quadra, banheiro do curso.",
+     "action": "1. Escolha um espaço que você divide e vai usar hoje ou amanhã.\n2. Ao sair, olhe de volta: ficou pronto para quem vem depois? Ajeite o que for seu.\n3. Se encontrar algo que não é seu de consertar (vazamento, tomada, equipamento estranho, cheiro de queimado), mande o aviso em três partes: onde, o que você viu, quem precisa olhar. Sem inventar a causa.\n4. Se chegar retorno, repare: resolveu ou ficou pendente?\n5. Volte aqui, marque “Já experimentei” e conte o que percebeu.",
+     "alternative": "Não trabalha? O espaço pode ser a cozinha de casa, a sala de aula, o laboratório do curso ou a quadra. Se não encontrar problema nenhum, ótimo: conte só a primeira parte, o que você ajeitou antes de sair e quem usa esse espaço depois de você.",
+     "example": "Tem água no chão perto da porta da copa, do lado da geladeira. Não sei de onde vem. Quem eu chamo para ver? Enquanto isso, avisei o pessoal para não passar por ali."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Quem usa esse espaço depois de você?",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Local · Fato · Pedido"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Quem usa esse espaço depois de você? Começou com uma caneca e terminou com água perto da geladeira. A pergunta é a mesma. Deixar pronto depende só de você. Avisar é a parte que você não resolve sozinho, nem precisa. Local, fato e pedido. Cabem numa mensagem e tiram você do papel de consertar o que não é seu. Até a próxima.",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Quem usa esse espaço depois de você? Começou com uma caneca e terminou com água perto da geladeira. A pergunta é a mesma.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "d2",
+        "line": "Deixar pronto depende só de você. Avisar é a parte que você não resolve sozinho, nem precisa.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d3",
+        "line": "Local, fato e pedido. Cabem numa mensagem e tiram você do papel de consertar o que não é seu. Até a próxima.",
+        "cameraId": "cam_aline6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Deixe pronto para quem vem depois."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Aviso útil: onde, o que você viu, qual apoio."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Depois do aviso: resolveu, avise; não resolveu, não diga que está seguro."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu espaço desta semana",
+       "kind": "checklist",
+       "items": [
+        "escolhi um espaço que divido",
+        "deixei pronto antes de sair",
+        "avisei um problema com onde, o que vi e quem chamar (se houve)",
+        "acompanhei o retorno"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m03",
+       "emptyText": "Você deixou para depois. Quando passar pelo espaço, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Deixe pronto para quem vem depois.\nAviso útil: onde, o que você viu, qual apoio.\nDepois do aviso: resolveu, avise; não resolveu, não diga que está seguro.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Local, fato e pedido. O resto é de quem sabe consertar."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v04",
+     "from": "v04",
+     "to": "q04"
+    },
+    {
+     "id": "e_q04_a",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q04_b",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q04_c",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "m03"
+    },
+    {
+     "id": "e_m03",
+     "from": "m03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v04": {
+      "x": 0,
+      "y": 0
+     },
+     "q04": {
+      "x": 0,
+      "y": 180
+     },
+     "v05": {
+      "x": 0,
+      "y": 360
+     },
+     "m03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 96,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Combine o cuidado com o espaço\" está sem texto",
+    "nodeId": "m01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Luan, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Luan, o que você faria?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Avise sobre um problema no espaço\" está sem texto",
+    "nodeId": "m02",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Sara, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Sara, o que você faria?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

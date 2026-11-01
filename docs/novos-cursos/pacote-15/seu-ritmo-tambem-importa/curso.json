@@ -1,0 +1,322 @@
+{
+  "schema_version": "dna-editorial-1.0",
+  "schema_notice": "Contrato editorial intermediário. Não é o schema nativo comprovado do motor. Adaptar após inspeção do projeto.",
+  "id": "dna-proposta-seu-ritmo-tambem-importa",
+  "slug_proposto": "seu-ritmo-tambem-importa",
+  "title": "Seu ritmo também importa",
+  "status": "draft",
+  "locale": "pt-BR",
+  "track_proposed": "Autonomia no trabalho",
+  "objective": "Reconhecer incompatibilidade entre demandas e capacidade e pedir ajuste.",
+  "audience": "Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+  "prerequisites": "Leitura básica; não exige experiência profissional.",
+  "instructor_proposed": "Júlia",
+  "editorial_review": "Conteúdo de organização; não é diagnóstico ou tratamento de saúde.",
+  "duration_seconds": null,
+  "duration_status": "awaiting_media_measurement",
+  "assessment": {
+    "purpose": "formative",
+    "passing_score": null,
+    "certificate_claim": null,
+    "retry_allowed": true
+  },
+  "lessons": [
+    {
+      "id": "a01",
+      "title": "Quando as tarefas deixam de caber",
+      "objective": "Organize três demandas fictícias por prazo, esforço estimado e dependência.",
+      "entry_node": "a01-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a01-abertura",
+          "type": "video",
+          "title": "Quando as tarefas deixam de caber",
+          "speech": "Ter dificuldade para dar conta de tudo não prova falta de esforço. Às vezes as demandas ultrapassam o tempo ou os recursos disponíveis. Colocar isso no papel ajuda a preparar uma conversa concreta.",
+          "onscreen_text": "Quando as tarefas deixam de caber",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-situacao"
+        },
+        {
+          "id": "a01-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Chegaram três tarefas novas e você já tem entregas combinadas. Você percebe que não conseguirá cumprir todos os prazos.",
+          "question": "Qual é uma primeira ação útil?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Esconder a dificuldade e esperar.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Listar as demandas, os prazos e o que está bloqueado para conversar sobre ajustes.",
+              "recommended": true,
+              "feedback_node": "a01-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Concluir que não serve para trabalhar.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a01-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "O conflito permanece invisível até virar atraso.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você transforma uma sensação geral em informações que podem orientar uma decisão.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Uma situação de sobrecarga não define sua capacidade ou seu valor.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Separe o que precisa ser feito, o que depende de outra pessoa e o tempo disponível. Estimativas podem mudar; apresente-as como estimativas. Se o mal-estar persistir ou afetar sua rotina, busque apoio de confiança e atendimento adequado quando necessário.",
+          "onscreen_text": "Organize três demandas fictícias por prazo, esforço estimado e dependência.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-pratica"
+        },
+        {
+          "id": "a01-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Organize três demandas fictícias por prazo, esforço estimado e dependência.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "A: hoje, cerca de quarenta minutos, sem bloqueio. B: amanhã, uma hora, depende de autorização. C: sexta, trinta minutos, material disponível.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a01-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a01-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a01-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Na próxima aula, vamos avançar para outra situação.",
+          "next": "a02-abertura",
+          "next_label": "Ir para a aula 2"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "title": "Como pedir um ajuste",
+      "objective": "Prepare um pedido de ajuste com situação, impacto e alternativa.",
+      "entry_node": "a02-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a02-abertura",
+          "type": "video",
+          "title": "Como pedir um ajuste",
+          "speech": "Pedir um ajuste é explicar a situação e discutir possibilidades. Pode ser mudar a ordem, dividir uma tarefa, receber orientação ou rever o prazo. Não precisa contar detalhes pessoais para justificar cada pedido.",
+          "onscreen_text": "Como pedir um ajuste",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-situacao"
+        },
+        {
+          "id": "a02-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Depois de listar as tarefas, você identifica que uma depende de uma autorização ainda pendente.",
+          "question": "Qual mensagem ajuda?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Está tudo impossível.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Para concluir A preciso da autorização. Enquanto isso consigo avançar em B. Podemos rever o prazo de A e confirmar essa ordem?",
+              "recommended": true,
+              "feedback_node": "a02-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Prometo compensar trabalhando sem parar.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a02-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A mensagem mostra desconforto, mas ainda não explica qual ajuste ajudaria.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você apresenta o bloqueio, uma alternativa e um pedido específico.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "A promessa pode ampliar o desgaste e não resolve a dependência.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Confirme o que foi combinado e quando será revisto. Se a pessoa não puder decidir, pergunte quem pode ajudar. O objetivo é tornar a carga administrável, respeitando os combinados e os limites de cada função.",
+          "onscreen_text": "Prepare um pedido de ajuste com situação, impacto e alternativa.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-pratica"
+        },
+        {
+          "id": "a02-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Prepare um pedido de ajuste com situação, impacto e alternativa.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "A depende de autorização. Enquanto isso posso avançar em B. Podemos confirmar essa ordem e rever o prazo de A?",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a02-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a02-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a02-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Você concluiu as duas situações do curso. Seu roteiro fica disponível para consultar e adaptar quando precisar.",
+          "next": "curso-concluido",
+          "next_label": "Concluir curso"
+        }
+      ]
+    }
+  ],
+  "end_node": {
+    "id": "curso-concluido",
+    "type": "summary",
+    "title": "Você chegou ao final",
+    "text": "Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+    "actions": [
+      "Abrir meu roteiro",
+      "Rever situações",
+      "Voltar aos cursos"
+    ],
+    "pending_message": "Você deixou uma atividade para depois. Ela continua disponível no seu roteiro.",
+    "completion_rule": "As duas decisões devem ter uma escolha confirmada e as duas aulas devem chegar ao fechamento. Práticas podem ficar pendentes. Se houver regras vigentes diferentes, mapear sem alterar certificados ou conclusão global silenciosamente."
+  }
+}

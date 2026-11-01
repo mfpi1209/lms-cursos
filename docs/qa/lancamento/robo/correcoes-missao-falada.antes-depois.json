@@ -1,0 +1,1889 @@
+{
+ "resumo": {
+  "script": "qa-missao-falada",
+  "modo": "aplicado",
+  "geradoEm": "2026-10-31T20:56:42.534Z",
+  "total": 35,
+  "aplicar": 35,
+  "jaAplicado": 0,
+  "divergente": 0,
+  "ajusteCarregadoMudaria": [],
+  "nota": "C06 aplicado depois, em outra execução (saída única mesclada aqui)"
+ },
+ "mudancas": [
+  {
+   "curso": "C09",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "aula": "aula_02",
+   "no": "v02",
+   "plano": "missao",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Avise sobre uma publicação",
+   "depois": "pergunta q03 → atividade m02",
+   "fala": "No fim desta aula, tem uma missão para você: avise sobre uma publicação.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Agora, vamos agir quando perceber que uma publicação pode ter mostrado algo indevido. O impulso pode ser apagar e torcer para ninguém ter visto. Retirar o conteúdo pode reduzir a circulação, mas a equipe precisa saber quando existe uma possível exposição. Avise o canal indicado e explique o que publicou, onde e o que percebeu. Não compartilhe o conteúdo novamente para pedir opinião no grupo. Vamos praticar como comunicar um problema sem ampliar a divulgação. Depois de postar, a Malu viu um documento no fundo da foto. Agora, responda: o que você faria no lugar dela?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao",
+    "line": "No fim desta aula, tem uma missão para você: avise sobre uma publicação.",
+    "cameraId": "cam_enzo8_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao",
+     "palavras": 13
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 95,
+   "revisaoDepois": 96
+  },
+  {
+   "curso": "C09",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Avise sobre uma publicação",
+   "depois": "vinheta → atividade m02",
+   "fala": "Chegou a hora da missão: avise sobre uma publicação.",
+   "antes": {
+    "ids": [
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "Explique os fatos que conhece: publiquei uma imagem neste canal e percebi um documento visível. Informe quando aconteceu e se a postagem ainda está disponível. Siga a orientação para retirar, registrar ou tratar o conteúdo, sem criar novas cópias para circular entre colegas. Não afirme que ninguém viu se você não consegue saber. Depois, reveja seu checklist antes de uma nova publicação. Se o conteúdo envolver outra pessoa, deixe a orientação responsável conduzir a comunicação necessária, sem expor o assunto em público.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Chegou a hora da missão: avise sobre uma publicação.",
+    "cameraId": "cam_enzo8_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 95,
+   "revisaoDepois": 96
+  },
+  {
+   "curso": "C09",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Confirme antes de publicar",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Logo depois da pergunta, vem a sua missão: confirme antes de publicar.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "s6",
+     "chamada"
+    ],
+    "narracao": "O segredo é olhar a foto inteira. Antes de publicar, confira a orientação da organização, as pessoas na imagem e as informações visíveis. Tela, crachá, planilha e conversa ao fundo podem revelar algo que não deveria sair dali. A permissão de uma colega para aparecer não autoriza mostrar dados do trabalho. E uma ação divulgada num perfil oficial não significa que todo bastidor está liberado. Se não souber, pergunte. Você pode contar que começou uma nova etapa sem fotografar o ambiente ou identificar outras pessoas. A colega autorizou, mas há um documento interno ao fundo. Agora, responda: o que o Ícaro faz antes de postar?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Logo depois da pergunta, vem a sua missão: confirme antes de publicar.",
+    "cameraId": "cam_enzo8_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 6,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Ícaro tem a autorização da colega, mas há um documento interno ao fundo. O que ele faz antes de postar?"
+    },
+    "depois": {
+     "teaser": "O Ícaro tem a autorização da colega, mas há um documento interno ao fundo. O que ele faz antes de postar?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 95,
+   "revisaoDepois": 96
+  },
+  {
+   "curso": "C11",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "aula": "aula_02",
+   "no": "v02",
+   "plano": "missao",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Esclareça uma diferença",
+   "depois": "pergunta q03 → vídeo v03 → atividade m02",
+   "fala": "No fim desta aula, tem uma missão para você: esclareça uma diferença.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Agora, vamos apresentar orientações diferentes sem precisar escolher uma no chute. Pode acontecer de uma colega ensinar um jeito e outra pessoa indicar outro. Talvez uma delas esteja falando de uma exceção, de outro momento ou de uma atividade diferente. Mostre o que recebeu e peça a confirmação à referência responsável. Se houver uma condição que pareça insegura ou sem autorização, não avance por pressão. Um colega disse ao Miguel que ele pode usar a sala sem reserva, mas a orientação inicial era confirmar no sistema antes. Agora, responda: o que o Miguel faz?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao",
+    "line": "No fim desta aula, tem uma missão para você: esclareça uma diferença.",
+    "cameraId": "cam_renato6_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Miguel recebeu duas orientações: reservar no sistema antes ou usar a sala sem reserva. O que ele faz?"
+    },
+    "depois": {
+     "teaser": "O Miguel recebeu duas orientações: reservar no sistema antes ou usar a sala sem reserva. O que ele faz?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao",
+     "palavras": 12
+    },
+    {
+     "id": "chamada",
+     "palavras": 7
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 86,
+   "revisaoDepois": 87
+  },
+  {
+   "curso": "C11",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:s5",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Peça um exemplo",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Mais adiante, tem uma missão para você: peça um exemplo.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "Uma pergunta concreta ajuda muito. Pergunte pelo exemplo, pelo limite e por quem pode orientar: na recepção, posso usar fone enquanto organizo documentos ou preciso ouvir os chamados o tempo todo? Você pode repetir o que entendeu para confirmar. Se existir uma orientação escrita, peça onde consultar. Não ter entendido uma palavra não significa que você não consegue aprender a regra. Veja o caso do Miguel: ele recebeu uma explicação sobre como reservar a sala e acha que entendeu. Agora, responda: como ele confirma o que entendeu?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, tem uma missão para você: peça um exemplo.",
+    "cameraId": "cam_renato6_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Miguel quer confirmar se a reserva da sala precisa de aprovação antes de avisar os participantes. Como ele confirma?"
+    },
+    "depois": {
+     "teaser": "O Miguel quer confirmar se a reserva da sala precisa de aprovação antes de avisar os participantes. Como ele confirma?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 10
+    },
+    {
+     "id": "chamada",
+     "palavras": 8
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 86,
+   "revisaoDepois": 87
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_06",
+   "no": "v11",
+   "plano": "missao",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escreva sua mensagem",
+   "depois": "pergunta q11 → atividade m05 (no meio da aula) → pergunta q12",
+   "fala": "Daqui a pouco, você tem uma missão: escreva sua mensagem.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "Agora, vamos escrever uma mensagem curta para pedir uma conversa a alguém da área. Muitas vagas de estágio e primeiro emprego chegam por indicação. E indicação começa com uma conversa. O segredo é pedir algo pequeno. Em vez de ‘tem vaga aí?’, peça quinze minutos para entender como é o trabalho da pessoa. Escreva uma mensagem curta: quem você é, por que escolheu aquela pessoa e um pedido simples. Se ela não responder, tudo bem. Mande para outra pessoa e siga em frente. A Ana estudou na sua escola e trabalha num hospital. Agora, responda: qual mensagem você manda?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao",
+    "line": "Daqui a pouco, você tem uma missão: escreva sua mensagem.",
+    "cameraId": "cam_j7_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s3",
+     "palavras": 17
+    },
+    {
+     "id": "missao",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_09",
+   "no": "v16",
+   "plano": "missao",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Prepare sua apresentação",
+   "depois": "pergunta q17 → vídeo v17 → pergunta q18 → atividade m08",
+   "fala": "No fim desta aula, tem uma missão para você: prepare sua apresentação.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Agora, vamos montar sua apresentação de um minuto em três frases. ‘Fale um pouco sobre você.’ Essa costuma ser a primeira pergunta da entrevista, e muita gente se perde nela. Ou conta a vida inteira, ou responde ‘ah, não sei’. Use três frases. Primeira: o que você faz hoje. Segunda: uma experiência de que você se orgulha. Terceira: o que você busca agora, e por que essa vaga. Pronto. Em menos de um minuto, a pessoa entende quem você é. E sua resposta abre caminho para as próximas perguntas. Entrevista para Jovem Aprendiz no administrativo de uma loja. Agora, responda: qual apresentação funciona melhor?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao",
+    "line": "No fim desta aula, tem uma missão para você: prepare sua apresentação.",
+    "cameraId": "cam_j7_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_11",
+   "no": "v20",
+   "plano": "missao",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escolha seu ponto a melhorar",
+   "depois": "pergunta q21 → vídeo v21 → perguntas q22, q23 → atividade m10",
+   "fala": "No fim desta aula, tem uma missão para você: escolha seu ponto a melhorar.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Agora, vamos treinar respostas sobre ponto fraco, por que escolheu a vaga e bolsa ou salário. ‘Qual é o seu ponto fraco?’ Fuja de duas respostas: ‘não tenho ponto fraco’ e ‘sou perfeccionista demais’. Escolha algo real, que não seja essencial para a vaga, e mostre o que você está fazendo para melhorar. Por exemplo: ‘Fico nervoso para falar em público, então comecei a apresentar mais trabalhos na escola.’ Real, pequeno e com ação. Sua vez: escolha como você responderia sobre o seu ponto fraco.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao",
+    "line": "No fim desta aula, tem uma missão para você: escolha seu ponto a melhorar.",
+    "cameraId": "cam_j7_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 3,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "Qual é o seu ponto fraco?"
+    },
+    "depois": {
+     "teaser": "Qual é o seu ponto fraco?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s3",
+     "palavras": 31
+    },
+    {
+     "id": "missao",
+     "palavras": 14
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_05",
+   "no": "v10",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escreva o seu “Sobre”",
+   "depois": "vinheta → atividade m04",
+   "fala": "É hora da missão: escreva o seu Sobre.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3"
+    ],
+    "narracao": "O ‘Sobre’ é onde muita gente trava. Use três frases. Na primeira, diga o que você faz hoje: estudo, curso, cidade. Na segunda, conte uma experiência de que você se orgulha. Na terceira, diga o que procura agora. Olha o exemplo da Júlia: ‘Estudo Administração em Belém. Organizei a feira de empreendedorismo da faculdade e cuidei do orçamento. Busco meu primeiro estágio em finanças.’ Simples, direto e verdadeiro.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "É hora da missão: escreva o seu Sobre.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 3,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 8
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_08",
+   "no": "v15",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Defina seu papel na dinâmica",
+   "depois": "vinheta → atividade m07",
+   "fala": "Para fechar, a sua missão: defina seu papel na dinâmica.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4"
+    ],
+    "narracao": "Se você é mais tímido, tenho uma boa notícia: não precisa liderar a dinâmica para se destacar. Existem papéis discretos e muito valorizados. Quem cuida do tempo avisa quanto falta. Quem resume organiza as ideias que já apareceram. Quem convida pergunta para quem ainda não falou: ‘e você, o que acha?’. Cada um desses papéis mostra colaboração e escuta. Uma boa participação vale mais do que muita fala.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Para fechar, a sua missão: defina seu papel na dinâmica.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s4",
+     "palavras": 9
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_01",
+   "no": "v02",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Conte sua primeira experiência",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Depois da pergunta, tem a missão: conte sua primeira experiência.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Agora, o pulo do gato: transformar experiência em habilidade. Para cada situação, pergunte: o que eu fazia ali? A Júlia ajuda na loja da tia aos sábados. Ela atende clientes, organiza o estoque e fecha o caixa. Isso mostra atendimento, organização e responsabilidade com dinheiro. Percebe? Uma única situação pode mostrar várias habilidades. Na entrevista, você não vai dizer só ‘sou organizada’. Vai contar o que fazia e deixar a habilidade aparecer no exemplo. Você é monitor de uma disciplina e tira dúvidas toda semana. Agora, responda: que habilidade isso mostra?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da pergunta, tem a missão: conte sua primeira experiência.",
+    "cameraId": "cam_j7_34",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_02",
+   "no": "v04",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escolha sua vaga-alvo",
+   "depois": "vinheta → pergunta q04 → atividade m02",
+   "fala": "Mais adiante, a missão desta aula: escolha sua vaga-alvo.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Outra dica: leia as atividades, não só o nome da vaga. ‘Assistente administrativo’ pode ser atender telefone, organizar planilhas ou cuidar de documentos. As atividades mostram o que você vai fazer de verdade e quais experiências suas combinam. Faça um teste rápido: para cada atividade, pergunte ‘eu já fiz algo parecido?’. Se a resposta for sim em boa parte delas, candidate-se. E o que você ainda não sabe vira assunto para a entrevista: o que você está fazendo para aprender. Sua vez: com pouco tempo, que parte da vaga você leria primeiro?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, a missão desta aula: escolha sua vaga-alvo.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_04",
+   "no": "v08",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escreva sua linha de currículo",
+   "depois": "vinheta → pergunta q08 → atividade m03",
+   "fala": "Logo depois da pergunta, vem a missão: escreva sua linha de currículo.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Para escrever cada linha, use uma receita simples: um verbo de ação, o que você fazia e, se der, um número. Em vez de ‘responsável pelo estoque’, escreva ‘organizei o estoque da loja toda semana’. Em vez de ‘participei da feira’, escreva ‘ajudei a montar uma feira com quarenta expositores’. Números chamam atenção, mas só use números verdadeiros. Se não sabe a quantidade exata, diga ‘cerca de’. E revise duas vezes: erro de português pode derrubar um currículo bom. Seu currículo passou de uma página. Agora, responda: o que você tira?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Logo depois da pergunta, vem a missão: escreva sua linha de currículo.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_07",
+   "no": "v13",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Monte seu plano para o teste",
+   "depois": "vinheta → pergunta q14 → atividade m06",
+   "fala": "Depois da pergunta, falta pouco para a missão: monte seu plano para o teste.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Na hora do teste, três cuidados ajudam muito. Primeiro: leia as instruções até o fim, inclusive quanto tempo você tem. Segundo: não trave numa questão. Terceiro: faça sozinho. E se você for mal? Faz parte. Anote o que foi difícil e treine com testes gratuitos de lógica antes do próximo. Faltam 15 minutos e você travou numa questão. Agora, responda: o que você faz?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da pergunta, falta pouco para a missão: monte seu plano para o teste.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "Neste teste dá para pular e voltar depois, sem penalidade. Faltam 15 minutos e você travou numa questão. O que você faz?"
+    },
+    "depois": {
+     "teaser": "Neste teste dá para pular e voltar depois, sem penalidade. Faltam 15 minutos e você travou numa questão. O que você faz?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s2",
+     "palavras": 3
+    },
+    {
+     "id": "s3",
+     "palavras": 7
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 14
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_09",
+   "no": "v17",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Prepare sua apresentação",
+   "depois": "vinheta → pergunta q18 → atividade m08",
+   "fala": "A missão desta aula chega logo depois da pergunta: prepare sua apresentação.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "chamada"
+    ],
+    "narracao": "Agora, um cuidado: não decore palavra por palavra. Resposta decorada soa robótica e, se você esquece uma palavra, trava tudo. Decore só a ordem: hoje, orgulho, busco. O resto, fale do seu jeito. Treine em voz alta umas cinco vezes, de formas um pouco diferentes. Se puder, grave no celular e ouça. Você vai perceber onde enrolou e onde ficou claro. Deu branco no meio da sua apresentação. Agora, responda: o que você faz?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "A missão desta aula chega logo depois da pergunta: prepare sua apresentação.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 3,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_10",
+   "no": "v19",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Conte sua história",
+   "depois": "vinheta → pergunta q20 → atividade m09",
+   "fala": "Mais adiante, tem uma missão esperando por você: conte sua história.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Três erros derrubam histórias boas. O primeiro é falar só ‘nós’. O segundo é não terminar: a história para na ação e ninguém sabe o que aconteceu. O terceiro é inventar ou exagerar. Basta uma pergunta a mais e a história desmonta. Use experiências pequenas e verdadeiras: um trabalho da escola, um problema na loja da família, um campeonato que quase não aconteceu. Pequeno e verdadeiro funciona. Agora é com você: escolha a frase que mostra melhor a sua parte.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, tem uma missão esperando por você: conte sua história.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s1",
+     "palavras": 11
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 11
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C14",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "aula": "aula_11",
+   "no": "v21",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Escolha seu ponto a melhorar",
+   "depois": "vinheta → perguntas q22, q23 → atividade m10",
+   "fala": "Depois das duas próximas perguntas, a missão: escolha seu ponto a melhorar.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Duas perguntas costumam aparecer. A primeira: ‘por que você quer trabalhar aqui?’. Antes da entrevista, veja o que a empresa faz e o que você vai aprender ali. Responda ligando as duas coisas, com uma razão verdadeira. A segunda é sobre bolsa ou salário. Muitas vagas já informam o valor. Se não informam, pesquise vagas parecidas e, na entrevista, pergunte qual é a faixa prevista. Agora é com você: por que você quer trabalhar aqui? Escolha a melhor resposta.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois das duas próximas perguntas, a missão: escolha seu ponto a melhorar.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s4",
+     "palavras": 15
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 404,
+   "revisaoDepois": 405
+  },
+  {
+   "curso": "C01",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Avise um imprevisto",
+   "depois": "vinheta → atividade m02",
+   "fala": "Agora é com você: a missão desta aula é avisar um imprevisto.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "s6"
+    ],
+    "narracao": "Vale guardar isto: avisar cedo ajuda mais do que esperar ter certeza de tudo. Ao avisar, apresente o fato e a informação disponível: meu ônibus parou e ainda não tenho previsão. Diga como vai atualizar a equipe. Quando chegar, procure a entrada indicada e fale seu nome, seu início e a pessoa de referência. Se não encontrarem o combinado, contate essa pessoa antes de circular por áreas desconhecidas. Durante a orientação inicial, anote os canais de apoio e tire dúvidas sobre a rotina. Você pode aprender aos poucos, confirmando as informações importantes ao longo do dia.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Agora é com você: a missão desta aula é avisar um imprevisto.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 6,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 85,
+   "revisaoDepois": 86
+  },
+  {
+   "curso": "C01",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:s5",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Confirme sua chegada",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Depois da próxima pergunta, vem a missão desta aula: confirme sua chegada.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "Antes de sair, confira o endereço completo, o horário combinado e quem procurar. Pergunte quais documentos precisa apresentar e como funciona a entrada. Se pedirem dados ou documentos por mensagem, confirme o canal com a pessoa responsável antes de enviar. Depois, planeje o trajeto com o tempo disponível e uma margem para imprevistos. Você não precisa comprar nada por suposição. Se faltar algum item solicitado, avise e pergunte como proceder. Preparação começa por esclarecer o combinado. Vamos para uma situação do Davi: falta uma cópia de documento para amanhã. Agora, responda: o que você faria no lugar do Davi?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da próxima pergunta, vem a missão desta aula: confirme sua chegada.",
+    "cameraId": "cam_j7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Davi tem o original, mas não conseguiu fazer a cópia pedida para amanhã. O que você faria no lugar dele?"
+    },
+    "depois": {
+     "teaser": "O Davi tem o original, mas não conseguiu fazer a cópia pedida para amanhã. O que você faria no lugar dele?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s1",
+     "palavras": 13
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    },
+    {
+     "id": "chamada",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 85,
+   "revisaoDepois": 86
+  },
+  {
+   "curso": "C07",
+   "courseId": "crs_bmf11akamtxoti28",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Apresente uma diferença",
+   "depois": "vinheta → atividade m02",
+   "fala": "A seguir, a sua missão: apresente uma diferença.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "O objetivo é esclarecer o prazo, não provar quem errou. Você pode dizer: na mensagem anterior, entendi que seria amanhã; hoje tenho outra entrega combinada; qual prioridade seguimos? Isso apresenta a informação sem atribuir intenção à pessoa. Escute a resposta e confirme o novo combinado. Se uma orientação continuar confusa ou exigir algo para o qual não tem acesso ou preparo, explique o limite e peça apoio. Discordar com respeito não exige aceitar uma ofensa. Quando a conversa ultrapassar esse limite, procure uma referência responsável para ajudar a tratar a situação.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "A seguir, a sua missão: apresente uma diferença.",
+    "cameraId": "cam_gustavo7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 8
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 89,
+   "revisaoDepois": 90
+  },
+  {
+   "curso": "C07",
+   "courseId": "crs_bmf11akamtxoti28",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Peça uma conversa",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Depois da pergunta, tem a missão: peça uma conversa.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "O que mais ajuda é uma abertura com assunto, necessidade e prazo: preciso confirmar o formato da lista de amanhã; quando você consegue orientar? Se for uma situação que pode afetar segurança ou outra necessidade imediata, use o procedimento indicado para urgências. No restante, evite marcar tudo como urgente. Quando a conversa começar, explique um ponto de cada vez e confirme o entendimento ao final. Você não precisa imitar o jeito de falar de outra pessoa. Clareza e respeito permitem manter seu jeito de se comunicar. Agora vamos ver o André, que recebeu uma orientação com duas etapas. Agora, responda: o que o André confirma antes de sair?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da pergunta, tem a missão: peça uma conversa.",
+    "cameraId": "cam_gustavo7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O André recebeu uma orientação com duas etapas e um prazo novo. O que ele confirma antes de sair?"
+    },
+    "depois": {
+     "teaser": "O André recebeu uma orientação com duas etapas e um prazo novo. O que ele confirma antes de sair?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    },
+    {
+     "id": "chamada",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 89,
+   "revisaoDepois": 90
+  },
+  {
+   "curso": "C08",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Avise sobre um problema no espaço",
+   "depois": "vinheta → atividade m02",
+   "fala": "Hora da missão: avise sobre um problema no espaço.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "Vale guardar isto: com um problema assim, o mais seguro é não usar e avisar quem pode resolver. Para comunicar, descreva o local e o que observou: o cabo do equipamento desta mesa parece danificado. Não teste só para conferir se funciona. Siga o procedimento indicado e não tente reparar o que não conhece. Se o problema for convivência, como volume de uma conversa, faça um pedido concreto e respeitoso quando se sentir confortável. Se ele continuar, peça ajuda para retomar o combinado do espaço. Seu papel é cuidar do que usa e comunicar o que precisa de orientação.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Hora da missão: avise sobre um problema no espaço.",
+    "cameraId": "cam_aline6_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 86,
+   "revisaoDepois": 87
+  },
+  {
+   "curso": "C08",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:s4",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Combine o cuidado com o espaço",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Já deixo avisado: depois da próxima pergunta, sua missão é combinar o cuidado com o espaço.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Depois de usar, recolha seus itens, deixe a superfície organizada e siga a orientação de limpeza e descarte. Se não conhecer o procedimento, pergunte, sem vergonha nenhuma. Na mesa compartilhada, devolva materiais ao lugar e não deixe documentos visíveis sem necessidade. Em conversas ou vídeos, observe o volume e os combinados do espaço. Cada cuidado simples ajuda quem chega depois e quem faz a manutenção. Agora, uma situação da Sara: ela abriu a geladeira da copa e encontrou uma embalagem sem nome. Agora, responda: o que você faria no lugar da Sara?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Já deixo avisado: depois da próxima pergunta, sua missão é combinar o cuidado com o espaço.",
+    "cameraId": "cam_aline6_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 3,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "A Sara achou na geladeira da copa um alimento sem nome e sem aviso de uso coletivo. O que você faria?"
+    },
+    "depois": {
+     "teaser": "A Sara achou na geladeira da copa um alimento sem nome e sem aviso de uso coletivo. O que você faria?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s1",
+     "palavras": 18
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 16
+    },
+    {
+     "id": "chamada",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 86,
+   "revisaoDepois": 87
+  },
+  {
+   "curso": "C10",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Alinhe a próxima atividade",
+   "depois": "vinheta → atividade m02",
+   "fala": "Sua missão agora é alinhar a próxima atividade.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4"
+    ],
+    "narracao": "Dá para seguir com calma. Você pode dizer: terminei a conferência; posso começar a próxima atividade da lista? Se não houver lista, proponha algo pequeno e peça confirmação. Enquanto aguarda, organize seus materiais ou revise uma orientação disponível, conforme o combinado. Se notar uma melhoria, apresente a ideia antes de mudar um procedimento compartilhado. Iniciativa útil considera a prioridade da equipe e seus limites de acesso e preparo. Você não precisa provar valor fazendo tudo; pode demonstrar responsabilidade ao concluir bem e perguntar pelo próximo passo.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Sua missão agora é alinhar a próxima atividade.",
+    "cameraId": "cam_beatriz7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 8
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 90,
+   "revisaoDepois": 91
+  },
+  {
+   "curso": "C10",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:s5",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Comunique sua entrega",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Daqui a pouco, você faz a missão desta aula: comunique sua entrega.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "Vale guardar isto: antes de avisar, compare a entrega com o pedido. Confira o local correto, a versão e os pontos que dependem de outra pessoa. Depois, comunique de forma curta: organizei a lista na pasta combinada; faltam dois campos que aguardam retorno. Se pediram uma revisão, solicite essa etapa. Não marque como concluído o que ainda exige uma ação sua. Uma entrega visível evita que a equipe espere por algo que já está disponível ou use uma versão incompleta sem saber. Agora, vamos ver a Jéssica: o material dela ficou pronto, mas ainda precisa passar pela supervisão. Agora, responda: o que a Jéssica deveria informar?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Daqui a pouco, você faz a missão desta aula: comunique sua entrega.",
+    "cameraId": "cam_beatriz7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O material da Jéssica está pronto, mas ainda não passou pela supervisão. O que ela deveria informar?"
+    },
+    "depois": {
+     "teaser": "O material da Jéssica está pronto, mas ainda não passou pela supervisão. O que ela deveria informar?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    },
+    {
+     "id": "chamada",
+     "palavras": 8
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 90,
+   "revisaoDepois": 91
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "aula": "aula_03",
+   "no": "v05",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Alinhe prioridades",
+   "depois": "vinheta → atividade m03",
+   "fala": "Vamos à missão desta aula: alinhe prioridades.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "Uma boa prioridade considera o prazo, o impacto e a orientação da equipe. Se dois pedidos não cabem juntos, apresente o conflito com uma proposta: consigo terminar a lista agora e começar o relatório depois; essa ordem atende? Talvez a equipe ajuste o prazo ou divida a tarefa. Depois do alinhamento, registre a decisão e reserve um momento para conferir o andamento. Antes de encerrar seu horário, deixe claro o que terminou e o que ficou pendente. Sua organização deve ajudar você a cumprir compromissos dentro da rotina combinada.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Vamos à missão desta aula: alinhe prioridades.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 7
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 169,
+   "revisaoDepois": 170
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Confirme uma tarefa",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Depois da próxima pergunta, vem a missão: confirme uma tarefa.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4"
+    ],
+    "narracao": "Você não precisa adivinhar o que a outra pessoa espera. Antes de começar, combine a entrega: uma lista organizada por nome, por exemplo. Confirme o prazo com dia e horário. Depois, descubra quem pode orientar se aparecer uma dúvida. Pode falar assim: para confirmar, você precisa dos contatos por nome até as três, certo? Tem algum modelo? Isso demonstra atenção. Se quem pediu estiver ocupado, reúna as dúvidas numa mensagem curta pelo canal combinado. A resposta ajuda você a trabalhar com mais autonomia depois.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da próxima pergunta, vem a missão: confirme uma tarefa.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 169,
+   "revisaoDepois": 170
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "aula": "aula_02",
+   "no": "v03",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Prepare seu pedido de ajuda",
+   "depois": "vinheta → pergunta q04 → atividade m02",
+   "fala": "Logo depois da pergunta, sua missão é preparar o seu pedido de ajuda.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "Para pedir ajuda, dê contexto: estou registrando um atendimento. Conte a tentativa: consultei o guia e encontrei duas categorias. Depois, apresente a dúvida: qual delas se aplica neste caso? Se existe um prazo, avise também. Você não precisa se desculpar várias vezes nem contar cada clique que deu. Se houver informação de cliente, use apenas os canais e acessos autorizados pela equipe. E, quando receber a orientação, anote o critério usado. Assim, a resposta de hoje vira uma referência para uma situação parecida amanhã.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Logo depois da pergunta, sua missão é preparar o seu pedido de ajuda.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 13
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 169,
+   "revisaoDepois": 170
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "aula": "aula_04",
+   "no": "v07",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Comunique um problema",
+   "depois": "vinheta → pergunta q07 → atividade m04",
+   "fala": "Daqui a pouco, tem uma missão para você: comunique um problema.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5"
+    ],
+    "narracao": "Uma mensagem útil tem fatos, impacto e próximo passo. Você pode dizer: encontrei três datas incorretas na lista enviada; ela será usada na reunião; posso revisar e encaminhar a versão corrigida em dez minutos. Se não souber o alcance, fale que está verificando. Evite afirmar que ninguém foi afetado sem conferir. E respeite seus acessos: não apague registros nem tente resolver sozinho algo que exige autorização. Depois da correção, combine uma prevenção simples, como conferir as datas antes do próximo envio.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Daqui a pouco, tem uma missão para você: comunique um problema.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 11
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 169,
+   "revisaoDepois": 170
+  },
+  {
+   "curso": "C13",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "aula": "aula_05",
+   "no": "v09",
+   "plano": "missao_fim",
+   "posicao": "fim",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Combine sua melhoria",
+   "depois": "vinheta → pergunta q09 → atividade m05",
+   "fala": "Mais adiante, a missão desta aula: combine sua melhoria.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4"
+    ],
+    "narracao": "Depois de ouvir, peça um exemplo ligado a uma situação. Se a orientação for incluir pendências nas mensagens, combine a ação: na próxima atualização, vou dizer o que concluí, o que falta e se preciso de apoio. Marque uma revisão para saber se isso ajudou. Se você discordar de algum ponto, explique o contexto e peça para comparar os fatos. Uma conversa respeitosa permite perguntas. Se houver humilhação ou ofensa, você pode buscar apoio de uma pessoa responsável. Aprender exige orientação que você consiga compreender e aplicar.",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, a missão desta aula: combine sua melhoria.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": null,
+    "depois": null,
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 169,
+   "revisaoDepois": 170
+  },
+  {
+   "curso": "C03",
+   "courseId": "crs_hd4jnnpx3oj0xf14",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Confirme o uso permitido",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Daqui a pouco, você tem uma missão: confirme o uso permitido.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "A atenção na pessoa vem primeiro. Antes de usar o aparelho, confira a finalidade, o momento e a orientação da equipe. Se ele faz parte da tarefa, mantenha o uso relacionado à atividade. Redes sociais, jogos e conversas pessoais podem esperar o momento permitido. Pergunte também sobre fones: precisar ouvir colegas ou sinais do ambiente muda a situação. Se não tiver aparelho ou não puder usar o seu, peça orientação sobre como executar a tarefa. Evite presumir que um hábito dos colegas vale para qualquer contexto. Uma colega usa fone, mas a Ana precisa ouvir o balcão. Agora, responda: o que você faria no lugar dela?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Daqui a pouco, você tem uma missão: confirme o uso permitido.",
+    "cameraId": "cam_r7_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": null
+    },
+    "depois": {
+     "teaser": null
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s1",
+     "palavras": 6
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 11
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 84,
+   "revisaoDepois": 85
+  },
+  {
+   "curso": "C04",
+   "courseId": "crs_4z17p0m6d43qxmmo",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Monte uma mensagem de trabalho",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Mais adiante, tem uma missão para você: monte uma mensagem de trabalho.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "chamada"
+    ],
+    "narracao": "Quem lê precisa entender rápido quem fala e o que você precisa. Na primeira conversa, identifique-se e dê o contexto: sou a Iara, comecei hoje na equipe de atendimento. Depois, faça o pedido: você pode me orientar sobre o acesso ao sistema? Se houver prazo, explique a necessidade sem inventar urgência. Prefira uma mensagem organizada a várias notificações com pedaços da frase. E, se o assunto envolve informações restritas, use o canal autorizado e envie só o necessário. O Pedro não sabe se a pessoa pode ouvir um áudio longo agora. Agora, responda: o que você faria?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, tem uma missão para você: monte uma mensagem de trabalho.",
+    "cameraId": "cam_thiago8_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 4,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Pedro precisa fazer um pedido, mas não sabe se a pessoa pode ouvir um áudio longo. O que você faria?"
+    },
+    "depois": {
+     "teaser": "O Pedro precisa fazer um pedido, mas não sabe se a pessoa pode ouvir um áudio longo. O que você faria?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 105,
+   "revisaoDepois": 106
+  },
+  {
+   "curso": "C05",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Confirme os horários",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "A missão desta aula vem logo depois da pergunta: confirme os horários.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "Vale lembrar: chegar à porta não é o fim do trajeto. Comece pelo horário de apresentação que foi combinado. Confirme onde você precisa estar e como funciona a entrada. Depois, confira o trajeto e pense numa alternativa possível para uma interrupção. A margem deve fazer sentido na sua realidade, sem depender de um gasto que você não pode assumir. Se o planejamento mostrar uma dificuldade recorrente, converse cedo com quem acompanha você. Para intervalos e encerramento, confirme também os horários e o procedimento. E o Lucas notou outra coisa: o ônibus tem atrasado com frequência. Agora, responda: o que você faria no lugar dele?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "A missão desta aula vem logo depois da pergunta: confirme os horários.",
+    "cameraId": "cam_julia6_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O ônibus do Lucas tem atrasado com frequência. O que você faria no lugar dele?"
+    },
+    "depois": {
+     "teaser": "O ônibus do Lucas tem atrasado com frequência. O que você faria no lugar dele?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 12
+    },
+    {
+     "id": "chamada",
+     "palavras": 9
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 89,
+   "revisaoDepois": 90
+  },
+  {
+   "curso": "C12",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:chamada",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Peça uma correção concreta",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Depois da pergunta, sua missão é pedir uma correção concreta.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "chamada"
+    ],
+    "narracao": "O caminho começa por entender o que a pessoa viu. Você pode perguntar: em qual situação isso aconteceu e o que você espera que eu faça diferente? Uma orientação útil trata de um comportamento observável, como interromper uma fala ou não avisar uma pendência. Se houver um contexto importante, explique depois de entender o exemplo. Você pode reconhecer um ponto e esclarecer outro. A conversa deve permitir entender o critério, sem reduzir você a um rótulo. Antes de terminar, confirme uma ação pequena que poderá praticar na próxima situação. O Vitor estava sem acesso ao celular quando a mensagem chegou. Agora, responda: quando ele explica esse contexto?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Depois da pergunta, sua missão é pedir uma correção concreta.",
+    "cameraId": "cam_helena8_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "brings both hands together, focused",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "O Vitor foi corrigido por não responder uma mensagem quando estava sem acesso ao celular. Quando ele explica isso?"
+    },
+    "depois": {
+     "teaser": "O Vitor foi corrigido por não responder uma mensagem quando estava sem acesso ao celular. Quando ele explica isso?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "missao_fim",
+     "palavras": 10
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 88,
+   "revisaoDepois": 89
+  },
+  {
+   "curso": "C06",
+   "courseId": "crs_b8zeh4b2gguseghq",
+   "aula": "aula_01",
+   "no": "v01",
+   "plano": "missao_fim",
+   "posicao": "antes:s6",
+   "estado": "aplicar",
+   "motivo": null,
+   "atividade": "Respeite uma preferência",
+   "depois": "vinheta → pergunta q02 → atividade m01",
+   "fala": "Mais adiante, a missão desta aula: respeite uma preferência.",
+   "antes": {
+    "ids": [
+     "s1",
+     "s2",
+     "s3",
+     "s4",
+     "s5",
+     "s6",
+     "chamada"
+    ],
+    "narracao": "Conhecer alguém leva tempo. Use o nome apresentado e deixe a pessoa escolher o que quer compartilhar. Comentários sobre corpo, relacionamentos, religião ou vida pessoal podem passar do limite, mesmo quando alguém diz que era só brincadeira. Risada não confirma conforto. Antes de um abraço ou de outro contato físico, pense na preferência da pessoa e pergunte quando tiver dúvida. Se ela disser que não gosta, pare, sem pedir explicação. A proximidade vem de conversas e atitudes respeitosas. Agora veja o Bruno: ele fez uma brincadeira e a colega disse que não gostou. Agora, responda: o que o Bruno responde?",
+    "stale": false
+   },
+   "planoNovo": {
+    "id": "missao_fim",
+    "line": "Mais adiante, a missão desta aula: respeite uma preferência.",
+    "cameraId": "cam_patricia8_esq",
+    "framing": "medium",
+    "layout": "presenter",
+    "cameraMove": "static",
+    "motionPrompt": "leans in slightly, curious",
+    "transitionIn": "cut"
+   },
+   "indiceInsercao": 5,
+   "ajusteCarregado": {
+    "antes": {
+     "teaser": "A colega disse que não gostou da brincadeira. O que o Bruno responde?"
+    },
+    "depois": {
+     "teaser": "A colega disse que não gostou da brincadeira. O que o Bruno responde?"
+    },
+    "igual": true
+   },
+   "planosQueOrcamentoCobra": [
+    {
+     "id": "s1",
+     "palavras": 4
+    },
+    {
+     "id": "missao_fim",
+     "palavras": 9
+    },
+    {
+     "id": "chamada",
+     "palavras": 7
+    }
+   ],
+   "roboVeMissaoNosUltimos260": true,
+   "revisaoAntes": 103,
+   "revisaoDepois": 104
+  }
+ ]
+}

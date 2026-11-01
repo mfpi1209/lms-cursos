@@ -1,0 +1,2821 @@
+{
+ "geradoEm": "2026-11-01T06:16:13.858Z",
+ "modo": "apply",
+ "registros": [
+  {
+   "alvo": "C03/aula_01/v01",
+   "courseId": "crs_hd4jnnpx3oj0xf14",
+   "esperadoS": 4.4,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 44.7,
+   "estado": "aplicado",
+   "assetId": "ast_ta20ie1bmfiku9hf",
+   "duracaoDepoisS": 40.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.16,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.16,
+     "duration": 9.6,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s3",
+     "start": 11.76,
+     "duration": 11.24,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s4",
+     "start": 23,
+     "duration": 5.8,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s5",
+     "start": 28.8,
+     "duration": 4.08,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "chamada",
+     "start": 32.88,
+     "duration": 7.52,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.06000000000000005,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s3",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0,
+     "tailTrim": 0.40800000000000036,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "A atenção na pessoa vem primeiro. Antes de usar o aparelho, confira a finalidade, o momento e a orientação da equipe. Se ele faz parte da tarefa, mantenha o uso relacionado à atividade. Redes sociais, jogos e conversas pessoais podem esperar o momento permitido. Pergunte também sobre fones: precisar ouvir colegas ou sinais do ambiente muda a situação. Se não tiver aparelho ou não puder usar o seu, peça orientação sobre como executar a tarefa. Evite presumir que um hábito dos colegas vale para qualquer contexto. Uma colega usa fone, mas a Ana precisa ouvir o balcão. Agora, responda: o que você faria no lugar dela?",
+   "assetAntes": "ast_m8hxzth9ye9y8c2d",
+   "economiaS": 4.3
+  },
+  {
+   "alvo": "C04/aula_01/v01",
+   "courseId": "crs_4z17p0m6d43qxmmo",
+   "esperadoS": 4.4,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 38.7,
+   "estado": "aplicado",
+   "assetId": "ast_yvaybj7w30g4j33n",
+   "duracaoDepoisS": 34.2,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 3.8,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 3.8,
+     "duration": 10.48,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 14.28,
+     "duration": 8.2,
+     "audioDelay": 0,
+     "clipStart": 0.04
+    },
+    {
+     "id": "s4",
+     "start": 22.48,
+     "duration": 5.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "chamada",
+     "start": 28.16,
+     "duration": 6,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.06299999999999972,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.0259999999999998,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.04,
+     "tailTrim": 0.016000000000000014,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0.08000000000000007,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Quem lê precisa entender rápido quem fala e o que você precisa. Na primeira conversa, identifique-se e dê o contexto: sou a Iara, comecei hoje na equipe de atendimento. Depois, faça o pedido: você pode me orientar sobre o acesso ao sistema? Se houver prazo, explique a necessidade sem inventar urgência. Prefira uma mensagem organizada a várias notificações com pedaços da frase. E, se o assunto envolve informações restritas, use o canal autorizado e envie só o necessário. O Pedro não sabe se a pessoa pode ouvir um áudio longo agora. Agora, responda: o que você faria?",
+   "assetAntes": "ast_bvzyosvm58h2lz8n",
+   "economiaS": 4.5
+  },
+  {
+   "alvo": "C05/aula_01/v01",
+   "courseId": "crs_4tj8a3q3g9gudgb7",
+   "esperadoS": 4.8,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 49.3,
+   "estado": "aplicado",
+   "assetId": "ast_l21o2maj82mjq4hj",
+   "duracaoDepoisS": 44.2,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4.2,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4.2,
+     "duration": 13.28,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 17.48,
+     "duration": 6.44,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 23.92,
+     "duration": 11.28,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s5",
+     "start": 35.2,
+     "duration": 5.04,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "chamada",
+     "start": 40.24,
+     "duration": 3.96,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.1200000000000001,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.23199999999999932,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0.18599999999999905,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.2,
+     "tailTrim": 0.18399999999999928,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.2,
+     "tailTrim": 0.17999999999999972,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Vale lembrar: chegar à porta não é o fim do trajeto. Comece pelo horário de apresentação que foi combinado. Confirme onde você precisa estar e como funciona a entrada. Depois, confira o trajeto e pense numa alternativa possível para uma interrupção. A margem deve fazer sentido na sua realidade, sem depender de um gasto que você não pode assumir. Se o planejamento mostrar uma dificuldade recorrente, converse cedo com quem acompanha você. Para intervalos e encerramento, confirme também os horários e o procedimento. E o Lucas notou outra coisa: o ônibus tem atrasado com frequência. Agora, responda: o que você faria no lugar dele?",
+   "assetAntes": "ast_cttfwhle1075zwo0",
+   "economiaS": 5.1
+  },
+  {
+   "alvo": "C06/aula_01/v01",
+   "courseId": "crs_b8zeh4b2gguseghq",
+   "esperadoS": 4.9,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim",
+    "s6",
+    "chamada"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": "s6",
+   "ultimoPlano": false,
+   "duracaoAntesS": 51.4,
+   "estado": "aplicado",
+   "assetId": "ast_rfyxoiskz2ycf87o",
+   "duracaoDepoisS": 46.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.32,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.32,
+     "duration": 4.72,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s3",
+     "start": 7.04,
+     "duration": 13.64,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s4",
+     "start": 20.68,
+     "duration": 7.72,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s5",
+     "start": 28.4,
+     "duration": 9,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s6",
+     "start": 37.4,
+     "duration": 5.52,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "chamada",
+     "start": 42.92,
+     "duration": 3.44,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.05600000000000005,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.16,
+     "tailTrim": 0.1349999999999998,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0,
+     "tailTrim": 0.05799999999999983,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s6",
+     "headTrim": 0.16,
+     "tailTrim": 0.1459999999999999,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Conhecer alguém leva tempo. Use o nome apresentado e deixe a pessoa escolher o que quer compartilhar. Comentários sobre corpo, relacionamentos, religião ou vida pessoal podem passar do limite, mesmo quando alguém diz que era só brincadeira. Risada não confirma conforto. Antes de um abraço ou de outro contato físico, pense na preferência da pessoa e pergunte quando tiver dúvida. Se ela disser que não gosta, pare, sem pedir explicação. A proximidade vem de conversas e atitudes respeitosas. Agora veja o Bruno: ele fez uma brincadeira e a colega disse que não gostou. Agora, responda: o que o Bruno responde?",
+   "assetAntes": "ast_3sash2igiwnrc9fh",
+   "economiaS": 5.0
+  },
+  {
+   "alvo": "C07/aula_01/v01",
+   "courseId": "crs_bmf11akamtxoti28",
+   "esperadoS": 3.7,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 45.2,
+   "estado": "aplicado",
+   "assetId": "ast_jv7yurnxkdwn2yot",
+   "duracaoDepoisS": 41.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 9.36,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 9.36,
+     "duration": 10.72,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s3",
+     "start": 20.08,
+     "duration": 9,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 29.08,
+     "duration": 8.2,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "chamada",
+     "start": 37.28,
+     "duration": 4.12,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.16,
+     "tailTrim": 0.10799999999999876,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0.14300000000000068,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.12,
+     "tailTrim": 0.05599999999999916,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.16,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "O que mais ajuda é uma abertura com assunto, necessidade e prazo: preciso confirmar o formato da lista de amanhã; quando você consegue orientar? Se for uma situação que pode afetar segurança ou outra necessidade imediata, use o procedimento indicado para urgências. No restante, evite marcar tudo como urgente. Quando a conversa começar, explique um ponto de cada vez e confirme o entendimento ao final. Você não precisa imitar o jeito de falar de outra pessoa. Clareza e respeito permitem manter seu jeito de se comunicar. Agora vamos ver o André, que recebeu uma orientação com duas etapas. Agora, responda: o que o André confirma antes de sair?",
+   "assetAntes": "ast_6tcfo8ttwj3fkye7",
+   "economiaS": 3.8
+  },
+  {
+   "alvo": "C07/aula_02/v03",
+   "courseId": "crs_bmf11akamtxoti28",
+   "esperadoS": 3.8,
+   "aberturaEm": [
+    "v02"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 41.2,
+   "estado": "aplicado",
+   "assetId": "ast_c64b7qlzvq9w6bjc",
+   "duracaoDepoisS": 37.5,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4,
+     "duration": 8.64,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s3",
+     "start": 12.64,
+     "duration": 3.84,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 16.48,
+     "duration": 11.04,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s5",
+     "start": 27.52,
+     "duration": 9.92,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.16,
+     "tailTrim": 0.09799999999999898,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.09499999999999975,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.12,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "O objetivo é esclarecer o prazo, não provar quem errou. Você pode dizer: na mensagem anterior, entendi que seria amanhã; hoje tenho outra entrega combinada; qual prioridade seguimos? Isso apresenta a informação sem atribuir intenção à pessoa. Escute a resposta e confirme o novo combinado. Se uma orientação continuar confusa ou exigir algo para o qual não tem acesso ou preparo, explique o limite e peça apoio. Discordar com respeito não exige aceitar uma ofensa. Quando a conversa ultrapassar esse limite, procure uma referência responsável para ajudar a tratar a situação.",
+   "assetAntes": "ast_ity332fkb71vclz3",
+   "economiaS": 3.7
+  },
+  {
+   "alvo": "C08/aula_01/v01",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "esperadoS": 6.2,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "missao_fim",
+    "s4",
+    "chamada"
+   ],
+   "planoAnterior": "s3",
+   "planoSeguinte": "s4",
+   "ultimoPlano": false,
+   "duracaoAntesS": 45.8,
+   "estado": "aplicado",
+   "assetId": "ast_l1lttfxbwhcirar9",
+   "duracaoDepoisS": 39.6,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 7.64,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 7.64,
+     "duration": 11.48,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s3",
+     "start": 19.12,
+     "duration": 9.84,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s4",
+     "start": 28.96,
+     "duration": 6.6,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "chamada",
+     "start": 35.56,
+     "duration": 4.04,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.13599999999999923,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.08,
+     "tailTrim": 0.05599999999999916,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0.06400000000000006,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0.05600000000000005,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Depois de usar, recolha seus itens, deixe a superfície organizada e siga a orientação de limpeza e descarte. Se não conhecer o procedimento, pergunte, sem vergonha nenhuma. Na mesa compartilhada, devolva materiais ao lugar e não deixe documentos visíveis sem necessidade. Em conversas ou vídeos, observe o volume e os combinados do espaço. Cada cuidado simples ajuda quem chega depois e quem faz a manutenção. Agora, uma situação da Sara: ela abriu a geladeira da copa e encontrou uma embalagem sem nome. Agora, responda: o que você faria no lugar da Sara?",
+   "assetAntes": "ast_wp15pn1xbov1nw0i",
+   "economiaS": 6.2
+  },
+  {
+   "alvo": "C08/aula_02/v03",
+   "courseId": "crs_8g0csi2hflfztfge",
+   "esperadoS": 3.7,
+   "aberturaEm": [
+    "v02"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 44.0,
+   "estado": "aplicado",
+   "assetId": "ast_7eb68e9arat7l733",
+   "duracaoDepoisS": 40.3,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 6.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 6.68,
+     "duration": 10.44,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s3",
+     "start": 17.12,
+     "duration": 4.72,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s4",
+     "start": 21.84,
+     "duration": 8.68,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s5",
+     "start": 30.52,
+     "duration": 9.72,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.16,
+     "tailTrim": 0.10400000000000098,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0,
+     "tailTrim": 0.17600000000000016,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.2,
+     "tailTrim": 0.18799999999999883,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Vale guardar isto: com um problema assim, o mais seguro é não usar e avisar quem pode resolver. Para comunicar, descreva o local e o que observou: o cabo do equipamento desta mesa parece danificado. Não teste só para conferir se funciona. Siga o procedimento indicado e não tente reparar o que não conhece. Se o problema for convivência, como volume de uma conversa, faça um pedido concreto e respeitoso quando se sentir confortável. Se ele continuar, peça ajuda para retomar o combinado do espaço. Seu papel é cuidar do que usa e comunicar o que precisa de orientação.",
+   "assetAntes": "ast_bsuwe4340edbgyzx",
+   "economiaS": 3.7
+  },
+  {
+   "alvo": "C09/aula_01/v01",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "esperadoS": 5.4,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s6",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 49.8,
+   "estado": "aplicado",
+   "assetId": "ast_z4pda6e2axs5pqc3",
+   "duracaoDepoisS": 44.6,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.72,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.72,
+     "duration": 7,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s3",
+     "start": 9.72,
+     "duration": 6.6,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 16.32,
+     "duration": 5,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s5",
+     "start": 21.32,
+     "duration": 8.04,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s6",
+     "start": 29.36,
+     "duration": 6.4,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "chamada",
+     "start": 35.76,
+     "duration": 8.8,
+     "audioDelay": 0,
+     "clipStart": 0.04
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.16,
+     "tailTrim": 0.06400000000000006,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0.02400000000000002,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.08,
+     "tailTrim": 0.06399999999999828,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s6",
+     "headTrim": 0.08,
+     "tailTrim": 0.1349999999999998,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.04,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "O segredo é olhar a foto inteira. Antes de publicar, confira a orientação da organização, as pessoas na imagem e as informações visíveis. Tela, crachá, planilha e conversa ao fundo podem revelar algo que não deveria sair dali. A permissão de uma colega para aparecer não autoriza mostrar dados do trabalho. E uma ação divulgada num perfil oficial não significa que todo bastidor está liberado. Se não souber, pergunte. Você pode contar que começou uma nova etapa sem fotografar o ambiente ou identificar outras pessoas. A colega autorizou, mas há um documento interno ao fundo. Agora, responda: o que o Ícaro faz antes de postar?",
+   "assetAntes": "ast_5xgaq99kdwf9x09v",
+   "economiaS": 5.2
+  },
+  {
+   "alvo": "C09/aula_02/v03",
+   "courseId": "crs_gjn468p3y6hwua4f",
+   "esperadoS": 4,
+   "aberturaEm": [
+    "v02"
+   ],
+   "planosAntes": [
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 39.2,
+   "estado": "aplicado",
+   "assetId": "ast_75i2hqlbxhda125i",
+   "duracaoDepoisS": 35.2,
+   "timeline": [
+    {
+     "id": "s2",
+     "start": 0,
+     "duration": 10.76,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s3",
+     "start": 10.76,
+     "duration": 8.12,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 18.88,
+     "duration": 8.08,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s5",
+     "start": 26.96,
+     "duration": 8.24,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s2",
+     "headTrim": 0.2,
+     "tailTrim": 0.1349999999999998,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.13599999999999923,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0.0600000000000005,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Explique os fatos que conhece: publiquei uma imagem neste canal e percebi um documento visível. Informe quando aconteceu e se a postagem ainda está disponível. Siga a orientação para retirar, registrar ou tratar o conteúdo, sem criar novas cópias para circular entre colegas. Não afirme que ninguém viu se você não consegue saber. Depois, reveja seu checklist antes de uma nova publicação. Se o conteúdo envolver outra pessoa, deixe a orientação responsável conduzir a comunicação necessária, sem expor o assunto em público.",
+   "assetAntes": "ast_03m3617st6zhygns",
+   "economiaS": 4.0
+  },
+  {
+   "alvo": "C10/aula_01/v01",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "esperadoS": 4.4,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "s5",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "s5",
+   "ultimoPlano": false,
+   "duracaoAntesS": 48.2,
+   "estado": "aplicado",
+   "assetId": "ast_wdlbm3o43i83esfg",
+   "duracaoDepoisS": 43.8,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4.68,
+     "duration": 13.4,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 18.08,
+     "duration": 7.24,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s4",
+     "start": 25.32,
+     "duration": 7.76,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s5",
+     "start": 33.08,
+     "duration": 6.72,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "chamada",
+     "start": 39.8,
+     "duration": 3.92,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.23199999999999932,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.2,
+     "tailTrim": 0.2159999999999993,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0.17799999999999994,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.16,
+     "tailTrim": 0.2240000000000002,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Vale guardar isto: antes de avisar, compare a entrega com o pedido. Confira o local correto, a versão e os pontos que dependem de outra pessoa. Depois, comunique de forma curta: organizei a lista na pasta combinada; faltam dois campos que aguardam retorno. Se pediram uma revisão, solicite essa etapa. Não marque como concluído o que ainda exige uma ação sua. Uma entrega visível evita que a equipe espere por algo que já está disponível ou use uma versão incompleta sem saber. Agora, vamos ver a Jéssica: o material dela ficou pronto, mas ainda precisa passar pela supervisão. Agora, responda: o que a Jéssica deveria informar?",
+   "assetAntes": "ast_4ghh9zyhg84rusj4",
+   "economiaS": 4.4
+  },
+  {
+   "alvo": "C10/aula_02/v03",
+   "courseId": "crs_q52zsimeeahpa9bq",
+   "esperadoS": 3.3,
+   "aberturaEm": [
+    "v02"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 41.0,
+   "estado": "aplicado",
+   "assetId": "ast_16iql9q6ezb6t0ir",
+   "duracaoDepoisS": 37.6,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 7.44,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 7.44,
+     "duration": 16.24,
+     "audioDelay": 0,
+     "clipStart": 0.24
+    },
+    {
+     "id": "s3",
+     "start": 23.68,
+     "duration": 5.52,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 29.2,
+     "duration": 8.4,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.07099999999999973,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.24,
+     "tailTrim": 0.14000000000000057,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0.10300000000000065,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Dá para seguir com calma. Você pode dizer: terminei a conferência; posso começar a próxima atividade da lista? Se não houver lista, proponha algo pequeno e peça confirmação. Enquanto aguarda, organize seus materiais ou revise uma orientação disponível, conforme o combinado. Se notar uma melhoria, apresente a ideia antes de mudar um procedimento compartilhado. Iniciativa útil considera a prioridade da equipe e seus limites de acesso e preparo. Você não precisa provar valor fazendo tudo; pode demonstrar responsabilidade ao concluir bem e perguntar pelo próximo passo.",
+   "assetAntes": "ast_vpacpq4mdf4bjwom",
+   "economiaS": 3.4
+  },
+  {
+   "alvo": "C11/aula_01/v01",
+   "courseId": "crs_u4nfw88a4n2n0ubv",
+   "esperadoS": 4.1,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "s5",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "s5",
+   "ultimoPlano": false,
+   "duracaoAntesS": 39.48,
+   "estado": "aplicado",
+   "assetId": "ast_uh7iijlf4r0m23cu",
+   "duracaoDepoisS": 35.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.68,
+     "duration": 11.12,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 13.8,
+     "duration": 6.84,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s4",
+     "start": 20.64,
+     "duration": 4.92,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s5",
+     "start": 25.56,
+     "duration": 6.04,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "chamada",
+     "start": 31.6,
+     "duration": 3.8,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09499999999999975,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.11100000000000065,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.2,
+     "tailTrim": 0.13600000000000012,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0.10400000000000009,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.12,
+     "tailTrim": 0.10400000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Uma pergunta concreta ajuda muito. Pergunte pelo exemplo, pelo limite e por quem pode orientar: na recepção, posso usar fone enquanto organizo documentos ou preciso ouvir os chamados o tempo todo? Você pode repetir o que entendeu para confirmar. Se existir uma orientação escrita, peça onde consultar. Não ter entendido uma palavra não significa que você não consegue aprender a regra. Veja o caso do Miguel: ele recebeu uma explicação sobre como reservar a sala e acha que entendeu. Agora, responda: como ele confirma o que entendeu?",
+   "assetAntes": "ast_hzspkkh66lqyni81",
+   "economiaS": 4.08
+  },
+  {
+   "alvo": "C12/aula_01/v01",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "esperadoS": 4.1,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 46.6,
+   "estado": "aplicado",
+   "assetId": "ast_u3gwlcl2n9nilu6n",
+   "duracaoDepoisS": 42.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.92,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.92,
+     "duration": 6.32,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s3",
+     "start": 9.24,
+     "duration": 7.48,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 16.72,
+     "duration": 7.84,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s5",
+     "start": 24.56,
+     "duration": 10.12,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "chamada",
+     "start": 34.68,
+     "duration": 7.72,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.10400000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.08,
+     "tailTrim": 0.1039999999999992,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0.13599999999999923,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.08,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.08,
+     "tailTrim": 0.14399999999999835,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "O caminho começa por entender o que a pessoa viu. Você pode perguntar: em qual situação isso aconteceu e o que você espera que eu faça diferente? Uma orientação útil trata de um comportamento observável, como interromper uma fala ou não avisar uma pendência. Se houver um contexto importante, explique depois de entender o exemplo. Você pode reconhecer um ponto e esclarecer outro. A conversa deve permitir entender o critério, sem reduzir você a um rótulo. Antes de terminar, confirme uma ação pequena que poderá praticar na próxima situação. O Vitor estava sem acesso ao celular quando a mensagem chegou. Agora, responda: quando ele explica esse contexto?",
+   "assetAntes": "ast_iswv5lsumbv3o4sd",
+   "economiaS": 4.2
+  },
+  {
+   "alvo": "C13/aula_01/v01",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "esperadoS": 4.3,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 36.4,
+   "estado": "aplicado",
+   "assetId": "ast_3ykn6ss49jd3lwg8",
+   "duracaoDepoisS": 32.1,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 2.8,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 2.8,
+     "duration": 11.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 14.48,
+     "duration": 8.56,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s4",
+     "start": 23.04,
+     "duration": 9,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.055999999999999606,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s3",
+     "headTrim": 0,
+     "tailTrim": 0.10299999999999976,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.16,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Você não precisa adivinhar o que a outra pessoa espera. Antes de começar, combine a entrega: uma lista organizada por nome, por exemplo. Confirme o prazo com dia e horário. Depois, descubra quem pode orientar se aparecer uma dúvida. Pode falar assim: para confirmar, você precisa dos contatos por nome até as três, certo? Tem algum modelo? Isso demonstra atenção. Se quem pediu estiver ocupado, reúna as dúvidas numa mensagem curta pelo canal combinado. A resposta ajuda você a trabalhar com mais autonomia depois.",
+   "assetAntes": "ast_13aez2ftozq87cjt",
+   "economiaS": 4.3
+  },
+  {
+   "alvo": "C13/aula_02/v03",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "esperadoS": 4.2,
+   "aberturaEm": [
+    "v02"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 37.8,
+   "estado": "aplicado",
+   "assetId": "ast_25daewd08wy2s3af",
+   "duracaoDepoisS": 33.6,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4.4,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4.4,
+     "duration": 10.72,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 15.12,
+     "duration": 4.76,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s4",
+     "start": 19.88,
+     "duration": 9.12,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s5",
+     "start": 29,
+     "duration": 4.56,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.05999999999999961,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.05600000000000094,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0.09599999999999831,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Para pedir ajuda, dê contexto: estou registrando um atendimento. Conte a tentativa: consultei o guia e encontrei duas categorias. Depois, apresente a dúvida: qual delas se aplica neste caso? Se existe um prazo, avise também. Você não precisa se desculpar várias vezes nem contar cada clique que deu. Se houver informação de cliente, use apenas os canais e acessos autorizados pela equipe. E, quando receber a orientação, anote o critério usado. Assim, a resposta de hoje vira uma referência para uma situação parecida amanhã.",
+   "assetAntes": "ast_z7o67y83abszak16",
+   "economiaS": 4.2
+  },
+  {
+   "alvo": "C13/aula_03/v05",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "esperadoS": 3.5,
+   "aberturaEm": [
+    "v04"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 35.8,
+   "estado": "aplicado",
+   "assetId": "ast_m5tkl8yc54h0xk1n",
+   "duracaoDepoisS": 32.2,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4.96,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4.96,
+     "duration": 9.32,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 14.28,
+     "duration": 8.52,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 22.8,
+     "duration": 4.72,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s5",
+     "start": 27.52,
+     "duration": 4.68,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.13599999999999923,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.16,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Uma boa prioridade considera o prazo, o impacto e a orientação da equipe. Se dois pedidos não cabem juntos, apresente o conflito com uma proposta: consigo terminar a lista agora e começar o relatório depois; essa ordem atende? Talvez a equipe ajuste o prazo ou divida a tarefa. Depois do alinhamento, registre a decisão e reserve um momento para conferir o andamento. Antes de encerrar seu horário, deixe claro o que terminou e o que ficou pendente. Sua organização deve ajudar você a cumprir compromissos dentro da rotina combinada.",
+   "assetAntes": "ast_qh29qvad4dwvnkkm",
+   "economiaS": 3.6
+  },
+  {
+   "alvo": "C13/aula_04/v07",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "esperadoS": 3.9,
+   "aberturaEm": [
+    "v06"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "missao_fim"
+   ],
+   "planoAnterior": "s5",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 36.8,
+   "estado": "aplicado",
+   "assetId": "ast_mer0ys2xm3ccijsg",
+   "duracaoDepoisS": 32.8,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 4.04,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 4.04,
+     "duration": 10,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 14.04,
+     "duration": 6.56,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 20.6,
+     "duration": 6.6,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s5",
+     "start": 27.2,
+     "duration": 5.6,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09999999999999964,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.1349999999999998,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.06300000000000061,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.12,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s5",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Uma mensagem útil tem fatos, impacto e próximo passo. Você pode dizer: encontrei três datas incorretas na lista enviada; ela será usada na reunião; posso revisar e encaminhar a versão corrigida em dez minutos. Se não souber o alcance, fale que está verificando. Evite afirmar que ninguém foi afetado sem conferir. E respeite seus acessos: não apague registros nem tente resolver sozinho algo que exige autorização. Depois da correção, combine uma prevenção simples, como conferir as datas antes do próximo envio.",
+   "assetAntes": "ast_a0p9fg0xr64dtu57",
+   "economiaS": 4.0
+  },
+  {
+   "alvo": "C13/aula_05/v09",
+   "courseId": "crs_gujuaiykqcsl2n31",
+   "esperadoS": 4,
+   "aberturaEm": [
+    "v08"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 37.3,
+   "estado": "aplicado",
+   "assetId": "ast_qaoum6qs05ckuugg",
+   "duracaoDepoisS": 33.2,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 3.24,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 3.24,
+     "duration": 9.6,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 12.84,
+     "duration": 11.12,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s4",
+     "start": 23.96,
+     "duration": 9.16,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.14399999999999968,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.14400000000000013,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.2,
+     "tailTrim": 0.05599999999999916,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Depois de ouvir, peça um exemplo ligado a uma situação. Se a orientação for incluir pendências nas mensagens, combine a ação: na próxima atualização, vou dizer o que concluí, o que falta e se preciso de apoio. Marque uma revisão para saber se isso ajudou. Se você discordar de algum ponto, explique o contexto e peça para comparar os fatos. Uma conversa respeitosa permite perguntas. Se houver humilhação ou ofensa, você pode buscar apoio de uma pessoa responsável. Aprender exige orientação que você consiga compreender e aplicar.",
+   "assetAntes": "ast_hf2fg2vei3umgtpa",
+   "economiaS": 4.1
+  },
+  {
+   "alvo": "C14/aula_01/v02",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.7,
+   "aberturaEm": [
+    "v00"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 45.32,
+   "estado": "aplicado",
+   "assetId": "ast_u7lhxog2niv32byn",
+   "duracaoDepoisS": 40.56,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 8.8,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 8.8,
+     "duration": 6.92,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 15.72,
+     "duration": 13.28,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s4",
+     "start": 29,
+     "duration": 4.16,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "chamada",
+     "start": 33.16,
+     "duration": 7.4,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.054999999999999716,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.06400000000000006,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.08,
+     "tailTrim": 0.02799999999999958,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Agora, o pulo do gato: transformar experiência em habilidade. Para cada situação, pergunte: o que eu fazia ali? A Júlia ajuda na loja da tia aos sábados. Ela atende clientes, organiza o estoque e fecha o caixa. Isso mostra atendimento, organização e responsabilidade com dinheiro. Percebe? Uma única situação pode mostrar várias habilidades. Na entrevista, você não vai dizer só ‘sou organizada’. Vai contar o que fazia e deixar a habilidade aparecer no exemplo. Você é monitor de uma disciplina e tira dúvidas toda semana. Agora, responda: que habilidade isso mostra?",
+   "assetAntes": "ast_de6bnmr19ldnyd8b",
+   "economiaS": 4.76
+  },
+  {
+   "alvo": "C14/aula_02/v04",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.7,
+   "aberturaEm": [
+    "v03"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 43.0,
+   "estado": "aplicado",
+   "assetId": "ast_2ngm2kmi3yz0s06j",
+   "duracaoDepoisS": 38.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 11.52,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 11.52,
+     "duration": 6.16,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 17.68,
+     "duration": 9.64,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 27.32,
+     "duration": 6.08,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "chamada",
+     "start": 33.4,
+     "duration": 4.96,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.06600000000000072,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.09999999999999964,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.054999999999999716,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Outra dica: leia as atividades, não só o nome da vaga. ‘Assistente administrativo’ pode ser atender telefone, organizar planilhas ou cuidar de documentos. As atividades mostram o que você vai fazer de verdade e quais experiências suas combinam. Faça um teste rápido: para cada atividade, pergunte ‘eu já fiz algo parecido?’. Se a resposta for sim em boa parte delas, candidate-se. E o que você ainda não sabe vira assunto para a entrevista: o que você está fazendo para aprender. Sua vez: com pouco tempo, que parte da vaga você leria primeiro?",
+   "assetAntes": "ast_r1kmuqdlwhmwfkih",
+   "economiaS": 4.6
+  },
+  {
+   "alvo": "C14/aula_04/v08",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.9,
+   "aberturaEm": [
+    "v07"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 43.88,
+   "estado": "aplicado",
+   "assetId": "ast_0ky90dryiq28knaq",
+   "duracaoDepoisS": 38.96,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 7.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 7.68,
+     "duration": 13.44,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 21.12,
+     "duration": 7.44,
+     "audioDelay": 0,
+     "clipStart": 0.16
+    },
+    {
+     "id": "s4",
+     "start": 28.56,
+     "duration": 4.92,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "chamada",
+     "start": 33.48,
+     "duration": 5.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09600000000000009,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.06600000000000072,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.16,
+     "tailTrim": 0.05599999999999916,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.12,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Para escrever cada linha, use uma receita simples: um verbo de ação, o que você fazia e, se der, um número. Em vez de ‘responsável pelo estoque’, escreva ‘organizei o estoque da loja toda semana’. Em vez de ‘participei da feira’, escreva ‘ajudei a montar uma feira com quarenta expositores’. Números chamam atenção, mas só use números verdadeiros. Se não sabe a quantidade exata, diga ‘cerca de’. E revise duas vezes: erro de português pode derrubar um currículo bom. Seu currículo passou de uma página. Agora, responda: o que você tira?",
+   "assetAntes": "ast_x04ko811m8mhsvbt",
+   "economiaS": 4.92
+  },
+  {
+   "alvo": "C14/aula_05/v10",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 3.1,
+   "aberturaEm": [
+    "v09"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "missao_fim"
+   ],
+   "planoAnterior": "s3",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 33.0,
+   "estado": "aplicado",
+   "assetId": "ast_cystgg9o6xce78s2",
+   "duracaoDepoisS": 29.8,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 9.84,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 9.84,
+     "duration": 10.52,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s3",
+     "start": 20.36,
+     "duration": 9.44,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.018000000000000682,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.08,
+     "tailTrim": 0.0259999999999998,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "O ‘Sobre’ é onde muita gente trava. Use três frases. Na primeira, diga o que você faz hoje: estudo, curso, cidade. Na segunda, conte uma experiência de que você se orgulha. Na terceira, diga o que procura agora. Olha o exemplo da Júlia: ‘Estudo Administração em Belém. Organizei a feira de empreendedorismo da faculdade e cuidei do orçamento. Busco meu primeiro estágio em finanças.’ Simples, direto e verdadeiro.",
+   "assetAntes": "ast_toi5dkptop6s152v",
+   "economiaS": 3.2
+  },
+  {
+   "alvo": "C14/aula_07/v13",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.8,
+   "aberturaEm": [
+    "v12"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 32.7,
+   "estado": "aplicado",
+   "assetId": "ast_yy17e2q29vcgw1vj",
+   "duracaoDepoisS": 27.7,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 11.52,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 11.52,
+     "duration": 2.12,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s3",
+     "start": 13.64,
+     "duration": 2.44,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 16.08,
+     "duration": 5.28,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "chamada",
+     "start": 21.36,
+     "duration": 6.28,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.022999999999999687,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0,
+     "tailTrim": 0.01499999999999968,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.05600000000000005,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0.08,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Na hora do teste, três cuidados ajudam muito. Primeiro: leia as instruções até o fim, inclusive quanto tempo você tem. Segundo: não trave numa questão. Terceiro: faça sozinho. E se você for mal? Faz parte. Anote o que foi difícil e treine com testes gratuitos de lógica antes do próximo. Faltam 15 minutos e você travou numa questão. Agora, responda: o que você faz?",
+   "assetAntes": "ast_movcmvod7e43np2s",
+   "economiaS": 5.0
+  },
+  {
+   "alvo": "C14/aula_08/v15",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.4,
+   "aberturaEm": [
+    "v14"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": null,
+   "ultimoPlano": true,
+   "duracaoAntesS": 33.28,
+   "estado": "aplicado",
+   "assetId": "ast_i67vpur8w6agipru",
+   "duracaoDepoisS": 28.96,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 10,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 10,
+     "duration": 6.44,
+     "audioDelay": 0,
+     "clipStart": 0.04
+    },
+    {
+     "id": "s3",
+     "start": 16.44,
+     "duration": 8.84,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s4",
+     "start": 25.28,
+     "duration": 3.68,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.02800000000000047,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.04,
+     "tailTrim": 0.07099999999999973,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0.019999999999999574,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Se você é mais tímido, tenho uma boa notícia: não precisa liderar a dinâmica para se destacar. Existem papéis discretos e muito valorizados. Quem cuida do tempo avisa quanto falta. Quem resume organiza as ideias que já apareceram. Quem convida pergunta para quem ainda não falou: ‘e você, o que acha?’. Cada um desses papéis mostra colaboração e escuta. Uma boa participação vale mais do que muita fala.",
+   "assetAntes": "ast_d4s03ph4a51wwol4",
+   "economiaS": 4.32
+  },
+  {
+   "alvo": "C14/aula_09/v17",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 5,
+   "aberturaEm": [
+    "v16"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s3",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 37.0,
+   "estado": "aplicado",
+   "assetId": "ast_n4tr5z7h8cytzx4u",
+   "duracaoDepoisS": 32,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 9.76,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 9.76,
+     "duration": 10.64,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s3",
+     "start": 20.4,
+     "duration": 6.08,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "chamada",
+     "start": 26.48,
+     "duration": 5.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.120000000000001,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.12,
+     "tailTrim": 0.08000000000000007,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0,
+     "tailTrim": 0.16000000000000014,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1.14
+    }
+   ],
+   "transcricao": "Agora, um cuidado: não decore palavra por palavra. Resposta decorada soa robótica e, se você esquece uma palavra, trava tudo. Decore só a ordem: hoje, orgulho, busco. O resto, fale do seu jeito. Treine em voz alta umas cinco vezes, de formas um pouco diferentes. Se puder, grave no celular e ouça. Você vai perceber onde enrolou e onde ficou claro. Deu branco no meio da sua apresentação. Agora, responda: o que você faz?",
+   "assetAntes": "ast_tjatmw2ipdcgyq55",
+   "economiaS": 5.0
+  },
+  {
+   "alvo": "C14/aula_10/v19",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 4.6,
+   "aberturaEm": [
+    "v18"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 37.9,
+   "estado": "aplicado",
+   "assetId": "ast_slb0qlynjs20lpdy",
+   "duracaoDepoisS": 33.3,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 5.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 5.48,
+     "duration": 8.84,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s3",
+     "start": 14.32,
+     "duration": 3.12,
+     "audioDelay": 0,
+     "clipStart": 0.12
+    },
+    {
+     "id": "s4",
+     "start": 17.44,
+     "duration": 11.32,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "chamada",
+     "start": 28.76,
+     "duration": 4.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.016000000000000014,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.08,
+     "tailTrim": 0.05600000000000094,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.12,
+     "tailTrim": 0.06799999999999962,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0.031000000000000583,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Três erros derrubam histórias boas. O primeiro é falar só ‘nós’. O segundo é não terminar: a história para na ação e ninguém sabe o que aconteceu. O terceiro é inventar ou exagerar. Basta uma pergunta a mais e a história desmonta. Use experiências pequenas e verdadeiras: um trabalho da escola, um problema na loja da família, um campeonato que quase não aconteceu. Pequeno e verdadeiro funciona. Agora é com você: escolha a frase que mostra melhor a sua parte.",
+   "assetAntes": "ast_m4357un47x0jiv0p",
+   "economiaS": 4.6
+  },
+  {
+   "alvo": "C14/aula_11/v21",
+   "courseId": "crs_hvvgkvtd1rb2um0l",
+   "esperadoS": 5.4,
+   "aberturaEm": [
+    "v20"
+   ],
+   "planosAntes": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "missao_fim",
+    "chamada"
+   ],
+   "planoAnterior": "s4",
+   "planoSeguinte": "chamada",
+   "ultimoPlano": false,
+   "duracaoAntesS": 36.84,
+   "estado": "aplicado",
+   "assetId": "ast_8llys71zz534h925",
+   "duracaoDepoisS": 31.4,
+   "timeline": [
+    {
+     "id": "s1",
+     "start": 0,
+     "duration": 5.32,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "s2",
+     "start": 5.32,
+     "duration": 8.68,
+     "audioDelay": 0,
+     "clipStart": 0.2
+    },
+    {
+     "id": "s3",
+     "start": 14,
+     "duration": 5.44,
+     "audioDelay": 0,
+     "clipStart": 0.08
+    },
+    {
+     "id": "s4",
+     "start": 19.44,
+     "duration": 6.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    },
+    {
+     "id": "chamada",
+     "start": 25.92,
+     "duration": 5.48,
+     "audioDelay": 0,
+     "clipStart": 0
+    }
+   ],
+   "joins": [
+    {
+     "id": "s1",
+     "headTrim": 0,
+     "tailTrim": 0.09999999999999964,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s2",
+     "headTrim": 0.2,
+     "tailTrim": 0.05999999999999872,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "s3",
+     "headTrim": 0.08,
+     "tailTrim": 0.0959999999999992,
+     "source": "audio",
+     "punch": 1
+    },
+    {
+     "id": "s4",
+     "headTrim": 0,
+     "tailTrim": 0.0959999999999992,
+     "source": "audio",
+     "punch": 1.14
+    },
+    {
+     "id": "chamada",
+     "headTrim": 0,
+     "tailTrim": 0,
+     "source": "audio",
+     "punch": 1
+    }
+   ],
+   "transcricao": "Duas perguntas costumam aparecer. A primeira: ‘por que você quer trabalhar aqui?’. Antes da entrevista, veja o que a empresa faz e o que você vai aprender ali. Responda ligando as duas coisas, com uma razão verdadeira. A segunda é sobre bolsa ou salário. Muitas vagas já informam o valor. Se não informam, pesquise vagas parecidas e, na entrevista, pergunte qual é a faixa prevista. Agora é com você: por que você quer trabalhar aqui? Escolha a melhor resposta.",
+   "assetAntes": "ast_eeqg5tuant2vqpdz",
+   "economiaS": 5.44
+  }
+ ]
+}

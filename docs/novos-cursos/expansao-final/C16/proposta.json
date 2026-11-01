@@ -1,0 +1,673 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C16",
+  "id": "crs_2rt2rsoii8bpydp2",
+  "titulo": "Discordar sem brigar",
+  "instrutor": "Mauro — Seu orientador",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 31
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou a fala do plano indicado (mesmo id, regrava só ele); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids não mudam.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. layout/camera seguem o padrão atual do curso.",
+  "A pergunta nova não ganha vídeo próprio: a cena anterior termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais).",
+  "A missão nova é fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; draftFromNodeId fica null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Aberturas: o plano 'missao'/'s4'/'s2' indicado troca de fala (mesmo id) por uma promessa concreta sem a palavra 'missão'. A regra do robô-aluno 'missao-sem-anuncio' precisa aceitar o anúncio sem a palavra (como no piloto C01).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "Reações novas: nenhuma usa as aberturas atuais do C16 ('Boa escolha', 'É por aí', 'Isso ajuda') nem as de frasesRepetidasEmVariosCursos.",
+  "Nenhum personagem novo: a aula 3 continua a Maitê (q04)."
+ ],
+ "diagnostico": [
+  "A q04 (Maitê, sexta/quarta) fecha o caso do formato, e a a02 pede critérios e uma pergunta ao destinatário; o curso para antes do que acontece depois: o destinatário responde.",
+  "O v04 manda “registrem o combinado”, mas nenhuma cena mostra como é esse registro (o que, por quê, quando rever) e nenhuma atividade cobra.",
+  "As duas práticas são montagem de blocos; nada acontece fora da tela.",
+  "As aberturas das duas aulas usam a fórmula “No fim desta aula, tem uma missão para você”.",
+  "O curso termina numa tela de texto genérica: sem fecho do Mauro."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Discordar de uma proposta com respeito, negociar um próximo passo e registrar uma decisão que dá para revisar. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Tratar o retorno que chega depois da entrega como critério para a próxima e registrar uma decisão de forma que dê para revisar."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "colega da planilha (sem nome)",
+    "Cauê",
+    "Maitê"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Dá para pensar diferente",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 troca de fala; os demais planos ficam.",
+     "planos": [
+      {
+       "id": "s4",
+       "fala": "Até o fim da aula, você escreve uma discordância em três partes: objetivo comum, preocupação e proposta. Dá para usar amanhã.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "change",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva uma discordância com objetivo comum, preocupação e proposta.",
+       "duracaoAnteriorS": 7.5
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com frase repetida em 12–13 cursos (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com frase repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução: o componente é de blocos, mas o texto diz 'Escreva uma resposta curta'. Molde, blocos e título ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Quando a crítica vem alto, peça um exemplo. O exemplo é o que dá para resolver."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como sair do impasse",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 troca de fala.",
+     "planos": [
+      {
+       "id": "s2",
+       "fala": "Guarde esta ideia: critério antes de opinião. Na prática desta aula, você escolhe dois critérios e uma pergunta para destravar uma decisão.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "change",
+       "palavras": 22,
+       "segundos": 8.4,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: defina dois critérios e uma pergunta que ajudariam a resolver um impasse.",
+       "duracaoAnteriorS": 7.4
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com frase repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com frase repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução (mesmo defeito da a01). Molde e blocos ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Quando há impasse, critérios e uma pergunta a quem vai usar ajudam mais do que insistir. Se você salvou, seus critérios ficam no Meu roteiro. Na próxima aula, a resposta do destinatário chega na sexta, e você decide o que fazer com ela.",
+      "closingLine": "Quem vai usar, para quê e até quando: o critério vem antes do formato."
+     },
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' e 'Você chegou ao final…' passam para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Discordar sem brigar",
+   "titulo": "Um combinado que dá para revisar",
+   "resumo": "Você decide o que fazer quando o retorno chega depois da entrega, aprende a registrar a decisão em uma linha e usa um critério num grupo seu nesta semana.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Tratar o retorno que chega depois da entrega como critério para a próxima e registrar uma decisão de forma que dê para revisar."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "A resposta chegou na sexta",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "O que você faz com o retorno?",
+     "planos": [
+      {
+       "id": "promessa",
+       "fala": "Nesta última aula, você leva o critério para fora da tela: na próxima decisão travada do seu grupo, você fala um critério antes da opinião.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5,
+       "nota": "Faz o papel do antigo anúncio, sem a fórmula e sem a palavra 'missão'."
+      },
+      {
+       "id": "s1",
+       "fala": "Lembra da Maitê? Ela e o colega entregaram na quarta o formato que cabia no prazo, e registraram o motivo.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "O colega preferia o outro formato, mas aceitou o critério. Na sexta, chega a resposta do destinatário: ele prefere justamente o outro formato.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "chamada",
+       "fala": "A entrega já foi feita, dentro do pedido e do prazo. No lugar da Maitê, o que você faz com essa resposta?",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      }
+     ],
+     "cartaoPerguntaSeguinte": "A entrega saiu na quarta, no formato que cabia no prazo. Na sexta, o destinatário diz que prefere o outro formato. No lugar da Maitê, o que você faz?",
+     "proximo": "q05",
+     "palavras": 90,
+     "segundos": 34.4,
+     "roteiroNovo": "Nesta última aula, você leva o critério para fora da tela: na próxima decisão travada do seu grupo, você fala um critério antes da opinião. Lembra da Maitê? Ela e o colega entregaram na quarta o formato que cabia no prazo, e registraram o motivo. O colega preferia o outro formato, mas aceitou o critério. Na sexta, chega a resposta do destinatário: ele prefere justamente o outro formato. A entrega já foi feita, dentro do pedido e do prazo. No lugar da Maitê, o que você faz com essa resposta?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Maitê, o que você faz com essa resposta?",
+     "apoioNaTela": "A entrega saiu na quarta, no formato que cabia no prazo, com o motivo registrado. Na sexta, o destinatário responde que prefere o outro formato.",
+     "bridge": {
+      "call": "No lugar da Maitê, o que você faz com essa resposta?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Refaço esta entrega no outro formato hoje mesmo, para compensar.”",
+       "qualidade": "ok",
+       "feedback": "A entrega já cumpriu pedido e prazo; refazer gasta tempo sem necessidade. Faça assim: agradeça o retorno, anote a preferência e aplique na próxima entrega.",
+       "reacao": {
+        "texto": "A vontade de agradar é compreensível. Mas essa entrega já cumpriu pedido e prazo. Refazer agora gasta tempo; a preferência vale para a próxima.",
+        "palavras": 24,
+        "segundos": 9.2
+       },
+       "vaiPara": "v06",
+       "caracteres": 66
+      },
+      {
+       "id": "b",
+       "rotulo": "“Anoto a preferência como padrão para as próximas e aviso o colega que defendia o formato pronto.”",
+       "qualidade": "strong",
+       "feedback": "O impasse fecha com um critério que veio de quem usa, e o colega continua dentro da decisão. Faça assim: responda ao destinatário, registre o padrão novo e conte ao colega no mesmo dia.",
+       "reacao": {
+        "texto": "Que critério ajudou vocês a seguir? O prazo. Agora chegou outro, de quem usa. O colega fica dentro da decisão, não de um placar.",
+        "palavras": 24,
+        "segundos": 9.2
+       },
+       "vaiPara": "v06",
+       "caracteres": 98
+      },
+      {
+       "id": "c",
+       "rotulo": "“Digo ao colega que ele estava errado desde o começo.”",
+       "qualidade": "weak",
+       "feedback": "Não havia erro: os dois formatos atendiam ao pedido. Faça assim: trate o retorno como critério novo, não como prova de quem tinha razão.",
+       "reacao": {
+        "texto": "Pare um segundo: havia erro? Os dois formatos atendiam ao pedido. Transformar o retorno em placar desgasta a equipe e não melhora a próxima.",
+        "palavras": 24,
+        "segundos": 9.2
+       },
+       "vaiPara": "v06",
+       "caracteres": 54
+      }
+     ],
+     "porQueFunciona": "A resposta não está no enunciado: ele diz que a entrega cumpriu pedido e prazo e que o retorno veio depois; decidir que o retorno vale para a próxima (e não para refazer ou para dar razão a alguém) é a decisão. A opção A é a tentação de quem quer agradar. Sem vídeo próprio da pergunta."
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Um combinado que dá para revisar",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "O que · Por quê · Quando rever",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Nem todo impasse termina com todo mundo preferindo a mesma opção. Às vezes termina com um critério entendido e um combinado que permite seguir.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s2",
+       "fala": "Registre em uma linha: o que foi escolhido, por quê, e quando será revisto. ‘Formato pronto nesta entrega, pelo prazo. Sexta, perguntamos a preferência.’",
+       "layout": "presenter_chips",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2,
+       "cartao": {
+        "titulo": "Registro da decisão",
+        "topicos": [
+         "**O que**: formato pronto nesta entrega",
+         "**Por quê**: cabe no prazo e atende ao pedido",
+         "**Quando rever**: sexta, com o destinatário"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "Se surgir informação nova, mudar de ideia não apaga o raciocínio anterior. Significa que a decisão foi ajustada ao que vocês sabem agora.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: na próxima vez que um grupo seu travar entre duas opções, fale um critério em voz alta. Depois, conte como foi.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_esq",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra. A aula segue para a03."
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete o v04 (critério antes do formato; registrem o combinado): o novo é o registro em uma linha (o que, por quê, quando rever), o retorno como critério para a próxima e “mudar de ideia não apaga o raciocínio”.",
+     "palavras": 96,
+     "segundos": 36.6,
+     "roteiroNovo": "Nem todo impasse termina com todo mundo preferindo a mesma opção. Às vezes termina com um critério entendido e um combinado que permite seguir. Registre em uma linha: o que foi escolhido, por quê, e quando será revisto. ‘Formato pronto nesta entrega, pelo prazo. Sexta, perguntamos a preferência.’ Se surgir informação nova, mudar de ideia não apaga o raciocínio anterior. Significa que a decisão foi ajustada ao que vocês sabem agora. Agora é com você: na próxima vez que um grupo seu travar entre duas opções, fale um critério em voz alta. Depois, conte como foi."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Fale um critério antes de defender a sua opção",
+     "tipoDeMissao": "FAZER fora da tela: na próxima decisão travada de um grupo seu, dizer um critério em voz alta e, se decidirem, registrar em uma linha",
+     "intro": "A Maitê saiu do impasse com um critério, não com a voz mais alta. Agora é num grupo seu: escola, família, trabalho.",
+     "action": [
+      "Repare na próxima vez que um grupo seu travar entre duas opções: qual filme, que dia, qual formato.",
+      "Antes de defender a sua, fale um critério em voz alta: “O que pesa mais aqui, prazo ou facilidade?”",
+      "Se decidirem, registre em uma linha: o que, por quê e quando rever. Pode ser uma mensagem no grupo.",
+      "Volte aqui, marque “Já experimentei” e conte o que aconteceu."
+     ],
+     "alternative": "Não precisa ser trabalho: o grupo do trabalho de escola, a família escolhendo o almoço de domingo, os amigos decidindo onde ir. Impasse tem em todo lugar.",
+     "tip": {
+      "rotulo": "Exemplo de registro",
+      "texto": "Trabalho de grupo travado entre vídeo e slides. Perguntei: o que pesa mais, o tempo que temos ou a nota de apresentação? Fomos de slides. Registrei no grupo: “Slides, porque sobra uma semana. Se der tempo, gravamos o vídeo.”",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Uma ou duas frases: o critério ajudou o grupo a decidir? Se travou mesmo assim, o que faltou?",
+      "placeholder": "Ex.: falei “prazo” e a discussão parou em dois minutos.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó: título da seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; o nó e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Discordar sem brigar",
+     "textoTela": "Objetivo comum · Exemplo · Critério · O que me faria mudar de ideia?",
+     "posicao": "depois da missão e antes do fim",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "O colega da planilha falou alto, e você pediu um exemplo. O Cauê falou do dado, não da pessoa. A Maitê escolheu por critério.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "d2",
+       "fala": "Discordar pode revelar a informação que estava faltando. Por isso, numa diferença de opinião, nomeie o objetivo comum antes de defender a solução.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "d3",
+       "fala": "E leve uma pergunta para a próxima conversa difícil: o que faria você mudar de ideia? Quem sabe responder isso, discorda sem brigar.",
+       "layout": "presenter",
+       "camera": "cam_mauro7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      }
+     ],
+     "palavras": 70,
+     "segundos": 26.7,
+     "forma": "termina com uma pergunta entregue ao aluno (“o que faria você mudar de ideia?”), que devolve o título do curso. Callback aos três casos em uma frase; sem “você praticou”, sem “Meu roteiro”.",
+     "motionPrompt": "mão no queixo, depois gesto aberto de convite; sorriso leve",
+     "roteiroNovo": "O colega da planilha falou alto, e você pediu um exemplo. O Cauê falou do dado, não da pessoa. A Maitê escolheu por critério. Discordar pode revelar a informação que estava faltando. Por isso, numa diferença de opinião, nomeie o objetivo comum antes de defender a solução. E leve uma pergunta para a próxima conversa difícil: o que faria você mudar de ideia? Quem sabe responder isso, discorda sem brigar."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Mudar de ideia com informação nova não apaga o raciocínio. Ajusta a decisão ao que vocês sabem agora.",
+     "summary": "O que você levou\nQuando a crítica vem para você, peça um exemplo.\nQuando é você quem discorda, fale da proposta e do efeito.\nNum impasse, critério antes de opinião; registre o que, por quê e quando rever.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu critério desta semana",
+       "kind": "checklist",
+       "items": [
+        "falei um critério antes da minha opinião",
+        "o grupo decidiu (ou travou, e eu sei por quê)",
+        "registrei em uma linha: o que, por quê, quando rever"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando o grupo travar, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Quando a crítica vem para você, peça um exemplo.\nQuando é você quem discorda, fale da proposta e do efeito.\nNum impasse, critério antes de opinião; registre o que, por quê e quando rever.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos \"keep\" custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 11,
+   "palavras": 256,
+   "segundos": 97.7
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 72,
+   "segundos": 27.5
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 43,
+   "segundos": 16.4,
+   "duracaoAnteriorS": 14.9
+  },
+  "totalNovoFalado": {
+   "palavras": 371,
+   "segundos": 141.6,
+   "usd": 2.59
+  },
+  "teto": "150 s (alvo 90–130 s)",
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 4,
+    "palavras": 90,
+    "segundos": 34.4
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 72,
+    "segundos": 27.5
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 96,
+    "segundos": 36.6
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 70,
+    "segundos": 26.7
+   },
+   {
+    "no": "aberturas trocadas (aulas existentes)",
+    "planos": 2,
+    "palavras": 43,
+    "segundos": 16.4
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 86,
+   "segundos": 32.8,
+   "usd": 0.6,
+   "nota": "Reações atuais que abrem com frase repetida em vários cursos. (b) cortar a primeira frase, se o ajuste fino aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no total acima.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você evita o conflito, mas muda sem saber o que realmente atrapalha.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "O tom sobe e a conversa vira disputa pessoal.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "O comentário generaliza o comportamento e aumenta a tensão.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você evita o conflito, mas o risco continua sem que a equipe possa avaliá-lo.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "A discussão consome tempo sem criar um critério de escolha.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Olhe isso com calma.",
+     "resto": "A escolha de um lado só pode gerar retrabalho e desgaste.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Você evita decidir sozinha, mas o prazo estoura.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você busca uma decisão, mas o gestor pode não responder antes de quarta.",
+     "palavras": 13,
+     "segundos": 5.0
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 146.1,
+    "maxS": 152.6,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 254.5,
+    "maxS": 261.0,
+    "texto": "cerca de 4.2–4.3 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença das aberturas trocadas (nova − gravada)."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+  "2. Registro da decisão: (a) só modelado no v06 (fala + cartão) e no exemplo da missão, sem exercício de tela · (b) acrescentar a prática de tela S2 do banco (“Registre a decisão para revisar depois”) como nó extra na aula 3. Recomendo (a): a aula 3 fica com uma decisão, uma missão real e o fecho, como o piloto.",
+  "3. Reações atuais com abertura repetida (ver custos): (a) deixar · (b) cortar a primeira frase, se o ajuste fino aceitar (grátis) · (c) regravar a segunda frase. Recomendo (b); se não der, (a)."
+ ]
+}

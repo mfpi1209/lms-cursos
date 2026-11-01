@@ -1,0 +1,80 @@
+{
+ "geradoEm": "2026-11-01T11:32:05.744Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "IA como aliada",
+   "courseId": "crs_m60hsx8on6ebcyqg",
+   "rascunhoRevAntes": 38,
+   "varredura": {
+    "rascunho": {
+     "videos": 23,
+     "assets": 23,
+     "ge200": 1,
+     "tolerados": 4
+    },
+    "publicada": {
+     "versao": 2,
+     "videos": 20,
+     "assets": 20,
+     "ge200": 0,
+     "tolerados": 2,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_03",
+     "no": "despedida",
+     "tipo": "cena",
+     "de": "ast_2uy7h0hg2iaww62m",
+     "para": "ast_r2g0p8vimhh8fo0a",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 12,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 4.32,
+       "ms": 240,
+       "quadro": 108,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 10,
+       "ok": true,
+       "dmaxAB": 32,
+       "inicio": 22.44,
+       "ms": 200,
+       "quadro": 561,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 9039360,
+      "tamanhoDepois": 11859037,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [],
+   "rascunhoRevDepois": 39
+  }
+ ]
+}

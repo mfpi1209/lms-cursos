@@ -1,0 +1,711 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C22",
+  "id": "crs_njtlqq7y7fyfeqcr",
+  "titulo": "Errei. E agora?",
+  "instrutor": "Vinícius — Seu orientador",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 31,
+  "notaRevisao": "A Fase 0 subiu o rascunho de 31 para 32: a01 já está no contexto fixo do orçamento (molde em primeira pessoa) e a02 já tem a instrução nova. Aqui só se propõe trocar “referência responsável” por “pessoa responsável” no prompt da a01."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim. Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v04, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2: regravam só v01/s4 e v03/s2 (anúncio da prática sem a fórmula); o resto do vídeo é reaproveitado. Textos: a01 (duas palavras do prompt), fim_aula_01 (frase de fechamento) e fim_aula_02 (deixa de ser fim do curso).",
+  "Planos de vídeo: falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_vinicius6_34 com chamada na cam_vinicius6_esq; explicação na cam_vinicius6_esq; despedida na cam_vinicius6_34.",
+  "q05 não ganha vídeo próprio: v05 termina com a chamada e o player pula o vídeo da pergunta.",
+  "q05 é a decisão S1 do banco (a colega pergunta “Resolveu aquilo do orçamento?”), escrita em “você” e com reação falada. A decisão original do pacote (repetia a q04 da Elaine) não entra.",
+  "a03 é missão fora da tela (“Leve para a vida real”): um erro pequeno real, três linhas no bloco de notas e a conferência usada uma vez na semana. “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C22 (“Boa escolha”, “É por aí”, “Isso ajuda”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "O curso ensina a avisar o erro (aula 1) e a mudar o processo (aula 2), mas pula o meio do caminho: você já corrigiu o seu arquivo, o cliente ainda não foi avisado, e alguém pergunta “resolveu?”.",
+  "Nenhuma cena separa “o que eu fiz” de “o que ainda depende de decisão”; o risco de dizer “tudo certo” antes da hora não aparece.",
+  "A ordem “contenha primeiro, previna depois” e o registro do tipo de erro + ponto de conferência (para ver se a prevenção atacou a causa) ficam de fora.",
+  "As duas práticas (a01 aviso, a02 mudança) são de tela sobre o orçamento fictício; ninguém olha um erro seu de verdade.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final…”): sem fecho do Vinícius, sem as três perguntas que o banco considera memoráveis."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Comunicar erros, dizer o que já foi corrigido e o que ainda falta, e mudar o processo na causa. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Ao comunicar uma correção, separar o que já foi feito do que ainda depende de decisão, sem prometer pelo outro, e registrar o erro para ver se a prevenção atacou a causa."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Gisele",
+    "Elaine"
+   ],
+   "novos": [
+    "a colega do grupo da equipe (sem nome)"
+   ]
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Percebi o erro: qual é o próximo passo?",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s4",
+       "acao": "change",
+       "fala": "Antes de terminar, você monta um aviso de erro pronto para mandar: o fato, o possível impacto, o próximo passo.",
+       "nota": "Anúncio da a01 sem a palavra “missão”.",
+       "antes": "No fim desta aula, tem uma missão para você: escreva um aviso de erro com fato, possível impacto e próximo passo.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.2
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Fase 0 já aplicou o contexto do orçamento (molde “No orçamento, eu digitei R$ 480 no lugar de R$ 840. {impacto}. {pedido}?”). Só troca jargão no prompt.",
+     "campos_alterados": {
+      "prompt": "Você digitou R$ 480 no lugar de R$ 840 no orçamento, e o cliente já aceitou. Monte o aviso para a pessoa responsável, escolhendo uma opção em cada grupo. Você ainda não tem autorização para alterar as condições com o cliente.",
+      "campos.pedido.pergunta": "O que você pede à pessoa responsável?"
+     }
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Fato, impacto, próximo passo. Sem desculpa no meio."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como corrigir e aprender",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "fala": "Daqui a pouco, a pergunta é outra: que mudança pequena evita esse erro, e como você vai saber se funcionou?",
+       "nota": "Anúncio da a02, com estrutura diferente do v01/s4.",
+       "antes": "No fim desta aula, tem uma missão para você: escolha uma mudança no processo e diga como verificar se ela reduziu o erro.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.4
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Corrigir também é olhar o processo: uma mudança pequena e uma conferência já ajudam. Se você salvou, sua escolha fica no Meu roteiro para acompanhar. Na próxima aula: o arquivo já corrigido, o cliente ainda não avisado, e um erro seu de verdade.",
+      "closingLine": "Mudança pequena, conferência certa. Lista de dez etapas ninguém segue."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” vão para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Errei. E agora?",
+   "titulo": "Resolveu aquilo?",
+   "resumo": "Você corrigiu o seu arquivo, o cliente ainda não foi avisado e alguém pergunta “resolveu?”. Depois, um erro seu de verdade e a conferência que o evitaria.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Ao comunicar uma correção, separar o que já foi feito do que ainda depende de decisão, sem prometer pelo outro, e registrar o erro para ver se a prevenção atacou a causa."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Resolveu aquilo?",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Corrigido no arquivo. E o cliente?",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já avisou o erro e já escolheu uma conferência. Falta o meio: corrigido no seu arquivo, mas o caso não acabou.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você pega um erro pequeno seu, de verdade, monta a conferência que teria evitado e usa essa conferência nesta semana.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”.",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "De volta ao orçamento. Você corrigiu o valor no seu arquivo. O cliente ainda não foi avisado: isso está com o gestor.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_34",
+       "cartao": {
+        "titulo": "Onde o caso está",
+        "topicos": [
+         "**Feito**: valor corrigido no arquivo (R$ 840)",
+         "**Pendente**: aviso ao cliente, com o gestor"
+        ]
+       },
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "No grupo da equipe, uma colega pergunta: “Resolveu aquilo do orçamento?”",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 11,
+       "segundos": 4.2,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "Agora, responda: o que você escreve no grupo?",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 8,
+       "segundos": 3.1,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "Você corrigiu o valor no seu arquivo. O cliente ainda não foi avisado; isso está com o gestor. Uma colega pergunta no grupo: “Resolveu aquilo do orçamento?” O que você escreve?",
+     "proximo": "q05",
+     "palavras": 85,
+     "segundos": 32.4,
+     "roteiroNovo": "Você já avisou o erro e já escolheu uma conferência. Falta o meio: corrigido no seu arquivo, mas o caso não acabou. No fim, você pega um erro pequeno seu, de verdade, monta a conferência que teria evitado e usa essa conferência nesta semana. De volta ao orçamento. Você corrigiu o valor no seu arquivo. O cliente ainda não foi avisado: isso está com o gestor. No grupo da equipe, uma colega pergunta: “Resolveu aquilo do orçamento?” Agora, responda: o que você escreve no grupo?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "O que você escreve no grupo?",
+     "apoioNaTela": "Você conferiu o valor e corrigiu o orçamento no seu arquivo. O cliente ainda não foi avisado; isso depende do gestor. Uma colega pergunta no grupo: “Resolveu aquilo do orçamento?”",
+     "bridge": {
+      "call": "Agora, responda: o que você escreve no grupo?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Resolvi, já está tudo certo.”",
+       "qualidade": "ok",
+       "feedback": "O arquivo foi corrigido, mas o cliente ainda não. “Tudo certo” pode fazer alguém parar de acompanhar. Faça assim: separe o que você fez do que ainda depende de decisão.",
+       "reacao": {
+        "texto": "Tudo certo para você. Para o cliente, ainda não. Quem lê “tudo certo” para de acompanhar, e aí o erro cresce.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v06",
+       "caracteres": 30
+      },
+      {
+       "id": "b",
+       "rotulo": "“Corrigi o valor no arquivo. O contato com o cliente está com o gestor; aviso quando fechar.”",
+       "qualidade": "strong",
+       "feedback": "Você informa o fato e o que ainda está em aberto, sem prometer pelo gestor. Faça assim: quando o contato com o cliente fechar, volte ao grupo e encerre o assunto.",
+       "reacao": {
+        "texto": "Duas frases, duas informações: o que você fez, o que depende de alguém. Ninguém promete pelo gestor, ninguém para de acompanhar.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v06",
+       "caracteres": 93
+      },
+      {
+       "id": "c",
+       "rotulo": "“Ainda não, tá tudo parado.”",
+       "qualidade": "weak",
+       "feedback": "Parte já foi feita. Esconder o avanço confunde quem acompanha tanto quanto esconder o erro. Faça assim: diga o que foi feito e o que falta.",
+       "reacao": {
+        "texto": "Parado não está: o arquivo foi corrigido. Esconder o avanço confunde tanto quanto esconder o erro. Diga feito e pendente.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v06",
+       "caracteres": 28
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele diz o que foi feito e o que falta; perceber que a mensagem precisa carregar os dois, sem prometer pelo gestor, é a decisão. Não repete q01 (assumir o erro) nem q04 (ajustar a conferência). Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 62,
+     "segundosReacoes": 23.7
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Feito, pendente, causa",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Conter · Dizer em que etapa está · Prevenir na causa",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Corrigir tem etapas. Primeiro, conter: o erro para de se espalhar. Depois, prevenir. E, no meio, dizer em que etapa você está.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "“O orçamento foi revisado” não quer dizer que o cliente foi avisado. Separe sempre: o que eu fiz, o que depende de outros.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_esq",
+       "cartao": {
+        "titulo": "Ao avisar a correção",
+        "topicos": [
+         "**Feito**: o que você já corrigiu",
+         "**Pendente**: o que depende de alguém",
+         "**Quando** você avisa de novo"
+        ]
+       },
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "E anote o tipo do erro e onde passou a conferir. Em um mês, você vê se a conferência atacou a causa.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: um erro pequeno seu, recente. O que aconteceu, quem foi afetado, que conferência evitaria. Use essa conferência esta semana.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a03.",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete v02 (avise com fatos) nem v04 (uma conferência que ajude, sem dez etapas). O novo: conter → dizer a etapa → prevenir; feito × pendente; registrar tipo de erro e ponto de conferência para ver se a prevenção atacou a causa.",
+     "palavras": 90,
+     "segundos": 34.4,
+     "roteiroNovo": "Corrigir tem etapas. Primeiro, conter: o erro para de se espalhar. Depois, prevenir. E, no meio, dizer em que etapa você está. “O orçamento foi revisado” não quer dizer que o cliente foi avisado. Separe sempre: o que eu fiz, o que depende de outros. E anote o tipo do erro e onde passou a conferir. Em um mês, você vê se a conferência atacou a causa. Agora é com você: um erro pequeno seu, recente. O que aconteceu, quem foi afetado, que conferência evitaria. Use essa conferência esta semana."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Um erro seu, uma conferência sua",
+     "tipoDeMissao": "FAZER fora da tela: um erro pequeno real em três linhas no bloco de notas, e a conferência usada uma vez na semana",
+     "intro": "No orçamento, a conferência certa era comparar com a origem. Agora é um erro seu: pequeno, recente, de qualquer lugar. E a conferência que teria evitado.",
+     "action": [
+      "Lembre um erro pequeno e recente, de qualquer lugar: mensagem para a pessoa errada, material esquecido, conta errada, horário perdido.",
+      "No bloco de notas, três linhas: o que aconteceu · quem foi afetado (mesmo que só você) · que conferência de dez segundos teria evitado.",
+      "Nesta semana, use essa conferência uma vez, antes de entregar ou enviar algo parecido.",
+      "Se alguém perguntar “resolveu?”, responda com o feito e o que falta.",
+      "Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Não depende de emprego: erro de escola, de casa ou do grupo de amigos serve. Não lembra nenhum? Use o próximo erro pequeno que aparecer nesta semana; ele vai aparecer. Se trabalha, escolha um erro que só envolveu você, sem expor nome de cliente ou colega.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de um aluno",
+      "texto": "Erro: mandei o trabalho do grupo na versão antiga. Afetou: o grupo, que revisou coisa velha. Conferência: abrir o arquivo e olhar a data antes de anexar. Usei na quinta: peguei a versão errada de novo, antes de enviar.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: a conferência pegou alguma coisa? Ou não precisou? Sem nomes de pessoas nem dados internos.",
+      "placeholder": "Ex.: conferi o destinatário antes de enviar e estava errado; corrigi antes.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Errei. E agora? Três perguntas",
+     "textoTela": "O que aconteceu? · Quem pode estar usando essa informação? · Qual é a ação segura agora?",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Errei. E agora? No orçamento, você viu: o número errado era o menor problema. O que pesou foi o que veio depois.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "Ninguém promete nunca mais errar. O que dá para prometer: contar o fato, separar feito de pendente, mexer na causa.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Na próxima falha, três perguntas: o que aconteceu? Quem pode estar usando essa informação? Qual é a ação segura agora?",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina nas três perguntas (a frase memorável do banco), sem despedida formal: a última pergunta fica no ar e a tela mostra as três. Sem recap, sem “você praticou”, sem “Meu roteiro” na fala; sem a fórmula “não é… é…”.",
+     "motionPrompt": "conta nos dedos as três perguntas, pausa curta na última",
+     "palavras": 62,
+     "segundos": 23.7,
+     "roteiroNovo": "Errei. E agora? No orçamento, você viu: o número errado era o menor problema. O que pesou foi o que veio depois. Ninguém promete nunca mais errar. O que dá para prometer: contar o fato, separar feito de pendente, mexer na causa. Na próxima falha, três perguntas: o que aconteceu? Quem pode estar usando essa informação? Qual é a ação segura agora?"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Corrigido no seu arquivo não é resolvido para o cliente. Diga o que foi feito e o que falta.",
+     "summary": "O que você levou\nAvisar: fato, possível impacto, próximo passo.\nCorrigir: conter primeiro; dizer em que etapa está (feito × pendente); prevenir na causa.\nNa próxima falha: o que aconteceu? quem pode estar usando essa informação? qual é a ação segura agora?",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu erro, minha conferência",
+       "kind": "checklist",
+       "items": [
+        "escolhi um erro pequeno e recente",
+        "três linhas: o que, quem, que conferência",
+        "usei a conferência uma vez nesta semana",
+        "respondi “resolveu?” com feito e pendente"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando usar a conferência, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Avisar: fato, possível impacto, próximo passo.\nCorrigir: conter primeiro; dizer em que etapa está (feito × pendente); prevenir na causa.\nNa próxima falha: o que aconteceu? quem pode estar usando essa informação? qual é a ação segura agora?",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 237,
+   "segundos": 90.5
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 62,
+   "segundos": 23.7
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 40,
+   "segundos": 15.3,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s4",
+     "palavras": 20,
+     "segundos": 7.6,
+     "duracaoAntesS": 7.2
+    },
+    {
+     "no": "v03",
+     "plano": "s2",
+     "palavras": 20,
+     "segundos": 7.6,
+     "duracaoAntesS": 7.4
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 85,
+    "segundos": 32.4
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 62,
+    "segundos": 23.7
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 90,
+    "segundos": 34.4
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 62,
+    "segundos": 23.7
+   },
+   {
+    "no": "aberturas trocadas (2 planos)",
+    "planos": 2,
+    "palavras": 40,
+    "segundos": 15.3
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 87,
+   "segundos": 33.2,
+   "usd": 0.61,
+   "nota": "8 reações do C22 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Ela pode ajudar, mas você fica de fora de algo que foi seu.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Culpar o sistema não é verdade e atrasa a solução.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você é sincera, mas a explicação vira justificativa e não resolve o cliente.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Culpar os outros desvia da solução e piora a conversa.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "A atenção ajuda, mas sozinha não cria uma verificação.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Olhe isso com calma.",
+     "resto": "Uma lista longa demais pesa e acaba não sendo usada.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "O erro não voltou, mas a conferência pesa em casos de pouco risco.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A atenção não substitui a verificação que estava funcionando.",
+     "palavras": 9,
+     "segundos": 3.4
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 140.4,
+    "maxS": 146.3,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 239.1,
+    "maxS": 245.4,
+    "texto": "cerca de 4.0–4.1 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.6 s, ≈ US$ 0.67). Recomendo (b); se não der, (a).",
+  "3. Prompt da a01 (Fase 0) diz “referência responsável”, termo que a regra de conteúdo veta: (a) trocar por “pessoa responsável” (texto, grátis) · (b) deixar. Recomendo (a).",
+  "4. Opção A da q05 (“Resolvi, já está tudo certo”) como média e C (“tá tudo parado”) como fraca: (a) manter · (b) inverter (A fraca, porque faz alguém parar de acompanhar; C média, porque pelo menos não cria falsa segurança). Recomendo (a): a reação de A já carrega o risco; C esconde o próprio trabalho, o que a aula 1 condenou."
+ ]
+}

@@ -1,0 +1,877 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:45.952Z",
+ "curso": {
+  "codigo": "C03",
+  "id": "crs_hd4jnnpx3oj0xf14",
+  "titulo": "Celular no trabalho"
+ },
+ "status": "ok",
+ "revisaoAntes": 91,
+ "revisaoVistaPelaProposta": 89,
+ "versaoPublicadaComparada": 12,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: confirme o uso permitido.",
+   "depois": "Esta aula termina com a sua pergunta pronta: o que pode, e o que não pode, com celular no seu posto."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_01/m01.instrucoes",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Hábito do colega não é regra do seu posto. Pergunte."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v02/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: combine um recado necessário.",
+   "depois": "Você vai sair daqui com o pedido montado: como receber um recado importante sem ficar olhando o celular."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_02/m02.instrucoes",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nCombine como receber um recado necessário.\nPermissão de uso não autoriza gravar tudo.",
+   "depois": "Combinar o canal e quem cobre resolve o recado sem olhar o celular o tempo todo. Se você salvou, seu pedido fica no Meu roteiro. Na próxima aula, o combinado é testado: o recado chega com cliente na frente, e a cobertura falha."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Permissão para usar o celular não é permissão para gravar."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Combine o uso do celular sem perder recados importantes nem interromper a atividade. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue confirmar o uso permitido do celular e combinar como receber um recado necessário.",
+   "depois": "Combine o uso do celular sem perder recados importantes nem interromper a atividade, e saiba o que fazer quando o combinado falha na hora. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Agir quando o combinado de cobertura falha com cliente na frente, dizer o que falta (cobertura, aparelho, conexão) e priorizar emergência real."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v02"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Confirme o uso permitido\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Caio, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Caio, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Ana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Ana, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Combine um recado necessário\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Ana, como você combinaria esse recado?\" ainda não está na fala do vídeo \"No lugar da Ana, como você combinaria esse recado?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Caio, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Caio, o que você faria?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Ana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Ana, o que você faria?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Ana, como você combinaria esse recado?\" ainda não está na fala do vídeo \"No lugar da Ana, como você combinaria esse recado?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~b",
+  "aula_01/q02~a",
+  "aula_02/q03~c"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Quem cobriria o balcão: (a) o Caio, que já existe no curso (q01) · (b) um colega sem nome, para não dar ao Caio o papel de quem falhou. Recomendo (a): menos personagem, e “saiu” não é culpa.",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Missão m03: (a) só montar e testar o modo silencioso, como está · (b) também mandar a pergunta sobre celular a alguém (repete m01 em outro formato). Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "3. As 4 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~23.3 s, ≈ US$ 0.43). Recomendo (b); se não der, (a).",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Frase “Bom trabalho.” no fim da despedida: (a) manter (despedida curta, na voz dele) · (b) terminar na frase da advertência. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 13,
+  "palavrasPlanosAulaNova": 244,
+  "palavrasReacoesNovas": 56,
+  "palavrasAberturasTrocadas": 39,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "O recado chegou com cliente na frente",
+  "description": "Você vê o combinado falhar na hora, decide o próximo passo e monta no seu celular um modo silencioso que deixa passar só quem precisa.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v04",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O combinado na hora H",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Cliente · Cobertura · Aviso"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Regra geral você já tem: finalidade, momento, combinado. Agora, o teste: o recado chega com cliente na frente. No fim, você mexe no celular: um modo silencioso que deixa passar só uma ou duas pessoas. Pronto para o trabalho. A Ana combinou: se a família ligar, ela avisa e o Caio cobre o balcão. O celular vibra. Ela está atendendo. Ela olha para o lado. O Caio saiu. O combinado existia na conversa. Na hora, não funcionou. Cliente na frente, cobertura ausente. No lugar da Ana, qual é o próximo passo?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Regra geral você já tem: finalidade, momento, combinado. Agora, o teste: o recado chega com cliente na frente.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você mexe no celular: um modo silencioso que deixa passar só uma ou duas pessoas. Pronto para o trabalho.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "A Ana combinou: se a família ligar, ela avisa e o Caio cobre o balcão. O celular vibra. Ela está atendendo.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Ela olha para o lado. O Caio saiu. O combinado existia na conversa. Na hora, não funcionou.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "Cliente na frente, cobertura ausente. No lugar da Ana, qual é o próximo passo?",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Ana, qual é o próximo passo?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "A Ana precisa atender o recado combinado. O Caio, que cobriria o balcão, não está. A pessoa continua na frente dela. No lugar da Ana, qual é o próximo passo?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Peço ao cliente um minuto e saio para atender, sem avisar ninguém.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você respeita a sua necessidade, mas a equipe não sabe que a cobertura falhou e o balcão fica sozinho. Faça assim: antes de sair, avise alguém da equipe que o Caio não está."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "O balcão ficou sozinho e ninguém sabe. Não esconda o que falta. Diga: o Caio não está. Aí alguém resolve."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Desisto de atender. Sem o Caio, não tem como.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A cobertura falhou, mas a sua necessidade continua, e ninguém soube que você precisava de outra saída. Faça assim: diga a quem acompanha que o combinado não funcionou e peça outra opção."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Sem o Caio, o combinado falhou. A ligação, não. Condição mudou? Volte na conversa: quem cobre agora?"
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Aviso a quem acompanha que a cobertura falhou e peço outra opção para atender.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você mostra o que está travando e pede um ajuste concreto. Faça assim: avise rápido, pelo canal combinado, e cuide do cliente até alguém assumir."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Isso é combinado funcionando: falhou, você avisou, alguém ajusta. Rápido, pelo canal certo, e o cliente não fica sozinho."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "Cliente na frente, cobertura ausente. No lugar da Ana, qual é o próximo passo?"
+     }
+    },
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Quando o combinado encontra a vida",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Diga o que falta · Peça outra saída · Emergência passa na frente"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Para o cliente, uma frase basta: um instante, vou chamar alguém para continuar com você. O motivo fica com a equipe. Combinado bom é o que funciona na hora. Se a cobertura falha, você avisa. Não some, não desiste. Avisa. Falta aparelho ou internet para a tarefa? Diga o que precisa. Ninguém tem que gastar o próprio pacote de dados por suposição. E emergência de verdade passa na frente de qualquer combinado. Segurança primeiro. Acordo de rotina não impede pedir ajuda. Agora, pegue o celular. Monte um modo silencioso que deixe passar só uma ou duas pessoas. Teste hoje. Depois, conte aqui.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Para o cliente, uma frase basta: um instante, vou chamar alguém para continuar com você. O motivo fica com a equipe.",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Combinado bom é o que funciona na hora. Se a cobertura falha, você avisa. Não some, não desiste. Avisa.",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Se o combinado falhar",
+         "bullets": [
+          "Diga **o que falta**",
+          "Peça **outra saída**",
+          "**Cliente** acompanhado até alguém assumir"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "Falta aparelho ou internet para a tarefa? Diga o que precisa. Ninguém tem que gastar o próprio pacote de dados por suposição.",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "s4",
+        "line": "E emergência de verdade passa na frente de qualquer combinado. Segurança primeiro. Acordo de rotina não impede pedir ajuda.",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora, pegue o celular. Monte um modo silencioso que deixe passar só uma ou duas pessoas. Teste hoje. Depois, conte aqui.",
+        "cameraId": "cam_r7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Se o combinado falhar\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Monte o seu modo silencioso",
+     "type": "mission",
+     "intro": "A Ana combinou com a equipe quem avisar. O seu combinado começa no seu próprio celular: ele avisa só quem precisa passar.",
+     "action": "1. Abra as configurações de som: “Não perturbe”, “Modo foco” ou parecido.\n2. Crie um modo (ou use o Não perturbe) e libere 1 ou 2 contatos que podem passar: a pessoa da sua casa, quem cuida de alguém com você.\n3. Ligue o modo por uma hora hoje, numa atividade que pede atenção: aula, estudo, trabalho.\n4. Repare: quantas notificações você não viu, e se perdeu algo que importava de verdade.\n5. Volte aqui, marque “Já experimentei” e conte o que percebeu.",
+     "alternative": "Não trabalha ainda? O celular é o mesmo: faça na aula, numa hora de estudo, no jantar. Se não achar o modo no seu aparelho, escreva em “Como foi?” qual é o celular: já é a primeira pergunta de quem resolve.",
+     "example": "Modo “Trabalho”: só minha mãe e meu irmão passam. Liguei das 14h às 15h no estudo. Perdi 23 notificações. Nenhuma importava."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Pergunte antes",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que ficou combinado? · Falhou? Avise · Faltou? Diga"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "O Caio no balcão, a Ana com a ligação, o fone da colega. Três vezes a mesma pergunta: o que ficou combinado? Não sabe? Pergunte. O combinado falhou? Avise. Faltou aparelho? Diga. Nada disso precisa de advertência para acontecer. Pergunte antes. Advertência não é jeito de descobrir a regra. Bom trabalho.",
+     "motionPrompt": "nods slowly, warm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "O Caio no balcão, a Ana com a ligação, o fone da colega. Três vezes a mesma pergunta: o que ficou combinado?",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d2",
+        "line": "Não sabe? Pergunte. O combinado falhou? Avise. Faltou aparelho? Diga. Nada disso precisa de advertência para acontecer.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "d3",
+        "line": "Pergunte antes. Advertência não é jeito de descobrir a regra. Bom trabalho.",
+        "cameraId": "cam_r7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de usar: finalidade, momento, combinado."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Recado importante: combine o canal e quem cobre."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Falhou a cobertura? Avise, não suma."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Faltou aparelho ou internet? Diga. Emergência passa na frente."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu modo silencioso",
+       "kind": "checklist",
+       "items": [
+        "modo criado no celular",
+        "1 ou 2 contatos liberados",
+        "testado por uma hora",
+        "reparei o que perdi (e o que não fez falta)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m03",
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de usar: finalidade, momento, combinado.\nRecado importante: combine o canal e quem cobre.\nFalhou a cobertura? Avise, não suma.\nFaltou aparelho ou internet? Diga. Emergência passa na frente.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Combinado bom é o que funciona na hora. Se falhar, você avisa."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v04",
+     "from": "v04",
+     "to": "q04"
+    },
+    {
+     "id": "e_q04_a",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q04_b",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "b"
+    },
+    {
+     "id": "e_q04_c",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "c",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "m03"
+    },
+    {
+     "id": "e_m03",
+     "from": "m03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v04": {
+      "x": 0,
+      "y": 0
+     },
+     "q04": {
+      "x": 0,
+      "y": 180
+     },
+     "v05": {
+      "x": 0,
+      "y": 360
+     },
+     "m03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 92,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Caio, o que você faria?\" ainda não está na fala do vídeo \"No lugar do Caio, o que você faria?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Ana, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Ana, o que você faria?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Ana, como você combinaria esse recado?\" ainda não está na fala do vídeo \"No lugar da Ana, como você combinaria esse recado?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

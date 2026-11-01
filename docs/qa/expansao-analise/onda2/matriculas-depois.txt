@@ -1,0 +1,30 @@
+Aprender faz parte do trabalho | aluna@demo.local | completed | ["aula_03"] | 3
+Aprender faz parte do trabalho | aluno@demo.local | active | [] | 3
+Comecei a trabalhar | aluna@demo.local | completed | ["aula_07"] | 16
+Comecei a trabalhar | aluno@demo.local | active | [] | 16
+Discordar sem brigar | aluna@demo.local | completed | ["aula_03"] | 4
+Discordar sem brigar | aluno@demo.local | active | [] | 4
+Errei. E agora? | aluna@demo.local | completed | ["aula_03"] | 5
+Errei. E agora? | aluno@demo.local | active | [] | 5
+Faz sentido? | aluna@demo.local | completed | ["aula_03"] | 3
+Faz sentido? | aluno@demo.local | active | [] | 3
+IA como aliada | aluna@demo.local | completed | ["aula_03"] | 4
+IA como aliada | aluno@demo.local | active | [] | 4
+Minha ideia também conta | aluna@demo.local | completed | ["aula_03"] | 4
+Minha ideia também conta | aluno@demo.local | active | [] | 4
+Minha primeira vaga | aluna@demo.local | completed | ["aula_13"] | 18
+Minha primeira vaga | aluno@demo.local | active | [] | 18
+O outro só é diferente | aluna@demo.local | completed | ["aula_03"] | 4
+O outro só é diferente | aluno@demo.local | completed | ["aula_03"] | 4
+Onde está o problema? | aluna@demo.local | completed | ["aula_04"] | 3
+Onde está o problema? | aluno@demo.local | active | [] | 3
+Parece verdade. Será? | aluna@demo.local | completed | ["aula_03"] | 4
+Parece verdade. Será? | aluno@demo.local | active | [] | 4
+Por onde eu começo? | aluna@demo.local | completed | ["aula_03"] | 4
+Por onde eu começo? | aluno@demo.local | active | [] | 4
+Recebi uma correção. E agora? | aluna@demo.local | completed | ["aula_03"] | 17
+Recebi uma correção. E agora? | aluno@demo.local | completed | ["aula_03"] | 17
+Seus dados também trabalham | aluna@demo.local | completed | ["aula_03"] | 4
+Seus dados também trabalham | aluno@demo.local | active | [] | 4
+Tudo é urgente? | aluna@demo.local | completed | ["aula_03"] | 5
+Tudo é urgente? | aluno@demo.local | active | [] | 5

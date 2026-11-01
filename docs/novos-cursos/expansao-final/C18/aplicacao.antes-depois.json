@@ -1,0 +1,837 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.310Z",
+ "curso": {
+  "codigo": "C18",
+  "id": "crs_tg9iqz8wmmf5pw77",
+  "titulo": "Seus dados também trabalham"
+ },
+ "status": "ok",
+ "revisaoAntes": 44,
+ "revisaoVistaPelaProposta": 43,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s4",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: liste o que removeria de um print fictício antes de pedir ajuda.",
+   "depois": "Ao fim da aula, você olha um print e diz, item por item, o que sai antes de pedir ajuda. É treino de olho."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_01/a01.instrucoes",
+   "estado": "ja-corrigido-fase0",
+   "antes": "Monte a frase tocando em um bloco de cada grupo. Quer dizer de outro jeito? Use “Prefiro escrever”, com uma situação fictícia e sem dados pessoais.",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Use um print fictício: não inclua nomes, contatos ou informações internas.",
+   "motivo": "a Fase 0 já trocou a instrução (um dos 8 jeitos); a proposta não a sobrescreve"
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "O que foi coberto não pode continuar legível. Confira a imagem que saiu, não a que você viu."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte um checklist de envio, com destinatário, conteúdo e acesso.",
+   "depois": "Você sai daqui com três perguntas para fazer antes de qualquer envio: para quem, o quê, e quem consegue abrir."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_02/a02.instrucoes",
+   "estado": "ja-corrigido-fase0",
+   "antes": "São três grupos: escolha um bloco em cada um. Se precisar, “Prefiro escrever” deixa você usar suas próprias palavras, sem informações internas.",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas.",
+   "motivo": "a Fase 0 já trocou a instrução (um dos 8 jeitos); a proposta não a sobrescreve"
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Antes de enviar, confira quem recebe, o que vai e quem consegue abrir. Se algo sair errado, avise logo quem pode agir: apagar a mensagem não resolve o que já foi visto. Se você salvou, seu checklist de envio fica no Meu roteiro.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Antes de enviar, confira quem recebe, o que vai e quem consegue abrir. Se algo sair errado, avise logo quem pode agir: apagar a mensagem não resolve o que já foi visto. Se você salvou, seu checklist fica no Meu roteiro. Na próxima aula, o destinatário certo não consegue abrir o arquivo, e a pressa aperta."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Nome de arquivo certo não controla quem abre. Permissão faz parte do envio."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Ver o que um print mostra sem querer e o que conferir antes de enviar um arquivo ou link. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Ver o que um print mostra sem querer, o que conferir antes de enviar um arquivo ou link, e o que fazer quando o acesso falha ou o envio sai errado. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Separar “para quem mando” de “quem consegue abrir”, resolver o acesso sem ampliá-lo e avisar rápido quando um envio sai errado."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 9
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual é a melhor preparação?\" ainda não está na fala do vídeo \"Qual é a melhor preparação?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Bruna, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Bruna, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você continua?\" ainda não está na fala do vídeo \"Como você continua?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Wesley, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Wesley, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,3 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual é a melhor preparação?\" ainda não está na fala do vídeo \"Qual é a melhor preparação?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Bruna, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Bruna, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você continua?\" ainda não está na fala do vídeo \"Como você continua?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Wesley, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Wesley, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Personagem da aula 3: (a) Bruna de novo (já conhecida da aula 1; um nome a menos) · (b) uma colega nova, como no pacote. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "3. Reações atuais com abertura repetida (ver custos): (a) deixar · (b) cortar a primeira frase, se o ajuste fino aceitar (grátis) · (c) regravar a segunda frase. Recomendo (b); se não der, (a).",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 255,
+  "palavrasReacoesNovas": 71,
+  "palavrasAberturasTrocadas": 44,
+  "palavrasTotal": 370,
+  "segundos": 141.2,
+  "usdEstimado": 2.58,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Dez segundos antes de enviar",
+  "description": "Você decide o que fazer quando o destinatário certo não consegue abrir, aprende as duas perguntas do compartilhamento e confere um envio real nesta semana.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O link certo com a permissão errada",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Para quem mando? Quem consegue abrir?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Nesta última aula, você leva dez segundos para fora da tela: antes do próximo envio real, conteúdo, destinatário e acesso. Só isso. A Bruna preparou um arquivo interno e copiou o link. Antes de mandar, ela olha: ‘Qualquer pessoa com o link’. Ela troca: só quem precisa. Destinatário certo, acesso certo. Envia. Dez minutos depois, o colega responde: ‘Não consigo abrir’. E a tarefa fecha às cinco. O relógio marca quatro e meia. No lugar da Bruna, o que você faz?",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "promessa",
+        "line": "Nesta última aula, você leva dez segundos para fora da tela: antes do próximo envio real, conteúdo, destinatário e acesso. Só isso.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s1",
+        "line": "A Bruna preparou um arquivo interno e copiou o link. Antes de mandar, ela olha: ‘Qualquer pessoa com o link’. Ela troca: só quem precisa.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "s2",
+        "line": "Destinatário certo, acesso certo. Envia. Dez minutos depois, o colega responde: ‘Não consigo abrir’. E a tarefa fecha às cinco.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "chamada",
+        "line": "O relógio marca quatro e meia. No lugar da Bruna, o que você faz?",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Bruna, o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O colega autorizado não consegue abrir o arquivo interno. A tarefa fecha às cinco, e já são quatro e meia. No lugar da Bruna, o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Troco para ‘qualquer pessoa com o link’ e mando de novo, para resolver rápido.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O link público dá acesso a quem não precisa do documento, e você não controla quem repassa. Faça assim: confirme a conta do colega e peça o ajuste específico a quem cuida do acesso."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Rápido, sim. Mas olha o que abriu junto: qualquer pessoa com o link, num arquivo interno. A pressa não muda quem pode ver."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Confirmo qual conta ele usou e peço o ajuste de acesso para essa conta, pelo caminho da equipe.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você resolve o acesso de quem precisa, sem ampliar para os outros. Faça assim: pergunte com qual conta ele tentou, peça o ajuste para essa conta e confira se abriu."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Quem recebe e quem consegue abrir são perguntas diferentes. Você foi direto na segunda: a conta certa, o acesso certo, sem abrir para mais ninguém."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Baixo o arquivo e mando em anexo direto para ele, por mensagem, para não travar a tarefa.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A cópia resolve hoje e cria um arquivo solto: sem controle de acesso e sem atualização. Faça assim: se a pressa exigir, combine com quem cuida do acesso; o ajuste da conta costuma ser rápido."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Foi só para ele, e isso conta. Mas agora existe uma cópia fora do lugar controlado. Quem atualiza o original não atualiza essa."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Bruna, o que você faz?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Duas perguntas e um aviso",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Para quem mando · Quem abre · Se saiu errado, avise"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Compartilhar tem duas perguntas diferentes: ‘Para quem estou mandando?’ e ‘Quem consegue abrir?’. Acertar a primeira não resolve a segunda. E se o envio já foi para a pessoa errada? Avise pelo caminho da equipe: qual arquivo, para quem foi, o que você já fez. Restringir depois ajuda, mas não prova que ninguém viu ou copiou. Por isso avisar rápido importa: quem cuida disso tem prazo e procedimento. Você não precisa resolver sozinho. Precisa informar. Dado pessoal exposto é assunto da organização, não só seu. Agora é com você: no próximo arquivo ou print que mandar de verdade, pare dez segundos. Conteúdo, destinatário, acesso. Depois, conte como foi.",
+     "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Compartilhar tem duas perguntas diferentes: ‘Para quem estou mandando?’ e ‘Quem consegue abrir?’. Acertar a primeira não resolve a segunda.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Antes de enviar",
+         "bullets": [
+          "**Para quem** estou mandando?",
+          "**Quem consegue** abrir?",
+          "Abriu? **Confira**, sem ampliar"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "s2",
+        "line": "E se o envio já foi para a pessoa errada? Avise pelo caminho da equipe: qual arquivo, para quem foi, o que você já fez.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s3",
+        "line": "Restringir depois ajuda, mas não prova que ninguém viu ou copiou. Por isso avisar rápido importa: quem cuida disso tem prazo e procedimento.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s4",
+        "line": "Você não precisa resolver sozinho. Precisa informar. Dado pessoal exposto é assunto da organização, não só seu.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: no próximo arquivo ou print que mandar de verdade, pare dez segundos. Conteúdo, destinatário, acesso. Depois, conte como foi.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Antes de enviar\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Dez segundos antes do próximo envio",
+     "type": "mission",
+     "intro": "A Bruna resolveu o acesso sem abrir o arquivo para todo mundo. Agora é um envio seu, de verdade, nesta semana.",
+     "action": "1. Espere o próximo arquivo, print ou link que você for mandar de verdade: trabalho, escola, família.\n2. Antes de apertar enviar, pare dez segundos e faça três perguntas: o que vai aqui? Para quem? Quem consegue abrir?\n3. Se algo sobrar, recorte, troque o destinatário ou ajuste o acesso.\n4. Volte aqui, marque “Já experimentei” e conte o que você mudou, ou que estava tudo certo.",
+     "alternative": "Não precisa ser trabalho: o print para o grupo da turma, o documento da matrícula, a foto do boleto para a família. Qualquer envio real serve.",
+     "example": "Ia mandar o print do erro do app para o grupo. Nos dez segundos, vi uma notificação com o nome de outra pessoa. Recortei e mandei só a mensagem de erro."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Dez segundos antes de enviar",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Conteúdo · Destino · Acesso"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Um print e um link mostram mais do que você pretendia. O print da Bruna tinha um CPF no canto. O link, uma permissão aberta. Esse cuidado faz parte da tarefa, antes de o arquivo sair. E se saiu errado, avise rápido, sem rodeio e sem reenviar o conteúdo. Proteger dados também é escolher o que não precisa entrar numa mensagem. Dez segundos. Conteúdo, destino, acesso.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Um print e um link mostram mais do que você pretendia. O print da Bruna tinha um CPF no canto. O link, uma permissão aberta.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "Esse cuidado faz parte da tarefa, antes de o arquivo sair. E se saiu errado, avise rápido, sem rodeio e sem reenviar o conteúdo.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Proteger dados também é escolher o que não precisa entrar numa mensagem. Dez segundos. Conteúdo, destino, acesso.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Mostre só a parte necessária e confira a imagem final."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Para quem mando e quem consegue abrir são perguntas diferentes."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Saiu errado? Avise rápido quem cuida disso: arquivo, destinatário, o que você já fez."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu envio desta semana",
+       "kind": "checklist",
+       "items": [
+        "parei dez segundos antes de enviar",
+        "conferi conteúdo, destinatário e acesso",
+        "tirei, troquei ou confirmei o que precisava"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. No próximo envio real, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Mostre só a parte necessária e confira a imagem final.\nPara quem mando e quem consegue abrir são perguntas diferentes.\nSaiu errado? Avise rápido quem cuida disso: arquivo, destinatário, o que você já fez.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Dez segundos antes de enviar: o que vai, para quem, e quem consegue abrir."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a"
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 45,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual é a melhor preparação?\" ainda não está na fala do vídeo \"Qual é a melhor preparação?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Bruna, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Bruna, o que você faz?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Como você continua?\" ainda não está na fala do vídeo \"Como você continua?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Wesley, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Wesley, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

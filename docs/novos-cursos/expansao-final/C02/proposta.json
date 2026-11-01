@@ -1,0 +1,605 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C02",
+  "id": "crs_arbeohlw3xp5v3zx",
+  "titulo": "Que roupa eu uso?",
+  "instrutora": "Camila — Sua orientadora",
+  "versaoPublicada": 11,
+  "revisaoDoRascunho": 88
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado (ou, em plano, a fala nova com o mesmo id); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes há mudanças de texto (fins de aula, campos de prática) e a troca de fala do plano de abertura da prática (mesmo id, sem a palavra \"missão\"), que continua sendo o anúncio da prática daquela aula.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62; cena na cam_camila6_34 com chamada na cam_camila6_esq; explicação na cam_camila6_esq; despedida na cam_camila6_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): sem molde; 'Como foi?' é o único campo de texto; draftFromNodeId null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso ('Boa escolha', 'Isso mesmo', 'Exatamente', 'Bom começo', 'Quase lá', 'É por aí').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de frase em blocos, na tela; nada acontece fora da plataforma e não há caminho para quem ainda não tem vaga.",
+  "O curso ensina a perguntar e a propor uma alternativa, mas para na resposta boa: nunca mostra a resposta vaga (“venha adequada à função”), que é a que mais chega.",
+  "Também não trata o dia em que a peça falta de verdade (rasgou, não secou): quando avisar e o que dizer.",
+  "As aberturas das duas aulas usam a mesma fórmula “No fim desta aula, tem uma missão para você: …”.",
+  "O curso termina numa tela de texto genérica: sem fecho da Camila, sem volta à história da Bia."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Entenda a orientação do ambiente, transforme uma resposta vaga em pergunta sobre uma peça concreta e saiba o que fazer no dia em que a peça falta. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Transformar uma orientação vaga em pergunta sobre uma peça concreta e avisar antes de sair de casa quando a peça falta."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Bia",
+    "Rafael (q02)"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como confirmar roupa e calçado",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: pergunte sobre a roupa.",
+       "para": "Daqui a pouco, você escreve a pergunta que confirma roupa e calçado, pronta para o seu primeiro dia.",
+       "camera": "cam_camila6_34",
+       "layout": "presenter",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida em 14 cursos"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução: o componente é de blocos. Molde, blocos e título ficam."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "A foto mostra um dia. A orientação vale todos os dias."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como conversar sobre alternativas de roupa",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: combine uma alternativa.",
+       "para": "E se a peça pedida não estiver no seu armário? No fim, você monta o pedido de alternativa, sem prometer compra.",
+       "camera": "cam_camila6_34",
+       "layout": "presenter",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Descrever a peça que você tem e perguntar se serve resolve mais do que prometer uma compra. Se você salvou, seu pedido fica no Meu roteiro. Na próxima aula: o que fazer quando a resposta vem vaga, e quando a peça falta de verdade.",
+      "closingLine": "Uma conversa curta resolve. Uma compra por suposição, não."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” passa para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Resposta vaga e peça que falta",
+   "resumo": "Você transforma uma orientação vaga em pergunta sobre uma peça concreta, aprende a avisar quando a peça falta e olha a roupa de um lugar real.",
+   "estimativaMin": 4,
+   "obrigatoria": "obrigatória para quem está no curso; quem já concluiu vê como conteúdo novo (DECISOES-AUTONOMAS §1, mesma regra do C24)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Transformar uma orientação vaga em pergunta sobre uma peça concreta e avisar antes de sair de casa quando a peça falta."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Venha adequada à função",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Vago · Concreto · Antes de sair",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "A Bia perguntou e descreveu o que tinha. Agora, duas coisas que acontecem muito: a resposta vaga e a peça que falta.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "promessa",
+       "fala": "Antes de terminar, você olha a roupa de um lugar onde quer trabalhar e anota uma dúvida concreta para perguntar.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "nota": "Faz o papel do antigo plano \"missao\", sem a fórmula.",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "A Bia mandou: tenho uma calça azul-marinho lisa, ela atende? Resposta: venha adequada à função. O primeiro dia é amanhã.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "chamada",
+       "fala": "Essa resposta resolveu a dúvida dela? No lugar da Bia, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_camila6_esq",
+       "acao": "add",
+       "palavras": 14,
+       "segundos": 5.3
+      }
+     ],
+     "roteiroNovo": "A Bia perguntou e descreveu o que tinha. Agora, duas coisas que acontecem muito: a resposta vaga e a peça que falta. Antes de terminar, você olha a roupa de um lugar onde quer trabalhar e anota uma dúvida concreta para perguntar. A Bia mandou: tenho uma calça azul-marinho lisa, ela atende? Resposta: venha adequada à função. O primeiro dia é amanhã. Essa resposta resolveu a dúvida dela? No lugar da Bia, o que você faz?",
+     "cartaoPerguntaSeguinte": "A Bia descreveu a calça e recebeu só “venha adequada à função”. O primeiro dia é amanhã. O que você faz no lugar dela?",
+     "proximo": "q04",
+     "palavras": 76,
+     "segundos": 29.0
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Bia, o que você faz com essa resposta?",
+     "apoioNaTela": "A Bia descreveu a calça azul-marinho lisa. A resposta foi só “venha adequada à função”. Ela ainda não sabe se a peça atende, e começa amanhã.",
+     "bridge": {
+      "call": "Essa resposta resolveu a dúvida dela? No lugar da Bia, o que você faz?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C02)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Pergunto de novo: essa calça atende? E, se não atender, qual alternativa serve?”",
+       "qualidade": "strong",
+       "feedback": "Você transforma uma resposta vaga numa confirmação sobre uma peça concreta. Faça assim: nomeie a peça, peça um sim ou não e já pergunte a alternativa.",
+       "reacao": {
+        "texto": "Viu a diferença? “Adequada” é vago. “Essa calça atende?” tem resposta: sim ou não. Agora dá para se preparar.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v05",
+       "caracteres": 81
+      },
+      {
+       "id": "b",
+       "rotulo": "“Levo a calça azul-marinho e, se alguém reclamar, explico que foi o que entendi.”",
+       "qualidade": "ok",
+       "feedback": "Pode dar certo, mas você chega sem saber se a peça atende, e o primeiro dia pode começar com uma correção. Faça assim: pergunte hoje se essa calça serve. É uma mensagem.",
+       "reacao": {
+        "texto": "Pode dar certo. Mas você chega sem saber e descobre na frente de todo mundo. Pergunte hoje: evita começar com correção.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 81
+      },
+      {
+       "id": "c",
+       "rotulo": "“Entendo que qualquer roupa escura foi autorizada.”",
+       "qualidade": "weak",
+       "feedback": "A resposta continuava vaga, e você preencheu o vazio com uma suposição. Faça assim: quando a orientação não diz sim nem não, descreva a peça e pergunte de novo.",
+       "reacao": {
+        "texto": "“Adequada à função” não disse sim nem não. Quem decidiu que roupa escura vale foi você. Descreva a peça e pergunte.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v05",
+       "caracteres": 51
+      }
+     ],
+     "respostaForaDoEnunciado": "A resposta não está no enunciado: ele diz que a orientação veio vaga e que o dia é amanhã; perceber que falta um sim ou não sobre a peça, e já pedir a alternativa, é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Quando a peça falta de verdade",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Avise antes de sair · Diga o que tem · Pergunte se serve hoje",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Agora, o outro caso: a peça que você tinha e não tem mais. Rasgou, molhou, não secou.",
+       "layout": "presenter",
+       "camera": "cam_camila6_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "s2",
+       "fala": "A diferença está na hora do aviso. Antes de sair de casa, dá tempo de combinar. Depois de chegar, vira correção.",
+       "layout": "presenter_chips",
+       "camera": "cam_camila6_esq",
+       "cartao": {
+        "titulo": "Peça que falta",
+        "topicos": [
+         "Avise **antes de sair**",
+         "Diga **o que tem**",
+         "Pergunte **se serve hoje**"
+        ]
+       },
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "s3",
+       "fala": "A mensagem cabe em duas linhas: a calça escura rasgou; hoje tenho uma cinza lisa. Posso vir com ela e resolver amanhã?",
+       "layout": "presenter",
+       "camera": "cam_camila6_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "s4",
+       "fala": "Sem explicar a vida, sem prometer compra: quem responde decide. Peça de proteção é diferente: faltou, avise e espere antes de entrar.",
+       "layout": "presenter",
+       "camera": "cam_camila6_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "lancamento",
+       "fala": "Sua vez: escolha um lugar onde gostaria de trabalhar, olhe como a equipe se veste e anote uma dúvida. Depois, volte e conte.",
+       "layout": "presenter",
+       "camera": "cam_camila6_esq",
+       "nota": "Faz o papel do antigo \"missao_fim\", sem a palavra \"missão\". A aula segue para m03.",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      }
+     ],
+     "roteiroNovo": "Agora, o outro caso: a peça que você tinha e não tem mais. Rasgou, molhou, não secou. A diferença está na hora do aviso. Antes de sair de casa, dá tempo de combinar. Depois de chegar, vira correção. A mensagem cabe em duas linhas: a calça escura rasgou; hoje tenho uma cinza lisa. Posso vir com ela e resolver amanhã? Sem explicar a vida, sem prometer compra: quem responde decide. Peça de proteção é diferente: faltou, avise e espere antes de entrar. Sua vez: escolha um lugar onde gostaria de trabalhar, olhe como a equipe se veste e anote uma dúvida. Depois, volte e conte.",
+     "proximo": "m03",
+     "palavras": 105,
+     "segundos": 40.1,
+     "naoRepete": "Não repete v01 (confirmar antes; foto não é regra) nem v03 (descrever a peça; uniforme; ofensa → apoio). O novo: resposta vaga → pergunta sobre a peça; peça que falta → avisar antes de sair; proteção não se substitui por “parecida”."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Olhe a roupa do lugar onde você quer trabalhar",
+     "tipoDeMissao": "OBSERVAR fora da tela: um lugar real (vaga, curso ou lugar onde gostaria de trabalhar), com uma dúvida concreta anotada no celular",
+     "intro": "A Bia só se preparou quando perguntou sobre uma peça concreta. Agora é com um lugar seu: a vaga ou o curso que você quer, ou um lugar onde gostaria de trabalhar.",
+     "action": [
+      "Escolha o lugar: a vaga que você quer, o curso que vai começar, ou um lugar onde gostaria de trabalhar (loja, clínica, escritório, oficina).",
+      "Procure a orientação de roupa: o site, o aviso da vaga, a foto da equipe. Ou repare em como as pessoas estão vestidas quando passar lá.",
+      "Anote no celular uma dúvida concreta, sobre uma peça: “tênis preto serve?”, “tem uniforme?”, “calça jeans pode?”.",
+      "Tem com quem perguntar (quem te chamou, quem dá o curso)? Mande. Não tem? Guarde: é a sua primeira pergunta do primeiro dia.",
+      "Volte aqui, marque “Já experimentei” e conte o que percebeu."
+     ],
+     "alternative": "Sem vaga nem curso em vista? Vale um lugar onde você gostaria de trabalhar. Ou o trabalho de alguém da sua casa: pergunte a essa pessoa como ela soube o que vestir no primeiro dia e o que teria perguntado antes. Se trabalha, escolha uma peça sobre a qual ainda tem dúvida e pergunte esta semana.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de uma aluna",
+      "texto": "Loja de celular do shopping. Vi: camiseta preta da loja, calça escura, tênis. Minha dúvida: o tênis pode ser branco ou precisa ser escuro? Tem camiseta para quem está começando?",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma frase: qual foi a dúvida que você anotou, ou o que descobriu olhando?",
+      "placeholder": "Ex.: achei a foto da equipe, todos de calça escura; vou perguntar do tênis.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a missão e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "A que você confirmou",
+     "textoTela": "Peça concreta · Dúvida concreta · Alternativa possível",
+     "posicao": "depois de m03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Lembra da foto com todo mundo de bermuda? Não era regra. E “venha adequada à função” também não respondeu nada.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d2",
+       "fala": "O que respondeu foi a sua pergunta: tenho esta peça, ela serve? Se não, qual? Se faltou, aviso antes de sair.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "d3",
+       "fala": "Roupa certa não é a mais cara nem a do colega. É a que você confirmou. Até mais.",
+       "layout": "presenter",
+       "camera": "cam_camila6_34",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9
+      }
+     ],
+     "roteiroNovo": "Lembra da foto com todo mundo de bermuda? Não era regra. E “venha adequada à função” também não respondeu nada. O que respondeu foi a sua pergunta: tenho esta peça, ela serve? Se não, qual? Se faltou, aviso antes de sair. Roupa certa não é a mais cara nem a do colega. É a que você confirmou. Até mais.",
+     "palavras": 59,
+     "segundos": 22.5,
+     "forma": "termina com uma afirmação curta, a frase do curso (“é a que você confirmou”), depois de um callback de uma linha (foto de bermuda, resposta vaga). Sem recap, sem “você praticou”, sem “Meu roteiro”.",
+     "motionPrompt": "gesto calmo de mão aberta, sorriso leve na última frase"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Resposta vaga não é resposta. Peça o sim ou o não sobre a peça que você tem.",
+     "summary": "O que você levou\nConfirme a orientação da sua atividade, não a foto.\nDescreva a peça que tem e pergunte se serve.\nResposta vaga? Peça o sim ou o não sobre a peça.\nFaltou a peça? Avise antes de sair de casa.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha dúvida de roupa",
+       "kind": "checklist",
+       "items": [
+        "lugar escolhido",
+        "orientação procurada (site, aviso, foto, olhando)",
+        "dúvida concreta anotada no celular",
+        "perguntei, ou guardei para o primeiro dia"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Confirme a orientação da sua atividade, não a foto.\nDescreva a peça que tem e pergunte se serve.\nResposta vaga? Peça o sim ou o não sobre a peça.\nFaltou a peça? Avise antes de sair de casa.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 14,
+   "palavras": 279,
+   "segundos": 106.5,
+   "nota": "inclui as aberturas trocadas (mesmo id de plano, fala nova)"
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 61,
+   "segundos": 23.3
+  },
+  "totalNovoFalado": {
+   "palavras": 340,
+   "segundos": 129.8,
+   "usd": 2.38,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v04",
+    "planos": 4,
+    "palavras": 76,
+    "segundos": 29.0
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 61,
+    "segundos": 23.3
+   },
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 105,
+    "segundos": 40.1
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "aberturas trocadas (v00/missao, v02/missao)",
+    "planos": 2,
+    "palavras": 39,
+    "segundos": 14.9
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 5,
+   "quais": "q01 C, q02 A, q02 C, q03 A, q03 B",
+   "segundos": 27.9,
+   "usd": 0.51,
+   "nota": "Aberturas: \"Vamos olhar isso com calma\", \"Tem um caminho ainda melhor\", \"Muita gente responderia assim\", \"Faz sentido, mas dá para ir além\", \"Faz sentido pensar assim, mas repara\". (b) cortar a 1ª frase se o ajustador aceitar vídeo de reação (grátis); (c) regravar só o resto (estimativa acima)."
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 173.9,
+    "maxS": 181.3,
+    "texto": "3–4 min"
+   },
+   "depois": {
+    "minS": 279.1,
+    "maxS": 287.2,
+    "texto": "cerca de 4.7–4.8 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação da q04 (mínima/máxima) + diferença das aberturas trocadas (+6.3 s). "
+  }
+ },
+ "perguntasAbertas": [
+  "1. Alcance da missão m03: (a) vaga, curso ou um lugar onde a pessoa gostaria de trabalhar, com a alternativa “pergunte a alguém da sua casa” · (b) só vaga ou curso, como os revisores escreveram (deixa sem caminho quem não tem nenhum dos dois). Recomendo (a).",
+  "2. Frase sobre peça de proteção (v05/s4, 2ª frase, ~5 s): (a) manter: é o único lugar que diz que proteção não se substitui por “parecida” · (b) tirar da fala e deixar só no texto da missão. Recomendo (a).",
+  "3. As 5 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~27.9 s, ≈ US$ 0.51). Recomendo (b); se não der, (a).",
+  "4. Exemplo da missão (“Ver um exemplo”): (a) loja de celular do shopping, aluna sem nome · (b) voltar à Bia e à calça (repete o curso). Recomendo (a)."
+ ]
+}

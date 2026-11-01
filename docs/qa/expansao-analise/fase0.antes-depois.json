@@ -1,0 +1,629 @@
+{
+ "resumo": {
+  "script": "fase0-expansao",
+  "modo": "aplicado",
+  "geradoEm": "2026-11-01T06:22:03.732Z",
+  "total": 26,
+  "porTipo": {
+   "instrucao": 24,
+   "c22-a01": 1,
+   "c24-a01": 1
+  },
+  "aplicar": 26,
+  "jaAplicado": 0,
+  "divergente": 0
+ },
+ "mudancas": [
+  {
+   "codigo": "C06",
+   "courseId": "crs_b8zeh4b2gguseghq",
+   "aula": "aula_03",
+   "no": "a03",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Monte a frase tocando em um bloco de cada grupo. Quer dizer de outro jeito? Use “Prefiro escrever”, com uma situação fictícia e sem dados pessoais."
+   },
+   "revisaoAntes": 128,
+   "revisaoDepois": 129
+  },
+  {
+   "codigo": "C15",
+   "courseId": "crs_t303ykqfmhj3yb1g",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Toque em um bloco por grupo para montar sua frase. Pode ser uma situação fictícia; se for escrever uma parte, não inclua nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C15",
+   "courseId": "crs_t303ykqfmhj3yb1g",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Vá escolhendo, grupo por grupo, as partes da sua frase. Nenhuma combina com você? Toque em “Prefiro escrever” e use palavras suas, sem dados pessoais."
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C16",
+   "courseId": "crs_2rt2rsoii8bpydp2",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Sua frase fica pronta quando cada grupo tiver uma escolha. Para mudar uma parte, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C16",
+   "courseId": "crs_2rt2rsoii8bpydp2",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Em cada um dos três grupos, toque no bloco que mais combina com você. Se preferir, escreva a sua parte em “Prefiro escrever”, com uma situação fictícia."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C17",
+   "courseId": "crs_5k5upah2xphlfvi5",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha um bloco em cada grupo para montar a frase. Só se quiser, use “Prefiro escrever” para dizer do seu jeito; nada de nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 32,
+   "revisaoDepois": 33
+  },
+  {
+   "codigo": "C17",
+   "courseId": "crs_5k5upah2xphlfvi5",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha uma opção em cada grupo e a sua frase vai se formando. Se nenhuma servir, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 32,
+   "revisaoDepois": 33
+  },
+  {
+   "codigo": "C18",
+   "courseId": "crs_tg9iqz8wmmf5pw77",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Monte a frase tocando em um bloco de cada grupo. Quer dizer de outro jeito? Use “Prefiro escrever”, com uma situação fictícia e sem dados pessoais."
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C18",
+   "courseId": "crs_tg9iqz8wmmf5pw77",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "São três grupos: escolha um bloco em cada um. Se precisar, “Prefiro escrever” deixa você usar suas próprias palavras, sem informações internas."
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C19",
+   "courseId": "crs_au1463izc386by27",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Toque em um bloco por grupo para montar sua frase. Pode ser uma situação fictícia; se for escrever uma parte, não inclua nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 32,
+   "revisaoDepois": 33
+  },
+  {
+   "codigo": "C19",
+   "courseId": "crs_au1463izc386by27",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Vá escolhendo, grupo por grupo, as partes da sua frase. Nenhuma combina com você? Toque em “Prefiro escrever” e use palavras suas, sem dados pessoais."
+   },
+   "revisaoAntes": 32,
+   "revisaoDepois": 33
+  },
+  {
+   "codigo": "C20",
+   "courseId": "crs_m60hsx8on6ebcyqg",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Sua frase fica pronta quando cada grupo tiver uma escolha. Para mudar uma parte, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C20",
+   "courseId": "crs_m60hsx8on6ebcyqg",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Em cada um dos três grupos, toque no bloco que mais combina com você. Se preferir, escreva a sua parte em “Prefiro escrever”, com uma situação fictícia."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C21",
+   "courseId": "crs_4jh683s5h351z2db",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha um bloco em cada grupo para montar a frase. Só se quiser, use “Prefiro escrever” para dizer do seu jeito; nada de nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 44,
+   "revisaoDepois": 45
+  },
+  {
+   "codigo": "C21",
+   "courseId": "crs_4jh683s5h351z2db",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha uma opção em cada grupo e a sua frase vai se formando. Se nenhuma servir, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 44,
+   "revisaoDepois": 45
+  },
+  {
+   "codigo": "C22",
+   "courseId": "crs_njtlqq7y7fyfeqcr",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "c22-a01",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+    "template": "{fato}. {impacto}. {passo}.",
+    "slots": [
+     "fato",
+     "impacto",
+     "passo"
+    ],
+    "scaffoldCompleto": {
+     "template": "{fato}. {impacto}. {passo}.",
+     "slots": [
+      {
+       "id": "fato",
+       "label": "O que aconteceu",
+       "question": "O que aconteceu?",
+       "options": [
+        "Enviei a versão anterior do arquivo",
+        "Digitei um valor errado no orçamento do cliente",
+        "Mandei o arquivo para a pessoa errada"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "impacto",
+       "label": "Qual pode ser o impacto",
+       "question": "Qual pode ser o impacto?",
+       "options": [
+        "O cliente pode ter recebido uma informação errada",
+        "Ainda não sei o impacto e vou verificar",
+        "Isso pode atrapalhar quem já começou a usar"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "passo",
+       "label": "Qual é o próximo passo",
+       "question": "Qual é o próximo passo?",
+       "options": [
+        "Vou avisar quem recebeu e mandar a correção",
+        "Vou avisar o gestor e propor a correção",
+        "Vou conferir quem já usou e te aviso em seguida"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      }
+     ]
+    }
+   },
+   "depois": {
+    "prompt": "Você digitou R$ 480 no lugar de R$ 840 no orçamento, e o cliente já aceitou. Monte o aviso para a referência responsável, escolhendo uma opção em cada grupo. Você ainda não tem autorização para alterar as condições com o cliente.",
+    "template": "No orçamento, eu digitei R$ 480 no lugar de R$ 840. {impacto}. {pedido}?",
+    "slots": [
+     "impacto",
+     "pedido"
+    ],
+    "scaffoldCompleto": {
+     "template": "No orçamento, eu digitei R$ 480 no lugar de R$ 840. {impacto}. {pedido}?",
+     "slots": [
+      {
+       "id": "impacto",
+       "label": "O que isso causa",
+       "question": "O que isso causa?",
+       "options": [
+        "O cliente já aceitou e precisamos verificar como tratar a diferença",
+        "Ainda preciso confirmar o que foi encaminhado após o aceite"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "pedido",
+       "label": "O que você pede",
+       "question": "O que você pede à referência?",
+       "options": [
+        "Pode me orientar sobre como registrar e corrigir a situação",
+        "Qual é o procedimento para tratar a diferença com quem responde pelo orçamento"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      }
+     ]
+    }
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C22",
+   "courseId": "crs_njtlqq7y7fyfeqcr",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "São dois grupos: escolha um bloco em cada um. Se precisar, “Prefiro escrever” deixa você usar suas próprias palavras, sem informações internas."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C23",
+   "courseId": "crs_gl0hjkmqfgnnur9y",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Toque em um bloco por grupo para montar sua frase. Pode ser uma situação fictícia; se for escrever uma parte, não inclua nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C23",
+   "courseId": "crs_gl0hjkmqfgnnur9y",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Vá escolhendo, grupo por grupo, as partes da sua frase. Nenhuma combina com você? Toque em “Prefiro escrever” e use palavras suas, sem dados pessoais."
+   },
+   "revisaoAntes": 31,
+   "revisaoDepois": 32
+  },
+  {
+   "codigo": "C24",
+   "courseId": "crs_dp9s7pdro9j6e3m0",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "c24-a01",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+    "template": "Preciso {a}. Sei {b}. Faltam {c}. Vou {d}.",
+    "slots": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "scaffoldCompleto": {
+     "template": "Preciso {a}. Sei {b}. Faltam {c}. Vou {d}.",
+     "slots": [
+      {
+       "id": "a",
+       "label": "O que você precisa conseguir",
+       "question": "O que você precisa conseguir?",
+       "options": [
+        "organizar uma reunião viável",
+        "preparar os kits da oficina",
+        "entregar o relatório no prazo"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "b",
+       "label": "O que você já sabe",
+       "question": "O que você já sabe?",
+       "options": [
+        "que serão seis pessoas",
+        "a quantidade combinada",
+        "o que já foi confirmado"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "c",
+       "label": "O que falta descobrir",
+       "question": "O que falta descobrir?",
+       "options": [
+        "duração e disponibilidade",
+        "o conteúdo e o prazo",
+        "o horário e o local"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "d",
+       "label": "Qual é o seu primeiro passo",
+       "question": "Qual é o seu primeiro passo?",
+       "options": [
+        "confirmar essas informações",
+        "perguntar a quem pediu",
+        "conferir o que falta antes de começar"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      }
+     ]
+    }
+   },
+   "depois": {
+    "prompt": "Você recebeu o pedido de tirar 30 cópias de um material para amanhã. Ainda não sabe qual versão usar nem se é frente e verso. Monte seu plano com as informações desse caso, escolhendo uma opção em cada grupo.",
+    "template": "Preciso {a}. Sei {b}. Ainda não sei {c}. Vou {d}.",
+    "slots": [
+     "a",
+     "b",
+     "c",
+     "d"
+    ],
+    "scaffoldCompleto": {
+     "template": "Preciso {a}. Sei {b}. Ainda não sei {c}. Vou {d}.",
+     "slots": [
+      {
+       "id": "a",
+       "label": "O que você precisa conseguir",
+       "question": "O que você precisa conseguir?",
+       "options": [
+        "deixar as 30 cópias prontas para amanhã",
+        "entregar amanhã as 30 cópias da versão certa do material"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "b",
+       "label": "O que você já sabe",
+       "question": "O que você já sabe?",
+       "options": [
+        "que são 30 cópias e que o prazo é amanhã",
+        "a quantidade e o prazo do pedido"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "c",
+       "label": "O que falta descobrir",
+       "question": "O que falta descobrir?",
+       "options": [
+        "qual versão do material usar e se é frente e verso",
+        "qual é a versão certa e como imprimir"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      },
+      {
+       "id": "d",
+       "label": "Qual é o seu primeiro passo",
+       "question": "Qual é o seu primeiro passo?",
+       "options": [
+        "perguntar a quem pediu qual versão usar e se é frente e verso",
+        "confirmar a versão e o formato antes de imprimir"
+       ],
+       "allowCustom": true,
+       "customMaxLength": 120
+      }
+     ]
+    }
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C24",
+   "courseId": "crs_dp9s7pdro9j6e3m0",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Em cada um dos quatro grupos, toque no bloco que mais combina com você. Se preferir, escreva a sua parte em “Prefiro escrever”, com uma situação fictícia."
+   },
+   "revisaoAntes": 43,
+   "revisaoDepois": 44
+  },
+  {
+   "codigo": "C25",
+   "courseId": "crs_0ua5onij460lpzs0",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha um bloco em cada grupo para montar a frase. Só se quiser, use “Prefiro escrever” para dizer do seu jeito; nada de nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 34,
+   "revisaoDepois": 35
+  },
+  {
+   "codigo": "C25",
+   "courseId": "crs_0ua5onij460lpzs0",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Escolha uma opção em cada grupo e a sua frase vai se formando. Se nenhuma servir, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 34,
+   "revisaoDepois": 35
+  },
+  {
+   "codigo": "C26",
+   "courseId": "crs_d5rsi8gt36rv0qbq",
+   "aula": "aula_01",
+   "no": "a01",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Monte a frase tocando em um bloco de cada grupo. Quer dizer de outro jeito? Use “Prefiro escrever”, com uma situação fictícia e sem dados pessoais."
+   },
+   "revisaoAntes": 44,
+   "revisaoDepois": 45
+  },
+  {
+   "codigo": "C26",
+   "courseId": "crs_d5rsi8gt36rv0qbq",
+   "aula": "aula_02",
+   "no": "a02",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "São três grupos: escolha um bloco em cada um. Se precisar, “Prefiro escrever” deixa você usar suas próprias palavras, sem informações internas."
+   },
+   "revisaoAntes": 44,
+   "revisaoDepois": 45
+  },
+  {
+   "codigo": "C26",
+   "courseId": "crs_d5rsi8gt36rv0qbq",
+   "aula": "aula_03",
+   "no": "a03",
+   "tipo": "instrucao",
+   "estado": "aplicar",
+   "antes": {
+    "prompt": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas."
+   },
+   "depois": {
+    "prompt": "Toque em um bloco por grupo para montar sua frase. Pode ser uma situação fictícia; se for escrever uma parte, não inclua nomes, contatos ou informações internas."
+   },
+   "revisaoAntes": 44,
+   "revisaoDepois": 45
+  }
+ ]
+}

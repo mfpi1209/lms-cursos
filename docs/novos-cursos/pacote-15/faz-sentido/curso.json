@@ -1,0 +1,322 @@
+{
+  "schema_version": "dna-editorial-1.0",
+  "schema_notice": "Contrato editorial intermediário. Não é o schema nativo comprovado do motor. Adaptar após inspeção do projeto.",
+  "id": "dna-proposta-faz-sentido",
+  "slug_proposto": "faz-sentido",
+  "title": "Faz sentido?",
+  "status": "draft",
+  "locale": "pt-BR",
+  "track_proposed": "Pensar e resolver",
+  "objective": "Separar observação de conclusão e testar explicações.",
+  "audience": "Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+  "prerequisites": "Leitura básica; não exige experiência profissional.",
+  "instructor_proposed": "Helena",
+  "editorial_review": "Continuação opcional de Por onde eu começo?.",
+  "duration_seconds": null,
+  "duration_status": "awaiting_media_measurement",
+  "assessment": {
+    "purpose": "formative",
+    "passing_score": null,
+    "certificate_claim": null,
+    "retry_allowed": true
+  },
+  "lessons": [
+    {
+      "id": "a01",
+      "title": "Eu sei ou estou supondo?",
+      "objective": "Separe uma observação fictícia de duas explicações possíveis.",
+      "entry_node": "a01-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a01-abertura",
+          "type": "video",
+          "title": "Eu sei ou estou supondo?",
+          "speech": "A gente tira conclusões o tempo todo. O cuidado é perceber quando uma conclusão vai além do que foi observado. Um fato pode ser compatível com várias explicações.",
+          "onscreen_text": "Eu sei ou estou supondo?",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-situacao"
+        },
+        {
+          "id": "a01-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Você enviou uma pergunta e seu gestor ainda não respondeu. Você pensa: 'Ele não gostou do meu trabalho'.",
+          "question": "O que está confirmado?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Que ele não gostou do trabalho.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Que a mensagem ainda não recebeu resposta.",
+              "recommended": true,
+              "feedback_node": "a01-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Que ele decidiu ignorar você.",
+              "recommended": false,
+              "feedback_node": "a01-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a01-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Isso é uma interpretação sobre o motivo, não um fato observado.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você identifica o dado disponível sem transformar uma hipótese em certeza.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Também é uma explicação possível, mas não confirmada.",
+          "next": "a01-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a01-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a01-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "A pessoa pode estar em reunião, verificando a resposta ou sem ter visto a mensagem. Você não precisa escolher uma dessas hipóteses como verdade. Se o assunto depende de prazo, retome com contexto e diga quando precisa da orientação.",
+          "onscreen_text": "Separe uma observação fictícia de duas explicações possíveis.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a01-pratica"
+        },
+        {
+          "id": "a01-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Separe uma observação fictícia de duas explicações possíveis.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Observação: ainda não houve resposta. Hipóteses: a pessoa está em reunião ou precisa verificar a informação.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a01-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a01-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a01-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Na próxima aula, vamos avançar para outra situação.",
+          "next": "a02-abertura",
+          "next_label": "Ir para a aula 2"
+        }
+      ]
+    },
+    {
+      "id": "a02",
+      "title": "Um caso não explica tudo",
+      "objective": "Escreva uma conclusão provisória e duas informações que ajudariam a testá-la.",
+      "entry_node": "a02-abertura",
+      "duration_seconds": null,
+      "nodes": [
+        {
+          "id": "a02-abertura",
+          "type": "video",
+          "title": "Um caso não explica tudo",
+          "speech": "Uma experiência chama atenção, mas nem sempre representa um padrão. Antes de concluir que algo sempre acontece, procure outros casos e veja se as condições eram parecidas.",
+          "onscreen_text": "Um caso não explica tudo",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-situacao"
+        },
+        {
+          "id": "a02-situacao",
+          "type": "decision",
+          "title": "Você decide",
+          "context": "Uma entrega atrasou no dia em que a equipe usou uma ferramenta nova. Alguém conclui que a ferramenta sempre causa atrasos.",
+          "question": "Qual análise é mais cuidadosa?",
+          "selection_mode": "single",
+          "submit_label": "Confirmar escolha",
+          "options": [
+            {
+              "id": "op1",
+              "label": "Aceitar: aconteceu junto, então foi a causa.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-1"
+            },
+            {
+              "id": "op2",
+              "label": "Verificar outros fatores e entregas antes de atribuir o atraso à ferramenta.",
+              "recommended": true,
+              "feedback_node": "a02-feedback-2"
+            },
+            {
+              "id": "op3",
+              "label": "Concluir que a ferramenta nunca pode ser o problema.",
+              "recommended": false,
+              "feedback_node": "a02-feedback-3"
+            }
+          ]
+        },
+        {
+          "id": "a02-feedback-1",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Dois acontecimentos juntos não demonstram, sozinhos, causa e efeito.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-2",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você considera a hipótese e busca evidências para avaliá-la.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-feedback-3",
+          "type": "text_feedback",
+          "title": "Veja o efeito dessa escolha",
+          "text": "Você descarta uma possibilidade sem investigar.",
+          "next": "a02-explicacao",
+          "next_label": "Entender o raciocínio",
+          "retry_target": "a02-situacao",
+          "retry_label": "Comparar outra escolha"
+        },
+        {
+          "id": "a02-explicacao",
+          "type": "video",
+          "title": "Entenda o raciocínio",
+          "speech": "Pode ter faltado informação, treinamento ou autorização. Compare o que mudou e procure registros disponíveis. Uma conclusão provisória pode ser: 'Ainda não sabemos a causa'. Isso orienta uma investigação sem culpar alguém antes da hora.",
+          "onscreen_text": "Escreva uma conclusão provisória e duas informações que ajudariam a testá-la.",
+          "asset": null,
+          "duration_seconds": null,
+          "next": "a02-pratica"
+        },
+        {
+          "id": "a02-pratica",
+          "type": "practice",
+          "title": "Na prática",
+          "prompt": "Escreva uma conclusão provisória e duas informações que ajudariam a testá-la.",
+          "instructions": "Escreva uma resposta curta. Pode usar uma situação fictícia. Não inclua nomes, contatos ou informações internas.",
+          "response_mode": "short_text",
+          "fields": [
+            {
+              "id": "resposta",
+              "label": "Minha resposta",
+              "placeholder": "Escreva sua ideia em uma a quatro frases.",
+              "required": true,
+              "max_length": 800
+            }
+          ],
+          "example_label": "Ver um exemplo",
+          "example": "Ainda não sabemos o motivo do atraso. Vou verificar quando a autorização chegou e se houve dificuldade no uso da ferramenta.",
+          "example_behavior": "Aparece somente ao solicitar; não preenche a resposta automaticamente.",
+          "self_check": [
+            "Minha resposta atende ao que a atividade pediu.",
+            "O próximo passo ou critério ficou claro para mim."
+          ],
+          "validation": {
+            "non_whitespace_required": true,
+            "max_length": 800,
+            "semantic_grading": false
+          },
+          "empty_error": "Escreva uma resposta para salvar. Se preferir, use uma situação fictícia.",
+          "save_label": "Salvar no meu roteiro",
+          "save_success": "Resposta salva no seu roteiro. Você pode editar depois.",
+          "save_error": "Não foi possível salvar. Sua resposta continua aqui. Tente novamente.",
+          "skip_label": "Fazer depois",
+          "skip_next": "a02-fechamento",
+          "skip_status": "pending_practice",
+          "next": "a02-fechamento",
+          "next_label": "Continuar aula",
+          "persist_keys": [
+            "course_id",
+            "lesson_id",
+            "node_id",
+            "response",
+            "updated_at"
+          ],
+          "autosave_notice": "Somente mostrar salvamento automático se o produto realmente oferecer essa função."
+        },
+        {
+          "id": "a02-fechamento",
+          "type": "text",
+          "title": "Leve para o dia a dia",
+          "text": "Guarde esse exemplo como ponto de partida. Na sua rotina, ajuste o plano ao que você sabe e ao que ainda precisa confirmar. Você concluiu as duas situações do curso. Seu roteiro fica disponível para consultar e adaptar quando precisar.",
+          "next": "curso-concluido",
+          "next_label": "Concluir curso"
+        }
+      ]
+    }
+  ],
+  "end_node": {
+    "id": "curso-concluido",
+    "type": "summary",
+    "title": "Você chegou ao final",
+    "text": "Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+    "actions": [
+      "Abrir meu roteiro",
+      "Rever situações",
+      "Voltar aos cursos"
+    ],
+    "pending_message": "Você deixou uma atividade para depois. Ela continua disponível no seu roteiro.",
+    "completion_rule": "As duas decisões devem ter uma escolha confirmada e as duas aulas devem chegar ao fechamento. Práticas podem ficar pendentes. Se houver regras vigentes diferentes, mapear sem alterar certificados ou conclusão global silenciosamente."
+  }
+}

@@ -1,0 +1,698 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C25",
+  "id": "crs_0ua5onij460lpzs0",
+  "titulo": "Faz sentido?",
+  "instrutora": "Flávia — Sua orientadora",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 34,
+  "notaRevisao": "A Fase 0 (instruções das práticas) subiu o rascunho de 34 para 35; a01 e a02 já têm a instrução nova e ficam como estão. A a02 continua generativa (conclusão provisória + duas informações): a classificação do pacote não entra."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim. Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v04, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2: regravam só v01/s3 e v03/s2 (anúncio da prática sem a fórmula); o resto do vídeo é reaproveitado. v01/s3 tem uma frase de ensino antes do anúncio: ela fica (simplificada) dentro do mesmo plano, e só a segunda frase muda. Textos: fim_aula_01 (frase de fechamento) e fim_aula_02 (deixa de ser fim do curso).",
+  "Planos de vídeo: falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_flavia6_34 com chamada na cam_flavia6_esq; explicação na cam_flavia6_esq; despedida na cam_flavia6_34.",
+  "q05 não ganha vídeo próprio: v05 termina com a chamada e o player pula o vídeo da pergunta.",
+  "a03 é missão fora da tela (“Leve para a vida real”): uma certeza real sobre alguém, três linhas no celular e alguns dias de observação. “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C25 (“Boa escolha”, “É por aí”, “Isso ajuda”, “Quase lá”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "O curso ensina a separar observação de hipótese (aula 1) e a não generalizar de um caso (aula 2), mas nunca mostra uma hipótese sendo confrontada por outra: a loja do Jonas para na chuva.",
+  "Falta a pergunta que transforma suposição em investigação: “o que eu precisaria encontrar para mudar de ideia?”.",
+  "Falta o erro de raciocínio mais comum depois de aprender a desconfiar: trocar uma certeza por outra (“então não foi a chuva, foi a falta”).",
+  "As duas práticas (a01 observação + hipóteses, a02 conclusão provisória) são de tela sobre casos fictícios; ninguém testa uma certeza própria.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final…”): sem fecho da Flávia, sem retorno ao silêncio da mensagem nem à chuva."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Separar observação de conclusão, testar explicações e descobrir o que faria você mudar de ideia. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Manter duas explicações possíveis sem eliminar nenhuma antes de comparar, e escrever o que seria preciso encontrar para mudar de ideia."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Aurora",
+    "Jonas"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Eu sei ou estou supondo?",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s3 regrava (mesmo id). A frase de ensino do começo fica, mais simples; só o anúncio muda (cortes.md, item 92).",
+     "planos": [
+      {
+       "id": "s3",
+       "acao": "change",
+       "fala": "Um fato pode ter várias explicações. Daqui a pouco você separa, num caso pequeno, o que foi observado de duas explicações possíveis.",
+       "nota": "Anúncio da a01 sem a palavra “missão”; mantém a frase de ensino.",
+       "antes": "Um fato pode ser compatível com várias explicações. No fim desta aula, tem uma missão para você: separe uma observação fictícia de duas explicações possíveis.",
+       "palavras": 22,
+       "segundos": 8.4,
+       "camera": "cam_flavia6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 10.92
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação A abre com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "O “ok” é fato. O “achou ruim” é hipótese."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Um caso não explica tudo",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "fala": "Quando esta aula acabar, você vai ter escrito uma conclusão provisória e duas informações capazes de derrubar essa conclusão.",
+       "nota": "Anúncio da a02 (que continua generativa), com estrutura diferente do v01/s3.",
+       "antes": "No fim desta aula, tem uma missão para você: escreva uma conclusão provisória e duas informações que ajudariam a testá-la.",
+       "palavras": 19,
+       "segundos": 7.3,
+       "camera": "cam_flavia6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 6.9
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Fica generativa (conclusão provisória + 2 informações). A classificação do pacote não entra: precisaria de componente novo e perderia a prática de escrever."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Uma conclusão provisória e duas informações para testá-la já formam uma boa investigação. Se você salvou, ela fica no Meu roteiro. Na próxima aula, o Jonas encontra uma segunda explicação para a queda nas vendas, e você testa uma certeza sua.",
+      "closingLine": "Dois casos juntos contam uma história. Não provam uma causa."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” vão para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Faz sentido?",
+   "titulo": "O que me faria mudar de ideia?",
+   "resumo": "Apareceu uma segunda explicação para a queda nas vendas. Você decide o que ela prova, aprende a testar a própria ideia e faz isso com uma certeza sua.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Manter duas explicações possíveis sem eliminar nenhuma antes de comparar, e escrever o que seria preciso encontrar para mudar de ideia."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "A segunda explicação",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Choveu. Faltou produto. E agora?",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já separa o que viu do que supõe. E sabe que um caso não explica tudo. Falta testar a sua própria ideia.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você pega uma certeza sua desta semana, sobre alguém, e escreve o que te faria mudar de ideia.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "De volta à loja do Jonas. Nos registros, ele achou algo: nos dois dias de chuva, o produto mais procurado estava em falta.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_34",
+       "cartao": {
+        "titulo": "O que o Jonas sabe",
+        "topicos": [
+         "Dois dias de **chuva**",
+         "Nos dois, o produto mais procurado **em falta**",
+         "Nos dois, **vendeu menos**"
+        ]
+       },
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Choveu, e faltou produto. Os outros dias, ninguém olhou ainda. O colega diz: “Viu? Então não foi a chuva.”",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar do Jonas, o que você conclui?",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "palavras": 8,
+       "segundos": 3.1,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "Nos dois dias de chuva, o produto mais procurado estava em falta. O colega diz: “Então não foi a chuva.” No lugar do Jonas, o que você conclui?",
+     "proximo": "q05",
+     "palavras": 93,
+     "segundos": 35.5,
+     "roteiroNovo": "Você já separa o que viu do que supõe. E sabe que um caso não explica tudo. Falta testar a sua própria ideia. No fim, você pega uma certeza sua desta semana, sobre alguém, e escreve o que te faria mudar de ideia. De volta à loja do Jonas. Nos registros, ele achou algo: nos dois dias de chuva, o produto mais procurado estava em falta. Choveu, e faltou produto. Os outros dias, ninguém olhou ainda. O colega diz: “Viu? Então não foi a chuva.” No lugar do Jonas, o que você conclui?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar do Jonas, o que você conclui?",
+     "apoioNaTela": "Nos dois dias de chuva, a loja vendeu menos e o produto mais procurado estava em falta. Os outros dias ainda não foram comparados. O colega diz: “Então não foi a chuva.”",
+     "bridge": {
+      "call": "No lugar do Jonas, o que você conclui?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Tenho duas explicações possíveis. Antes de escolher uma, comparo com dias sem chuva e sem falta.”",
+       "qualidade": "strong",
+       "feedback": "Você mantém a conclusão do tamanho do que já conferiu: duas explicações possíveis, nenhuma eliminada. Faça assim: compare dias de chuva com estoque cheio e dias sem chuva com falta.",
+       "reacao": {
+        "texto": "Choveu, faltou produto, vendeu menos. Isso a gente sabe. Qual pesou mais, ainda não. Só comparar outros dias responde.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v06",
+       "caracteres": 98
+      },
+      {
+       "id": "b",
+       "rotulo": "“A falta do produto explica tudo: a chuva não teve efeito nenhum.”",
+       "qualidade": "weak",
+       "feedback": "Uma explicação possível não elimina a outra. A falta de produto é mais uma pista, não a prova final. Faça assim: trate as duas como hipóteses e compare com outros dias.",
+       "reacao": {
+        "texto": "Apareceu uma explicação nova. Isso não apaga a antiga: chuva e falta podem ter pesado juntas. Trocar certeza não é investigar.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v06",
+       "caracteres": 66
+      },
+      {
+       "id": "c",
+       "rotulo": "“Anoto que a falta pode ter pesado, mas a chuva continua sendo a causa principal.”",
+       "qualidade": "ok",
+       "feedback": "“Principal” já é uma conclusão, e ainda não houve comparação nenhuma. Faça assim: escreva o que você precisaria encontrar para mudar de ideia e vá atrás disso.",
+       "reacao": {
+        "texto": "“Principal” já é conclusão. O que você comparou para chegar nela? Nada. A primeira ideia não ganha por chegar primeiro.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v06",
+       "caracteres": 82
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele dá os fatos e a frase do colega; a decisão é não trocar uma certeza por outra (B) nem manter a primeira como “principal” sem comparar (C). Não repete q04 (dois casos não provam padrão): aqui o erro é eliminar ou preferir uma hipótese antes de comparar. Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 60,
+     "segundosReacoes": 22.9
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Teste a própria ideia",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "O que eu sei · O que eu suponho · O que me faria mudar de ideia",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Hipótese não é erro por não estar provada. Ela guia a busca. O problema é só procurar o que confirma.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Antes de olhar os dados, escreva: o que eu precisaria encontrar para mudar de ideia? Se nada serve, você não está investigando.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_esq",
+       "cartao": {
+        "titulo": "Teste a própria ideia",
+        "topicos": [
+         "O que eu **sei**",
+         "O que eu **suponho**",
+         "O que me faria **mudar de ideia**"
+        ]
+       },
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Para o Jonas: “Se, com estoque cheio, a venda não cair na chuva, não foi a chuva.” Agora ele sabe o que procurar.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: uma certeza sua desta semana, sobre alguém. O que você viu, e o que mudaria sua ideia.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a03.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete v02 (várias hipóteses; retome com contexto) nem v04 (compare o que mudou; “ainda não sabemos a causa”). O novo: a hipótese que precisa poder ser derrubada, a pergunta “o que me faria mudar de ideia?” escrita antes de olhar os dados, e o exemplo do que derrubaria a chuva.",
+     "palavras": 86,
+     "segundos": 32.8,
+     "roteiroNovo": "Hipótese não é erro por não estar provada. Ela guia a busca. O problema é só procurar o que confirma. Antes de olhar os dados, escreva: o que eu precisaria encontrar para mudar de ideia? Se nada serve, você não está investigando. Para o Jonas: “Se, com estoque cheio, a venda não cair na chuva, não foi a chuva.” Agora ele sabe o que procurar. Agora é com você: uma certeza sua desta semana, sobre alguém. O que você viu, e o que mudaria sua ideia."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Uma certeza sua, e o que te faria mudar de ideia",
+     "tipoDeMissao": "FAZER fora da tela: uma certeza real sobre alguém, três linhas no celular e alguns dias reparando",
+     "intro": "O Jonas escreveu o que derrubaria a chuva. Agora é com uma certeza sua: aquela que apareceu rápido esta semana, sobre alguém.",
+     "action": [
+      "Pense numa certeza que você teve esta semana sobre alguém: “ela está brava comigo”, “ele não gostou”, “fizeram de propósito”.",
+      "No bloco de notas, três linhas: O que eu vi (só o fato) · O que eu concluí · O que eu precisaria encontrar para mudar de ideia.",
+      "Nos próximos dias, repare: apareceu o que mudaria sua ideia? Ou algo que confirmou?",
+      "Se der, pergunte à pessoa, com contexto, em vez de esperar a resposta aparecer sozinha.",
+      "Volte aqui, marque “Já experimentei” e conte o que apareceu."
+     ],
+     "alternative": "Não depende de emprego: família, escola, grupo de amigos e grupo de mensagens dão certeza rápida todo dia. Se nenhuma certeza aparecer, use a próxima vez que você pensar “com certeza ele…” e pare nessa hora. Se trabalha, escolha uma situação que só envolve você e a pessoa, sem expor terceiros.",
+     "tip": {
+      "rotulo": "Exemplo: a nota da Aurora",
+      "texto": "Vi: ele respondeu “ok” e nada mais. Concluí: achou ruim. Mudaria minha ideia: ele estar no meio de outra coisa, ou falar comigo normalmente amanhã. Dois dias depois: puxou assunto como sempre e perguntou do relatório. Era pressa.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: apareceu algo que mudou (ou confirmou) sua ideia? Sem nome da pessoa.",
+      "placeholder": "Ex.: eu tinha certeza que ela estava brava; ela só estava sem celular dois dias.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Faz sentido? Quase tudo faz",
+     "textoTela": "O que eu sei · O que suponho · O que me faria mudar de ideia",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "O Jonas comparou. Chuva com estoque cheio: caiu um pouco. Falta de produto: caiu muito. As duas pesaram.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "Faz sentido? Quase tudo faz. A pergunta é outra: o que eu sei, o que suponho, o que me faria mudar de ideia.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Nem sempre dá para esperar a resposta completa. Decida com o que tem. Mas anote o que falta.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina com a resolução da situação do curso (o Jonas comparou: as duas pesaram) e uma orientação concreta para decidir sem a resposta completa; responde ao título do curso; sem recap, sem “você praticou”, sem “Meu roteiro” na fala, sem “não é… é…”.",
+     "motionPrompt": "pausa curta depois de “Faz sentido?”, leve sorriso, mão aberta ao final",
+     "palavras": 59,
+     "segundos": 22.5,
+     "roteiroNovo": "O Jonas comparou. Chuva com estoque cheio: caiu um pouco. Falta de produto: caiu muito. As duas pesaram. Faz sentido? Quase tudo faz. A pergunta é outra: o que eu sei, o que suponho, o que me faria mudar de ideia. Nem sempre dá para esperar a resposta completa. Decida com o que tem. Mas anote o que falta."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O que eu precisaria encontrar para mudar de ideia? Quem pergunta isso está investigando. Quem não pergunta, só confirmando.",
+     "summary": "O que você levou\nSepare: o que foi observado, o que você supõe.\nDois acontecimentos juntos não provam qual causou qual; compare com outros casos.\nAntes de olhar os dados, escreva o que te faria mudar de ideia.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha certeza testada",
+       "kind": "checklist",
+       "items": [
+        "escolhi uma certeza desta semana",
+        "três linhas: vi, concluí, o que mudaria minha ideia",
+        "reparei nos dias seguintes (ou perguntei)",
+        "anotei o que apareceu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando testar a certeza, volte e conte o que apareceu."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Separe: o que foi observado, o que você supõe.\nDois acontecimentos juntos não provam qual causou qual; compare com outros casos.\nAntes de olhar os dados, escreva o que te faria mudar de ideia.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 238,
+   "segundos": 90.8
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 60,
+   "segundos": 22.9
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 41,
+   "segundos": 15.6,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s3",
+     "palavras": 22,
+     "segundos": 8.4,
+     "duracaoAntesS": 10.92
+    },
+    {
+     "no": "v03",
+     "plano": "s2",
+     "palavras": 19,
+     "segundos": 7.3,
+     "duracaoAntesS": 6.9
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 93,
+    "segundos": 35.5
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 60,
+    "segundos": 22.9
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 86,
+    "segundos": 32.8
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "aberturas trocadas (2 planos)",
+    "planos": 2,
+    "palavras": 41,
+    "segundos": 15.6
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 7,
+   "palavras": 66,
+   "segundos": 25.2,
+   "usd": 0.46,
+   "nota": "7 reações do C25 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Isso é uma interpretação sobre o motivo, não um fato observado.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "É uma explicação possível, mas ainda não confirmada.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Isso é uma interpretação sobre o motivo, não um fato.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Dois acontecimentos juntos não demonstram, sozinhos, causa e efeito.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q03",
+     "opcao": "c",
+     "abertura": "Olhe isso com calma.",
+     "resto": "É prudente, mas decide sem investigar, e a causa pode ser outra.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Você não conclui cedo, mas ainda não compara com nada.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Dois casos não provam um padrão.",
+     "palavras": 6,
+     "segundos": 2.3
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 146,
+    "maxS": 152.4,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 242.0,
+    "maxS": 249.1,
+    "texto": "cerca de 4.0–4.2 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 7 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 29.8 s, ≈ US$ 0.55). Recomendo (b); se não der, (a).",
+  "3. A a02 continua generativa (conclusão provisória + 2 informações): (a) manter; a classificação de 5 itens do pacote não entra · (b) adotar a classificação (componente novo no motor, 3–5 dias, e corte do anúncio do v03). Recomendo (a): a missão a03 já é a prática generativa de verdade, e o anúncio novo do v03 continua certo.",
+  "4. Despedida resolve a história do Jonas com um resultado inventado (“as duas pesaram”): (a) manter, porque mostra que as hipóteses podem coexistir · (b) terminar sem resolver (“o Jonas ainda está comparando”). Recomendo (a).",
+  "5. Missão a03 trata de certezas sobre pessoas (pode mexer com emoção): (a) manter, com o passo “se der, pergunte à pessoa, com contexto” · (b) trocar por uma certeza sobre uma coisa (um app, um horário). Recomendo (a): é o caso do curso desde a aula 1 (o gestor que não respondeu, o “ok” do colega)."
+ ]
+}

@@ -1,0 +1,894 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C13",
+  "id": "crs_gujuaiykqcsl2n31",
+  "titulo": "Comecei a trabalhar",
+  "instrutor": "Rafael — Seu orientador",
+  "versaoPublicada": 12,
+  "revisaoDoRascunho": 180
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo/plano indicado; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova (aula_07) é APENDADA no fim. Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes só há: troca de fala do plano 'missao' (mesmo id, regrava só esse plano) e mudanças de texto nos nós 'end'. Os planos 'missao_fim' já estão sendo tirados na Fase 0 (cortes.md, status a): não mexer neles aqui.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_r7_34 com chamada na cam_r7_esq; explicação na cam_r7_esq; despedida na cam_r7_34.",
+  "q12 não ganha vídeo próprio: v12 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m07 é missão fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; botões 'Já experimentei' e 'Vou fazer depois'. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso.",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "C13 tem seis aulas: as seis aberturas trocam o plano 'missao' (ids v00, v02, v04, v06, v08, v10). É o que pesa no orçamento deste curso (≈ 35 s do total); por isso a aula 7 é mais enxuta que nos cursos de duas aulas.",
+  "Os cinco 'missao_fim' (v01, v03, v05, v07, v09) saem na Fase 0; o v11 não tem.",
+  "Ids novos (v12, q12, v13, m07, despedida, fim_aula_07) não colidem com os existentes (o curso já tem q11 na aula 1)."
+ ],
+ "diagnostico": [
+  "As seis missões (m01–m06) são montagem de blocos; nada acontece fora da tela. O curso termina na m06 e na tela de roteiro, sem uma fala que costure as seis situações.",
+  "A aula 6 ensina a propor uma prática acompanhada, mas não mostra a proposta delimitada em ação, nem o que fazer quando a resposta é “esta semana está corrido” (“qual momento seria possível?”).",
+  "Falta a distinção que mais protege quem começa: observar uma vez não é estar autorizado a fazer sozinho.",
+  "Falta comparar a tarefa do começo com a de agora (o que já faço com menos ajuda; onde ainda confirmo), que é como o crescimento aparece numa conversa.",
+  "Seis aberturas com a mesma fórmula (“No fim desta aula, tem uma missão para você: …”) num curso de 12 minutos."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Pratique decisões do começo da carreira e monte seu roteiro para trabalhar, aprender e crescer com responsabilidade, propondo um próximo passo que cabe no que você já faz. Público: Jovens de 16 a 24 anos em estágio, aprendizagem ou primeiro emprego, incluindo iniciantes e tímidos. Objetivo final: Ao final, a pessoa consegue alinhar uma tarefa, negociar prioridades, comunicar um erro, aplicar feedback e propor um próximo passo de desenvolvimento acompanhado, sem assumir sozinha o que ainda está aprendendo."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_07",
+    "texto": "Propor um próximo passo delimitado (observar, fazer com revisão, conversar sobre o resultado), insistir com “qual momento seria possível?” e não assumir sozinho o que só observou."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Luana",
+    "Caio",
+    "Joana"
+   ],
+   "novos": [
+    "um colega da Joana que faz conferências (sem nome)"
+   ]
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como confirmar a entrega, o prazo e quem orienta",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Nesta aula, você deixa pronta a frase que confirma um pedido: entrega, prazo e quem ajuda.",
+       "de": "No fim desta aula, tem uma missão para você: confirme uma tarefa.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "q11",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Um minuto confirmando evita uma tarde refazendo."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Peça ajuda com clareza",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "q04",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Hoje você sai daqui com um pedido de ajuda montado: contexto, o que tentou e a dúvida.",
+       "de": "No fim desta aula, tem uma missão para você: prepare seu pedido de ajuda.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0."
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Pedir ajuda com contexto não é fraqueza. É trabalho."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "change",
+   "titulo": "Organize tarefas e prioridades",
+   "caminhoPrincipal": [
+    "v04",
+    "q05",
+    "v05",
+    "m03",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Daqui a pouco, dois prazos batem no mesmo horário. Você monta a proposta que resolve.",
+       "de": "No fim desta aula, tem uma missão para você: alinhe prioridades.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 15,
+       "segundos": 5.7,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0; o vídeo passa a terminar em s5."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Dois prazos no mesmo horário não se resolvem prometendo os dois."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 4,
+   "id": "aula_04",
+   "acao": "change",
+   "titulo": "Avise quando algo der errado",
+   "caminhoPrincipal": [
+    "v06",
+    "q06",
+    "v07",
+    "q07",
+    "m04",
+    "fim_aula_04"
+   ],
+   "nos": [
+    {
+     "id": "v06",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Erro dá um aperto. Hoje você deixa pronto o aviso: fatos, impacto, próximo passo.",
+       "de": "No fim desta aula, tem uma missão para você: comunique um problema.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 14,
+       "segundos": 5.3,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q06",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v07",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0."
+    },
+    {
+     "id": "q07",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m04",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_04",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Erro avisado cedo é problema da equipe. Erro escondido é só seu."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 5,
+   "id": "aula_05",
+   "acao": "change",
+   "titulo": "Transforme feedback em ação",
+   "caminhoPrincipal": [
+    "v08",
+    "q08",
+    "v09",
+    "q09",
+    "m05",
+    "fim_aula_05"
+   ],
+   "nos": [
+    {
+     "id": "v08",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Ao terminar, você terá combinado uma melhoria que dá para ver e um dia para conferir.",
+       "de": "No fim desta aula, tem uma missão para você: combine sua melhoria.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q08",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v09",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0."
+    },
+    {
+     "id": "q09",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m05",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_05",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "“Vou melhorar” não dá para conferir. “Vou incluir as pendências” dá."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 6,
+   "id": "aula_06",
+   "acao": "change",
+   "titulo": "Proponha uma oportunidade de aprender",
+   "caminhoPrincipal": [
+    "v10",
+    "q10",
+    "v11",
+    "m06",
+    "fim_aula_06"
+   ],
+   "nos": [
+    {
+     "id": "v10",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Esta aula termina com o seu plano: habilidade, prática acompanhada e como mostrar o que aprendeu.",
+       "de": "No fim desta aula, tem uma missão para você: monte seu plano de desenvolvimento.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q10",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v11",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "Não tem missao_fim."
+    },
+    {
+     "id": "m06",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_06",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' passa para fim_aula_07.",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Proponha uma prática possível com orientação. Registre aprendizados sem copiar informações internas. Na próxima aula, a Joana leva o plano para a conversa, e você faz a sua proposta para alguém de verdade.",
+      "closingLine": "Observar é o primeiro passo. Fazer com revisão é o segundo. Não pule o segundo."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 7,
+   "id": "aula_07",
+   "acao": "add",
+   "modulo": "Aprenda e dê o próximo passo",
+   "titulo": "Observar não é estar autorizado",
+   "resumo": "Você acompanha a proposta da Joana na conversa real, decide o que fazer depois de só observar e propõe a alguém de verdade: ver, depois tentar com revisão.",
+   "estimativaMin": 4,
+   "obrigatoria": "sim (mesma decisão do piloto C24: quem está fazendo passa pela aula; quem já concluiu vê como conteúdo novo)",
+   "objetivo": {
+    "id": "obj_aula_07",
+    "texto": "Propor um próximo passo delimitado (observar, fazer com revisão, conversar sobre o resultado), insistir com “qual momento seria possível?” e não assumir sozinho o que só observou."
+   },
+   "caminhoPrincipal": [
+    "v12",
+    "q12",
+    "v13",
+    "m07",
+    "despedida",
+    "fim_aula_07"
+   ],
+   "nos": [
+    {
+     "id": "v12",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Sim tem tamanho",
+     "objetivos": [
+      "obj_aula_07"
+     ],
+     "textoTela": "Observar · Fazer com revisão · Conversar",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Nesta última aula, a Joana leva o plano para a conversa. E descobre que sim tem tamanho.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você propõe a alguém de verdade: posso ver você fazer, e depois tentar com você olhando?",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Faz o papel do antigo plano 'missao', sem a fórmula."
+      },
+      {
+       "id": "s2",
+       "fala": "A Joana quer aprender a conferir entregas. Propôs: acompanhar uma, depois fazer uma com revisão. Resposta: esta semana está corrido.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s3",
+       "fala": "Ela não parou ali: qual momento seria possível? Enquanto isso, tem um modelo para eu conhecer? Ficou: quinta, acompanhar.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s4",
+       "fala": "Na quinta, ela viu uma conferência inteira e anotou. Só acompanhou, como combinado. Aí o colega foi chamado para outra coisa.",
+       "layout": "presenter_chips",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0,
+       "cartao": {
+        "titulo": "O combinado da Joana",
+        "topicos": [
+         "Quinta: **acompanhar** uma conferência",
+         "Fazer **com revisão**: ainda sem data",
+         "Modelo: **recebido**"
+        ]
+       }
+      },
+      {
+       "id": "chamada",
+       "fala": "Sobrou uma entrega na mesa. No lugar da Joana, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_r7_esq",
+       "acao": "add",
+       "palavras": 13,
+       "segundos": 5.0
+      }
+     ],
+     "roteiroNovo": "Nesta última aula, a Joana leva o plano para a conversa. E descobre que sim tem tamanho. No fim, você propõe a alguém de verdade: posso ver você fazer, e depois tentar com você olhando? A Joana quer aprender a conferir entregas. Propôs: acompanhar uma, depois fazer uma com revisão. Resposta: esta semana está corrido. Ela não parou ali: qual momento seria possível? Enquanto isso, tem um modelo para eu conhecer? Ficou: quinta, acompanhar. Na quinta, ela viu uma conferência inteira e anotou. Só acompanhou, como combinado. Aí o colega foi chamado para outra coisa. Sobrou uma entrega na mesa. No lugar da Joana, o que você faz?",
+     "palavras": 108,
+     "segundos": 41.2,
+     "cartaoPerguntaSeguinte": "A Joana acompanhou uma conferência e anotou tudo. O colega saiu, e há uma entrega na mesa esperando conferência. O que você faz?",
+     "proximo": "q12"
+    },
+    {
+     "id": "q12",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_07"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Joana, o que você faz?",
+     "apoioNaTela": "A Joana só tinha combinado acompanhar. Ela viu uma conferência inteira e anotou. O colega foi chamado para outra coisa, e há uma entrega na mesa esperando conferência.",
+     "bridge": {
+      "call": "Sobrou uma entrega na mesa. No lugar da Joana, o que você faz?"
+     },
+     "video": "não gerar: a cena anterior (v12) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C13)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Confiro essa entrega sozinha: acabei de ver como faz.”",
+       "qualidade": "weak",
+       "feedback": "Observar ajuda, mas não confirma domínio nem autorização para assumir a tarefa. Faça assim: anote as dúvidas e peça para fazer a próxima com alguém revisando.",
+       "reacao": {
+        "texto": "Você viu uma vez. Isso não confirma que domina, nem que alguém autorizou. Se errar, o erro sai com seu nome.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v13",
+       "caracteres": 55
+      },
+      {
+       "id": "b",
+       "rotulo": "“Não mexo, e espero chamarem de novo quando for a hora de eu tentar.”",
+       "qualidade": "ok",
+       "feedback": "A expectativa fica no ar e pode não virar oportunidade. Faça assim: diga o que você viu e proponha a conferência com revisão, com uma data possível.",
+       "reacao": {
+        "texto": "Não mexer está certo. Esperar que percebam, não funciona. Ninguém sabe que você quer o próximo passo.",
+        "palavras": 17,
+        "segundos": 6.5
+       },
+       "vaiPara": "v13",
+       "caracteres": 69
+      },
+      {
+       "id": "c",
+       "rotulo": "“Anoto minhas dúvidas e combino com o colega uma conferência com revisão, quando der.”",
+       "qualidade": "strong",
+       "feedback": "A observação virou progressão combinada. Faça assim: mostre as dúvidas anotadas, proponha a próxima conferência com revisão e, se adiarem, pergunte qual momento seria possível.",
+       "reacao": {
+        "texto": "Você transformou o que viu em dúvidas anotadas e num pedido com data. É assim que acompanhar vira fazer com revisão.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v13",
+       "caracteres": 86
+      }
+     ],
+     "porQueNaoEstaNoEnunciado": "A resposta não está no enunciado: ele diz que ela só combinou acompanhar e que viu tudo; perceber que ver uma vez não é domínio nem autorização, e que a saída é transformar o que viu em pedido com data, é a decisão."
+    },
+    {
+     "id": "v13",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Compare o começo com agora",
+     "objetivos": [
+      "obj_aula_07"
+     ],
+     "textoTela": "Faço sozinho · Faço com revisão · Ainda só observo",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Crescer também é reconhecer o que mudou. Compare uma tarefa do começo com o jeito que você faz agora.",
+       "layout": "presenter",
+       "camera": "cam_r7_esq",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s2",
+       "fala": "O que faz com menos ajuda? Onde ainda confirma? Diga com exemplos, sem se diminuir nem exagerar.",
+       "layout": "presenter_chips",
+       "camera": "cam_r7_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5,
+       "cartao": {
+        "titulo": "Do começo até agora",
+        "topicos": [
+         "**Faço sozinho**",
+         "**Faço com revisão**",
+         "**Ainda só observo**",
+         "Adiaram? Combine quando retomar, sem prometer data"
+        ]
+       }
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, a sua proposta de verdade, para alguém que faz bem o que você quer aprender. Posso ver, e depois tentar?",
+       "layout": "presenter",
+       "camera": "cam_r7_esq",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra 'missão'. A aula segue para m07."
+      }
+     ],
+     "roteiroNovo": "Crescer também é reconhecer o que mudou. Compare uma tarefa do começo com o jeito que você faz agora. O que faz com menos ajuda? Onde ainda confirma? Diga com exemplos, sem se diminuir nem exagerar. Agora, a sua proposta de verdade, para alguém que faz bem o que você quer aprender. Posso ver, e depois tentar?",
+     "palavras": 57,
+     "segundos": 21.8,
+     "proximo": "m07",
+     "naoRepete": "É o aprofundamento do pacote (aprovado), em planos. Não repete v11 (habilidade, prática, evidência; registre sem dados internos). O novo: comparar começo e agora, os três estados (sozinho / com revisão / só observo) e, no cartão, adiamento sem promessa de data."
+    },
+    {
+     "id": "m07",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_07"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Proponha: ver, depois tentar com alguém olhando",
+     "tipoDeMissao": "FAZER fora da tela: uma proposta real a alguém, em até 7 dias",
+     "intro": "A Joana saiu com uma data para acompanhar e um pedido para fazer com revisão. Agora é a sua proposta, para alguém de verdade: em casa, na escola, no estágio ou num bico.",
+     "action": [
+      "Escolha uma coisa que você já faz bem e uma que quer aprender.",
+      "Escolha alguém que faz bem a segunda.",
+      "Proponha: “posso ver você fazer uma vez e depois tentar com você olhando?”. Se a resposta for “agora não”, pergunte: “qual momento seria possível?”.",
+      "Anote a resposta e a data, se tiver.",
+      "Volte aqui, marque “Já experimentei” e conte."
+     ],
+     "alternative": "Sem trabalho, serve igual: trocar um pneu com um vizinho, fechar o caixa da cantina da escola, fazer o arroz do jeito da sua avó, mexer num programa que um colega domina. O que importa é o pedido: ver, depois tentar com alguém olhando.",
+     "tip": {
+      "rotulo": "Exemplo: a nota da Joana",
+      "texto": "O que já faço: cadastrar pedidos. O que quero: conferir entregas. Propus ao colega: ver uma, depois fazer uma com ele revisando. Resposta: semana que vem está corrido. Perguntei qual momento seria possível: quinta, às 14h. Anotei.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Para quem você propôs, o que a pessoa respondeu, e ficou alguma data? Uma ou duas frases.",
+      "placeholder": "Ex.: propus ao meu tio ver ele trocar a resistência do chuveiro; quinta ele me deixa tentar.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; m07 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Um ponto por semana",
+     "objetivos": [
+      "obj_aula_07"
+     ],
+     "textoTela": "Entender · Pedir ajuda · Organizar · Avisar · Corrigir · Propor",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Seis situações que se repetem em qualquer começo: entender o pedido, pedir ajuda, organizar prioridades, avisar um erro, usar uma correção, propor um passo.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "d2",
+       "fala": "O que liga as seis é simples: não esconder o que falta. Quem sabe onde você travou consegue te orientar.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d3",
+       "fala": "Ninguém faz as seis com segurança no primeiro dia. Nem precisa. Nesta semana, um ponto só. Observe o que mudou.",
+       "layout": "presenter",
+       "camera": "cam_r7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      }
+     ],
+     "roteiroNovo": "Seis situações que se repetem em qualquer começo: entender o pedido, pedir ajuda, organizar prioridades, avisar um erro, usar uma correção, propor um passo. O que liga as seis é simples: não esconder o que falta. Quem sabe onde você travou consegue te orientar. Ninguém faz as seis com segurança no primeiro dia. Nem precisa. Nesta semana, um ponto só. Observe o que mudou.",
+     "palavras": 64,
+     "segundos": 24.4,
+     "forma": "é o encerramento reescrito pelos revisores (S2, voz do Rafael), enxugado para caber no orçamento: costura as seis situações, dá a frase da ficha (“não esconder o que falta”) e termina com uma orientação concreta (um ponto por semana). Sem “Meu roteiro” na fala; a menção aos outros cursos fica só na tela.",
+     "motionPrompt": "contagem curta com a mão nas seis situações, depois um dedo só, firme e sem pressa",
+     "required": true,
+     "posicao": "depois de m07 e antes de fim_aula_07"
+    },
+    {
+     "id": "fim_aula_07",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Um ponto por semana. Quem tenta melhorar tudo de uma vez não vê o que mudou.",
+     "summary": "O que você levou\nNão esconder o que falta: é o que liga as seis situações.\nProposta que cabe: ver, fazer com revisão, conversar sobre o resultado.\nObservar não é estar autorizado. Adiamento não é promessa de data.\nQuando uma dessas situações apertar, existe um curso só sobre ela.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha proposta desta semana",
+       "kind": "checklist",
+       "items": [
+        "escolhi o que já faço bem e o que quero aprender",
+        "escolhi para quem propor",
+        "propus: ver, depois tentar com a pessoa olhando",
+        "anotei a resposta (e a data, se houve)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m07",
+       "composedNodeIds": [
+        "m07"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer a proposta, volte e conte a resposta."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Não esconder o que falta: é o que liga as seis situações.\nProposta que cabe: ver, fazer com revisão, conversar sobre o resultado.\nObservar não é estar autorizado. Adiamento não é promessa de data.\nQuando uma dessas situações apertar, existe um curso só sobre ela.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos 'keep' custam zero. A pergunta nova não gera vídeo próprio. As aberturas trocadas regravam só o plano 'missao' de cada aula existente.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 229,
+   "segundos": 87.4
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 59,
+   "segundos": 22.5
+  },
+  "aberturasTrocadas": {
+   "quantidade": 6,
+   "palavras": 94,
+   "segundos": 35.9
+  },
+  "totalNovoFalado": {
+   "palavras": 382,
+   "segundos": 145.8,
+   "usd": 2.67,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoAlvo": false,
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v00/missao (abertura)",
+    "planos": 1,
+    "palavras": 16,
+    "segundos": 6.1
+   },
+   {
+    "no": "v02/missao (abertura)",
+    "planos": 1,
+    "palavras": 17,
+    "segundos": 6.5
+   },
+   {
+    "no": "v04/missao (abertura)",
+    "planos": 1,
+    "palavras": 15,
+    "segundos": 5.7
+   },
+   {
+    "no": "v06/missao (abertura)",
+    "planos": 1,
+    "palavras": 14,
+    "segundos": 5.3
+   },
+   {
+    "no": "v08/missao (abertura)",
+    "planos": 1,
+    "palavras": 16,
+    "segundos": 6.1
+   },
+   {
+    "no": "v10/missao (abertura)",
+    "planos": 1,
+    "palavras": 16,
+    "segundos": 6.1
+   },
+   {
+    "no": "v12",
+    "planos": 6,
+    "palavras": 108,
+    "segundos": 41.2
+   },
+   {
+    "no": "q12 (3 reações)",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "v13",
+    "planos": 3,
+    "palavras": 57,
+    "segundos": 21.8
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 64,
+    "segundos": 24.4
+   }
+  ],
+  "videoDoCurso": {
+   "antes": {
+    "minS": 669.8,
+    "maxS": 714.1,
+    "texto": "12 min"
+   },
+   "depois": {
+    "minS": 763.7,
+    "maxS": 809.5,
+    "texto": "cerca de 12.7–13.5 min"
+   },
+   "comoCalculado": "antes + v12 + v13 + despedida + uma reação de q12 (mínima/máxima). As aberturas trocadas têm duração parecida com a atual; as aulas existentes não mudam de duração de forma relevante."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aberturas: (a) trocar as seis (≈ 30 s; o total fica perto do teto, mas abaixo dele) · (b) trocar só as da aula 1 e da aula 6 e manter a fórmula nas outras quatro (economiza ≈ 19 s). Recomendo (a): a fórmula repetida seis vezes no mesmo curso é o que o dono reclamou.",
+  "2. Despedida: (a) versão enxuta da S2 (cabe no orçamento; seis situações, “não esconder o que falta”, um ponto por semana) · (b) S2 integral, 145 palavras (+29 s; estoura o teto). Recomendo (a).",
+  "3. Demonstração: (a) com a Joana (continuidade da aula 6) · (b) com “você”, como no pacote. Recomendo (a).",
+  "4. Menção aos outros cursos (“existe um curso só sobre ela”): (a) só na tela do fim (resumo) · (b) também na fala da despedida (+4 s). Recomendo (a).",
+  "5. Frases de fechamento das aulas 1–5 (hoje null): (a) acrescentar as seis propostas (custo zero) · (b) só na aula 6 e na 7. Recomendo (a)."
+ ]
+}

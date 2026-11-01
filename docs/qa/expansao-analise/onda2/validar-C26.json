@@ -1,0 +1,38 @@
+[
+ {
+  "codigo": "C26",
+  "id": "crs_d5rsi8gt36rv0qbq",
+  "titulo": "Onde está o problema?",
+  "revisao": 54,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_04/q07",
+   "aula_04/q07"
+  ],
+  "stale": [],
+  "outros": [
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "CALL_NOT_SPOKEN aula_03/q05",
+   "CALL_NOT_SPOKEN aula_03/q06"
+  ],
+  "ultimaAula": "aula_04",
+  "nosUltimaAula": [
+   "v07:scenario",
+   "q07:choice",
+   "v08:content",
+   "a04:mission",
+   "despedida:content",
+   "fim_aula_04:end"
+  ]
+ }
+]

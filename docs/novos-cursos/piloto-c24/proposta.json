@@ -1,0 +1,754 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C24",
+  "id": "crs_dp9s7pdro9j6e3m0",
+  "titulo": "Por onde eu começo?",
+  "instrutora": "Flávia — Sua orientadora",
+  "versaoPublicada": 2,
+  "revisaoDoRascunho": 43
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v04, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2 só há mudanças de texto (a01, a02, fim_aula_01, fim_aula_02). Nenhum plano é tirado: os dois anúncios de missão (v01/s4, v03/s3) são o ÚNICO anúncio de a01/a02 (cortes.md, status d).",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62 (ritmo real medido); layout/camera seguem o padrão atual do C24 (cena na cam_flavia6_34 com chamada na cam_flavia6_esq; explicação na cam_flavia6_esq).",
+  "q05 não ganha vídeo próprio: v05 termina com a chamada e o player pula o vídeo da pergunta (como nas 4 perguntas atuais).",
+  "a03 é missão fora da tela ('Leve para a vida real'): não tem molde; o plano vai para o bloco de notas do celular. 'Como foi?' é o único campo de texto. draftFromNodeId fica null (ver perguntasAbertas 2).",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do C24 ('Boa escolha', 'É por aí', 'Isso ajuda').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (a01, a02) são montagem de blocos sobre casos fictícios (reunião, kits); nada acontece fora da tela.",
+  "a02 pede a ordem que a q03-A e o v04 acabaram de dizer; a01 mistura três contextos (reunião, kits, relatório) nos blocos.",
+  "O curso ensina a entender e a ordenar, mas nunca o terceiro momento: fazer e perceber o que precisou mudar quando o plano encontra a vida.",
+  "Todos os casos são de trabalho (reunião, apresentação, kits, evento): quem ainda não trabalha não tem para onde levar.",
+  "O curso termina numa tela de texto genérica ('Você chegou ao final. Revise o que preparou…'): sem fecho da Flávia, sem retorno à história do curso."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Entender um objetivo, descobrir o que falta, ordenar as ações e ajustar o plano quando algo muda. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Executar um plano simples numa tarefa real e, quando algo muda, voltar só até a etapa que a mudança alcança."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Natália",
+    "Yuri"
+   ],
+   "novos": [
+    "Bia (aluna que organiza o amigo-secreto da turma; exemplo fora do trabalho)"
+   ]
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Entenda antes de sair fazendo",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "v01/s4 (anúncio da missão, 32 palavras) fica: é o único anúncio de a01 (cortes.md §C, status d). Tirar só se o dono aceitar a01 sem anúncio falado."
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida em 13 cursos (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Correção C24·A1 revisada: contexto único, mantendo o molde de blocos (analise.md §6 item 9) e com caso NOVO para o aluno não copiar o v02 (pedagogia-C19-C26: '30 cópias'). Título e anúncio falado no v01 continuam valendo.",
+     "campos_alterados": {
+      "ponte": "Você viu que entender o resultado vem antes de agir. Agora, um caso novo: pediram 30 cópias de um material para amanhã. Você não sabe qual versão nem se é frente e verso. Complete as quatro partes.",
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas.",
+      "molde": "Preciso {a}. Sei {b}. Ainda não sei {c}. Vou {d}.",
+      "campos": [
+       {
+        "id": "a",
+        "rotulo": "O que você precisa conseguir",
+        "pergunta": "O que você precisa conseguir?",
+        "opcoes": [
+         "entregar 30 cópias do jeito que pediram",
+         "ter o material impresso certo para amanhã",
+         "entregar as cópias certas, sem reimprimir"
+        ],
+        "permiteOutro": true,
+        "maxCaracteresOutro": 120
+       },
+       {
+        "id": "b",
+        "rotulo": "O que você já sabe",
+        "pergunta": "O que você já sabe?",
+        "opcoes": [
+         "que são 30 cópias",
+         "que é para amanhã",
+         "que são 30 cópias para amanhã"
+        ],
+        "permiteOutro": true,
+        "maxCaracteresOutro": 120
+       },
+       {
+        "id": "c",
+        "rotulo": "O que falta descobrir",
+        "pergunta": "O que ainda não sabe?",
+        "opcoes": [
+         "qual versão do arquivo imprimir",
+         "se é frente e verso",
+         "a versão nem se é frente e verso"
+        ],
+        "permiteOutro": true,
+        "maxCaracteresOutro": 120
+       },
+       {
+        "id": "d",
+        "rotulo": "Qual é o seu primeiro passo",
+        "pergunta": "Qual é o seu primeiro passo?",
+        "opcoes": [
+         "perguntar a quem pediu antes de imprimir",
+         "confirmar versão e formato antes de imprimir",
+         "mandar uma mensagem com essas duas perguntas"
+        ],
+        "permiteOutro": true,
+        "maxCaracteresOutro": 120
+       }
+      ],
+      "exemplo": "Preciso entregar 30 cópias do jeito que pediram. Sei que são 30 cópias para amanhã. Ainda não sei a versão nem se é frente e verso. Vou perguntar a quem pediu antes de imprimir."
+     }
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Perguntar o que falta não atrasa. Reservar a sala errada, atrasa."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null). Resumo e roteiro ficam."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Organize o próximo passo",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "v03/s3 (anúncio da missão) fica: único anúncio de a02 (cortes.md §C)."
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução: o componente é de blocos, mas o texto diz 'Escreva uma resposta curta' (defeito em 26 práticas, analise.md §6 item 6). Molde, blocos e título ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Dividir em etapas e marcar o que depende de confirmação evita retrabalho. Se você salvou, seu plano fica no Meu roteiro. Na próxima aula, o plano sai do papel: você faz uma tarefa sua e repara no que muda.",
+      "closingLine": "De que esta etapa depende? Quem pergunta isso antes, refaz menos depois."
+     },
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' e a frase 'Você chegou ao final…' passam para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Por onde eu começo?",
+   "titulo": "Faça e repare o que mudou",
+   "resumo": "Você escolhe uma tarefa sua desta semana, escreve os passos, faz e anota o que precisou mudar.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Executar um plano simples numa tarefa real e, quando algo muda, voltar só até a etapa que a mudança alcança."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Quando o plano encontra a vida",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Do papel para a semana",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Até aqui, você planejou no papel: reunião, apresentação, kits. Nesta última aula, o plano sai do papel. E a vida mexe nele.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você escolhe uma tarefa sua, desta semana. Escreve os passos, faz, e repara no que precisou mudar. É isso que a gente treina.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "nota": "Faz o papel do antigo plano 'missao', sem a fórmula 'No fim desta aula, tem uma missão para você'.",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "s2",
+       "fala": "A Bia combinou um amigo-secreto com a turma. Ela fez como você: lista de quem entra, valor combinado, sorteio, data da troca. Quatro etapas.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s3",
+       "fala": "E perguntou de que cada etapa depende. O sorteio depende da lista. A data, de todo mundo. Terça, a lista fechou. Quarta, ela sorteou.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_34",
+       "cartao": {
+        "titulo": "O plano da Bia",
+        "topicos": [
+         "**Lista** de quem entra",
+         "**Valor** combinado",
+         "**Sorteio** (depende da lista)",
+         "**Data** da troca (depende de todos)"
+        ]
+       },
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s4",
+       "fala": "Quinta, duas pessoas avisam: não vão mais participar. O sorteio já foi feito. O valor e a data continuam de pé.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Bia, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 8,
+       "segundos": 3.1
+      }
+     ],
+     "roteiroNovo": "Até aqui, você planejou no papel: reunião, apresentação, kits. Nesta última aula, o plano sai do papel. E a vida mexe nele. No fim, você escolhe uma tarefa sua, desta semana. Escreve os passos, faz, e repara no que precisou mudar. É isso que a gente treina. A Bia combinou um amigo-secreto com a turma. Ela fez como você: lista de quem entra, valor combinado, sorteio, data da troca. Quatro etapas. E perguntou de que cada etapa depende. O sorteio depende da lista. A data, de todo mundo. Terça, a lista fechou. Quarta, ela sorteou. Quinta, duas pessoas avisam: não vão mais participar. O sorteio já foi feito. O valor e a data continuam de pé. No lugar da Bia, o que você faz?",
+     "cartaoPerguntaSeguinte": "Duas pessoas saíram do amigo-secreto depois do sorteio. O valor e a data continuam. O que você faz no lugar da Bia?",
+     "proximo": "q05",
+     "palavras": 124,
+     "segundos": 47.4
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Bia, o que você faz?",
+     "apoioNaTela": "A Bia planejou o amigo-secreto da turma em quatro etapas e já fez o sorteio. Na quinta, duas pessoas saem. O valor e a data continuam valendo.",
+     "bridge": {
+      "call": "No lugar da Bia, o que você faz?"
+     },
+     "video": "não gerar: a cena anterior (v05) termina com a chamada e o player pula o vídeo da pergunta (como nas 4 perguntas atuais do C24)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Refaço só o sorteio com quem ficou e aviso a turma hoje.”",
+       "qualidade": "strong",
+       "feedback": "Você volta só até a etapa que a mudança alcança. Faça assim: refaça o sorteio, avise a turma no mesmo dia e anote o que mudou.",
+       "reacao": {
+        "texto": "O que mudou? A lista. O que depende dela? Só o sorteio. Você refez exatamente isso, e o resto continuou de pé.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v06",
+       "caracteres": 58
+      },
+      {
+       "id": "b",
+       "rotulo": "“Espero até sexta, para ver se mais alguém sai, e aí refaço.”",
+       "qualidade": "ok",
+       "feedback": "Você evita refazer duas vezes, mas o resto do plano fica parado esperando. Faça assim: refaça hoje; se alguém sair depois, refaz só o sorteio.",
+       "reacao": {
+        "texto": "Esperar parece prudente. Mas, sem sorteio, ninguém compra nada. Refaça hoje. Se alguém sair depois, você refaz só o sorteio de novo.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v06",
+       "caracteres": 61
+      },
+      {
+       "id": "c",
+       "rotulo": "“Cancelo o sorteio e recomeço o plano do zero, para não errar de novo.”",
+       "qualidade": "weak",
+       "feedback": "Você gasta tempo em etapas que não mudaram: valor e data continuam valendo. Faça assim: pergunte o que a mudança alcança e volte só até ali.",
+       "reacao": {
+        "texto": "Recomeçar dá sensação de controle. Mas o valor e a data não mudaram. Antes de apagar tudo, pergunte: o que essa mudança alcança?",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v06",
+       "caracteres": 71
+      }
+     ]
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Fazer e reparar",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Escolher · Escrever · Fazer · Anotar",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Um plano não é promessa. É um chute organizado. Ele serve para você perceber, cedo, onde a vida foi diferente do que imaginou.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s2",
+       "fala": "São quatro movimentos: escolher uma tarefa pequena, escrever os passos, fazer, e anotar o que mudou. Simples de falar. Vamos ver cada um.",
+       "layout": "presenter_chips",
+       "camera": "cam_flavia6_esq",
+       "cartao": {
+        "titulo": "Quatro movimentos",
+        "topicos": [
+         "**Escolher** uma tarefa pequena",
+         "**Escrever** os passos",
+         "**Fazer**",
+         "**Anotar** o que mudou"
+        ]
+       },
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s3",
+       "fala": "Pequena quer dizer: cabe nesta semana e termina. Um capítulo para a prova, o armário do quarto, um trabalho da escola, um pedido no estágio.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "s4",
+       "fala": "Antes de começar, uma pergunta: como eu vou saber que terminou? Capítulo lido não é prova feita. Caixa cheia não é kit certo.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "nota": "'Como saber que terminou' é o único trecho aproveitado do aprofundamento do pacote; 'caixa cheia / kit certo' é o callback à aula 2.",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s5",
+       "fala": "Escreva de três a cinco passos. Nos que dependem de alguém, ou de algo que você ainda não sabe, ponha um ponto de interrogação.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s6",
+       "fala": "No meio do caminho, algo vai sair diferente. Não empurre. Pare dez segundos e pergunte: o que isso alcança? Um passo, ou todos?",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s7",
+       "fala": "No fim, compare com o que escreveu. O que mudou é o que você aprendeu sobre a tarefa. Da próxima vez, o chute começa melhor.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é a sua vez: escolha a tarefa, escreva os passos e faça. Depois, volte aqui e conte como foi.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_esq",
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra 'missão'. A aula segue para a03 (não há pergunta depois deste vídeo).",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      }
+     ],
+     "roteiroNovo": "Um plano não é promessa. É um chute organizado. Ele serve para você perceber, cedo, onde a vida foi diferente do que imaginou. São quatro movimentos: escolher uma tarefa pequena, escrever os passos, fazer, e anotar o que mudou. Simples de falar. Vamos ver cada um. Pequena quer dizer: cabe nesta semana e termina. Um capítulo para a prova, o armário do quarto, um trabalho da escola, um pedido no estágio. Antes de começar, uma pergunta: como eu vou saber que terminou? Capítulo lido não é prova feita. Caixa cheia não é kit certo. Escreva de três a cinco passos. Nos que dependem de alguém, ou de algo que você ainda não sabe, ponha um ponto de interrogação. No meio do caminho, algo vai sair diferente. Não empurre. Pare dez segundos e pergunte: o que isso alcança? Um passo, ou todos? No fim, compare com o que escreveu. O que mudou é o que você aprendeu sobre a tarefa. Da próxima vez, o chute começa melhor. Agora é a sua vez: escolha a tarefa, escreva os passos e faça. Depois, volte aqui e conte como foi.",
+     "proximo": "a03",
+     "palavras": 186,
+     "segundos": 71.0,
+     "naoRepete": "v02 (resultado / já sei / falta) e v04 (de que depende / conferir no fim) não são refeitos; o novo é: tarefa pequena, 'pronto quando', '?' no passo dependente, parar quando muda, comparar no fim."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Faça uma tarefa sua com plano e repare o que mudou",
+     "tipoDeMissao": "FAZER fora da tela: uma tarefa real desta semana, planejada no celular, executada e anotada",
+     "intro": "A Bia refez só o sorteio, e o amigo-secreto aconteceu. Agora é com uma tarefa sua, de verdade, desta semana. Da escola, de casa, do curso ou do estágio.",
+     "action": [
+      "Escolha uma tarefa que termina nesta semana.",
+      "No bloco de notas do celular, escreva “Pronto quando: …” e de três a cinco passos. Ponha “?” no passo que depende de alguém ou de algo que você ainda não sabe.",
+      "Faça a tarefa.",
+      "Quando algo sair diferente do escrito, anote em uma linha: o que mudou e até onde a mudança alcançou.",
+      "Terminou, ou travou? Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Sem estágio ou emprego? Tanto faz: a tarefa pode ser da escola, de casa ou de um curso. Estudar para a prova de sexta, fazer a sua parte do trabalho em grupo, resolver um documento pelo app, preparar o almoço de domingo. Só precisa ter um fim e caber na semana. Se trabalha, escolha algo que você já faz sozinho, sem precisar de autorização nova.",
+     "tip": {
+      "rotulo": "Exemplo: a nota da Bia",
+      "texto": "Amigo-secreto da turma. Pronto quando: todo mundo com um nome e a data marcada. Passos: 1) fechar a lista (?) · 2) combinar o valor · 3) sortear · 4) marcar a data (?). O que mudou: duas pessoas saíram na quinta. Refiz só o sorteio e avisei no grupo.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: o que mudou no caminho, ou o que travou? Se nada mudou, conte o que você confirmou antes de começar.",
+      "placeholder": "Ex.: a aula foi cancelada e eu troquei a ordem dos passos.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó: título da seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Por onde eu começo? Agora você sabe",
+     "textoTela": "O que preciso · O que falta · De que depende · O que alcança",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Lembra da sala de reunião? Reservar parecia um começo. Era um chute. E o sorteio da Bia: mudou a lista, mudou só o sorteio.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "d2",
+       "fala": "Por onde eu começo? Agora você sabe: pelo que precisa conseguir e pelo que ainda falta saber. Depois, um passo de cada vez.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "d3",
+       "fala": "E quando algo mudar no meio, e vai mudar, não recomece. Pergunte: o que isso alcança? Essa pergunta agora é sua. Boa semana.",
+       "layout": "presenter",
+       "camera": "cam_flavia6_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      }
+     ],
+     "roteiroNovo": "Lembra da sala de reunião? Reservar parecia um começo. Era um chute. E o sorteio da Bia: mudou a lista, mudou só o sorteio. Por onde eu começo? Agora você sabe: pelo que precisa conseguir e pelo que ainda falta saber. Depois, um passo de cada vez. E quando algo mudar no meio, e vai mudar, não recomece. Pergunte: o que isso alcança? Essa pergunta agora é sua. Boa semana.",
+     "palavras": 70,
+     "segundos": 26.8,
+     "forma": "termina com uma pergunta entregue ao aluno ('o que isso alcança?') + despedida curta; sem o molde recap / você praticou / na próxima / Meu roteiro",
+     "motionPrompt": "mão aberta num gesto curto de 'é com você', sorriso leve"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Toda tarefa muda no meio. Quem escreveu os passos percebe cedo e volta só até onde precisa.",
+     "summary": "O que você levou\nAntes de começar: o que preciso conseguir, o que já sei, o que falta.\nCada passo: de que depende?\nQuando mudar: o que isso alcança?",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha tarefa desta semana",
+       "kind": "checklist",
+       "items": [
+        "tarefa escolhida e anotada no celular",
+        "passos escritos, com “?” no que dependia de alguém",
+        "tarefa feita (ou travou, e eu sei onde)",
+        "anotei o que mudou"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer a tarefa, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de começar: o que preciso conseguir, o que já sei, o que falta.\nCada passo: de que depende?\nQuando mudar: o que isso alcança?",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos 'keep' custam zero. q05 não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 17,
+   "palavras": 380,
+   "segundos": 145.2
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 67,
+   "segundos": 25.6
+  },
+  "totalNovoFalado": {
+   "palavras": 447,
+   "segundos": 170.8,
+   "usd": 3.13
+  },
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 6,
+    "palavras": 124,
+    "segundos": 47.4
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 67,
+    "segundos": 25.6
+   },
+   {
+    "no": "v06",
+    "planos": 8,
+    "palavras": 186,
+    "segundos": 71.0
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 70,
+    "segundos": 26.8
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 98,
+   "segundos": 37.4,
+   "usd": 0.68,
+   "nota": "8 das 12 reações do C24 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima) ou textos novos na voz da Flávia, a pedido.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você age rápido, mas a sala pode estar livre num horário em que as pessoas não podem.",
+     "palavras": 17,
+     "segundos": 6.5
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "O convite transforma uma suposição em compromisso ainda não combinado.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você avança, mas a versão geral pode ser refeita quando souber o público.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você investe tempo em algo que pode mudar quando souber o público.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Os kits podem ficar diferentes do necessário e precisar ser refeitos.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q03",
+     "opcao": "c",
+     "abertura": "Olhe isso com calma.",
+     "resto": "Você pode comprar itens desnecessários e deixar faltar o que importa.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "É seguro, mas você perde tempo em etapas que não dependem do espaço.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você pode refazer o trabalho se o espaço não for confirmado.",
+     "palavras": 11,
+     "segundos": 4.2
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 163.1,
+    "maxS": 171.4,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 316.7,
+    "maxS": 325.4,
+    "texto": "cerca de 5.3–5.4 min"
+   },
+   "comoCalculado": "antes + v05 + v06 + despedida + uma reação da q05 (mínima/máxima). Nenhum plano das aulas 1–2 muda de duração."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem já concluiu o C24 vê o curso reaberto e passa pela aula 3 · (b) opcional: matrículas concluídas ficam concluídas; a aula aparece como extra. Recomendo (a).",
+  "2. Plano da tarefa: (a) só no bloco de notas do celular, como está (a03 sem molde; 'Como foi?' é o único campo) · (b) molde de 4 blocos na tela (tarefa / pronto quando / passos / o que pode mudar) + celular. Recomendo (a): é o que separa missão de exercício.",
+  "3. Anúncios falados das missões antigas (v01/s4, 32 palavras; v03/s3): (a) manter: são o único anúncio de a01/a02 · (b) tirar os dois (grátis, por drop + remontagem; a01/a02 ficam sem anúncio falado, só a ponte escrita). Recomendo (a).",
+  "4. As 8 reações com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (≈ 37.4 s, ≈ US$ 0.68). Recomendo (b); se não der, (a).",
+  "5. Caso do a01: (a) '30 cópias para amanhã' (novo; evita copiar o v02) · (b) reunião de seis pessoas (analise.md item 9; repete o v02). Recomendo (a).",
+  "6. Exemplo da aula 3: (a) Bia e o amigo-secreto da turma (fora do trabalho, mostra o 'volta só até onde a mudança alcança') · (b) trocar por tarefa de escola (trabalho em grupo em que um colega sai). Recomendo (a)."
+ ]
+}

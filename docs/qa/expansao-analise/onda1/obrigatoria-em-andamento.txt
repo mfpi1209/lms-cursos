@@ -1,0 +1,4 @@
+enr_3uf3170xr0txved6 C2 v12 opcionais=[] aulas=3 feitas= obrigatórias que faltam=aula_01,aula_02,aula_03 courseIsComplete(com o que fez)=false courseIsComplete(todas menos a última)=false courseIsComplete(todas)=true
+enr_ld33t22839494yu5 C5 v15 opcionais=[] aulas=3 feitas= obrigatórias que faltam=aula_01,aula_02,aula_03 courseIsComplete(com o que fez)=false courseIsComplete(todas menos a última)=false courseIsComplete(todas)=true
+enr_xsvqg9ixapr9c3ii C6 v12 opcionais=[] aulas=4 feitas=aula_01,aula_02 obrigatórias que faltam=aula_03,aula_04 courseIsComplete(com o que fez)=false courseIsComplete(todas menos a última)=false courseIsComplete(todas)=true
+enr_tcdwfdtn9n8gs410 C9 v15 opcionais=[] aulas=3 feitas=aula_01 obrigatórias que faltam=aula_02,aula_03 courseIsComplete(com o que fez)=false courseIsComplete(todas menos a última)=false courseIsComplete(todas)=true

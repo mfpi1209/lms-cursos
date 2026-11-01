@@ -1,0 +1,1178 @@
+[
+ {
+  "curso": "C01",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_odc132ysgnu4mkd6",
+  "dur": 39.2,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   0,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_fa2durozbm29ur2q",
+  "dur": 72.7,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_3itq9ncmb3cchwid",
+  "dur": 33,
+  "sem": 0.994,
+  "falt": [
+   {
+    "texto": "a",
+    "palavras": 1,
+    "t": 24.28
+   }
+  ],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   1,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_n52k0b0c96251uxy",
+  "dur": 72.4,
+  "sem": 0.984,
+  "falt": [
+   {
+    "texto": "oito e vinte",
+    "palavras": 3,
+    "t": 29.6
+   }
+  ],
+  "sob": [
+   {
+    "texto": "8h20",
+    "palavras": 1,
+    "t": 29.6
+   }
+  ],
+  "troc": [
+   {
+    "esperado": "assim",
+    "ouvido": "sim",
+    "t": 31.17
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_3013xo4bse3x8v0v",
+  "dur": 35.6,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_16was7rl7fjoa7s0",
+  "dur": 65.9,
+  "sem": 0.994,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "pergunto",
+    "ouvido": "pergunte",
+    "t": 15.12
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   3,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_3c2uirlylaekh6xb",
+  "dur": 37,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   3,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_hr33s4ugygpu6wxa",
+  "dur": 61.6,
+  "sem": 0.997,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "um",
+    "palavras": 1,
+    "t": 7.44
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C01",
+  "path": [
+   3,
+   "nos",
+   5,
+   "video"
+  ],
+  "asset": "ast_kw0t1vxn8dw4pfjn",
+  "dur": 23.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C02",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_dns4ypcqa24mcq3l",
+  "dur": 39.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C02",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_6w9scqe5b4h7obee",
+  "dur": 42.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C02",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_fk8n2xi0uacriisx",
+  "dur": 29,
+  "sem": 0.961,
+  "falt": [
+   {
+    "texto": "venha",
+    "palavras": 1,
+    "t": 20.78
+   },
+   {
+    "texto": "à",
+    "palavras": 1,
+    "t": 21.29
+   }
+  ],
+  "sob": [
+   {
+    "texto": "Vem a",
+    "palavras": 2,
+    "t": 20.78
+   }
+  ],
+  "troc": [
+   {
+    "esperado": "tenho",
+    "ouvido": "Tem",
+    "t": 16.3
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C02",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_5sdj9hpi6zbpf9gv",
+  "dur": 40.8,
+  "sem": 0.986,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "a",
+    "palavras": 1,
+    "t": 13.62
+   }
+  ],
+  "troc": [
+   {
+    "esperado": "tenho",
+    "ouvido": "tem",
+    "t": 18.88
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C02",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_mxgqj7cvahg0ts88",
+  "dur": 21.8,
+  "sem": 0.974,
+  "falt": [
+   {
+    "texto": "a",
+    "palavras": 1,
+    "t": 19.33
+   }
+  ],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "que",
+    "ouvido": "aqui",
+    "t": 19.33
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C03",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_c27fsysqizftp88e",
+  "dur": 41.7,
+  "sem": 0.996,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 19.36
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C03",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_y7tn82w3ah15foac",
+  "dur": 43,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C03",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_bx3q3q4kf8sep79b",
+  "dur": 34.2,
+  "sem": 0.995,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 6.79
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C03",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_rir089uoqpjce8s3",
+  "dur": 38.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C03",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_s5bxmpw2b9q40hhd",
+  "dur": 21.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C04",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_qi2bjf2znooc8u35",
+  "dur": 39.1,
+  "sem": 0.974,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "Thiago",
+    "ouvido": "Tiago",
+    "t": 0.73
+   },
+   {
+    "esperado": "Iara",
+    "ouvido": "Yara",
+    "t": 29.35
+   },
+   {
+    "esperado": "Iara",
+    "ouvido": "Yara",
+    "t": 33.18
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C04",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_86frjwe9b1jw6s5e",
+  "dur": 32.9,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C04",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_0jiarjmuzca51sf0",
+  "dur": 31.4,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C04",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_3huyx7ta1y6h9pma",
+  "dur": 35.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C04",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_pi60zaj58hosjon3",
+  "dur": 19.7,
+  "sem": 0.981,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "Iara",
+    "ouvido": "Yara",
+    "t": 0.07
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C05",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_axfxxch17s1d8jm8",
+  "dur": 40.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C05",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_gpcdf3q8vkmb4l91",
+  "dur": 41.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C05",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_4p319yyjgq360alp",
+  "dur": 36.9,
+  "sem": 0.995,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 11.71
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C05",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_0lf3mtql1nc9hkl5",
+  "dur": 36.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C05",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_iccpavt9n5jwlalg",
+  "dur": 23.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_j6vh8c051t2uh20s",
+  "dur": 54.1,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_g7l7nsxczlckmejt",
+  "dur": 45.7,
+  "sem": 0.983,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "quem",
+    "ouvido": "que",
+    "t": 5.16
+   },
+   {
+    "esperado": "pedir",
+    "ouvido": "impedir",
+    "t": 5.48
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_spkibp7ag1pmet1g",
+  "dur": 26.6,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   3,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_wbfj0z7y3uu9ugwr",
+  "dur": 31.2,
+  "sem": 0.973,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "Ravi",
+    "ouvido": "Javi",
+    "t": 1.26
+   },
+   {
+    "esperado": "Ravi",
+    "ouvido": "Javi",
+    "t": 13.3
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   3,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_05ggwqduho8fltkb",
+  "dur": 47,
+  "sem": 0.985,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 36.45
+   }
+  ],
+  "troc": [
+   {
+    "esperado": "Vi",
+    "ouvido": "Viu",
+    "t": 3.74
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C06",
+  "path": [
+   3,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_xddc6zyvyxq17w7u",
+  "dur": 25.3,
+  "sem": 0.982,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "Ravi",
+    "ouvido": "Javi",
+    "t": 3.51
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C07",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_72gv4d32i2bff0xv",
+  "dur": 41,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C07",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_g0f7c7uy4wrry9h1",
+  "dur": 43.6,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C07",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_co7xedf0af1vap55",
+  "dur": 30.3,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C07",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_wjhf2xatnz7qb150",
+  "dur": 42.4,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C07",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_w88tlix20zl2dzr7",
+  "dur": 19.9,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C08",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_k18pzczp9bcrnf7l",
+  "dur": 47.4,
+  "sem": 0.996,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 30.73
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C08",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_708wi0tdvq8apuj3",
+  "dur": 45.8,
+  "sem": 0.982,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "Sara",
+    "ouvido": "Sarah",
+    "t": 34.96
+   },
+   {
+    "esperado": "Sara",
+    "ouvido": "Sarah",
+    "t": 44.89
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C08",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_8tdq18a9r83rfyzp",
+  "dur": 34,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C08",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_r85b8wzi3l757fj8",
+  "dur": 27.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C08",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_dkt8m81u51pamrb1",
+  "dur": 24,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C09",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_3z2un0mirk87e1up",
+  "dur": 42.4,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C09",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_o6h5gacvq7pk4kak",
+  "dur": 46.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C09",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_9ykf0vkmbvrq3068",
+  "dur": 37,
+  "sem": 0.995,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "o",
+    "palavras": 1,
+    "t": 32.64
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C09",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_w8x11x33kyuqmvyx",
+  "dur": 31.9,
+  "sem": 0.994,
+  "falt": [],
+  "sob": [
+   {
+    "texto": "um",
+    "palavras": 1,
+    "t": 4.36
+   }
+  ],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C09",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_ao2bl82l8e5f0kwy",
+  "dur": 24.7,
+  "sem": 0.985,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "para",
+    "ouvido": "pra",
+    "t": 21.3
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C10",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_qchkwm84trlv9n01",
+  "dur": 43.8,
+  "sem": 0.991,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "o",
+    "ouvido": "um",
+    "t": 17.61
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C10",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_ftzb9avetaco0o8i",
+  "dur": 40.9,
+  "sem": 0.995,
+  "falt": [
+   {
+    "texto": "a",
+    "palavras": 1,
+    "t": 8.99
+   }
+  ],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C10",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_e54fxpfgaimfke9n",
+  "dur": 37.6,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C10",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_u41hs771lb7mlkx8",
+  "dur": 31.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C10",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_pnxggq9n0ld75wl7",
+  "dur": 25.8,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C11",
+  "path": [
+   0,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_pym7gkz2h7ue6zne",
+  "dur": 43.5,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C11",
+  "path": [
+   1,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_9x45pufmmj5nro12",
+  "dur": 44.3,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C11",
+  "path": [
+   2,
+   "nos",
+   0,
+   "video"
+  ],
+  "asset": "ast_14vcpkvnfvh3i3y6",
+  "dur": 44.3,
+  "sem": 0.991,
+  "falt": [],
+  "sob": [],
+  "troc": [
+   {
+    "esperado": "tenho",
+    "ouvido": "Tenha",
+    "t": 25
+   }
+  ],
+  "status": "ok"
+ },
+ {
+  "curso": "C11",
+  "path": [
+   2,
+   "nos",
+   2,
+   "video"
+  ],
+  "asset": "ast_xb9qnizjew5lcna6",
+  "dur": 25.1,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ },
+ {
+  "curso": "C11",
+  "path": [
+   2,
+   "nos",
+   4,
+   "video"
+  ],
+  "asset": "ast_fkzqd4cnwot7viqz",
+  "dur": 25.1,
+  "sem": 1,
+  "falt": [],
+  "sob": [],
+  "troc": null,
+  "status": "ok"
+ }
+]

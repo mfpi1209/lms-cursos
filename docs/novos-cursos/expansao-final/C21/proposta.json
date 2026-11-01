@@ -1,0 +1,720 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C21",
+  "id": "crs_4jh683s5h351z2db",
+  "titulo": "Tudo é urgente?",
+  "instrutor": "Vinícius — Seu orientador",
+  "versaoPublicada": 2,
+  "revisaoDoRascunho": 44,
+  "notaRevisao": "A Fase 0 (instruções das práticas) subiu o rascunho de 44 para 45; a01 e a02 já têm a instrução nova e ficam como estão."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim. Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v05, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2: regravam só v01/s4 e v03/s3 (anúncio da prática sem a fórmula); o resto do vídeo é reaproveitado. Textos: fim_aula_01 (frase de fechamento) e fim_aula_02 (deixa de ser fim do curso).",
+  "Planos de vídeo: falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_vinicius6_34 com chamada na cam_vinicius6_esq; explicação na cam_vinicius6_esq; despedida na cam_vinicius6_34.",
+  "q05 não ganha vídeo próprio: v06 termina com a chamada e o player pula o vídeo da pergunta.",
+  "a03 é missão fora da tela (“Leve para a vida real”): a lista da semana vai para o papel ou o bloco de notas; “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "Exatidão legal: a reação e o retorno da opção A da q05 dizem que aprendiz não compensa horas depois (CLT, art. 432) e que estágio segue o termo de compromisso. Não trocar por “pode fazer hora extra”.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C21 (“Boa escolha”, “É por aí”, “Isso ajuda”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "O curso ensina a perguntar prazo e uso (aula 1) e a mostrar o conflito com uma alternativa (aula 2), mas para antes do momento mais duro: você mostra a conta e a resposta é “preciso dos dois”.",
+  "Nenhuma cena trata da saída errada mais comum nessa hora: pular o intervalo ou esticar o horário para caber um planejamento que não cabia (e aprendiz não pode compensar jornada).",
+  "A estimativa aparece como “não é promessa” (v04), mas ninguém diz o que fazer quando ela muda no meio: avisar na hora, não no fim do prazo.",
+  "As duas práticas (a01 pergunta, a02 pedido de ajuste) são de tela sobre tarefas fictícias; ninguém faz a conta da própria semana.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final…”): sem fecho do Vinícius, sem retorno à Rebeca."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Comparar demandas, combinar prioridades e oferecer saídas quando o trabalho não cabe no tempo. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Quando a resposta é “preciso dos dois”, mostrar a conta e oferecer saídas (entrega menor, dividir, prazo novo) sem escolher sozinho e sem abrir mão da pausa."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Rebeca"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Dois pedidos, um só tempo",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s4",
+       "acao": "change",
+       "fala": "Daqui a pouco você escreve a pergunta que resolve metade desses conflitos: para quando é, e para quê.",
+       "nota": "Anúncio da a01 sem a palavra “missão”.",
+       "antes": "No fim desta aula, tem uma missão para você: escreva uma pergunta para esclarecer o prazo e o uso de um pedido.",
+       "palavras": 18,
+       "segundos": 6.9,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 6.4
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Para quando? Para quê? Duas perguntas antes de qualquer sim."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Quando as tarefas deixam de caber",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "v05",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s3 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s3",
+       "acao": "change",
+       "fala": "Antes do fim, você sai com um pedido de ajuste pronto: a situação, o que está em risco e uma alternativa.",
+       "nota": "Anúncio da a02, com estrutura diferente do v01/s4.",
+       "antes": "No fim desta aula, tem uma missão para você: prepare um pedido de ajuste com situação, impacto e alternativa.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 6.86
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Pedir um ajuste é mostrar a situação, o impacto e uma alternativa, sem precisar contar a sua vida pessoal. Se a sobrecarga estiver pesando além do trabalho, procure alguém de confiança. Se você salvou, seu pedido fica no Meu roteiro. Na próxima aula, a resposta ao seu pedido é “preciso dos dois”, e você faz a conta da sua semana.",
+      "closingLine": "Situação, impacto, alternativa. Três linhas que fazem o trabalho caber."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” vão para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Tudo é urgente?",
+   "titulo": "Quando a resposta é: preciso dos dois",
+   "resumo": "Você mostra a conta, ouve “preciso dos dois”, oferece saídas sem escolher sozinho, e depois faz a conta da sua semana.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Quando a resposta é “preciso dos dois”, mostrar a conta e oferecer saídas (entrega menor, dividir, prazo novo) sem escolher sozinho e sem abrir mão da pausa."
+   },
+   "caminhoPrincipal": [
+    "v06",
+    "q05",
+    "v07",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v06",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Preciso dos dois",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Uma hora. Dois pedidos.",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já sabe mostrar o conflito e pedir ajuste. Agora, a parte difícil: a resposta é “preciso dos dois”.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você monta a lista da sua semana, com o tempo de cada coisa, e marca o que não cabe.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "A Rebeca tem uma hora até o fim do expediente. Relatório: uns quarenta minutos. Planilha: outros quarenta.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_34",
+       "cartao": {
+        "titulo": "A conta da Rebeca",
+        "topicos": [
+         "**60 min** até o fim do expediente",
+         "Relatório: **~40 min**",
+         "Planilha: **~40 min**"
+        ]
+       },
+       "palavras": 17,
+       "segundos": 6.5,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Ela explica que não cabe. O gestor responde: “Preciso dos dois, completos, hoje.” E volta para a reunião.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Rebeca, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 8,
+       "segundos": 3.1,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "Uma hora, dois pedidos de quarenta minutos. Ela avisou que não cabe e ouviu: “Preciso dos dois, completos, hoje.” No lugar da Rebeca, o que você faz?",
+     "proximo": "q05",
+     "palavras": 83,
+     "segundos": 31.7,
+     "roteiroNovo": "Você já sabe mostrar o conflito e pedir ajuste. Agora, a parte difícil: a resposta é “preciso dos dois”. No fim, você monta a lista da sua semana, com o tempo de cada coisa, e marca o que não cabe. A Rebeca tem uma hora até o fim do expediente. Relatório: uns quarenta minutos. Planilha: outros quarenta. Ela explica que não cabe. O gestor responde: “Preciso dos dois, completos, hoje.” E volta para a reunião. No lugar da Rebeca, o que você faz?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Rebeca, o que você faz?",
+     "apoioNaTela": "Resta uma hora. O relatório e a planilha levam uns quarenta minutos cada. A Rebeca avisou que não cabe e ouviu: “Preciso dos dois, completos, hoje.”",
+     "bridge": {
+      "call": "No lugar da Rebeca, o que você faz?"
+     },
+     "video": "não gerar: v06 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Pulo o intervalo e fico até mais tarde. Assim os dois saem hoje.”",
+       "qualidade": "ok",
+       "feedback": "Você resolve hoje à custa da sua pausa e do seu horário, e amanhã a conta volta igual. Aprendiz não compensa horas depois; estágio segue o termo de compromisso. Faça assim: mostre a conta e ofereça saídas, sem esticar o dia.",
+       "reacao": {
+        "texto": "Entendo a vontade. Mas a pausa é sua, e esticar o horário não resolve a conta: amanhã ela volta igual.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v07",
+       "caracteres": 66
+      },
+      {
+       "id": "b",
+       "rotulo": "“Repito a conta e proponho: uma versão mais curta, alguém que ajude ou um prazo novo. Ele escolhe.”",
+       "qualidade": "strong",
+       "feedback": "Você não escolheu qual pedido ignorar: mostrou a conta e três saídas, e deixou a decisão com quem decide. Faça assim: registre o que ele escolher e avise na hora se a estimativa mudar.",
+       "reacao": {
+        "texto": "Você não escolheu qual pedido ignorar. Mostrou a conta e três saídas. Agora a decisão é de quem pode decidir.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v07",
+       "caracteres": 99
+      },
+      {
+       "id": "c",
+       "rotulo": "“Faço o relatório e deixo a planilha, sem avisar. Alguém tinha que decidir.”",
+       "qualidade": "weak",
+       "feedback": "Decidir sozinho e em silêncio deixa a planilha sumir sem ninguém saber, e a prioridade pode ser outra. Faça assim: diga que não cabe, proponha uma ordem e peça a decisão.",
+       "reacao": {
+        "texto": "Alguém tinha que decidir, sim. Mas era ele. Você escolheu sozinho e a planilha sumiu sem ninguém saber.",
+        "palavras": 18,
+        "segundos": 6.9
+       },
+       "vaiPara": "v07",
+       "caracteres": 76
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele dá a conta e a recusa; perceber que a saída é oferecer opções, não escolher qual pedido ignorar nem esticar o dia, é a decisão. A opção A é a armadilha mais comum e dá o aprendizado legal (aprendiz não compensa jornada). Não repete q04 (mensagem com bloqueio) nem q03 (listar). Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 58,
+     "segundosReacoes": 22.1
+    },
+    {
+     "id": "v07",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "O que cabe no tempo",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Entrega menor · Dividir · Prazo novo",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Os dois pedidos são importantes. Eles cabem? Importância não aumenta o tempo. O que cabe no tempo não muda por vontade.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Quando ouvir “preciso dos dois”, ofereça saídas, não desculpas: uma entrega menor, alguém que divide, um prazo novo. Quem pediu escolhe.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_esq",
+       "cartao": {
+        "titulo": "Três saídas",
+        "topicos": [
+         "Entrega **menor**",
+         "**Dividir** com alguém",
+         "**Prazo** novo"
+        ]
+       },
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Estimativa não é promessa. Apareceu um bloqueio? Avise na hora, não no fim do prazo.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 15,
+       "segundos": 5.7,
+       "acao": "add"
+      },
+      {
+       "id": "s4",
+       "fala": "E a pausa fica. Pular intervalo para caber um plano errado não é esforço: é esconder o problema de quem deveria resolver.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, a sua semana: liste o que precisa entregar, estime o tempo de cada coisa e marque o que não cabe.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a03.",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete v02 (prazo e uso), v04 (listar; estimativa, não promessa) nem v05 (confirmar o combinado; quem pode ajudar). O novo: as três saídas em vez de escolher qual ignorar, avisar o bloqueio na hora, e a pausa que fica.",
+     "palavras": 100,
+     "segundos": 38.2,
+     "roteiroNovo": "Os dois pedidos são importantes. Eles cabem? Importância não aumenta o tempo. O que cabe no tempo não muda por vontade. Quando ouvir “preciso dos dois”, ofereça saídas, não desculpas: uma entrega menor, alguém que divide, um prazo novo. Quem pediu escolhe. Estimativa não é promessa. Apareceu um bloqueio? Avise na hora, não no fim do prazo. E a pausa fica. Pular intervalo para caber um plano errado não é esforço: é esconder o problema de quem deveria resolver. Agora, a sua semana: liste o que precisa entregar, estime o tempo de cada coisa e marque o que não cabe."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Faça a conta da sua semana",
+     "tipoDeMissao": "FAZER fora da tela: a lista real da semana, com tempo estimado, o que não cabe e para quem avisar",
+     "intro": "A Rebeca mostrou a conta e três saídas. Agora é a sua conta: tudo o que você precisa entregar até domingo, com o tempo de cada coisa.",
+     "action": [
+      "No papel ou no bloco de notas, liste tudo o que você precisa entregar até domingo: escola, casa, curso, trabalho.",
+      "Ao lado de cada item, escreva quanto tempo acha que leva. Chute honesto, não otimista.",
+      "Some e compare com o tempo que você tem de verdade, descontando sono, trajeto e pausa.",
+      "Marque o que não cabe. Ao lado, escreva para quem você precisa avisar e qual saída oferece: menor, dividir ou prazo novo.",
+      "Se der, avise essa pessoa ainda esta semana. Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Sem estágio ou emprego? A conta funciona igual com prova, trabalho em grupo, tarefa de casa e curso. Se tudo coube, ótimo: anote o que você confirmou antes de dizer sim. Se trabalha, inclua só o que já é seu, sem assumir tarefa nova para a lista ficar cheia.",
+     "tip": {
+      "rotulo": "Exemplo: a lista da Rebeca",
+      "texto": "Até domingo: relatório (40 min) · planilha (40 min) · prova de quinta (3 h) · trabalho em grupo, minha parte (2 h) · ajudar em casa sábado (2 h). Tenho: ~6 h livres. Não cabe: a planilha hoje. Avisar: o gestor. Saída: entregar amanhã de manhã ou uma versão só com os totais hoje.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: o que não coube? Você avisou alguém? O que a pessoa respondeu? Se tudo coube, conte o que você confirmou.",
+      "placeholder": "Ex.: não cabia a parte do trabalho em grupo; avisei o grupo e dividimos.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Tudo é urgente? Quase nunca",
+     "textoTela": "Para quando · A conta · As saídas · Quem decide",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Lembra do pedido “para agora”? E da Rebeca, com uma hora e dois pedidos? Em nenhum deles a saída era adivinhar.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 21,
+       "segundos": 8.0,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "Tudo é urgente? Quase nunca. Pergunte para quando, mostre a conta, ofereça saídas. E deixe a decisão com quem decide.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Uma última coisa: não espere o prazo acabar para avisar de um bloqueio que você já percebeu. Combinado?",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina com uma orientação concreta (a frase forte do banco, “não espere o prazo acabar…”) e um “Combinado?” de conversa; sem recap, sem “você praticou”, sem “Meu roteiro” na fala; responde ao título do curso.",
+     "motionPrompt": "mãos abertas na altura do peito ao dizer “combinado?”, sorriso breve",
+     "palavras": 59,
+     "segundos": 22.5,
+     "roteiroNovo": "Lembra do pedido “para agora”? E da Rebeca, com uma hora e dois pedidos? Em nenhum deles a saída era adivinhar. Tudo é urgente? Quase nunca. Pergunte para quando, mostre a conta, ofereça saídas. E deixe a decisão com quem decide. Uma última coisa: não espere o prazo acabar para avisar de um bloqueio que você já percebeu. Combinado?"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O que cabe no tempo não muda por vontade. O que você faz com isso, muda.",
+     "summary": "O que você levou\nAntes de dizer sim: para quando? para quê?\nQuando não cabe: mostre a conta e ofereça saídas (menor, dividir, prazo).\nQuem decide é quem pediu. A pausa é sua. O bloqueio se avisa na hora.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "A conta da minha semana",
+       "kind": "checklist",
+       "items": [
+        "listei o que preciso entregar",
+        "estimei o tempo de cada coisa",
+        "marquei o que não cabe",
+        "avisei quem precisava saber, com uma saída"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer a conta da semana, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de dizer sim: para quando? para quê?\nQuando não cabe: mostre a conta e ofereça saídas (menor, dividir, prazo).\nQuem decide é quem pediu. A pausa é sua. O bloqueio se avisa na hora.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 13,
+   "palavras": 242,
+   "segundos": 92.4
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 58,
+   "segundos": 22.1
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 39,
+   "segundos": 14.9,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s4",
+     "palavras": 18,
+     "segundos": 6.9,
+     "duracaoAntesS": 6.4
+    },
+    {
+     "no": "v03",
+     "plano": "s3",
+     "palavras": 21,
+     "segundos": 8.0,
+     "duracaoAntesS": 6.86
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v06",
+    "planos": 5,
+    "palavras": 83,
+    "segundos": 31.7
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 58,
+    "segundos": 22.1
+   },
+   {
+    "no": "v07",
+    "planos": 5,
+    "palavras": 100,
+    "segundos": 38.2
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "aberturas trocadas (2 planos)",
+    "planos": 2,
+    "palavras": 39,
+    "segundos": 14.9
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 88,
+   "segundos": 33.6,
+   "usd": 0.61,
+   "nota": "8 reações do C21 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "a",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A primeira entrega pode atrasar sem que ninguém consiga se reorganizar.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "A promessa não aumenta o tempo e pode criar duas expectativas incompatíveis.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você atende o pedido do gestor, mas o relatório pode atrasar sem ele saber.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q02",
+     "opcao": "b",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Dividir a atenção sem avisar pode atrasar as duas, e ninguém sabe disso.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "O conflito fica invisível até virar atraso.",
+     "palavras": 7,
+     "segundos": 2.7
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Olhe isso com calma.",
+     "resto": "Sobrecarga não define a sua capacidade nem o seu valor.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "A mensagem mostra desconforto, mas não explica qual ajuste ajudaria.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "A promessa pode ampliar o desgaste e não resolve a dependência.",
+     "palavras": 11,
+     "segundos": 4.2
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 150.7,
+    "maxS": 157.1,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 251.6,
+    "maxS": 258.7,
+    "texto": "cerca de 4.2–4.3 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.6 s, ≈ US$ 0.67). Recomendo (b); se não der, (a).",
+  "3. Opção A da q05 (“pulo o intervalo e fico até mais tarde”) como opção média, com a regra do aprendiz no retorno: (a) manter, porque é a armadilha mais comum e protege o aprendiz · (b) trocar por uma opção neutra (“faço os dois ao mesmo tempo”) e deixar a pausa só na explicação. Recomendo (a).",
+  "4. Missão a03 pede para avisar alguém de verdade (“se der”): (a) manter o aviso como passo opcional dentro da missão · (b) missão só da lista, sem aviso. Recomendo (a): o aviso é o que a aula ensina; “se der” já cobre quem não tem para quem avisar."
+ ]
+}

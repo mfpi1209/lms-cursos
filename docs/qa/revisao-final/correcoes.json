@@ -1,0 +1,230 @@
+[
+ {
+  "codigo": "C01·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "O ônibus de Luana está parado e ela pode chegar depois do horário combinado. Ainda não há previsão segura de retomada."
+ },
+ {
+  "codigo": "C02·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Bia recebeu a orientação de usar calça escura. Tem uma calça azul sem estampas, mas não sabe se o tom atende à orientação e não pode comprar outra agora."
+ },
+ {
+  "codigo": "C03·A1·q01·A",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Essa opção funciona: você mantém a atenção no atendimento e consulta a mensagem no momento permitido."
+ },
+ {
+  "codigo": "C04·A1·q02·A",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Você explica, mas escolhe o formato no lugar da pessoa. Faça assim: confirme antes se áudio funciona para ela."
+ },
+ {
+  "codigo": "C04·A2·q03·B",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Você aumenta as notificações sem acrescentar contexto. Faça assim: mande um acompanhamento objetivo pelo canal previsto."
+ },
+ {
+  "codigo": "C04·A2·v03·00:21",
+  "tipo_correcao": "cortar",
+  "alvo": "v03",
+  "palavras": "E sobre horários: siga o combinado da empresa."
+ },
+ {
+  "codigo": "C05·A1·q01",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Lucas calculou o ônibus até a porta do prédio. Ainda não sabe como funcionam a entrada e a identificação no primeiro dia."
+ },
+ {
+  "codigo": "C06·A1·q01·A",
+  "tipo_correcao": "tela",
+  "alvo": "classificação",
+  "texto_novo": "strong"
+ },
+ {
+  "codigo": "C06·A1·q01·A",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Usar o nome apresentado respeita a pessoa. Faça assim: se tiver dúvida, pergunte como ela prefere ser chamada."
+ },
+ {
+  "codigo": "C06·A1·q01·A·reação·00:00",
+  "tipo_correcao": "cortar",
+  "alvo": "q01·A·reação",
+  "palavras": "Quase lá."
+ },
+ {
+  "codigo": "C06·A2·v02·00:43",
+  "tipo_correcao": "cortar",
+  "alvo": "v02",
+  "palavras": "O apelido continuou mesmo depois do pedido."
+ },
+ {
+  "codigo": "C06·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Desta vez é o Bruno quem pediu que não usassem um apelido com ele. O apelido continua e ele não se sente à vontade para falar com o grupo de novo."
+ },
+ {
+  "codigo": "C07·A1·v00·00:34",
+  "tipo_correcao": "cortar",
+  "alvo": "v00",
+  "palavras": "Quem pode tirar a dúvida está em reunião."
+ },
+ {
+  "codigo": "C07·A1·q01",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Elisa tem uma dúvida sobre o formato de uma lista que entregará amanhã. Quem pode orientar está em reunião. Ela pode continuar outras tarefas enquanto aguarda."
+ },
+ {
+  "codigo": "C09·A1·q02·B",
+  "tipo_correcao": "tela",
+  "alvo": "opção",
+  "texto_novo": "Eu recorto o documento da foto e publico."
+ },
+ {
+  "codigo": "C09·A2·v02·00:11",
+  "tipo_correcao": "cortar",
+  "alvo": "v02",
+  "palavras": "No fim desta aula, tem uma missão para você: avise sobre uma publicação."
+ },
+ {
+  "codigo": "C09·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "A Malu publicou uma foto e depois notou um documento com informações de atendimento no fundo. A empresa tem um canal para avisar esse tipo de problema."
+ },
+ {
+  "codigo": "C09·A2·fim",
+  "tipo_correcao": "tela",
+  "alvo": "cartão",
+  "texto_novo": "Interrompa a divulgação e avise pelo canal indicado. Não redistribua o conteúdo para pedir opiniões. Antes de postar, confira: pessoas, informações visíveis e autorização."
+ },
+ {
+  "codigo": "C10·A2·v02·00:38",
+  "tipo_correcao": "cortar",
+  "alvo": "v02",
+  "palavras": "A referência do Henrique está ocupada, e há uma planilha restrita à vista."
+ },
+ {
+  "codigo": "C10·A2·v02·cartão",
+  "tipo_correcao": "tela",
+  "alvo": "cartão",
+  "texto_novo": "O Henrique entregou a tarefa e a referência está ocupada. Há uma lista de atividades autorizadas e uma planilha restrita à vista. Como você continuaria?"
+ },
+ {
+  "codigo": "C11·A2·v02·00:10",
+  "tipo_correcao": "cortar",
+  "alvo": "v02",
+  "palavras": "No fim desta aula, tem uma missão para você: esclareça uma diferença."
+ },
+ {
+  "codigo": "C12·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Alana entendeu que interrompeu a explicação de uma pessoa no atendimento. A orientação foi deixá-la concluir antes de perguntar."
+ },
+ {
+  "codigo": "C13·A1·q11·00:07",
+  "tipo_correcao": "cortar",
+  "alvo": "q11",
+  "palavras": "Vamos tentar de novo: o que você pergunta?"
+ },
+ {
+  "codigo": "C13·A1·q11",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Luana decidiu falar com a supervisora antes de começar. Ela tem um minuto, na porta da sala."
+ },
+ {
+  "codigo": "C13·A2·q03",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Caio não sabe qual categoria usar num registro. Consultou o guia e encontrou duas possibilidades: uma por idade do cliente, outra por tipo de solicitação. Sua colega está em reunião; o canal combinado é a mensagem interna."
+ },
+ {
+  "codigo": "C14·A1·v01·00:33",
+  "tipo_correcao": "cortar",
+  "alvo": "v01",
+  "palavras": "Nesta aula, você vai encontrar essas experiências na sua própria história."
+ },
+ {
+  "codigo": "C14·A3·q05",
+  "tipo_correcao": "tela",
+  "alvo": "situação",
+  "texto_novo": "Você está no segundo semestre da faculdade e quer seu primeiro estágio. Caminhos possíveis: seu cadastro na DNA Work, programas de Jovem Aprendiz (14 a 24 anos, com requisitos próprios), a página 'trabalhe conosco' das empresas, o LinkedIn e as pessoas que você conhece."
+ },
+ {
+  "codigo": "C14·A3·q05·A",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Você combina dois caminhos que funcionam. Faça assim: cadastre-se na DNA Work e conte para três pessoas."
+ },
+ {
+  "codigo": "C14·A6·v11·00:09",
+  "tipo_correcao": "cortar",
+  "alvo": "v11",
+  "palavras": "No fim desta aula, tem uma missão para você: escreva sua mensagem."
+ },
+ {
+  "codigo": "C14·A6·q12·A",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Um lembrete é suficiente. Faça assim: espere uns dias, lembre uma vez, sem obrigação, e siga com outras pessoas."
+ },
+ {
+  "codigo": "C14·A6·q12·B",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Insistir todo dia incomoda e fecha a porta. Faça assim: no máximo um lembrete, depois de alguns dias, e siga em frente."
+ },
+ {
+  "codigo": "C14·A6·q12·C",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Uma pessoa sem tempo não é todo mundo. Faça assim: mande para outras duas pessoas."
+ },
+ {
+  "codigo": "C14·A7·q13·C",
+  "tipo_correcao": "tela",
+  "alvo": "retorno",
+  "texto_novo": "Qualquer imprevisto vira eliminação. Faça assim: resolva o teste com folga, nos primeiros dias do prazo."
+ },
+ {
+  "codigo": "C14·A9·v16·00:04",
+  "tipo_correcao": "cortar",
+  "alvo": "v16",
+  "palavras": "No fim desta aula, tem uma missão para você: prepare sua apresentação."
+ },
+ {
+  "codigo": "C14·A11·v20·00:07",
+  "tipo_correcao": "cortar",
+  "alvo": "v20",
+  "palavras": "No fim desta aula, tem uma missão para você: escolha seu ponto a melhorar."
+ },
+ {
+  "codigo": "C14·A11·m10",
+  "tipo_correcao": "ordem",
+  "alvo": "m10",
+  "texto_novo": "mover a atividade para depois de q23, antes do fim da aula"
+ },
+ {
+  "codigo": "C14·A12·v23·00:12",
+  "tipo_correcao": "cortar",
+  "alvo": "v23",
+  "palavras": "E se a resposta for não? Dói, mas faz parte. Pergunte, com educação, o que você pode melhorar. Anote, ajuste e siga para a próxima."
+ },
+ {
+  "codigo": "C14·A12·fim",
+  "tipo_correcao": "tela",
+  "alvo": "cartão",
+  "texto_novo": "Online: teste antes, luz de frente e câmera na altura dos olhos. Leve duas perguntas; um agradecimento breve depois é opcional, se houver canal. Um \"não\" é treino: pergunte o que melhorar e siga."
+ }
+]

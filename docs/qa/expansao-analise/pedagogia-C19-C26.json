@@ -1,0 +1,205 @@
+{
+  "lote": "C19-C26",
+  "tipo": "revisao_pedagogica",
+  "base": {
+    "pacote": "expansao-zip (cursos/C19.md…C26.md, expansao.json, FICHAS_DE_VOZ.md, CORRECOES_ADICIONAIS.md)",
+    "verdade": "docs/qa/raio-x/raio-x.json — cursos[codigo].publicada"
+  },
+  "transversais": [
+    {"item": "encerramentos (8/8)", "severity": "P1", "problem": "Mesmo esqueleto de 4 parágrafos nos 26 fechos (recap / 'você praticou' / 'Na próxima X, experimente' / 'Se fez a atividade, está no Meu roteiro. X não é Y. É Z.'). C19, C21, C22, C23 e C26 terminam literalmente com 'não é… É…'. expansao.json: todos os fechos se chamam 'Leve para o próximo dia' e todos os aprofundamentos 'O que muda na prática'.", "fix": "Título próprio por curso; variar o 4º parágrafo (pergunta, imagem concreta, regra curta). Reescritas de C19 e C20 abaixo."},
+    {"item": "voz dos orientadores (8/8)", "severity": "P1", "problem": "Laís, Vinícius e Flávia falam no mesmo registro ensaístico e com jargão (proporcional, sustentação, unilateral, referência responsável, procedimento autorizado). Fichas pedem frases curtas e faladas.", "fix": "Reescrever 2–3 frases por vídeo no tom da ficha; aplicar a tabela de vocabulário. 'Referência' como gestor → 'quem pediu' / 'a pessoa responsável'."},
+    {"item": "práticas (8/8)", "severity": "P1", "problem": "Todas continuam exercícios de tela sobre caso fictício; a ação real só aparece como sugestão no 3º parágrafo do fecho.", "fix": "Acrescentar missão de campo opcional de uma linha por curso (lista em 'missoes_de_campo'), factível sem emprego."},
+    {"item": "anúncio gravado da missão antiga", "severity": "P1", "problem": "v01/v03 (áudio já gerado) anunciam a missão atual; a prática nova é outra. Pior em C20 (v01 promete 'monte um pedido', chega seleção múltipla), C25 ('conclusão provisória' → classificação), C19 ('três verificações' → resposta) e C23 ('plano' → duas perguntas).", "fix": "Condicionar a troca da prática ao corte/regravação do anúncio (candidatos_cortes.json ainda sem timestamps)."},
+    {"item": "feedbacks das 8 decisões novas", "severity": "P2", "problem": "Uma frase de diagnóstico, sem o 'faça assim' que os feedbacks existentes têm.", "fix": "Acrescentar frase de ação em cada um (ver exemplos nas reescritas de C22 e C24)."},
+    {"item": "frases de reação repetidas", "severity": "P2", "problem": "'Vamos olhar o efeito disso', 'Veja o que essa escolha muda', 'Pense no que acontece depois', 'Olhe isso com calma', 'Vale pensar no que fica de fora', 'Repare no que isso provoca' aparecem nos 8 cursos (vídeos HeyGen existentes). O pacote não trata (os feedbacks novos são textuais e sem bordão — correto).", "fix": "Registrar como pendência separada do pacote."},
+    {"item": "componentes novos", "severity": "P2", "problem": "nodes.ts só tem reflection texto livre/blocos. multi_select (C20), ordering (C24), classification (C25) e 4 campos (C24 A1) não existem.", "fix": "Dependência de implementação, não pedagógica; sem eles, usar texto curto com critérios."}
+  ],
+  "cursos": {
+    "C19": {
+      "titulo": "Parece verdade. Será?",
+      "orientador": "Laís",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "prática a02", "severity": "P2", "problem": "Enunciado dita a resposta ('informe isso sem chamar de falsa nem afirmar que está aberta'); o exemplo é quase a única redação possível.", "fix": "Dar atrito: quem mandou o print pergunta 'Então me inscrevo ou não?'. Ver rewrite."},
+        {"item": "demo", "severity": "P2", "problem": "'Imagine um aviso' — abstrato para a Laís demonstrativa.", "fix": "Mostrar o print fictício na tela e narrar o que se vê."},
+        {"item": "aprofundamento", "severity": "P2", "problem": "'conclusão do tamanho da evidência' é frase difícil para 15–17 anos.", "fix": "'Conclua só o que você conseguiu conferir.'"},
+        {"item": "encerramento", "severity": "P2", "problem": "140 palavras (limite inferior); 4º parágrafo na fórmula 'não é… É…'; falta a regra memorável sobre cobrança.", "fix": "Trocar 4º parágrafo (rewrite): 'vaga de verdade não cobra para você se inscrever'."},
+        {"item": "anúncio v03", "severity": "P1", "problem": "Áudio promete 'monte uma sequência de três verificações'; prática vira resposta a quem enviou.", "fix": "Cortar/regravar anúncio antes de trocar a prática."}
+      ],
+      "pontos_fortes": ["Ângulo novo e útil: verdadeiro mas fora de data.", "Feedback de B ('golpe') ensina a não acusar sem prova.", "Callback ao Kelvin (pagamento) no fecho."],
+      "seguranca": "ok — não pagar, não entregar dados; sem termos proibidos; sem garantias.",
+      "rewrites": {
+        "encerramento_p4": "Se montou sua resposta, ela está no Meu roteiro. E guarda uma regra simples: vaga de verdade não cobra para você se inscrever. Quem pede pagamento, senha ou código antes de confirmar qualquer coisa já respondeu à sua pergunta.",
+        "pratica_enunciado": "Você achou o aviso original: é do ano passado e não há nova abertura confirmada. A pessoa que mandou o print pergunta: \"Então me inscrevo ou não?\". Responda em até 3 frases: o que você encontrou, o que ainda não está confirmado e onde ela pode conferir."
+      }
+    },
+    "C20": {
+      "titulo": "IA como aliada",
+      "orientador": "Laís",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "prática a01 (multi_select)", "severity": "P1", "problem": "4 itens, 2 corretos, e o enunciado da decisão já disse quais são os inventados. Zero desafio. Substitui a única prática em que o aluno escreve um pedido (regressão).", "fix": "Manter a01 como texto curto 'escreva o pedido' (rewrite) e, se quiser seleção múltipla, aplicar na a02 com 7 itens (rewrite)."},
+        {"item": "anúncio v01/v02", "severity": "P1", "problem": "Áudio e textoTela prometem 'monte um pedido com objetivo, contexto e formato'.", "fix": "Se mantiver a01 como escrita de pedido, o anúncio continua válido — mais um motivo para a opção (a)."},
+        {"item": "encerramento", "severity": "P2", "problem": "'Seu roteiro reúne o que você salvou' é incondicional; não lembra a regra da empresa sobre uso de IA (que v02 já ensina).", "fix": "Rewrite da frase."},
+        {"item": "precisão/segurança IA", "severity": "ok", "problem": "Conteúdo correto: invenção de dados, comparar com a origem, 'se faltar, sinalize', não colar dado pessoal/interno, responsabilidade de quem comunica.", "fix": "—"}
+      ],
+      "pontos_fortes": ["Melhor demonstração do lote: pedido ruim → invenções → pedido bom → resposta honesta.", "Decisão com pegadinha boa (B mantém o prazo inventado)."],
+      "seguranca": "ok — coerente com LGPD/dados internos; sem confiança cega em tecnologia.",
+      "rewrites": {
+        "pratica_a01_texto_curto": {
+          "enunciado": "Dados confirmados: oficina interna, terça, 10h, sala 2, equipe de apoio. Escreva o pedido que você faria à IA para um convite de três frases. Use só esses dados e diga o que ela deve fazer se faltar informação.",
+          "criterios": ["Diz o resultado e o tamanho.", "Lista só os dados confirmados.", "Pede para sinalizar o que falta, não inventar.", "Não inclui dado pessoal ou interno."]
+        },
+        "multi_select_7_itens": {"itens": ["Terça, às 10h", "Certificado incluso", "Sala 2", "Inscrições até segunda", "Duração de uma hora", "Equipe de apoio", "Traga seu notebook"], "gabarito_1based": [2, 4, 5, 7]},
+        "encerramento_frase": "Se salvou seu pedido, ele está no Meu roteiro. E antes de usar IA numa tarefa de verdade, pergunte qual é a regra do lugar onde você trabalha."
+      }
+    },
+    "C21": {
+      "titulo": "Tudo é urgente?",
+      "orientador": "Vinícius",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "decisão opção C", "severity": "P2", "problem": "'Escolho A sem informar' — 'A' é a tarefa e também a letra da alternativa.", "fix": "Nomear tarefas ('o relatório', 'a planilha') na situação e nas opções. Rewrite."},
+        {"item": "aprofundamento", "severity": "P2", "problem": "'pergunte quem tem essa responsabilidade' repete v05, que fica imediatamente antes da inserção.", "fix": "Cortar a frase; manter o novo (atualizar estimativa; não é teste de quanto você aceita; não abrir mão da pausa)."},
+        {"item": "vocabulário", "severity": "P2", "problem": "'A referência continua pedindo', 'capacidade'.", "fix": "'quem pediu continua querendo as duas'; 'o que cabe no tempo'."},
+        {"item": "encerramento", "severity": "P2", "problem": "Correto mas genérico; fórmula 'não significa… Significa…'.", "fix": "Fechar com a frase forte: 'Não espere o prazo acabar para revelar um bloqueio que já percebeu.'"}
+      ],
+      "pontos_fortes": ["Demo concreta (60 min, 2×40) e coerente.", "Prática é uma mensagem real, factível sem emprego.", "Protege o aprendiz: não glorifica hora extra nem pular pausa."],
+      "seguranca": "ok (trabalhista: pausa preservada; sem ameaça).",
+      "rewrites": {
+        "opcao_C": "Faço o relatório e deixo a planilha de lado, sem avisar. Alguém tinha que decidir."
+      }
+    },
+    "C22": {
+      "titulo": "Errei. E agora?",
+      "orientador": "Vinícius",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "decisão", "severity": "P1", "problem": "Situação idêntica à q04 (Elaine: conferência reduziu erros, envios demoram), respondida 1 minuto antes com outra 'melhor resposta' (lá: conferir só valor alto; aqui: investigar etapa lenta). Opção A repete q04-C.", "fix": "Substituir pela decisão sobre comunicar a correção sem prometer o que não foi decidido (tema do aprofundamento). Rewrite."},
+        {"item": "correção C22 A1", "severity": "P2", "problem": "Correta e necessária (a01 atual mistura destinatário/arquivo com orçamento). Mas o molde em voz passiva ('foi digitado') contradiz o 'Assumo o erro' da q01.", "fix": "Molde: 'Eu digitei R$ 480 no lugar de R$ 840 no orçamento. {impacto}. {pedido}.'"},
+        {"item": "encerramento", "severity": "P2", "problem": "4º parágrafo na fórmula 'não é… É…'.", "fix": "Fechar com as três perguntas (já estão no 3º parágrafo) como frase final."}
+      ],
+      "pontos_fortes": ["Demo coerente (840/480); 'contenha primeiro, previna depois' é novo.", "Aprofundamento: 'o orçamento foi revisado' ≠ cliente resolvido.", "Prática pede efeito e esforço — critério real.", "A1 não responsabiliza financeiramente o jovem."],
+      "seguranca": "ok.",
+      "rewrites": {
+        "decisao_nova": {
+          "situacao": "Você conferiu o valor e corrigiu o orçamento no seu arquivo. O cliente ainda não foi avisado; isso depende do gestor. Uma colega pergunta no grupo: \"Resolveu aquilo do orçamento?\"",
+          "pergunta": "O que você responde?",
+          "opcoes": [
+            {"id": "A", "texto": "\"Resolvi, já está tudo certo.\"", "melhor": false, "feedback": "O arquivo foi corrigido, mas o cliente ainda não. Dizer 'tudo certo' pode fazer alguém parar de acompanhar. Faça assim: separe o que você fez do que ainda depende de decisão."},
+            {"id": "B", "texto": "\"Corrigi o valor no arquivo. O contato com o cliente está com o gestor; aviso quando fechar.\"", "melhor": true, "feedback": "Você informa o fato e o que ainda está em aberto, sem prometer pelo outro."},
+            {"id": "C", "texto": "\"Ainda não, tá tudo parado.\"", "melhor": false, "feedback": "Parte já foi feita. Esconder o avanço também confunde quem acompanha. Faça assim: diga o que foi feito e o que falta."}
+          ]
+        }
+      }
+    },
+    "C23": {
+      "titulo": "Aprender faz parte do trabalho",
+      "orientador": "Vinícius",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "prática a02", "severity": "P2", "problem": "Título 'Anote ação e critério' não descreve a tarefa (duas perguntas); anúncio gravado promete 'plano'.", "fix": "Título: 'Duas perguntas para aprender uma tarefa'. Cortar anúncio."},
+        {"item": "decisão opção C", "severity": "P2", "problem": "'Peço que façam todos os próximos cadastros por mim' é caricata.", "fix": "'Faço como no exemplo e aviso depois se der errado.' Feedback: 'Parecido não é igual. Confirmar o critério antes custa menos do que corrigir depois.'"},
+        {"item": "aprofundamento", "severity": "P2", "problem": "'referência viva' é abstrato.", "fix": "'uma anotação que vai melhorando a cada caso'."},
+        {"item": "encerramento", "severity": "P2", "problem": "4º parágrafo na fórmula 'não é… É…'.", "fix": "Fechar com a pergunta da demo: 'O que fez você escolher essa opção?' — leve essa pergunta para a próxima tarefa."}
+      ],
+      "pontos_fortes": ["Priscila/Sérgio coerentes; 'anote o critério, não só o botão' é conteúdo novo de verdade.", "Fecho com callback à aula 1 e respeito a acessos/combinados."],
+      "seguranca": "ok.",
+      "rewrites": {}
+    },
+    "C24": {
+      "titulo": "Por onde eu começo?",
+      "orientador": "Flávia",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "decisão", "severity": "P1", "problem": "Enunciado já diz 'A equipe autorizou separar os demais itens' — a resposta está no texto; A é absurda.", "fix": "Reescrever sem a autorização; a decisão passa a ser pedir e registrar a pendência. Rewrite."},
+        {"item": "prática a02 (ordering)", "severity": "P2", "problem": "A ordem certa foi dita na q03 (opção A forte) e em v04. Itens 1 e 3 ('Verificar conteúdo…' / 'Confirmar o conteúdo…') confundem por vocabulário.", "fix": "Reescrever itens (rewrite); gabarito igual."},
+        {"item": "correção C24 A1", "severity": "P2", "problem": "Certa (a01 mistura relatório/kits/reunião), mas o exemplo repete v02 palavra por palavra — o aluno copia.", "fix": "Caso novo: 'Pediram 30 cópias de um material para amanhã; você não sabe qual versão nem se é frente e verso.'"},
+        {"item": "demo", "severity": "P2", "problem": "Sobrepõe a q04 (Yuri: adiantar o que não depende).", "fix": "Aceitável — exemplo mais concreto; manter."},
+        {"item": "encerramento", "severity": "P2", "problem": "Link a 'Faz sentido?' só se disponível ao aluno.", "fix": "Condicionar à disponibilidade (regra do pacote)."}
+      ],
+      "pontos_fortes": ["Aprofundamento traz 'como saber que terminou' (critério de pronto) — novo.", "Fecho com callback à reunião."],
+      "seguranca": "ok.",
+      "rewrites": {
+        "decisao": {
+          "situacao": "Conteúdo confirmado e estoque conferido. Faltam canetas; o apoio está vendo a reposição. Ninguém disse o que você faz enquanto isso.",
+          "pergunta": "O que você faz agora?",
+          "opcoes": [
+            {"id": "A", "texto": "Monto os kits sem caneta e entrego; depois alguém completa.", "melhor": false, "feedback": "O kit entregue não é o combinado, e ninguém sabe que falta algo. Faça assim: nada sai como pronto com item faltando."},
+            {"id": "B", "texto": "Pergunto se posso separar os itens que já tenho e anoto \"faltam canetas\" em cada kit.", "melhor": true, "feedback": "Você avança no que não depende da caneta e deixa a pendência visível para quem for completar."},
+            {"id": "C", "texto": "Espero as canetas chegarem para começar qualquer coisa.", "melhor": false, "feedback": "Pode ser válido, mas separar o resto não depende da caneta. Faça assim: pergunte o que pode adiantar."}
+          ]
+        },
+        "ordering_itens": {"ordem_inicial": ["Conferir os kits prontos antes de entregar", "Separar e montar os kits", "Perguntar a quem pediu o que vai em cada kit", "Ver no estoque se tem material para todos"], "gabarito_1based": [3, 4, 2, 1]}
+      }
+    },
+    "C25": {
+      "titulo": "Faz sentido?",
+      "orientador": "Flávia",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "prática a02 (classification)", "severity": "P2", "problem": "3 itens, cada um com a palavra-chave ('pode', 'sempre'); fácil. Perde a prática generativa anterior (conclusão provisória + 2 verificações).", "fix": "Subir para 5 itens (rewrite) e incluir missão de campo."},
+        {"item": "anúncio v03", "severity": "P1", "problem": "Áudio promete 'escreva uma conclusão provisória e duas informações'.", "fix": "Cortar/regravar antes de trocar a prática."},
+        {"item": "encerramento", "severity": "ok", "problem": "150 palavras; callback ao silêncio da mensagem e à chuva; pergunta memorável. Melhor fecho do lote.", "fix": "—"}
+      ],
+      "pontos_fortes": ["Demo excelente: produto em falta como fator concorrente.", "'O que eu precisaria encontrar para mudar de ideia?' — melhor frase do lote.", "Voz da Flávia reconhecível."],
+      "seguranca": "ok.",
+      "rewrites": {
+        "classification_itens_extras": [
+          {"frase": "Nos dois dias, o produto mais procurado estava em falta.", "categoria": "Observação informada", "feedback": "Foi informado no caso; não atribui causa."},
+          {"frase": "As vendas caíram por causa da falta do produto.", "categoria": "Conclusão não sustentada", "feedback": "Afirma a causa sem comparar com outros dias."}
+        ]
+      }
+    },
+    "C26": {
+      "titulo": "Onde está o problema?",
+      "orientador": "Flávia",
+      "veredito": "adotar com correções",
+      "issues": [
+        {"item": "demo + decisão", "severity": "P1", "problem": "Repetem q06-B e v06 quase literalmente ('registro que o teste passou e peço envio real autorizado'; 'funcionar em teste não prova todos os casos'). O aluno acabou de responder isso.", "fix": "Trocar o ângulo para 'o problema voltou uma semana depois' — usa o registro que o curso ensinou a fazer. Rewrite."},
+        {"item": "prática a03", "severity": "P2", "problem": "Quase igual à a03 atual, só mais estreita.", "fix": "Aceitável se a demo mudar; ou pedir o registro da falha que voltou."},
+        {"item": "vocabulário", "severity": "P2", "problem": "'procedimento autorizado', 'referência responsável', 'alcance'.", "fix": "'do jeito combinado, com autorização'; 'a pessoa responsável'; 'até onde o teste vale'."}
+      ],
+      "pontos_fortes": ["Aprofundamento traz o que registrar quando o teste falha e o limite de acesso.", "'Parar antes de apagar, expor ou alterar algo importante faz parte do raciocínio, não é falta de iniciativa' — memorável, manter."],
+      "seguranca": "ok — não mexer em produção; dados fictícios.",
+      "rewrites": {
+        "demo_ideia": "Uma semana depois, alguém avisa: \"o formulário não chegou de novo\". Sem registro, a investigação começa do zero. Com o registro do Nathan — ambiente de teste, destino corrigido, uso real não verificado — dá para perguntar: foi no uso real? Mudou mais alguma coisa desde o teste? Isso a gente sabe. O motivo, ainda não. (~85 palavras na versão final)",
+        "decisao": {
+          "situacao": "O formulário falhou de novo, uma semana depois do teste que passou.",
+          "pergunta": "O que você faz com o registro da semana passada?",
+          "opcoes": [
+            {"id": "A", "texto": "Comparo as condições: onde falhou agora, o que mudou desde o teste, e levo isso a quem tem acesso.", "melhor": true, "feedback": "O registro vira ponto de partida. Ninguém começa do zero."},
+            {"id": "B", "texto": "Refaço o ajuste do destino, porque funcionou da outra vez.", "melhor": false, "feedback": "Pode não ser a mesma causa. Repetir a correção sem comparar esconde o que mudou. Faça assim: compare antes de mexer."},
+            {"id": "C", "texto": "Concluo que o teste da semana passada não valeu nada.", "melhor": false, "feedback": "Ele valeu para aquelas condições. A diferença entre elas é justamente a pista."}
+          ]
+        }
+      }
+    }
+  },
+  "missoes_de_campo": {
+    "C19": "Esta semana, pegue um print de vaga/curso que circulou no seu grupo. Ache a publicação original, a data e para quem vale. Anote o que confirmou e o que não.",
+    "C20": "Numa IA gratuita, peça um texto pequeno com dados inventados por você. Cole aqui o que teve de corrigir (só dados fictícios).",
+    "C21": "Liste o que você precisa entregar nesta semana (escola, casa, trabalho) com tempo estimado. Marque o que não cabe e para quem precisa avisar.",
+    "C22": "Lembre um erro pequeno recente (qualquer lugar). Escreva: o que aconteceu, quem foi afetado, qual conferência evitaria.",
+    "C23": "Pergunte a alguém que faz uma tarefa bem (em casa, escola, trabalho): 'o que faz você escolher X?'. Anote ação + critério.",
+    "C24": "Pegue uma tarefa real da semana. Escreva: resultado esperado, o que sei, o que falta, primeiro passo.",
+    "C25": "Anote uma certeza que você teve esta semana sobre alguém. Escreva o que foi observado e o que te faria mudar de ideia.",
+    "C26": "Um problema com celular/app/wi-fi em casa: sintoma, uma hipótese e uma verificação que não piora nada."
+  },
+  "vocabulario": {
+    "proporcional": "do tamanho do problema",
+    "sustentação / evidência": "prova / o que você conferiu",
+    "unilateral": "sozinho, sem avisar",
+    "referência (pessoa)": "a pessoa responsável / quem pediu",
+    "procedimento autorizado": "do jeito combinado, com autorização",
+    "capacidade": "o que cabe no tempo"
+  },
+  "checagens": {
+    "termos_proibidos": "nenhum (CIEE, IEL, agente de integração, slogans) nos 8 cursos",
+    "avatares_experiencias_pessoais": "nenhuma",
+    "garantias_ou_ameacas": "nenhuma",
+    "palavras_encerramentos": {"C19": 140, "C20": 152, "C21": 146, "C22": 151, "C23": 147, "C24": 151, "C25": 150, "C26": 146},
+    "gabaritos_json": "C20 solution [1,3], C24 [2,3,1,0], C25 conferem com os .md",
+    "ancoras": "inserções e vídeo final batem com o caminhoPrincipal da versão publicada (C26 na aula 3)"
+  }
+}

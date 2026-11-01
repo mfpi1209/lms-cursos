@@ -1,0 +1,35 @@
+[
+ {
+  "codigo": "C13",
+  "id": "crs_gujuaiykqcsl2n31",
+  "titulo": "Comecei a trabalhar",
+  "revisao": 198,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_07/q12",
+   "aula_07/q12"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "EMPTY_BODY aula_04/m04",
+   "EMPTY_BODY aula_05/m05"
+  ],
+  "ultimaAula": "aula_07",
+  "nosUltimaAula": [
+   "v12:scenario",
+   "q12:choice",
+   "v13:content",
+   "m07:mission",
+   "despedida:content",
+   "fim_aula_07:end"
+  ]
+ }
+]

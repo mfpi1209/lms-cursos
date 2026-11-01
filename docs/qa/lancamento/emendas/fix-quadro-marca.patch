@@ -1,0 +1,33 @@
+--- /Users/marcelopinheiro/Documents/lms-cursos/packages/media/src/compose/compose.ts	2026-10-31 16:39:53
++++ repo/packages/media/src/compose/compose.ts	2026-10-31 17:40:29
+@@ -534,7 +534,8 @@
+     }
+     if (s.watermarkPath) {
+       const wi = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(D), '-i', s.watermarkPath]);
+-      chains.push(`[${wi}:v]format=rgba,trim=duration=${sec(D)},setpts=PTS-STARTPTS[w${i}]`);
++      // mesma base de tempo do plano (AVTB): com bases diferentes o overlay perdia o ÚLTIMO quadro de cada plano (~1 por plano; imagem mais curta que o som)
++      chains.push(`[${wi}:v]format=rgba,trim=duration=${sec(D)},setpts=PTS-STARTPTS,settb=AVTB[w${i}]`);
+       chains.push(`[${vo}][w${i}]overlay=0:0:format=auto,${tail}[v${i}]`);
+     }
+   });
+--- /Users/marcelopinheiro/Documents/lms-cursos/packages/media/test/join.test.ts	2026-10-31 16:42:59
++++ repo/packages/media/test/join.test.ts	2026-10-31 17:40:29
+@@ -253,6 +253,18 @@
+     // as legendas seguem o começo real de cada plano no clipe (o respiro que saiu não desloca as palavras)
+     for (const [i, t] of after.timeline.entries()) expect(t.clipStart).toBeCloseTo(after.joins[i]!.headTrim, 6);
+   }, 240_000);
++
++  it('com marca d\'água, a imagem não perde quadro por plano (antes: ~1 quadro a menos em cada plano, imagem mais curta que o som)', async () => {
++    const dir = tmp();
++    const files = ['a', 'b', 'c', 'd'].map((n) => path.join(dir, `${n}.mp4`));
++    for (const [i, f] of files.entries()) await avatarClip(f, i);
++    const shots = files.map((_, i) => ({ id: `s${i}`, transitionIn: 'cut' as const }));
++    const clips = new Map(shots.map((s, i) => [s.id, { videoPath: files[i]! }]));
++    const r = await composeScene({ shots, clips, output: path.join(dir, 'o.mp4'), width: 640, height: 360, preset: 'ultrafast', loudnorm: false, watermark: { brand: 'DNA Work', position: 'bottom-right', opacity: 0.8 } });
++    const p = await ffprobe(r.output);
++    expect(Math.abs((p.videoDurationSeconds ?? 0) - r.expectedDurationSeconds)).toBeLessThan(0.05);
++    expect(Math.abs((p.videoDurationSeconds ?? 0) - (p.audioDurationSeconds ?? 0))).toBeLessThan(0.1);
++  }, 120_000);
+ 
+   it('plano no meio de um clipe compartilhado não é apertado (a emenda é contínua)', async () => {
+     const dir = tmp();

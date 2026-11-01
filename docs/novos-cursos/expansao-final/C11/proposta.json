@@ -1,0 +1,609 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C11",
+  "id": "crs_u4nfw88a4n2n0ubv",
+  "titulo": "Não entendi. Posso perguntar?",
+  "instrutor": "Renato — Seu orientador",
+  "versaoPublicada": 12,
+  "revisaoDoRascunho": 95
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo/plano indicado; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova (aula_03) é APENDADA no fim. Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes só há: troca de fala do plano 'missao' (mesmo id, regrava só esse plano) e mudanças de texto nos nós 'end'. Os planos 'missao_fim' já estão sendo tirados na Fase 0 (cortes.md, status a): não mexer neles aqui.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_renato6_34 com chamada na cam_renato6_esq; explicação na cam_renato6_esq; despedida na cam_renato6_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; botões 'Já experimentei' e 'Vou fazer depois'. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso.",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "P0 do pacote resolvido: o Renato não aparece como personagem em nenhuma fala; a cena e a decisão são da Duda (aula 1)."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de blocos; nada acontece fora da tela, e a m02 monta a frase que o v03 acabou de ditar.",
+  "O curso ensina a pedir exemplo e a mostrar duas orientações, mas não o mecanismo que faz o exemplo funcionar: ele revela o critério escondido, e você confirma (“então X vem antes de Y, certo?”).",
+  "Falta o que fazer quando a regra confirmada encontra um caso que ela não cobre (a fronteira da regra) e a ideia de sair da conversa com um critério, não só com a resposta daquele caso.",
+  "O pacote colocou o Renato como personagem da cena (“Renato ouviu…”), o que a regra do dono proíbe: a cena é da Duda.",
+  "O curso termina numa tela de texto genérica: sem fecho do Renato, sem retorno à Duda e ao Miguel."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Transforme uma orientação vaga em um combinado que você consegue aplicar, e saia da conversa com o critério, não só com a resposta. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue pedir esclarecimento, comparar informações diferentes, confirmar a regra aplicável e testar onde ela termina."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Usar um exemplo para revelar o critério de uma orientação, confirmá-lo com as próprias palavras e testar a fronteira da regra com um caso real."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Duda",
+    "Miguel"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como pedir um exemplo",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "Quando esta aula terminar, você vai ter um pedido de exemplo montado, para a primeira regra vaga que aparecer.",
+       "de": "No fim desta aula, tem uma missão para você: peça um exemplo.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim sai na Fase 0 (cortes.md, status a). Nada a fazer aqui."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Só acrescenta a frase de fechamento (hoje null).",
+     "campos_alterados": {
+      "closingLine": "“Bom senso” é regra sem exemplo. Peça o exemplo."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como esclarecer orientações diferentes",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "change",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "fala": "No fim, você escreve a pergunta que põe duas orientações lado a lado e pede para confirmar qual vale.",
+       "de": "No fim desta aula, tem uma missão para você: esclareça uma diferença.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Troca só este plano (mesmo id); os demais planos do nó ficam. Sem a palavra 'missão'."
+      }
+     ],
+     "demaisPlanos": "keep"
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "Não tem missao_fim; o s4 termina com 'Agora, monte a sua frase', que continua valendo para a m02."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' passa para fim_aula_03. O resumo troca 'referência responsável' por 'quem combinou a tarefa com você'.",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Esclareça orientações diferentes com quem combinou a tarefa com você. Confirme as condições de uma exceção. Na próxima aula, a Duda volta: a regra foi confirmada, e aparece um caso que ela não cobre.",
+      "closingLine": "Duas orientações diferentes não são um problema seu para resolver no chute."
+     }
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Saia com o critério, não só com a resposta",
+   "resumo": "Você vê um exemplo revelar o critério escondido, testa a regra na fronteira e faz isso com uma regra real da sua semana.",
+   "estimativaMin": 4,
+   "obrigatoria": "sim (mesma decisão do piloto C24: quem está fazendo passa pela aula; quem já concluiu vê como conteúdo novo)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Usar um exemplo para revelar o critério de uma orientação, confirmá-lo com as próprias palavras e testar a fronteira da regra com um caso real."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "O exemplo que revela o critério",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Exemplo · Critério · Fronteira",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Nesta última aula, a pergunta é outra: o que você leva da conversa?",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 13,
+       "segundos": 5.0
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você testa uma regra de verdade, com alguém que te explicar algo nesta semana. Em casa, na escola, no trabalho.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "nota": "Faz o papel do antigo plano 'missao', sem a fórmula."
+      },
+      {
+       "id": "s2",
+       "fala": "A Duda ouviu: separe os pedidos prioritários. Perguntou o que é prioritário. Resposta: os que precisam sair primeiro. Não ajudou.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s3",
+       "fala": "Então ela tentou um exemplo: tenho um pedido para hoje e outro de um cliente antigo para amanhã. Qual entra primeiro?",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "s4",
+       "fala": "Resposta: o de hoje, data de entrega vem antes de tempo de cadastro. A Duda confirmou e anotou. Agora tem um critério.",
+       "layout": "presenter_chips",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "cartao": {
+        "titulo": "O que a Duda levou",
+        "topicos": [
+         "Pergunta vaga → **resposta vaga**",
+         "Exemplo → **o critério aparece**",
+         "Confirmar: “então X vem antes de Y, certo?”"
+        ]
+       }
+      },
+      {
+       "id": "chamada",
+       "fala": "Na hora de separar, aparece um pedido sem data. No lugar da Duda, o que você faz com ele?",
+       "layout": "presenter",
+       "camera": "cam_renato6_esq",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      }
+     ],
+     "roteiroNovo": "Nesta última aula, a pergunta é outra: o que você leva da conversa? No fim, você testa uma regra de verdade, com alguém que te explicar algo nesta semana. Em casa, na escola, no trabalho. A Duda ouviu: separe os pedidos prioritários. Perguntou o que é prioritário. Resposta: os que precisam sair primeiro. Não ajudou. Então ela tentou um exemplo: tenho um pedido para hoje e outro de um cliente antigo para amanhã. Qual entra primeiro? Resposta: o de hoje, data de entrega vem antes de tempo de cadastro. A Duda confirmou e anotou. Agora tem um critério. Na hora de separar, aparece um pedido sem data. No lugar da Duda, o que você faz com ele?",
+     "palavras": 117,
+     "segundos": 44.7,
+     "cartaoPerguntaSeguinte": "A regra confirmada: data de entrega vem primeiro. Aparece um pedido sem data nenhuma. O que você faz com ele?",
+     "proximo": "q04"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Duda, o que você faz com esse pedido?",
+     "apoioNaTela": "Quem combinou a tarefa confirmou: a data de entrega vem primeiro. Na hora de separar, a Duda encontra um pedido sem data nenhuma.",
+     "bridge": {
+      "call": "Na hora de separar, aparece um pedido sem data. No lugar da Duda, o que você faz com ele?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C11)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Separo pelo tempo de cadastro, porque foi o outro critério citado.”",
+       "qualidade": "ok",
+       "feedback": "Você criou uma regra para a exceção sem combinar. Pode até fazer sentido, mas ninguém confirmou. Faça assim: separe os que têm data e pergunte sobre esse, com ele na mão.",
+       "reacao": {
+        "texto": "Faz sentido como palpite. Mas é você criando regra para a exceção, e ninguém confirmou.",
+        "palavras": 15,
+        "segundos": 5.7
+       },
+       "vaiPara": "v05",
+       "caracteres": 68
+      },
+      {
+       "id": "b",
+       "rotulo": "“Deixo esse pedido de lado e sigo com os outros, sem avisar.”",
+       "qualidade": "weak",
+       "feedback": "O pedido some da fila. Quem espera por ele não sabe que travou. Faça assim: avise que existe um pedido sem data e pergunte como tratar.",
+       "reacao": {
+        "texto": "Os outros andam, e esse some. Quem espera por ele não sabe que travou. Sem aviso, ninguém vai procurar.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v05",
+       "caracteres": 61
+      },
+      {
+       "id": "c",
+       "rotulo": "“Separo os que têm data e pergunto, com esse pedido na mão, como tratar quem não tem.”",
+       "qualidade": "strong",
+       "feedback": "O critério vale onde ele vale; o caso real serve para descobrir a fronteira da regra. Faça assim: mostre o pedido, pergunte, e anote a resposta junto com a regra.",
+       "reacao": {
+        "texto": "O critério vale onde ele vale. Com o pedido na mão, a pergunta fica concreta, e a resposta vira regra para o próximo.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v05",
+       "caracteres": 86
+      }
+     ],
+     "porQueNaoEstaNoEnunciado": "A resposta não está no enunciado: ele diz a regra e mostra o caso fora dela; perceber que o critério vale só onde vale, e que o caso real na mão é o jeito de perguntar, é a decisão. Não repete a q03 (duas orientações), que já foi resolvida."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Teste a regra na fronteira",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Repita · Teste com “e se…?” · Diga o que faltou",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Quando a explicação chegar, teste com outro caso: e se os dois tiverem a mesma data? Isso mostra onde a regra termina.",
+       "layout": "presenter",
+       "camera": "cam_renato6_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "s3",
+       "fala": "Se ainda houver dúvida, diga qual parte entendeu e qual falta. Não entendi nada, e entendi tudo, quase nunca descrevem o que aconteceu.",
+       "layout": "presenter_chips",
+       "camera": "cam_renato6_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "cartao": {
+        "titulo": "Antes de sair da conversa",
+        "topicos": [
+         "**Repita** com suas palavras",
+         "**Teste** com um “e se…?”",
+         "**Diga** qual parte faltou"
+        ]
+       }
+      },
+      {
+       "id": "lancamento",
+       "fala": "Nesta semana, alguém vai te explicar uma regra. Repita, teste com um caso, e veja o que muda.",
+       "layout": "presenter",
+       "camera": "cam_renato6_esq",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra 'missão'. A aula segue para m03."
+      }
+     ],
+     "roteiroNovo": "Quando a explicação chegar, teste com outro caso: e se os dois tiverem a mesma data? Isso mostra onde a regra termina. Se ainda houver dúvida, diga qual parte entendeu e qual falta. Não entendi nada, e entendi tudo, quase nunca descrevem o que aconteceu. Nesta semana, alguém vai te explicar uma regra. Repita, teste com um caso, e veja o que muda.",
+     "palavras": 63,
+     "segundos": 24.0,
+     "proximo": "m03",
+     "naoRepete": "É o aprofundamento do pacote (aprovado), em planos e sem jargão. Não repete v01 (peça exemplo, limite, quem orienta; repita o que entendeu) nem v03 (frase com as duas orientações; quem decide). O novo: testar na fronteira, só as exceções que mudam a ação, dizer qual parte faltou."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Repita a regra e pergunte “e se…?”",
+     "tipoDeMissao": "FAZER fora da tela: com uma regra que alguém te explicar nesta semana",
+     "intro": "A Duda saiu com um critério e com a fronteira dele. Agora é com uma regra que alguém te explicar nesta semana: em casa, na escola, no curso ou no trabalho.",
+     "action": [
+      "Nesta semana, quando alguém te explicar uma regra ou um jeito de fazer, não diga só “entendi”.",
+      "Repita com suas palavras: “então é assim: …, certo?”.",
+      "Pergunte “e se…?” com um caso de verdade: “e se chegar um sem data?”, “e se eu estiver sozinho?”, “e se der empate?”.",
+      "Repare no que mudou no seu entendimento depois do “e se”.",
+      "Volte aqui, marque “Já experimentei” e conte."
+     ],
+     "alternative": "Não apareceu ninguém explicando nada? Vale com uma regra de jogo, uma receita, o combinado de horários lá de casa ou a instrução de um trabalho da escola. Toda regra tem fronteira, e o “e se” acha.",
+     "tip": {
+      "rotulo": "Exemplo: a Duda e os pedidos",
+      "texto": "Regra: data de entrega vem antes de tempo de cadastro. Repeti: então, entre dois pedidos, sai primeiro o de data mais perto, certo? Perguntei: e se um não tiver data? Resposta: pergunta para quem recebeu o pedido. Anotei junto com a regra.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "O que você entendeu diferente depois de repetir e perguntar “e se”? Em uma ou duas frases.",
+      "placeholder": "Ex.: achei que era por ordem de chegada; era por prazo. O “e se” mostrou isso.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; m03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Qual parte você já entendeu?",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "A parte que entendi · A parte que falta · O critério",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Perguntar não precisa começar com um pedido de desculpas. Você mostra a parte que entendeu e aponta onde a dúvida aparece.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "d2",
+       "fala": "A Duda não saiu daquela conversa com um pedido separado. Saiu com um critério, e com a fronteira dele. Isso serve amanhã.",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "d3",
+       "fala": "Da próxima vez que alguém te explicar algo, antes de dizer entendi, pergunte: qual parte eu já entendi? E qual falta?",
+       "layout": "presenter",
+       "camera": "cam_renato6_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      }
+     ],
+     "roteiroNovo": "Perguntar não precisa começar com um pedido de desculpas. Você mostra a parte que entendeu e aponta onde a dúvida aparece. A Duda não saiu daquela conversa com um pedido separado. Saiu com um critério, e com a fronteira dele. Isso serve amanhã. Da próxima vez que alguém te explicar algo, antes de dizer entendi, pergunte: qual parte eu já entendi? E qual falta?",
+     "palavras": 64,
+     "segundos": 24.4,
+     "forma": "abre com a frase memorável do pacote (“Perguntar não precisa começar com um pedido de desculpas”), faz um callback à Duda e termina com a pergunta da ficha do Renato devolvida ao aluno (“qual parte eu já entendi?”). Sem recap, sem “Meu roteiro” na fala.",
+     "motionPrompt": "pausa curta antes da pergunta final, cabeça levemente inclinada, sem pressa",
+     "required": true,
+     "posicao": "depois de m03 e antes de fim_aula_03"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Resposta resolve o caso de hoje. Critério resolve o de amanhã.",
+     "summary": "O que você levou\nPergunta vaga, resposta vaga. Exemplo, critério.\nConfirme: “então X vem antes de Y, certo?”\nTeste a fronteira: “e se…?”. Diga qual parte faltou.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha regra desta semana",
+       "kind": "checklist",
+       "items": [
+        "alguém me explicou uma regra",
+        "repeti com minhas palavras",
+        "perguntei “e se…?” com um caso real",
+        "anotei o que mudou"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando testar uma regra, volte e conte o que mudou."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Pergunta vaga, resposta vaga. Exemplo, critério.\nConfirme: “então X vem antes de Y, certo?”\nTeste a fronteira: “e se…?”. Diga qual parte faltou.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos 'keep' custam zero. A pergunta nova não gera vídeo próprio. As aberturas trocadas regravam só o plano 'missao' de cada aula existente.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 244,
+   "segundos": 93.1
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 57,
+   "segundos": 21.8
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 38,
+   "segundos": 14.5
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoAlvo": true,
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v00/missao (abertura)",
+    "planos": 1,
+    "palavras": 19,
+    "segundos": 7.3
+   },
+   {
+    "no": "v02/missao (abertura)",
+    "planos": 1,
+    "palavras": 19,
+    "segundos": 7.3
+   },
+   {
+    "no": "v04",
+    "planos": 6,
+    "palavras": 117,
+    "segundos": 44.7
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 57,
+    "segundos": 21.8
+   },
+   {
+    "no": "v05",
+    "planos": 3,
+    "palavras": 63,
+    "segundos": 24.0
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 64,
+    "segundos": 24.4
+   }
+  ],
+  "videoDoCurso": {
+   "antes": {
+    "minS": 182.7,
+    "maxS": 186.3,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 281.5,
+    "maxS": 288.2,
+    "texto": "cerca de 4.7–4.8 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação de q04 (mínima/máxima). As aberturas trocadas têm duração parecida com a atual; as aulas existentes não mudam de duração de forma relevante."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Decisão: (a) o pedido sem data (fronteira da regra; reescrita dos revisores) · (b) dois pedidos com a mesma data (também fronteira, mas a explicação já usa esse exemplo). Recomendo (a).",
+  "2. Despedida: (a) termina com a pergunta da ficha do Renato devolvida ao aluno (“qual parte eu já entendi? E qual falta?”) · (b) termina com a frase do título (“saia com o critério, não só com a resposta”). Recomendo (a): é a assinatura do Renato e não vira frase de efeito.",
+  "3. Resumo do fim_aula_02: (a) trocar “referência responsável” por “quem combinou a tarefa com você” (jargão da lista do dono) · (b) manter como está. Recomendo (a): custo zero.",
+  "4. Frase de fechamento do fim_aula_01: (a) “‘Bom senso’ é regra sem exemplo. Peça o exemplo.” · (b) deixar null. Recomendo (a)."
+ ]
+}

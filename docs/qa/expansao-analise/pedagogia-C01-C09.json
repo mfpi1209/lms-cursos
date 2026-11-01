@@ -1,0 +1,243 @@
+{
+  "geradoEm": "2026-11-01",
+  "escopo": "Revisão pedagógica do pacote de expansão, cursos C01–C09. Somente leitura; nada aplicado.",
+  "fontes": {
+    "verdade": "docs/qa/raio-x/raio-x.json (rascunho atual)",
+    "pacote": ["expansao-zip/cursos/C01.md…C09.md", "expansao-zip/expansao.json", "expansao-zip/FICHAS_DE_VOZ.md", "expansao-zip/CORRECOES_ADICIONAIS.md"],
+    "piloto": "docs/novos-cursos/piloto-c01/proposta.md"
+  },
+  "severidades": {"P0": "bloqueia adoção", "P1": "corrigir antes de gerar mídia", "P2": "melhoria"},
+  "verificacoes": {
+    "termosProibidos": "nenhum (CIEE, IEL, agente de integração, slogans, garantia de contratação, ameaça, experiência pessoal do avatar)",
+    "linksParaOutrosCursos": {"C01→C05": "existe", "C03→C09": "existe", "C07→C16": "existe", "C09→C18": "existe"},
+    "revisaoDoRascunho": {"C01": "pacote rev 92, atual 93 (piloto aplicado) — DIVERGE", "C02-C09": "iguais ao snapshot do pacote"},
+    "palavrasEncerramento": {"C01": 151, "C02": 154, "C03": 144, "C04": 146, "C05": 152, "C06": 150, "C07": 149, "C08": 149, "C09": 147}
+  },
+  "transversais": [
+    {
+      "item": "prática",
+      "severity": "P0",
+      "problem": "As nove práticas viram short_text sobre a personagem; nenhuma ação fora da tela nem caminho para quem ainda não trabalha. Repete a crítica do dono ('não é missão, é pergunta simples'); em C01 apaga a missão real do piloto. Texto livre pesa mais para o aluno tímido do que os blocos atuais.",
+      "fix": "Texto opcional + linha 'Minha missão de verdade' com ação real e caminho 'ainda sem vaga' (modelo do piloto C01). Sugestões por curso em cursos[].rewrites.missaoReal."
+    },
+    {
+      "item": "prática",
+      "severity": "P1",
+      "problem": "A prática pede a frase que acabou de aparecer: C01 (opção B = exemplo), C02/C04/C05 (frase está na demonstração), C08 (opção A = exemplo), C09 (opção B ≈ exemplo). Sem transferência.",
+      "fix": "Trocar o caso da prática por um caso-irmão (cursos[].rewrites.casoIrmao), mantendo critérios e exemplo."
+    },
+    {
+      "item": "encerramento",
+      "severity": "P1",
+      "problem": "Mesmo esqueleto nos nove: tema → 'a personagem aprendeu' → 'na próxima vez' + bloco do Meu roteiro → moral + link. Título idêntico nos 26. 144–154 palavras ≈ 60 s de orientador parado depois da prática; nenhum tem frase final memorável.",
+      "fix": "Tirar o bloco do Meu roteiro da narração (tela já mostra estado real). Meta 90–110 palavras (≈40 s). Uma frase de fechamento própria por curso (cursos[].rewrites.fraseFinal). Variar abertura por orientador."
+    },
+    {
+      "item": "voz",
+      "severity": "P1",
+      "problem": "Registro alto e uniforme ('tornar a dependência visível', 'impedimento', 'procedimento aplicável', 'preserva a participação'). Não distingue Rafael/Enzo/Thiago; fichas de voz não foram usadas.",
+      "fix": "Filtro 'eu diria isso a um jovem de 17 anos?'. Trocas: dependência→'o que eu preciso para começar'; impedimento→'o que está travando'; referência→nome da personagem ou 'quem combinou com você'; 'torna visível'→'mostra'."
+    },
+    {
+      "item": "decisão",
+      "severity": "P1",
+      "problem": "Em 7 de 9 cursos a terceira opção é de palha (entrar sem liberação, roupa mais cara, cancelar sem conversar, 'só ajudo se confrontar', 'quebrou e precisa trocar', repostar a foto). Decisão vira escolha de 2. Feedback em texto de uma frase, sem 'faça assim'.",
+      "fix": "Substituir a opção implausível por uma 'média' plausível (cursos[].rewrites.opcao). Dar ao cartão de feedback a estrutura das reações atuais: consequência + faça assim."
+    },
+    {
+      "item": "passagem",
+      "severity": "P2",
+      "problem": "v03 de C01, C04, C05, C07, C08, C09 termina anunciando a prática; o pacote insere 2 vídeos + decisão antes. Em C01 e C07 o anúncio promete OUTRA prática.",
+      "fix": "Corte limpo onde a prática é a mesma (C04, C05, C08, C09); em C07 cortar e renomear a prática; em C01 não aplicar."
+    },
+    {
+      "item": "feedback",
+      "severity": "P2",
+      "problem": "Reações atuais são em vídeo do orientador; decisão nova usa cartão de texto. Mistura perceptível para o aluno.",
+      "fix": "Aceitável; se mantiver texto, mesma estrutura das reações. Em C01 (piloto) usar vídeo."
+    }
+  ],
+  "cursos": {
+    "C01": {
+      "titulo": "Meu primeiro dia",
+      "instrutor": "Marina",
+      "verdict": "não adotar",
+      "resumo": "Escrito sobre a versão publicada (2 aulas). O rascunho já tem o piloto: 4 aulas, missões reais, despedida na aula 4, Renata/Caio.",
+      "issues": [
+        {"item": "encerramento", "severity": "P0", "problem": "Entraria antes de fim_aula_02 num curso de 4 aulas que já tem despedida em vídeo na aula 4.", "fix": "Descartar. Manter a despedida do piloto."},
+        {"item": "prática", "severity": "P0", "problem": "Revisão de m02 troca a missão real 'Deixe o aviso de atraso pronto no celular' (nota 'Se eu atrasar' + contato salvo) por exercício de tela sobre a Luana na recepção.", "fix": "Não aplicar. Preservar m02 do piloto."},
+        {"item": "demonstração", "severity": "P0", "problem": "'A confirmação veio da Paula': no curso a referência é Renata, do RH (v01, v03, m02, aula 3). Cena 'nome não está na lista' já existe em v03 (Davi).", "fix": "Se usar algo, trocar Paula por Renata e não repetir a cena de v03."},
+        {"item": "passagem", "severity": "P1", "problem": "v03 do piloto termina 'Agora, monte o seu aviso e salve nas notas'; inserir demo+decisão+aprofundamento aí quebra a promessa.", "fix": "Não inserir dentro das aulas 1–2 (regra do piloto)."},
+        {"item": "aprofundamento", "severity": "P2", "problem": "'Não envie documentos para contato desconhecido' já está em v01.", "fix": "Nada a merger."}
+      ],
+      "rewrites": {
+        "aproveitarNoPiloto": {
+          "onde": "aula 3, pergunta extra antes de q04, com reação em vídeo da Marina",
+          "apoio": "Luana chegou. A recepção diz que o nome dela não está na lista. Ela tem o contato da Renata, do RH.",
+          "opcoes": [
+            {"id": "A", "qualidade": "média", "rotulo": "Oi Renata, cheguei! Estou na recepção.", "reacao": "Ela sabe onde você está, mas não sabe que tem um problema. Diga também que o nome não apareceu na lista."},
+            {"id": "B", "qualidade": "forte", "rotulo": "Oi Renata, estou na recepção da rua de trás e meu nome não apareceu na lista. Pode confirmar minha chegada com eles?", "reacao": "Local, fato e pedido. A Renata resolve em uma ligação."},
+            {"id": "C", "qualidade": "fraca", "rotulo": "Já estou subindo para não perder o horário.", "reacao": "Entrar sem liberação cria um problema maior que o atraso. Espere ali e avise."}
+          ]
+        }
+      }
+    },
+    "C02": {
+      "titulo": "Que roupa eu uso?",
+      "instrutor": "Camila",
+      "verdict": "adotar com correções",
+      "resumo": "Decisão nova e realista ('Venha adequada à função'); síntese 'peça concreta, dúvida concreta, alternativa' boa; alerta de segurança correto.",
+      "issues": [
+        {"item": "demonstração", "severity": "P1", "problem": "Repete v03 ('tenho uma calça azul sem estampas; ela atende?').", "fix": "Começar pela resposta vaga 'Venha adequada à função' e usar as duas perguntas como saída. Corta ~30 palavras."},
+        {"item": "aprofundamento", "severity": "P1", "problem": "Uniforme e 'ofensa → apoio' já estão em v03.", "fix": "Conteúdo novo: o dia em que a peça falta de verdade (lavou, rasgou): avisar antes de sair de casa."},
+        {"item": "decisão", "severity": "P1", "problem": "Opção B ('roupa mais cara emprestada') é de palha.", "fix": "Ver rewrites.opcao."},
+        {"item": "prática", "severity": "P1", "problem": "Pede a frase que a demonstração acabou de dizer.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "154 palavras; parágrafo 3 é o bloco-padrão do Meu roteiro.", "fix": "Cortar para ~100; frase final em rewrites.fraseFinal."}
+      ],
+      "rewrites": {
+        "opcao": {"id": "B", "rotulo": "Levo a calça azul-marinho e, se alguém reclamar, explico que foi o que entendi.", "feedback": "Pode dar certo, mas você chega sem saber se a peça atende. Uma pergunta antes evita começar o dia com uma correção."},
+        "casoIrmao": "Pediram sapato fechado. Você só tem um tênis preto, sem detalhes. Escreva a pergunta e o que perguntar se não servir.",
+        "missaoReal": "Procure a orientação de roupa da vaga ou curso que você quer (site, foto da equipe, aviso) e anote uma dúvida concreta para perguntar.",
+        "fraseFinal": "Roupa certa não é a mais cara nem a do colega. É a que você confirmou."
+      }
+    },
+    "C03": {
+      "titulo": "Celular no trabalho",
+      "instrutor": "Rafael",
+      "verdict": "adotar com correções",
+      "resumo": "Melhor demonstração do lote (recado chega com cliente na frente). Decisão realista com três opções plausíveis. Aprofundamento traz 'plano de dados' e 'emergência passa na frente'.",
+      "issues": [
+        {"item": "demonstração", "severity": "P1", "problem": "'Pode dizer: Preciso pedir apoio por um momento' — ninguém fala assim com cliente.", "fix": "Ver rewrites.demoTrecho."},
+        {"item": "aprofundamento", "severity": "P2", "problem": "Primeira metade ('a finalidade muda a decisão') repete v01.", "fix": "Abrir direto em 'Também pode faltar aparelho ou conexão…'."},
+        {"item": "prática", "severity": "P2", "problem": "Igual à m02 atual, em texto livre.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão; a melhor frase ('não precisa esperar uma advertência para perguntar') está escondida.", "fix": "Fechar com ela (rewrites.fraseFinal); encurtar períodos para a voz do Rafael."}
+      ],
+      "rewrites": {
+        "demoTrecho": "Para o cliente, basta: 'Um instante, vou chamar uma colega para continuar com você.' O motivo fica com a equipe, não com o balcão.",
+        "casoIrmao": "Caio espera uma ligação da escola do irmão entre 14h e 15h. Escreva como ele combina aviso e continuidade do atendimento.",
+        "missaoReal": "Crie no seu celular um modo silencioso que deixe passar só 1 ou 2 contatos. Teste hoje.",
+        "fraseFinal": "Pergunte antes. Advertência não é jeito de descobrir a regra."
+      }
+    },
+    "C04": {
+      "titulo": "WhatsApp sem complicação",
+      "instrutor": "Thiago",
+      "verdict": "adotar com correções",
+      "resumo": "O mais pronto do lote: horários concretos, três opções plausíveis, aprofundamento com conteúdo novo ('Recebi. Vou seguir'), encerramento com callback duplo (Iara/Pedro).",
+      "issues": [
+        {"item": "prática", "severity": "P1", "problem": "O exemplo está inteiro na demonstração.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "146 palavras; parágrafo 4 é o bloco-padrão.", "fix": "Cortar parágrafo 4; frase final em rewrites.fraseFinal."},
+        {"item": "passagem", "severity": "P2", "problem": "v03 termina 'Agora, monte a sua mensagem de retomada'.", "fix": "Corte limpo (mesma prática, só adiada)."}
+      ],
+      "rewrites": {
+        "casoIrmao": "Você pediu a senha do sistema de manhã. Às 13h a resposta foi 'já te mando'. Você precisa dela até as 15h. Escreva a retomada.",
+        "missaoReal": "Pegue a última mensagem em que você pediu algo a alguém (escola, família, curso). Reescreva com quem fala, assunto e pedido. Mande a versão nova.",
+        "fraseFinal": "Mensagem boa é a que a pessoa responde sem precisar perguntar nada."
+      }
+    },
+    "C05": {
+      "titulo": "Horário é combinado",
+      "instrutor": "Júlia",
+      "verdict": "adotar com correções",
+      "resumo": "Cena coerente com A2 (Yasmin). Decisão pega caso real e frequente (colega sugere compensar). Aprofundamento é o melhor dos nove: muda de assunto (dificuldade recorrente).",
+      "issues": [
+        {"item": "decisão/legal", "severity": "P1", "problem": "Feedback B só diz 'equivalência não confirma que seja permitido'. Aprendiz não pode prorrogar nem compensar jornada (CLT art. 432); estagiário só o que está no termo de compromisso. Informação que protege o jovem.", "fix": "Ver rewrites.feedbackB."},
+        {"item": "decisão", "severity": "P1", "problem": "Opção C ('cancelo sem conversar') é de palha.", "fix": "Ver rewrites.opcao."},
+        {"item": "prática", "severity": "P1", "problem": "Exemplo está inteiro na demonstração.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão.", "fix": "Frase final em rewrites.fraseFinal."}
+      ],
+      "rewrites": {
+        "feedbackB": "Parece justo, mas aprendiz não pode compensar hora: a lei não permite. No estágio, só vale o que está no seu termo. Por isso quem responde pelo seu horário é quem confirma.",
+        "opcao": {"id": "C", "rotulo": "Aviso no grupo da equipe que vou sair das 9h às 10h na sexta.", "feedback": "Avisar é importante, mas o grupo não confirma procedimento. Fale com quem responde pelo seu horário e pergunte como fica a entrega."},
+        "casoIrmao": "O ônibus mudou de horário e você passa a chegar 10 minutos depois todo dia. Escreva a mensagem para conversar sobre o padrão, sem prometer outro transporte.",
+        "missaoReal": "Faça o trajeto (ou simule no app) no horário real de um dia de semana e anote quanto deu. Defina a hora de sair com margem.",
+        "fraseFinal": "Horário combinado se combina antes. Depois, só dá para avisar."
+      }
+    },
+    "C06": {
+      "titulo": "Brincadeiras têm limite",
+      "instrutor": "Patrícia",
+      "verdict": "adotar com correções",
+      "resumo": "Usa Ravi (A3 q05), coerente. Demonstração ensina o que os vídeos atuais não dizem (apoiar sem decidir pela pessoa). Conversão de a03 para texto corrige incoerência atual ('Escreva' em montagem por blocos).",
+      "issues": [
+        {"item": "decisão", "severity": "P1", "problem": "Opção A ('conto no grupo sem dizer o nome') repete o erro de A3 q04 B.", "fix": "Ver rewrites.opcaoA."},
+        {"item": "decisão", "severity": "P1", "problem": "Opção C ('só ajudo se confrontar') é de palha.", "fix": "Ver rewrites.opcaoC."},
+        {"item": "aprofundamento", "severity": "P1", "problem": "'Se você participou, reconhecer e parar' repete A1 q02; 'não prometa segredo' repete v05.", "fix": "Conteúdo novo: e se o alvo for você e um colega oferecer ajuda? O que aceitar, como dizer 'agora não'."},
+        {"item": "prática", "severity": "P2", "problem": "Caso igual ao da decisão.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "segurança", "severity": "P2", "problem": "Vídeos atuais lembram 'menor de idade → adulto de confiança'; pacote não.", "fix": "Manter uma linha no aprofundamento."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão; a boa frase ('Respeito aparece no que fazemos depois de perceber o limite do outro') não é a última.", "fix": "Cortar para ~100 e fechar com ela."}
+      ],
+      "rewrites": {
+        "opcaoA": {"id": "A", "rotulo": "Falo com os colegas que fizeram a piada, sem avisar o Ravi.", "feedback": "A intenção é boa, mas o Ravi pediu para não expor. Pergunte a ele antes de qualquer conversa."},
+        "opcaoC": {"id": "C", "rotulo": "Digo que vou falar com a liderança por ele, para poupar o Ravi.", "feedback": "Você tira dele a decisão. Pergunte primeiro: quer que eu vá junto ou que eu fale por você?"},
+        "casoIrmao": "Uma colega te conta, em particular, que um apelido a incomoda e pede que você não faça nada. Escreva o que você responde.",
+        "missaoReal": "Pergunte a duas pessoas próximas como preferem ser chamadas e cumprimentadas. Use a resposta esta semana.",
+        "fraseFinal": "Respeito aparece no que a gente faz depois de perceber o limite do outro."
+      }
+    },
+    "C07": {
+      "titulo": "Como falar com a equipe",
+      "instrutor": "Gustavo",
+      "verdict": "adotar com correções",
+      "resumo": "Decisão nova e concreta (prazo confirmado, sem acesso ao arquivo). 'Confirmar não é concordar com o impossível' é a frase certa. Mantém C07 (esclarecer) × C16 (negociar).",
+      "issues": [
+        {"item": "demonstração", "severity": "P1", "problem": "Repete v03 quase palavra por palavra.", "fix": "Começar depois da resposta 'é hoje' e ir para o acesso ao arquivo. Corta ~40 palavras."},
+        {"item": "decisão", "severity": "P1", "problem": "Opção B ('a orientação anterior estava melhor') é de palha.", "fix": "Ver rewrites.opcao."},
+        {"item": "passagem", "severity": "P2", "problem": "v03 anuncia 'apresente uma diferença'; prática do pacote é 'confirme sem esconder o impedimento'.", "fix": "Cortar anúncio; renomear prática: 'Confirme o prazo e diga o que falta'."},
+        {"item": "prática", "severity": "P2", "problem": "Caso igual ao da decisão.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão; registro alto.", "fix": "Frase final em rewrites.fraseFinal (marca do Gustavo: duas perguntas)."}
+      ],
+      "rewrites": {
+        "opcao": {"id": "B", "rotulo": "Digo que vou tentar entregar hoje e peço o acesso pelo grupo da equipe.", "feedback": "Você já sinaliza o acesso, mas 'vou tentar' não diz que sem o arquivo nada começa. Diga direto: preciso do acesso para começar."},
+        "casoIrmao": "Pediram o relatório 'até o fim do dia', mas o seu acesso ao sistema acaba às 16h. Escreva a confirmação.",
+        "missaoReal": "Na próxima orientação que receber (escola, curso, casa), devolva com suas palavras antes de executar: o quê, até quando, o que falta.",
+        "fraseFinal": "Qual é o prazo? E o que falta para começar? São duas perguntas. Faça as duas."
+      }
+    },
+    "C08": {
+      "titulo": "O espaço também é do outro",
+      "instrutor": "Aline",
+      "verdict": "adotar com correções",
+      "resumo": "Cena nova (água na copa), segurança correta, tríade 'onde / o que observou / qual apoio' memorável, usa Luan (A1).",
+      "issues": [
+        {"item": "prática", "severity": "P1", "problem": "A resposta é a opção A da decisão, literalmente.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "decisão", "severity": "P1", "problem": "Opção B ('quebrou e precisa ser trocado') é de palha.", "fix": "Ver rewrites.opcao."},
+        {"item": "aprofundamento", "severity": "P2", "problem": "'Organizar × reparo' já está em v02/v03 e q01.", "fix": "Manter só a tríade e o retorno ('se resolveu, avise; se não, não diga que está seguro')."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão; tom de 'sermão de limpeza' que a ficha pede para evitar.", "fix": "Abrir com 'Quem usa esse espaço depois de você?'; fechar com rewrites.fraseFinal."}
+      ],
+      "rewrites": {
+        "opcao": {"id": "B", "rotulo": "Coloco um aviso de 'cuidado, chão molhado' e volto para a minha mesa.", "feedback": "Você protege quem passa, e isso já ajuda. Mas ninguém foi chamado para ver a origem, e a água perto do equipamento ligado continua lá."},
+        "casoIrmao": "Cheiro de queimado perto da impressora do corredor. Ninguém por perto sabe de onde vem. Escreva o aviso.",
+        "missaoReal": "Hoje, num espaço que você divide (cozinha de casa, sala de aula, quadra): deixe pronto para o próximo e avise um problema que não é seu de consertar.",
+        "fraseFinal": "Local, fato e pedido. Três coisas que cabem numa mensagem e tiram você do papel de consertar o que não é seu."
+      }
+    },
+    "C09": {
+      "titulo": "Posso postar isso?",
+      "instrutor": "Enzo",
+      "verdict": "adotar com correções",
+      "resumo": "O detalhe novo de verdade é 'a colega já compartilhou antes de eu apagar'. Decisão B claramente melhor.",
+      "issues": [
+        {"item": "demonstração", "severity": "P1", "problem": "Repete A2 v02/q03 (Malu postou, viu documento, tirar/avisar). Personagem novo 'daniel' (minúsculo) quando Malu e Ícaro já existem.", "fix": "Usar a Malu e começar depois da retirada: 'A Malu tirou a foto do ar. Pronto? Uma colega avisa que compartilhou antes…'. Corrigir grafia se mantiver Daniel."},
+        {"item": "aprofundamento", "severity": "P1", "problem": "Repete v01 (autorização da pessoa ≠ do conteúdo; olhe o fundo).", "fix": "Conteúdo novo: por que avisar rápido importa com dado de cliente (empresa pode ter obrigação de registrar e responder — LGPD). Ver rewrites.aprofundamentoTrecho."},
+        {"item": "decisão", "severity": "P2", "problem": "Opção C ('publico aviso com a foto') acontece, mas é fraca demais.", "fix": "Ver rewrites.opcao."},
+        {"item": "prática", "severity": "P1", "problem": "Exemplo ≈ opção B.", "fix": "Ver rewrites.casoIrmao e missaoReal."},
+        {"item": "encerramento", "severity": "P1", "problem": "Bloco-padrão; registro alto.", "fix": "Reescrita completa em rewrites.encerramento (98 palavras)."}
+      ],
+      "rewrites": {
+        "aprofundamentoTrecho": "Você não resolve isso sozinho, e não é para resolver. Quanto antes a empresa souber, menor o estrago: ela pode ter prazo e obrigação de responder por aquele dado.",
+        "opcao": {"id": "C", "rotulo": "Mando mensagem para a colega pedindo que apague e deixo por isso mesmo.", "feedback": "Reduzir a cópia é certo. Falta avisar o canal: você não sabe quem mais viu, e a empresa pode precisar tratar o caso."},
+        "casoIrmao": "Você postou um story do seu crachá. Aparece o nome completo de uma colega no fundo. Já apagou, não sabe quem viu. Escreva o aviso.",
+        "missaoReal": "Abra suas últimas 10 fotos publicadas. Procure tela, crachá, documento ou pessoa sem autorização no fundo. Conte quantas achou.",
+        "encerramento": "Antes de postar, três olhares: o que aparece, quem aparece e que autorização vale para esse uso. O fundo da foto também fala.\nA Malu aprendeu do jeito mais caro: depois de publicar. Apagar ajuda, mas não traz de volta o que já foi copiado. Retirar é a primeira ação. Avisar é a segunda. Nenhuma substitui a outra.\nNa próxima foto do trabalho, pare um segundo antes de apertar publicar e olhe o fundo. Se bater dúvida, a resposta é curta: confirma antes.\nDá para mostrar que você começou uma etapa nova sem mostrar a tela de ninguém.",
+        "fraseFinal": "Dá para mostrar que você começou uma etapa nova sem mostrar a tela de ninguém."
+      }
+    }
+  },
+  "ordemSugerida": [
+    "Fechar o padrão transversal antes de qualquer curso: prática = texto opcional + missão real; encerramento ≤110 palavras sem bloco do Meu roteiro; opções de palha substituídas.",
+    "Aplicar C04 e C03 primeiro (menor retrabalho); depois C05, C08, C06, C02, C07, C09.",
+    "C01: não aplicar. Opcional: decisão da recepção entra no piloto como pergunta extra da aula 3, com Renata e reação em vídeo.",
+    "Antes de gerar mídia: ler cada fala em voz alta com a ficha do orientador ao lado."
+  ]
+}

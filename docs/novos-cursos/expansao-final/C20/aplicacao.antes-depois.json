@@ -1,0 +1,851 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.339Z",
+ "curso": {
+  "codigo": "C20",
+  "id": "crs_m60hsx8on6ebcyqg",
+  "titulo": "IA como aliada"
+ },
+ "status": "ok",
+ "revisaoAntes": 32,
+ "revisaoVistaPelaProposta": 31,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s4",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte um pedido para organizar uma tarefa fictícia, com objetivo, contexto e formato.",
+   "depois": "Daqui a pouco você monta um pedido de verdade, peça por peça: o que quer, com quais dados, em que formato."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Quanto mais claro o pedido, menos a IA precisa inventar."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: crie seu checklist de revisão de uma resposta de IA com três verificações.",
+   "depois": "Antes de terminar, você vai ter um checklist seu: três coisas para conferir antes de usar qualquer resposta de IA."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Antes de usar uma resposta de IA, confira os fatos e retire o que ninguém confirmou. Não cole cadastros, senhas nem documentos internos: troque por dados fictícios. Se você salvou, seu checklist fica no Meu roteiro.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Antes de usar uma resposta de IA, confira os fatos e retire o que ninguém confirmou. Não cole cadastros, senhas nem documentos internos: troque por dados fictícios. Se você salvou, seu checklist fica no Meu roteiro. Na próxima aula, você vê a IA inventar num caso completo e testa isso numa IA de verdade."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Resposta bonita não é resposta confirmada."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Pedir ajuda à IA, verificar o resultado e proteger informações. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Pedir ajuda à IA, conferir a resposta com os dados de origem e proteger informações. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Comparar a resposta da IA com os dados de origem, retirar o que não tem origem (mesmo o que parece útil) e perguntar a regra de uso de IA do lugar onde trabalha."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 9
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual pedido dá uma direção mais útil?\" ainda não está na fala do vídeo \"Qual pedido dá uma direção mais útil?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Lorena, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Lorena, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz antes de enviar?\" ainda não está na fala do vídeo \"O que você faz antes de enviar?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Samuel, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Samuel, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,5 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual pedido dá uma direção mais útil?\" ainda não está na fala do vídeo \"Qual pedido dá uma direção mais útil?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Lorena, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Lorena, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz antes de enviar?\" ainda não está na fala do vídeo \"O que você faz antes de enviar?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Samuel, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Samuel, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão t",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.3 s, ≈ US$ 0.66). Recomend",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Missão a03 exige acesso a uma IA gratuita: (a) como está, com a alternativa escrita (pedir o celular de alguém, computador da escola ou marcar o texto do exemplo) · (b) trocar a missão por “marcar o que não tem origem",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. a01 continua sendo “montar o pedido” em blocos (o que a revisão pediu manter): (a) sim, intacta · (b) trocar por texto curto “escreva o pedido” com critérios (S1 do banco; depende do selfReview no motor). Recomendo (a",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 5,
+   "recomendada": "a",
+   "texto": "5. Prazo inventado como opção “média” (A) da q05: (a) manter, porque a armadilha “útil mas não confirmado” é o aprendizado da aula · (b) rebaixar A para fraca e criar uma média nova (“peço à IA a fonte do prazo”). Recome",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 234,
+  "palavrasReacoesNovas": 60,
+  "palavrasAberturasTrocadas": 41,
+  "palavrasTotal": 335,
+  "segundos": 127.9,
+  "usdEstimado": 2.34,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "A IA inventou. E agora?",
+  "description": "Você vê o caso completo, decide o que fazer com o detalhe inventado que parece útil e testa um pedido numa IA de verdade.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "A IA inventou. E agora?",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Do pedido vago à resposta honesta"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já sabe pedir e já sabe desconfiar. Hoje você testa isso numa IA gratuita, só com dados inventados por você. Pedido vago: “Faça um convite legal para a oficina”. Veio bonito, com certificado, duração e inscrição gratuita. Nada disso existia. Pedido com dados: terça, dez horas, sala dois, equipe de apoio. “Use só isso; se faltar, avise.” Resposta: “tema não informado”. A Lorena pediu de novo, sem a última frase. Vieram “inscrições até segunda” e “certificado incluso”. Nada disso está nos dados. No lugar da Lorena, o que você faz?",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "promessa",
+        "line": "Você já sabe pedir e já sabe desconfiar. Hoje você testa isso numa IA gratuita, só com dados inventados por você.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Pedido vago: “Faça um convite legal para a oficina”. Veio bonito, com certificado, duração e inscrição gratuita. Nada disso existia.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Simulação · pedido vago",
+         "bullets": [
+          "Pedido: “Faça um convite **legal** para a oficina”",
+          "Resposta acrescentou: **certificado** · **duração** · **inscrição gratuita**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "s3",
+        "line": "Pedido com dados: terça, dez horas, sala dois, equipe de apoio. “Use só isso; se faltar, avise.” Resposta: “tema não informado”.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Simulação · pedido com dados",
+         "bullets": [
+          "Só: **terça, 10h, sala 2, equipe de apoio**",
+          "“Se faltar informação, **avise**”",
+          "Resposta: “O tema **não foi informado**”"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s4",
+        "line": "A Lorena pediu de novo, sem a última frase. Vieram “inscrições até segunda” e “certificado incluso”. Nada disso está nos dados.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar da Lorena, o que você faz?",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Lorena, o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Dados confirmados: oficina interna, terça, 10h, sala 2, equipe de apoio. A resposta da IA acrescentou “inscrições até segunda” e “certificado incluso”. No lugar da Lorena, o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Tiro o certificado, mas deixo o prazo de inscrição: ajuda a organizar quem vai.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O prazo parece útil, mas ninguém confirmou. Se ficar, alguém pode perder a oficina por uma data inventada. Faça assim: tire tudo o que não tem origem nos seus dados, mesmo o que parece ajudar."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "O prazo parece útil. Mas de onde ele veio? De lugar nenhum. Útil e confirmado são coisas diferentes: o prazo também sai."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Tiro as duas e confiro o resto, frase por frase, com os dados que eu tinha.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você revisou pelo que estava confirmado, não pelo que soava bem. Faça assim: antes de enviar, confira nomes, números e condições contra a origem, e guarde o que conferiu."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você revisou pelo que tinha na mão, não pelo que soava bem. É assim que a resposta vira texto seu."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Deixo as duas: todo convite tem isso, e o texto ficou bonito.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O texto bonito cria duas promessas que ninguém pode cumprir: certificado e prazo. Faça assim: retire as duas e compare o resto, frase por frase, com os dados de origem."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Bonito, sim. Confirmado, não. Segunda-feira chega alguém perguntando do certificado, e quem responde é você, não a ferramenta."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Lorena, o que você faz?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Conferir contra a origem",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Texto da IA · Seus dados · Sem origem, sai"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Pedido melhor, menos invenção. Nunca zero. Conferir não é desconfiar da ferramenta: é a sua parte do trabalho. Ponha o texto e os seus dados lado a lado. Cada nome, número e condição precisa ter origem. O que não tem, sai. E antes de usar IA numa tarefa de verdade, pergunte a regra do lugar onde você trabalha. Cada empresa tem a sua. Agora é com você: um pedido pequeno, numa IA gratuita, dados inventados. Depois volte e conte o que corrigiu.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Pedido melhor, menos invenção. Nunca zero. Conferir não é desconfiar da ferramenta: é a sua parte do trabalho.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Ponha o texto e os seus dados lado a lado. Cada nome, número e condição precisa ter origem. O que não tem, sai.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Lado a lado",
+         "bullets": [
+          "**Texto** da IA",
+          "**Seus dados** de origem",
+          "Sem origem: **sai**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "E antes de usar IA numa tarefa de verdade, pergunte a regra do lugar onde você trabalha. Cada empresa tem a sua.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: um pedido pequeno, numa IA gratuita, dados inventados. Depois volte e conte o que corrigiu.",
+        "cameraId": "cam_lais8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Lado a lado\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Peça um texto a uma IA e corrija o que ela inventou",
+     "type": "mission",
+     "intro": "A Lorena tirou o prazo e o certificado porque não tinham origem. Agora é a sua vez de ver, numa IA de verdade, o que ela acrescenta quando você não limita.",
+     "action": "1. Invente os dados de um evento que não existe: dia, hora, lugar, público. Nada real, nada seu.\n2. Numa IA gratuita, peça um texto de três frases com esses dados e a regra: “Use só isso. Se faltar informação, avise.”\n3. Compare a resposta, frase por frase, com os dados que você inventou. Marque o que apareceu sem origem.\n4. Peça uma segunda versão, com as mesmas regras, e veja se a invenção sumiu.\n5. Volte aqui, marque “Já experimentei” e conte o que precisou corrigir.",
+     "alternative": "Não precisa de emprego: qualquer conta gratuita serve, no celular ou no computador da escola. Sem acesso a nenhuma IA? Peça a alguém para abrir uma no celular por dois minutos, ou faça com o convite da oficina: pegue o texto do exemplo e marque o que não tem origem nos dados. Em nenhum caso cole dados reais, nem os seus.",
+     "example": "Dados inventados: feira de ciências, quinta, 14h, quadra, turma do 2º ano. Pedido: convite de três frases, só com isso, avisar se faltar. Veio: “…com premiação para os três melhores” — não existe. Pedi de novo com as mesmas regras: saiu “o critério de avaliação não foi informado”. Corrigi: a premiação."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "De onde veio este dado?",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Pedir · Conferir · Buscar fora · Perguntar a regra"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Lembra do convite? O texto convencia. E o certificado? Veio de lugar nenhum. Essa pergunta vale para toda resposta. A IA ajuda a começar. O que sai no seu nome é decisão sua: o que pedir, o que conferir, o que buscar fora. Quando um texto convencer você, pare um segundo e pergunte: de onde veio este dado? Até a próxima.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Lembra do convite? O texto convencia. E o certificado? Veio de lugar nenhum. Essa pergunta vale para toda resposta.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "A IA ajuda a começar. O que sai no seu nome é decisão sua: o que pedir, o que conferir, o que buscar fora.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Quando um texto convencer você, pare um segundo e pergunte: de onde veio este dado? Até a próxima.",
+        "cameraId": "cam_lais8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Pedir: resultado, dados confirmados, formato, e “se faltar, avise”."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Conferir: texto e dados lado a lado; sem origem, sai, mesmo o que parece útil."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de usar numa tarefa real: qual é a regra do lugar onde você trabalha?"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu pedido numa IA de verdade",
+       "kind": "checklist",
+       "items": [
+        "dados inventados por mim",
+        "pedido com “use só isso; se faltar, avise”",
+        "conferi frase por frase",
+        "pedi a segunda versão"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando fizer o pedido, volte e conte o que precisou corrigir."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Pedir: resultado, dados confirmados, formato, e “se faltar, avise”.\nConferir: texto e dados lado a lado; sem origem, sai, mesmo o que parece útil.\nAntes de usar numa tarefa real: qual é a regra do lugar onde você trabalha?",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O texto convence. Mas de onde veio este dado?"
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 33,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual pedido dá uma direção mais útil?\" ainda não está na fala do vídeo \"Qual pedido dá uma direção mais útil?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Lorena, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Lorena, o que você faz?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz antes de enviar?\" ainda não está na fala do vídeo \"O que você faz antes de enviar?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Samuel, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Samuel, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

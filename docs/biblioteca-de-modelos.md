@@ -14,7 +14,7 @@ para o rascunho (nova revisão, origem `template`): **nenhum vídeo/voz é gerad
 | `voice` | provedor, voiceId, amostra (trecho de narração já produzida) | sim |
 | `branding` | marca d'água (logo, rodapé direito, 0,7), vinheta de assinatura; sem campo de slogan | sim |
 | `direction` | `directionStyle`, cartão padrão (`presenter_chips`/`presenter_panel`/`card`), letreiro, pergunta a seguir, regras | sim |
-| `knowledge` | base de conhecimento do motor (regras de roteiro, fala, vídeo, câmera, cartões, marca, custo, produto) | consulta |
+| `knowledge` | base de conhecimento do motor (regras de roteiro, fala, vídeo, câmera, cartões, marca, custo, produto e produção/publicação — esta última aprendida no lote de 12 cursos, `docs/lote-12-cursos.md`) | consulta |
 | `learner` | aluno de teste fictício (idade, cidade, situação, traços, tempo, jeito de responder) | consulta + simulação |
 
 Esquema: `packages/course-schema/src/library.ts` (+ `library-defaults.ts`, `learner-sim.ts`).

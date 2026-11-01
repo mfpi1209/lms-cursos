@@ -1,0 +1,633 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C04",
+  "id": "crs_4z17p0m6d43qxmmo",
+  "titulo": "WhatsApp sem complicação",
+  "instrutor": "Thiago — Seu orientador",
+  "versaoPublicada": 11,
+  "revisaoDoRascunho": 110
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado (ou, em plano, a fala nova com o mesmo id); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes há mudanças de texto (fins de aula, campos de prática) e a troca de fala do plano de abertura da prática (mesmo id, sem a palavra \"missão\"), que continua sendo o anúncio da prática daquela aula.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62; cena na cam_thiago8_34 com chamada na cam_thiago8_esq; explicação na cam_thiago8_esq; despedida na cam_thiago8_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): sem molde; 'Como foi?' é o único campo de texto; draftFromNodeId null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso ('Boa escolha', 'Isso mesmo', 'Exatamente', 'Bom começo', 'Quase lá', 'É por aí').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de frase em blocos; nada acontece fora da tela.",
+  "O curso ensina a primeira mensagem e a retomada, mas para antes do caso mais comum: a resposta vem (“vou ver”), não resolve, e o prazo chega.",
+  "Não ensina a fechar a conversa quando a orientação chega (“recebi, vou seguir”), o que deixa a outra pessoa procurando uma solução que você já tem.",
+  "As aberturas das duas aulas usam a fórmula “No fim desta aula, tem uma missão para você: …”; o missao_fim de v01 já saiu na Fase 0.",
+  "O curso termina numa tela de texto genérica: sem fecho do Thiago."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Envie mensagens claras, acompanhe um pedido sem cobranças repetidas e saiba o que fazer quando a resposta chega, mas não resolve. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Agir quando a resposta vem incompleta e o prazo passa, levando o bloqueio a quem decide, e fechar a conversa quando a orientação chega."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Iara",
+    "Pedro"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como escrever uma mensagem com contexto e pedido",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: monte uma mensagem de trabalho.",
+       "para": "Daqui a pouco você monta a sua primeira mensagem de trabalho. Curta, com quem fala, assunto e pedido.",
+       "camera": "cam_thiago8_34",
+       "layout": "presenter",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim já tirado na Fase 0 (cortes.md §A, n 11): não mexer."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução: o componente é de blocos."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Um oi sozinho é uma notificação. Com assunto e pedido, vira mensagem."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como acompanhar um pedido sem pressionar",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: retome um pedido.",
+       "para": "E você sai desta aula com a retomada escrita: pedido, motivo, e uma saída se a resposta não vier.",
+       "camera": "cam_thiago8_34",
+       "layout": "presenter",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "v03/s5 “Agora, monte a sua mensagem de retomada.” fica: continua levando a m02, que não muda de lugar (ver pergunta 2)."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Retomar sem pressionar é lembrar o pedido e dizer por que ele importa. Se você salvou, sua retomada fica no Meu roteiro. Na próxima aula, a resposta chega, mas não resolve: o que fazer, e como fechar a conversa.",
+      "closingLine": "Cobrar cinco vezes é barulho. Explicar por que importa é informação."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” passa para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Quando a resposta não resolve",
+   "resumo": "Você vê uma resposta que não resolve, decide o que fazer quando o prazo passa, aprende a fechar a conversa e reescreve um pedido seu de verdade.",
+   "estimativaMin": 4,
+   "obrigatoria": "obrigatória para quem está no curso; quem já concluiu vê como conteúdo novo (DECISOES-AUTONOMAS §1, mesma regra do C24)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Agir quando a resposta vem incompleta e o prazo passa, levando o bloqueio a quem decide, e fechar a conversa quando a orientação chega."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Vou ver",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Resposta · Prazo · Bloqueio",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Agora, o que acontece toda semana: você pergunta, a pessoa responde, e a resposta não resolve.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você pega uma mensagem real que já mandou, pedindo algo a alguém, e manda a versão melhor.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "nota": "Faz o papel do antigo plano \"missao\", sem a fórmula.",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s2",
+       "fala": "O Pedro pediu o procedimento da tarefa da tarde. A resposta: vou ver. Duas palavras.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 15,
+       "segundos": 5.7
+      },
+      {
+       "id": "s3",
+       "fala": "Ele retoma: preciso da confirmação até as duas para entregar às quatro. Se não der, quem pode me orientar?",
+       "layout": "presenter_chips",
+       "camera": "cam_thiago8_34",
+       "cartao": {
+        "titulo": "A retomada do Pedro",
+        "topicos": [
+         "**Obrigado.** Preciso dessa confirmação **até as 14h** para entregar **às 16h**.",
+         "Se não for possível, **quem pode me orientar?**"
+        ]
+       },
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s4",
+       "fala": "Duas da tarde, nada. Duas e meia, nada. A entrega é às quatro.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 13,
+       "segundos": 5.0
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar do Pedro, o que você faz agora?",
+       "layout": "presenter",
+       "camera": "cam_thiago8_esq",
+       "acao": "add",
+       "palavras": 9,
+       "segundos": 3.4
+      }
+     ],
+     "roteiroNovo": "Agora, o que acontece toda semana: você pergunta, a pessoa responde, e a resposta não resolve. No fim, você pega uma mensagem real que já mandou, pedindo algo a alguém, e manda a versão melhor. O Pedro pediu o procedimento da tarefa da tarde. A resposta: vou ver. Duas palavras. Ele retoma: preciso da confirmação até as duas para entregar às quatro. Se não der, quem pode me orientar? Duas da tarde, nada. Duas e meia, nada. A entrega é às quatro. No lugar do Pedro, o que você faz agora?",
+     "cartaoPerguntaSeguinte": "Duas e meia. O Pedro já retomou com prazo e motivo e não teve resposta. A entrega é às quatro. O que você faz?",
+     "proximo": "q04",
+     "palavras": 91,
+     "segundos": 34.7
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar do Pedro, o que você faz agora?",
+     "apoioNaTela": "Duas e meia. O Pedro já retomou com prazo e motivo e não teve resposta. A entrega é às quatro.",
+     "bridge": {
+      "call": "No lugar do Pedro, o que você faz agora?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C04)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Mando a mesma mensagem de novo, para ela voltar ao topo.”",
+       "qualidade": "ok",
+       "feedback": "Pode chamar atenção, mas não acrescenta nada e não abre outro caminho. Faça assim: avise quem acompanha a tarefa que a confirmação está pendente.",
+       "reacao": {
+        "texto": "Mesma mensagem, mesma informação. Quem lê não ganha nada novo. O que muda é outra pessoa saber que você travou.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v05",
+       "caracteres": 58
+      },
+      {
+       "id": "b",
+       "rotulo": "“Aviso quem acompanha a tarefa que a confirmação não veio e pergunto como seguir.”",
+       "qualidade": "strong",
+       "feedback": "Você leva o bloqueio a quem pode decidir, sem cobrar a pessoa de novo. Faça assim: diga o que pediu, a quem, e o que precisa até as quatro.",
+       "reacao": {
+        "texto": "Você não cobrou de novo: avisou quem decide. Uma mensagem: pedi, não veio, preciso até as quatro. A tarefa anda.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v05",
+       "caracteres": 82
+      },
+      {
+       "id": "c",
+       "rotulo": "“Escolho um procedimento por conta própria para não atrasar.”",
+       "qualidade": "weak",
+       "feedback": "A iniciativa parece boa, mas, se o procedimento precisava de confirmação, vira retrabalho às cinco. Faça assim: antes de decidir sozinho, avise quem acompanha a tarefa.",
+       "reacao": {
+        "texto": "Resolver sozinho dá alívio às três e retrabalho às cinco. Se precisava de confirmação, precisava. Avise antes de escolher.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v05",
+       "caracteres": 61
+      }
+     ],
+     "respostaForaDoEnunciado": "A resposta não está no enunciado: ele diz que a retomada já foi feita e que o prazo chega; perceber que a próxima mensagem não é para a mesma pessoa, e sim para quem acompanha a tarefa, é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Resposta incompleta e conversa fechada",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Prazo · Canal · Pendente · Fechar",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Mensagem clara também recebe resposta incompleta. Não quer dizer que você escreveu mal. A conversa só não acabou.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_esq",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9
+      },
+      {
+       "id": "s2",
+       "fala": "O próximo passo depende de duas coisas: o prazo e o canal da equipe. Silêncio não é acusação. Descreva o que está pendente.",
+       "layout": "presenter_chips",
+       "camera": "cam_thiago8_esq",
+       "cartao": {
+        "titulo": "Resposta incompleta",
+        "topicos": [
+         "Veja o **prazo**",
+         "Use o **canal** da equipe",
+         "Descreva o que está **pendente**",
+         "Quando chegar, **feche**"
+        ]
+       },
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s3",
+       "fala": "E quando a orientação chega, feche a conversa: recebi, vou seguir esse procedimento. Três segundos para escrever.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "s4",
+       "fala": "Sem isso, a pessoa continua procurando uma solução que você já tem. Conversa boa termina fechada.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_esq",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      },
+      {
+       "id": "lancamento",
+       "fala": "Sua vez: ache um pedido seu sem resposta, ou o próximo que for fazer. Escreva quem fala, assunto, pedido. E mande.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_esq",
+       "nota": "Faz o papel do antigo \"missao_fim\", sem a palavra \"missão\". A aula segue para m03.",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      }
+     ],
+     "roteiroNovo": "Mensagem clara também recebe resposta incompleta. Não quer dizer que você escreveu mal. A conversa só não acabou. O próximo passo depende de duas coisas: o prazo e o canal da equipe. Silêncio não é acusação. Descreva o que está pendente. E quando a orientação chega, feche a conversa: recebi, vou seguir esse procedimento. Três segundos para escrever. Sem isso, a pessoa continua procurando uma solução que você já tem. Conversa boa termina fechada. Sua vez: ache um pedido seu sem resposta, ou o próximo que for fazer. Escreva quem fala, assunto, pedido. E mande.",
+     "proximo": "m03",
+     "palavras": 95,
+     "segundos": 36.3,
+     "naoRepete": "Não repete v01 (quem fala, assunto, pedido; áudio) nem v03 (retomada com motivo; destinatário, conteúdo, anexos). O novo: resposta incompleta não é culpa sua; silêncio não é acusação; levar o bloqueio a quem decide; fechar a conversa."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Reescreva um pedido de verdade",
+     "tipoDeMissao": "FAZER no celular, fora da plataforma: um pedido real reescrito, enviado e fechado quando a resposta vier",
+     "intro": "O Pedro retomou com prazo e motivo, e fechou a conversa quando a resposta veio. Agora é com uma mensagem sua.",
+     "action": [
+      "Abra suas conversas e ache um pedido seu que ficou sem resposta. Ou pense no próximo pedido que vai fazer: escola, família, curso, trabalho.",
+      "Reescreva numa mensagem só: quem fala (se a pessoa não te conhece bem), o assunto e o pedido. Se tem prazo, diga por que ele importa.",
+      "Mande.",
+      "Quando a resposta vier, feche: “Recebi, obrigado. Vou fazer assim.”",
+      "Volte aqui, marque “Já experimentei” e conte o que mudou."
+     ],
+     "alternative": "Não trabalha? Serve o pedido de um documento na secretaria da escola, a dúvida com o professor, o combinado com alguém da família. Qualquer pedido real. Se trabalha, escolha um pedido que já está parado há mais de um dia.",
+     "tip": {
+      "rotulo": "Exemplo: antes e depois",
+      "texto": "Antes: “oi, tudo bem? então…”. Depois: “Oi, professora, é o Luan do 2º B. Sobre o trabalho de história: posso entregar quinta? Sexta tenho prova de manhã.” Resposta: “Pode.” Fechei: “Recebido, entrego quinta. Obrigado!”",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Qual era o pedido, e a resposta veio diferente de antes?",
+      "placeholder": "Ex.: a secretaria respondeu em dez minutos; antes eu tinha mandado três mensagens.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a missão e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Mensagem boa",
+     "textoTela": "Quem fala? · Qual assunto? · O que precisa acontecer?",
+     "posicao": "depois de m03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "A Iara começou uma conversa. O Pedro continuou uma, e fechou. Três momentos, uma regra: quem lê entende sem perguntar.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d2",
+       "fala": "Antes de enviar: quem fala? Qual é o assunto? O que precisa acontecer? Se tem prazo, por que importa.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "d3",
+       "fala": "Mensagem boa é a que a pessoa responde sem precisar perguntar nada. Até a próxima.",
+       "layout": "presenter",
+       "camera": "cam_thiago8_34",
+       "acao": "add",
+       "palavras": 15,
+       "segundos": 5.7
+      }
+     ],
+     "roteiroNovo": "A Iara começou uma conversa. O Pedro continuou uma, e fechou. Três momentos, uma regra: quem lê entende sem perguntar. Antes de enviar: quem fala? Qual é o assunto? O que precisa acontecer? Se tem prazo, por que importa. Mensagem boa é a que a pessoa responde sem precisar perguntar nada. Até a próxima.",
+     "palavras": 54,
+     "segundos": 20.6,
+     "forma": "termina com uma lista curta (três perguntas de checagem) e a frase do curso; abertura por callback duplo (Iara e Pedro). Enxuto como o Thiago. Sem “Meu roteiro” na fala.",
+     "motionPrompt": "conta nos dedos as três perguntas, sorriso curto no fim"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Resposta incompleta não encerra o pedido. Resposta recebida, sim: feche a conversa.",
+     "summary": "O que você levou\nPrimeira mensagem: quem fala, assunto, pedido.\nRetomada: o pedido, o prazo e por que importa.\nResposta incompleta e prazo chegando: avise quem acompanha.\nOrientação chegou: “Recebi, vou seguir.”",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu pedido reescrito",
+       "kind": "checklist",
+       "items": [
+        "pedido escolhido (sem resposta, ou o próximo)",
+        "reescrito: quem fala, assunto, pedido",
+        "enviado",
+        "conversa fechada quando a resposta veio"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Primeira mensagem: quem fala, assunto, pedido.\nRetomada: o pedido, o prazo e por que importa.\nResposta incompleta e prazo chegando: avise quem acompanha.\nOrientação chegou: “Recebi, vou seguir.”",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 16,
+   "palavras": 277,
+   "segundos": 105.7,
+   "nota": "inclui as aberturas trocadas (mesmo id de plano, fala nova)"
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 59,
+   "segundos": 22.5
+  },
+  "totalNovoFalado": {
+   "palavras": 336,
+   "segundos": 128.2,
+   "usd": 2.35,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v04",
+    "planos": 6,
+    "palavras": 91,
+    "segundos": 34.7
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 59,
+    "segundos": 22.5
+   },
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 95,
+    "segundos": 36.3
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 54,
+    "segundos": 20.6
+   },
+   {
+    "no": "aberturas trocadas (v00/missao, v02/missao)",
+    "planos": 2,
+    "palavras": 37,
+    "segundos": 14.1
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 5,
+   "quais": "q01 C, q02 A, q02 C, q03 A, q03 B",
+   "segundos": 28.6,
+   "usd": 0.52,
+   "nota": "Aberturas: \"Vamos olhar isso com calma\", \"Tem um caminho ainda melhor\", \"Muita gente responderia assim\", \"Faz sentido, mas dá para ir além\", \"Faz sentido pensar assim, mas repara\". (b) cortar a 1ª frase se o ajustador aceitar (grátis); (c) regravar só o resto."
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 149.3,
+    "maxS": 154.0,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 254.6,
+    "maxS": 259.6,
+    "texto": "cerca de 4.2–4.3 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação da q04 (mínima/máxima) + diferença das aberturas trocadas (+6.4 s). O “antes” é o raio-x das 02:33; a Fase 0 tirou o missao_fim de v01 (−4.4 s), não descontado aqui."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Missão m03: (a) um pedido seu que ficou sem resposta, ou o próximo pedido que for fazer (evita reenviar algo já respondido) · (b) “a última mensagem em que você pediu algo”, reescrita e reenviada, como os revisores escreveram. Recomendo (a).",
+  "2. v03/s5 “Agora, monte a sua mensagem de retomada.” (2,2 s): (a) manter: m02 continua logo depois · (b) tirar por drop + remontagem (grátis). Recomendo (a).",
+  "3. As 5 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~28.6 s, ≈ US$ 0.52). Recomendo (b); se não der, (a).",
+  "4. Cartão da retomada do Pedro em v04/s3: (a) mostrar a mensagem completa no cartão (o aluno lê enquanto o Thiago fala) · (b) só a fala. Recomendo (a)."
+ ]
+}

@@ -1,0 +1,3 @@
+crs_4tj8a3q3g9gudgb7 aula_01/v00 boasvindas: corte no meio "com folga" → devolvido
+crs_b8zeh4b2gguseghq aula_02/v03 s2: corte no meio "ou ao agente de integração do seu contrato." → devolvido
+crs_hvvgkvtd1rb2um0l aula_11/v20 s3: corte no meio "As duas soam falsas." → MANTIDO (frase inteira)

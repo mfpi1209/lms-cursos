@@ -1,0 +1,707 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C23",
+  "id": "crs_gl0hjkmqfgnnur9y",
+  "titulo": "Aprender faz parte do trabalho",
+  "instrutor": "Vinícius — Seu orientador",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 31,
+  "notaRevisao": "A Fase 0 (instruções das práticas) subiu o rascunho de 31 para 32; a01 e a02 já têm a instrução nova e ficam como estão."
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou regravar a fala do plano com o MESMO id; add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim. Nenhum nó novo entra nas aulas 1 e 2; os ids v01–v04, q01–q04, a01, a02 não mudam.",
+  "Nas aulas 1 e 2: regravam só v01/s3 e v03/s2 (anúncio da prática sem a fórmula); o resto do vídeo é reaproveitado. A a02 continua sendo o plano de três partes (observar / anotar / praticar), então o anúncio novo do v03 promete um plano, e a pendência “anúncio promete plano, prática é duas perguntas” não existe nesta proposta.",
+  "Planos de vídeo: falas ≤ 25 palavras; segundos = palavras / 2,62. Cena na cam_vinicius6_34 com chamada na cam_vinicius6_esq; explicação na cam_vinicius6_esq; despedida na cam_vinicius6_34.",
+  "q05 não ganha vídeo próprio: v05 termina com a chamada e o player pula o vídeo da pergunta.",
+  "a03 é missão fora da tela (“Leve para a vida real”): uma pergunta feita a uma pessoa de verdade e duas linhas no celular. “Como foi?” é o único campo de texto. draftFromNodeId fica null.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as atuais do C23 (“Boa escolha”, “É por aí”, “Isso ajuda”).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "A aula 2 ensina a observar, anotar os passos e praticar com alguém por perto, mas a anotação que ela ensina é a sequência de cliques; o curso nunca diz “anote o critério, não só o botão”.",
+  "Falta a cena em que a cópia dos cliques trava: o caso diferente do exemplo, em que a pessoa sabe o caminho, mas não sabe o que decide a escolha.",
+  "Falta a conferência antes de assumir uma etapa (“neste caso eu escolheria esta, por causa deste dado. Faz sentido?”) e o combinado de quais casos ainda vão para revisão.",
+  "As duas práticas (a01 registro, a02 plano) são de tela; ninguém pergunta nada a uma pessoa de verdade.",
+  "O curso termina numa tela de texto genérica (“Você chegou ao final…”): sem fecho do Vinícius, sem retorno à Valentina e à Priscila."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Reconhecer o que você já faz sozinho e aprender uma tarefa nova observando o passo e o critério de quem já faz. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Ao aprender uma tarefa, anotar o critério ao lado do passo, conferir o critério antes de assumir um caso diferente e combinar quais casos ainda vão para revisão."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Valentina",
+    "Fábio",
+    "Priscila",
+    "Sérgio"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "O que eu já faço com autonomia?",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s3 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s3",
+       "acao": "change",
+       "fala": "Mais para o fim, você escreve duas frases: o que já faz sozinho e o que quer aprender a seguir.",
+       "nota": "Anúncio da a01 sem a palavra “missão”.",
+       "antes": "No fim desta aula, tem uma missão para você: registre algo que você já faz com mais autonomia e o que quer aprender a seguir.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 7.32
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "O que você já faz sozinho é o ponto de partida do próximo passo."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como aprender uma tarefa observando",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 regrava (mesmo id).",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "fala": "E quando terminar, vai ter um plano curto para a próxima tarefa nova: como observar, o que anotar, como praticar.",
+       "nota": "Anúncio da a02 (que continua sendo um plano), com estrutura diferente do v01/s3.",
+       "antes": "No fim desta aula, tem uma missão para você: monte um plano para aprender uma tarefa observando quem já faz.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "camera": "cam_vinicius6_34",
+       "layout": "presenter",
+       "duracaoAntesS": 6.58
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "keep",
+     "nota": "Instrução já trocada na Fase 0. Continua plano de três partes."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Aprender também é observar, anotar e praticar com alguém por perto. Se você salvou, seu plano fica no Meu roteiro para a próxima tarefa nova. Na próxima aula, a Priscila descobre o que faltou na anotação, e você faz uma pergunta a alguém de verdade.",
+      "closingLine": "Observar, anotar, praticar com alguém por perto. Decorar não entra na lista."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” e “Você chegou ao final…” vão para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Aprender faz parte do trabalho",
+   "titulo": "O clique e o motivo",
+   "resumo": "A anotação dos cliques trava no caso diferente. Você aprende a anotar o critério, conferir antes de assumir e pergunta isso a alguém de verdade.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Ao aprender uma tarefa, anotar o critério ao lado do passo, conferir o critério antes de assumir um caso diferente e combinar quais casos ainda vão para revisão."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "O clique e o motivo",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Três cliques. E o caso diferente?",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Você já sabe observar, anotar e praticar com alguém por perto. Falta o detalhe que separa copiar de aprender.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você pergunta a alguém que faz algo bem: “o que faz você escolher isso?” De verdade. E anota.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "nota": "Faz o papel do antigo anúncio, sem “missão”.",
+       "palavras": 20,
+       "segundos": 7.6,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "A Priscila acompanhou o Sérgio num cadastro: abre a tela, escolhe a categoria, conclui. Ela anotou os três cliques.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_34",
+       "cartao": {
+        "titulo": "A anotação da Priscila",
+        "topicos": [
+         "1. Abrir a **tela**",
+         "2. Escolher a **categoria**",
+         "3. **Concluir**"
+        ]
+       },
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "No dia seguinte, sozinha, chega um cadastro diferente. Os cliques ela sabe. A categoria certa, a anotação não diz.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 19,
+       "segundos": 7.3,
+       "acao": "add"
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Priscila, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 8,
+       "segundos": 3.1,
+       "acao": "add"
+      }
+     ],
+     "cartaoPerguntaSeguinte": "Chegou um cadastro diferente do exemplo. A Priscila sabe os cliques, mas não sabe qual categoria serve para este caso. No lugar dela, o que você faz?",
+     "proximo": "q05",
+     "palavras": 85,
+     "segundos": 32.4,
+     "roteiroNovo": "Você já sabe observar, anotar e praticar com alguém por perto. Falta o detalhe que separa copiar de aprender. No fim, você pergunta a alguém que faz algo bem: “o que faz você escolher isso?” De verdade. E anota. A Priscila acompanhou o Sérgio num cadastro: abre a tela, escolhe a categoria, conclui. Ela anotou os três cliques. No dia seguinte, sozinha, chega um cadastro diferente. Os cliques ela sabe. A categoria certa, a anotação não diz. No lugar da Priscila, o que você faz?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Priscila, o que você faz?",
+     "apoioNaTela": "Surge um cadastro diferente do exemplo observado. A Priscila sabe os cliques, mas não sabe qual categoria atende a este caso. O Sérgio está na mesa ao lado, ocupado.",
+     "bridge": {
+      "call": "No lugar da Priscila, o que você faz?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Pergunto ao Sérgio: ‘neste caso, o que decide a categoria?’ e só concluo depois.”",
+       "qualidade": "strong",
+       "feedback": "Você usa o que aprendeu e aponta exatamente a parte nova. Faça assim: anote o critério ao lado do passo, para o próximo caso diferente não travar.",
+       "reacao": {
+        "texto": "Você não perguntou “qual categoria”. Perguntou o que decide. No próximo caso diferente, nada trava: você já tem o critério.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v06",
+       "caracteres": 82
+      },
+      {
+       "id": "b",
+       "rotulo": "“Uso a categoria do exemplo: o cadastro parece igual, e mantém o padrão.”",
+       "qualidade": "ok",
+       "feedback": "Parecido não é igual: a aparência não garante que o critério seja o mesmo, e a categoria errada segue adiante. Faça assim: mostre o dado diferente e confirme antes de concluir.",
+       "reacao": {
+        "texto": "Parece igual. Mas parecido não é igual, e a categoria errada segue para outra equipe. Padrão sem critério é repetição.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v06",
+       "caracteres": 73
+      },
+      {
+       "id": "c",
+       "rotulo": "“Faço como no exemplo e aviso depois, se der errado.”",
+       "qualidade": "weak",
+       "feedback": "Confirmar antes custa um minuto; corrigir depois custa o seu tempo e o de outra equipe. Faça assim: pergunte o que decide a categoria e só então conclua.",
+       "reacao": {
+        "texto": "Avisar depois custa mais que perguntar antes. E se der errado, você ainda não sabe por quê. O critério continua faltando.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v06",
+       "caracteres": 53
+      }
+     ],
+     "porQue": "A resposta não está no enunciado: ele diz que ela sabe os cliques e não sabe a categoria; a decisão é perguntar o critério (não “qual categoria”) em vez de repetir o padrão ou arriscar. B é plausível (parece igual, e o Sérgio está ocupado). Não repete q03 (como observar) nem q04 (como receber o retorno). Sem vídeo próprio da pergunta.",
+     "palavrasReacoes": 61,
+     "segundosReacoes": 23.3
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Anote o critério, não só o botão",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Passo · Critério · O que ainda vai para revisão",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Anote o critério, não só o botão. O clique você repete. O motivo é o que resolve o caso que ninguém mostrou.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "s2",
+       "fala": "Enquanto observa, pergunte: “O que fez você escolher isso?” A pessoa aponta um dado. Esse dado vai para a anotação, ao lado do passo.",
+       "layout": "presenter_chips",
+       "camera": "cam_vinicius6_esq",
+       "cartao": {
+        "titulo": "Anotação que serve",
+        "topicos": [
+         "**Passo**: o que a pessoa fez",
+         "**Critério**: o dado que decidiu",
+         "**Revisar**: quais casos ainda levo para conferir"
+        ]
+       },
+       "palavras": 24,
+       "segundos": 9.2,
+       "acao": "add"
+      },
+      {
+       "id": "s3",
+       "fala": "Antes de assumir, confira em voz alta: “Neste caso eu escolheria esta, por causa deste dado. Faz sentido?” Corrige antes de errar.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: alguém que faz uma coisa bem, e a pergunta: o que decide a escolha? Depois, volte e conte.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_esq",
+       "nota": "Faz o papel do antigo missao_fim, sem a palavra “missão”. A aula segue para a03. O combinado “quais casos ainda vão para revisão” fica no cartão e na missão (passo 4), não em fala.",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete v04 (acompanhar, anotar os passos, pedir que confira) nem v02 (registrar o avanço). O novo: critério ao lado do passo, a pergunta “o que fez você escolher isso?”, a conferência em voz alta antes de assumir e o combinado de revisão.",
+     "palavras": 90,
+     "segundos": 34.4,
+     "roteiroNovo": "Anote o critério, não só o botão. O clique você repete. O motivo é o que resolve o caso que ninguém mostrou. Enquanto observa, pergunte: “O que fez você escolher isso?” A pessoa aponta um dado. Esse dado vai para a anotação, ao lado do passo. Antes de assumir, confira em voz alta: “Neste caso eu escolheria esta, por causa deste dado. Faz sentido?” Corrige antes de errar. Agora é com você: alguém que faz uma coisa bem, e a pergunta: o que decide a escolha? Depois, volte e conte."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Pergunte o critério a quem faz bem",
+     "tipoDeMissao": "FAZER fora da tela: uma pergunta a uma pessoa de verdade e duas linhas no celular (passo + critério)",
+     "intro": "A Priscila travou porque anotou o clique e não o motivo. Agora é com uma pessoa de verdade: alguém que faz algo bem e que você vê fazendo.",
+     "action": [
+      "Escolha uma pessoa que faz algo bem e que você vê fazendo: quem cozinha em casa, quem organiza o trabalho do grupo, alguém da equipe.",
+      "Num momento em que ela escolhe algo (um tempero, uma ordem, uma categoria), pergunte: “O que faz você escolher isso?”",
+      "Anote no celular, em duas linhas: o passo e o critério que ela disse.",
+      "Se der, faça esse passo uma vez com ela por perto e diga antes: “Neste caso eu escolheria X, por causa de Y. Faz sentido?”",
+      "Volte aqui, marque “Já experimentei” e conte o que ela respondeu."
+     ],
+     "alternative": "Sem estágio ou emprego? Em casa e na escola tem gente que faz coisa bem todo dia: a pessoa que cozinha, quem monta a escala do time, o colega que sempre fecha a conta certa. Vergonha de perguntar ao vivo? Vale por mensagem. Se trabalha, escolha uma tarefa que você já acompanha, sem pedir acesso novo.",
+     "tip": {
+      "rotulo": "Exemplo: a nota da Priscila",
+      "texto": "Passo: escolher a categoria do cadastro. Critério: o campo “tipo de pedido” do formulário; se vier “troca”, é categoria 2. Ainda levo para revisão: quando o campo vem vazio. Ele respondeu na hora; eu achava que era pelo valor.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Em uma ou duas frases: o que a pessoa respondeu? Era o que você imaginava? Sem nomes nem informações internas.",
+      "placeholder": "Ex.: ela escolhe a panela pelo tempo de cozimento, não pelo tamanho; eu achava que era o tamanho.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a03 e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "O que fez você escolher essa opção?",
+     "textoTela": "Observar · Perguntar o motivo · Praticar com alguém por perto",
+     "posicao": "depois de a03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "A Valentina contou o que já fazia sozinha. A Priscila anotou os cliques e travou no caso novo. Dois lados do mesmo aprendizado.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 23,
+       "segundos": 8.8,
+       "acao": "add"
+      },
+      {
+       "id": "d2",
+       "fala": "Aprender faz parte do trabalho, não vem antes dele. Observe, pergunte o motivo, pratique com alguém por perto. Um caso por vez.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 22,
+       "segundos": 8.4,
+       "acao": "add"
+      },
+      {
+       "id": "d3",
+       "fala": "Leve uma pergunta para a próxima tarefa: “o que fez você escolher essa opção?” Serve em qualquer lugar.",
+       "layout": "presenter",
+       "camera": "cam_vinicius6_34",
+       "palavras": 18,
+       "segundos": 6.9,
+       "acao": "add"
+      }
+     ],
+     "forma": "termina entregando a pergunta da aula ao aluno (S4 do banco), sem despedida formal e sem a fórmula “não é… é…”; o callback (Valentina, Priscila) cabe em uma frase; sem “Meu roteiro” na fala.",
+     "motionPrompt": "gesto de “leva com você” com a mão, sorriso contido",
+     "palavras": 63,
+     "segundos": 24.0,
+     "roteiroNovo": "A Valentina contou o que já fazia sozinha. A Priscila anotou os cliques e travou no caso novo. Dois lados do mesmo aprendizado. Aprender faz parte do trabalho, não vem antes dele. Observe, pergunte o motivo, pratique com alguém por perto. Um caso por vez. Leve uma pergunta para a próxima tarefa: “o que fez você escolher essa opção?” Serve em qualquer lugar."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O clique você repete. O critério você entende. Só o segundo resolve o caso novo.",
+     "summary": "O que você levou\nDiga com fatos o que já faz sozinho e o que quer aprender a seguir.\nPara aprender uma tarefa: observe, anote passo e critério, pratique com alguém por perto.\nAntes de assumir: “neste caso eu escolheria esta, por causa deste dado. Faz sentido?”",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha pergunta a quem faz bem",
+       "kind": "checklist",
+       "items": [
+        "escolhi a pessoa e a tarefa",
+        "perguntei “o que faz você escolher isso?”",
+        "anotei passo e critério",
+        "conferi em voz alta antes de fazer (se deu)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer a pergunta, volte e conte o que a pessoa respondeu."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Diga com fatos o que já faz sozinho e o que quer aprender a seguir.\nPara aprender uma tarefa: observe, anote passo e critério, pratique com alguém por perto.\nAntes de assumir: “neste caso eu escolheria esta, por causa deste dado. Faz sentido?”",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 238,
+   "segundos": 90.8
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 61,
+   "segundos": 23.3
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 40,
+   "segundos": 15.3,
+   "itens": [
+    {
+     "no": "v01",
+     "plano": "s3",
+     "palavras": 20,
+     "segundos": 7.6,
+     "duracaoAntesS": 7.32
+    },
+    {
+     "no": "v03",
+     "plano": "s2",
+     "palavras": 20,
+     "segundos": 7.6,
+     "duracaoAntesS": 6.58
+    }
+   ],
+   "nota": "Mesmo id de plano; o resto do vídeo é reaproveitado. A diferença de duração em relação ao plano antigo entra no vídeo do curso."
+  },
+  "totalNovoFalado": {
+   "palavras": 339,
+   "segundos": 129.4,
+   "usd": 2.37,
+   "alvo": "90–130 s",
+   "teto": "150 s"
+  },
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 5,
+    "palavras": 85,
+    "segundos": 32.4
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 61,
+    "segundos": 23.3
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 90,
+    "segundos": 34.4
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 63,
+    "segundos": 24.0
+   },
+   {
+    "no": "aberturas trocadas (2 planos)",
+    "planos": 2,
+    "palavras": 40,
+    "segundos": 15.3
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 96,
+   "segundos": 36.6,
+   "usd": 0.67,
+   "nota": "8 reações do C23 abrem com frase repetida em 12–13 cursos. (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no orçamento desta proposta.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você é honesta com o que falta, mas deixa de mostrar o que já avançou.",
+     "palavras": 15,
+     "segundos": 5.7
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Você ignora um avanço real e fica sem um ponto de partida para o próximo passo.",
+     "palavras": 16,
+     "segundos": 6.1
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você garante a qualidade, mas deixa de crescer.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você assume um risco sem apoio nem combinado.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você aprende vendo, mas sem anotar nem perguntar pode errar.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Olhe isso com calma.",
+     "resto": "Você põe o aprendizado só na mão do outro, e o Sérgio tem pouco tempo.",
+     "palavras": 15,
+     "segundos": 5.7
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "A intenção é boa, mas não muda a anotação nem o método.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você coloca a causa no outro e perde a chance de melhorar.",
+     "palavras": 12,
+     "segundos": 4.6
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 145,
+    "maxS": 148.7,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 244.7,
+    "maxS": 248.8,
+    "texto": "cerca de 4.1–4.1 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença de duração das aberturas trocadas."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão tomada no C24.",
+  "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 37.0 s, ≈ US$ 0.68). Recomendo (b); se não der, (a).",
+  "3. A a02 continua sendo o plano de três partes (observar / anotar / praticar): (a) manter, e o anúncio novo do v03 promete o plano · (b) trocar pela prática “duas perguntas” do pacote (S3), que exige cortar o anúncio e depende do selfReview no motor. Recomendo (a): custo zero, e a pergunta de verdade já é a missão a03.",
+  "4. Missão a03 pede para perguntar a uma pessoa ao vivo: (a) manter, com “vale por mensagem” na alternativa · (b) permitir também “lembrar uma explicação que alguém já te deu” para quem não quer perguntar. Recomendo (a): a pergunta feita é o que diferencia missão de exercício."
+ ]
+}

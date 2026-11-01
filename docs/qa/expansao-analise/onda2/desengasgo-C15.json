@@ -1,0 +1,32 @@
+{
+ "geradoEm": "2026-11-01T11:16:56.328Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "O outro só é diferente",
+   "courseId": "crs_t303ykqfmhj3yb1g",
+   "rascunhoRevAntes": 50,
+   "varredura": {
+    "rascunho": {
+     "videos": 23,
+     "assets": 23,
+     "ge200": 0,
+     "tolerados": 6
+    },
+    "publicada": {
+     "versao": 2,
+     "videos": 20,
+     "assets": 20,
+     "ge200": 0,
+     "tolerados": 5,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": []
+  }
+ ]
+}

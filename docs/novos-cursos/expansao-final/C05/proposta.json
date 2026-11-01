@@ -1,0 +1,608 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C05",
+  "id": "crs_4tj8a3q3g9gudgb7",
+  "titulo": "Horário é combinado",
+  "instrutora": "Júlia — Sua orientadora",
+  "versaoPublicada": 13,
+  "revisaoDoRascunho": 94
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado (ou, em plano, a fala nova com o mesmo id); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 3 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes há mudanças de texto (fins de aula, campos de prática) e a troca de fala do plano de abertura da prática (mesmo id, sem a palavra \"missão\"), que continua sendo o anúncio da prática daquela aula.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62; cena na cam_julia6_34 com chamada na cam_julia6_esq; explicação na cam_julia6_esq; despedida na cam_julia6_34.",
+  "q04 não ganha vídeo próprio: v04 termina com a chamada e o player pula o vídeo da pergunta.",
+  "m03 é missão fora da tela ('Leve para a vida real'): sem molde; 'Como foi?' é o único campo de texto; draftFromNodeId null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso ('Boa escolha', 'Isso mesmo', 'Exatamente', 'Bom começo', 'Quase lá', 'É por aí').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As duas missões (m01, m02) são montagem de frase em blocos; nada acontece fora da tela, e o trajeto nunca é medido de verdade.",
+  "O curso ensina a avisar e a perguntar o procedimento, mas não trata a “solução” que vem de um colega (“fica uma hora a mais e resolve”): aprendiz não pode compensar jornada, e no estágio vale o termo.",
+  "Não trata a dificuldade que se repete (o ônibus que nunca cabe no horário): levar fatos, sem prometer um transporte que não pode pagar.",
+  "As aberturas das duas aulas usam a fórmula “No fim desta aula, tem uma missão para você: …”; o missao_fim de v01 já saiu na Fase 0.",
+  "O curso termina numa tela de texto genérica: sem fecho da Júlia."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Organize sua chegada, comunique mudanças de horário antes que virem surpresa e saiba quem confirma uma troca de horário. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Levar uma troca de horário a quem responde por ela (aprendiz não compensa jornada; estágio segue o termo), tratar uma dificuldade recorrente com fatos e medir o próprio trajeto."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Lucas",
+    "Yasmin"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como planejar o trajeto e a chegada",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: confirme os horários.",
+       "para": "Antes de terminar, você escreve a pergunta sobre o seu horário: onde se apresentar, a que horas, como é a entrada.",
+       "camera": "cam_julia6_34",
+       "layout": "presenter",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim já tirado na Fase 0 (cortes.md §A, n 14): não mexer."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução: o componente é de blocos."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "A porta do prédio não é o seu posto. Conte a entrada."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como avisar uma mudança de horário",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: alinhe uma ausência.",
+       "para": "Hoje você monta o aviso de uma ausência do jeito que funciona: período, pendência e a pergunta sobre o procedimento.",
+       "camera": "cam_julia6_34",
+       "layout": "presenter",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "v03/s5 “Agora, monte a sua frase.” fica: m02 continua logo depois."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Avisar informa; combinar resolve. Se você salvou, seu pedido fica no Meu roteiro. Na próxima aula, um colega oferece uma solução que parece justa, e você vê por que quem confirma é outra pessoa.",
+      "closingLine": "Avisar é o começo. O combinado é o fim."
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” passa para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Fica uma hora a mais e resolve?",
+   "resumo": "Você decide o que fazer com a solução que vem de um colega, vê como tratar uma dificuldade que se repete e mede o seu trajeto de verdade.",
+   "estimativaMin": 4,
+   "obrigatoria": "obrigatória para quem está no curso; quem já concluiu vê como conteúdo novo (DECISOES-AUTONOMAS §1, mesma regra do C24)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Levar uma troca de horário a quem responde por ela (aprendiz não compensa jornada; estágio segue o termo), tratar uma dificuldade recorrente com fatos e medir o próprio trajeto."
+   },
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "m03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "A sugestão do colega",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Sugestão · Quem confirma · Entrega",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Planejar a chegada, avisar a ausência. Agora, uma cena comum: a solução que vem de um colega, com boa intenção.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "promessa",
+       "fala": "No fim, você faz o seu trajeto de verdade, com relógio, e descobre a hora de sair com margem.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "nota": "Faz o papel do antigo plano \"missao\", sem a fórmula.",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "s2",
+       "fala": "A Yasmin avisou a sexta de manhã e perguntou o procedimento. Antes da resposta, um colega diz: sai tranquila, depois fica uma hora a mais.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "s3",
+       "fala": "Parece justo: uma hora fora, uma hora depois. A entrega da sexta continua marcada. Quem acompanha ainda não respondeu.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Yasmin, o que você responde ao colega?",
+       "layout": "presenter",
+       "camera": "cam_julia6_esq",
+       "acao": "add",
+       "palavras": 10,
+       "segundos": 3.8
+      }
+     ],
+     "roteiroNovo": "Planejar a chegada, avisar a ausência. Agora, uma cena comum: a solução que vem de um colega, com boa intenção. No fim, você faz o seu trajeto de verdade, com relógio, e descobre a hora de sair com margem. A Yasmin avisou a sexta de manhã e perguntou o procedimento. Antes da resposta, um colega diz: sai tranquila, depois fica uma hora a mais. Parece justo: uma hora fora, uma hora depois. A entrega da sexta continua marcada. Quem acompanha ainda não respondeu. No lugar da Yasmin, o que você responde ao colega?",
+     "cartaoPerguntaSeguinte": "Um colega sugeriu: sai na sexta e fica uma hora a mais depois. Quem acompanha o horário da Yasmin ainda não respondeu. O que você faz?",
+     "proximo": "q04",
+     "palavras": 93,
+     "segundos": 35.5
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Yasmin, o que você faz?",
+     "apoioNaTela": "Um colega sugeriu: sai na sexta e fica uma hora a mais depois. Quem acompanha o horário da Yasmin ainda não respondeu. A entrega da sexta continua.",
+     "bridge": {
+      "call": "No lugar da Yasmin, o que você responde ao colega?"
+     },
+     "video": "não gerar: a cena anterior (v04) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C05)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Agradeço, mas confirmo com quem responde pelo meu horário antes de combinar qualquer troca.”",
+       "qualidade": "strong",
+       "feedback": "Você não trata a ideia de um colega como ajuste autorizado. Faça assim: pergunte a quem acompanha como fica a sexta e a entrega, e espere a resposta antes de prometer.",
+       "reacao": {
+        "texto": "O colega quis ajudar, e isso é bom. Mas troca de horário, quem confirma é quem responde por ele. Você perguntou antes.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v05",
+       "caracteres": 93
+      },
+      {
+       "id": "b",
+       "rotulo": "“Aceito. Uma hora fora, uma hora depois: dá no mesmo.”",
+       "qualidade": "weak",
+       "feedback": "Parece justo, mas aprendiz não pode compensar hora: a lei não permite. No estágio, só vale o que está no seu termo. Faça assim: leve a ideia a quem responde pelo seu horário e pergunte se é possível.",
+       "reacao": {
+        "texto": "Parece igual, mas não é. Aprendiz não pode compensar hora: a lei não deixa. No estágio, vale o termo. Confirme com quem responde.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v05",
+       "caracteres": 54
+      },
+      {
+       "id": "c",
+       "rotulo": "“Aviso no grupo da equipe que saio das nove às dez na sexta.”",
+       "qualidade": "ok",
+       "feedback": "Avisar é importante, mas o grupo não confirma procedimento nem resolve a entrega. Faça assim: fale com quem responde pelo seu horário e pergunte como fica a entrega.",
+       "reacao": {
+        "texto": "O grupo ficou sabendo. Mas grupo não confirma procedimento, e a entrega da sexta fica sem dono. Pergunte a quem responde pelo horário.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v05",
+       "caracteres": 61
+      }
+     ],
+     "respostaForaDoEnunciado": "A resposta não está no enunciado: ele diz que a sugestão veio de um colega e que quem acompanha ainda não respondeu; perceber que a troca parece justa e mesmo assim não é dele para oferecer (e pode nem ser permitida) é a decisão."
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Quando a dificuldade se repete",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Quem confirma · Fatos · Sem prometer o que não pode pagar",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Troca de horário não se combina com colega. Se combina com quem responde por ele, depois de perguntar se pode.",
+       "layout": "presenter",
+       "camera": "cam_julia6_esq",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "Outra situação: a dificuldade que se repete. O ônibus mudou, você chega dez minutos depois todo dia. Isso não é aviso: é conversa.",
+       "layout": "presenter",
+       "camera": "cam_julia6_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s3",
+       "fala": "Leve exemplos: os dias, os horários, o que já tentou. Sem prometer um transporte que você não pode pagar. Fatos ajudam mais.",
+       "layout": "presenter_chips",
+       "camera": "cam_julia6_esq",
+       "cartao": {
+        "titulo": "Dificuldade que se repete",
+        "topicos": [
+         "Leve **os dias e horários**",
+         "Diga **o que já tentou**",
+         "Pergunte **o que é possível**",
+         "Sem prometer o que **não pode pagar**"
+        ]
+       },
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, o seu trajeto. Faça o caminho, ou simule no aplicativo, no horário real de um dia de semana. Anote quanto deu.",
+       "layout": "presenter",
+       "camera": "cam_julia6_esq",
+       "nota": "Faz o papel do antigo \"missao_fim\", sem a palavra \"missão\". A aula segue para m03.",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      }
+     ],
+     "roteiroNovo": "Troca de horário não se combina com colega. Se combina com quem responde por ele, depois de perguntar se pode. Outra situação: a dificuldade que se repete. O ônibus mudou, você chega dez minutos depois todo dia. Isso não é aviso: é conversa. Leve exemplos: os dias, os horários, o que já tentou. Sem prometer um transporte que você não pode pagar. Fatos ajudam mais. Agora, o seu trajeto. Faça o caminho, ou simule no aplicativo, no horário real de um dia de semana. Anote quanto deu.",
+     "proximo": "m03",
+     "palavras": 87,
+     "segundos": 33.2,
+     "naoRepete": "Não repete v01 (horário, entrada, trajeto, margem) nem v03 (período, pendência, procedimento; imprevisto já acontecendo). O novo: quem confirma uma troca; aprendiz não compensa; dificuldade que se repete com fatos; trajeto medido."
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Cronometre o seu trajeto",
+     "tipoDeMissao": "FAZER fora da tela: o trajeto real (ou simulado no app) no horário de um dia de semana, com a hora de sair definida",
+     "intro": "O Lucas calculou o ônibus até a porta e errou por pouco. Agora é o seu caminho, com relógio de verdade.",
+     "action": [
+      "Escolha o trajeto: para o trabalho, o estágio, a escola ou o curso.",
+      "Faça o caminho num dia de semana, no horário em que precisa chegar. Marque a hora que saiu de casa e a hora que chegou ao ponto onde se apresenta (não só à porta).",
+      "Não dá esta semana? Simule no aplicativo de mapas, no horário real de um dia útil, e some a entrada: catraca, elevador, crachá.",
+      "Anote no celular: “Saí às __, cheguei às __. Deu __ minutos. Vou sair às __.” A margem precisa caber no seu dia.",
+      "Volte aqui, marque “Já experimentei” e conte quanto deu."
+     ],
+     "alternative": "Sem vaga ainda? O trajeto da escola ou do curso serve igual. Se não tem nenhum dos dois, escolha um lugar onde gostaria de trabalhar e simule o caminho às 7h de uma segunda-feira. Se trabalha, meça o dia em que o trajeto costuma dar errado.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de um aluno",
+      "texto": "Casa → estágio. Saí 7h10, cheguei na catraca 8h02: 52 minutos, com 6 de fila no elevador. Entrada às 8h. Vou sair 6h50.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Quanto deu, e o que você não tinha contado? Fila, baldeação, elevador?",
+      "placeholder": "Ex.: deu 48 minutos; não tinha contado os 7 minutos da catraca.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a missão e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Se combina antes",
+     "textoTela": "Trajeto real · Entrada · Quem confirma · Fatos",
+     "posicao": "depois de m03 e antes de fim_aula_03",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "O Lucas calculou até a porta e esqueceu a entrada. A Yasmin quase trocou uma hora que não era dela.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d2",
+       "fala": "Horário é trajeto real, entrada, intervalo, volta. Quando algo muda, avise cedo. Quando se repete, converse com fatos.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9
+      },
+      {
+       "id": "d3",
+       "fala": "Horário combinado se combina antes. Depois, só dá para avisar. Saia com margem.",
+       "layout": "presenter",
+       "camera": "cam_julia6_34",
+       "acao": "add",
+       "palavras": 13,
+       "segundos": 5.0
+      }
+     ],
+     "roteiroNovo": "O Lucas calculou até a porta e esqueceu a entrada. A Yasmin quase trocou uma hora que não era dela. Horário é trajeto real, entrada, intervalo, volta. Quando algo muda, avise cedo. Quando se repete, converse com fatos. Horário combinado se combina antes. Depois, só dá para avisar. Saia com margem.",
+     "palavras": 51,
+     "segundos": 19.5,
+     "forma": "termina com uma orientação concreta (“saia com margem”) depois da frase do curso; abertura por callback (Lucas, Yasmin). Realista, sem culpar transporte. Sem “Meu roteiro” na fala.",
+     "motionPrompt": "olhar rápido para o relógio de pulso na última frase, sorriso leve"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Margem não é chute. É o trajeto medido, mais o que você não controla.",
+     "summary": "O que você levou\nChegar na porta não é chegar: conte a entrada.\nMudança de horário: avise cedo e pergunte o procedimento.\nTroca de hora, quem confirma é quem responde por ela. Aprendiz não compensa.\nDificuldade que se repete: converse com fatos.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu trajeto medido",
+       "kind": "checklist",
+       "items": [
+        "trajeto feito ou simulado no horário real",
+        "hora de saída e de chegada anotadas",
+        "entrada contada (não só a porta)",
+        "hora de sair definida com margem"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m03",
+       "composedNodeIds": [
+        "m03"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Chegar na porta não é chegar: conte a entrada.\nMudança de horário: avise cedo e pergunte o procedimento.\nTroca de hora, quem confirma é quem responde por ela. Aprendiz não compensa.\nDificuldade que se repete: converse com fatos.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 14,
+   "palavras": 272,
+   "segundos": 103.8,
+   "nota": "inclui as aberturas trocadas (mesmo id de plano, fala nova)"
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 68,
+   "segundos": 26.0
+  },
+  "totalNovoFalado": {
+   "palavras": 340,
+   "segundos": 129.8,
+   "usd": 2.38,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v04",
+    "planos": 5,
+    "palavras": 93,
+    "segundos": 35.5
+   },
+   {
+    "no": "q04 (3 reações)",
+    "planos": 3,
+    "palavras": 68,
+    "segundos": 26.0
+   },
+   {
+    "no": "v05",
+    "planos": 4,
+    "palavras": 87,
+    "segundos": 33.2
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 51,
+    "segundos": 19.5
+   },
+   {
+    "no": "aberturas trocadas (v00/missao, v02/missao)",
+    "planos": 2,
+    "palavras": 41,
+    "segundos": 15.6
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 4,
+   "quais": "q01 C, q02 C, q03 A, q03 B",
+   "segundos": 24.4,
+   "usd": 0.45,
+   "nota": "Aberturas: \"Vamos olhar isso com calma\", \"Muita gente responderia assim\", \"Faz sentido, mas dá para ir além\", \"Faz sentido pensar assim, mas repara\". (b) cortar a 1ª frase se o ajustador aceitar (grátis); (c) regravar só o resto."
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 193.8,
+    "maxS": 198.1,
+    "texto": "4 min"
+   },
+   "depois": {
+    "minS": 297.2,
+    "maxS": 301.9,
+    "texto": "cerca de 5.0–5.0 min"
+   },
+   "comoCalculado": "antes + v04 + v05 + despedida + uma reação da q04 (mínima/máxima) + diferença das aberturas trocadas (+6.8 s). O “antes” é o raio-x das 02:33; a Fase 0 tirou o missao_fim de v01 (−4.8 s), não descontado aqui."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Informação legal na reação B: (a) “a lei não deixa”, sem citar artigo, na fala e no retorno escrito · (b) acrescentar “(CLT, art. 432)” ao retorno escrito. Recomendo (a): a referência exata fica para a equipe, não para a fala de 15–24 anos.",
+  "2. Missão m03: (a) fazer o trajeto de verdade quando der, simular no app só se não der esta semana · (b) aceitar a simulação sempre. Recomendo (a).",
+  "3. As 4 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~24.4 s, ≈ US$ 0.45). Recomendo (b); se não der, (a).",
+  "4. Quem dá a sugestão na cena: (a) “um colega”, sem nome · (b) dar nome (personagem novo). Recomendo (a): o mínimo de personagens."
+ ]
+}

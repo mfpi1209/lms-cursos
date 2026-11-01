@@ -1,0 +1,21 @@
+{
+ "item": "P1",
+ "onde": "C14·A12·v23",
+ "courseId": "crs_hvvgkvtd1rb2um0l",
+ "estado": "aplicar",
+ "dropAntes": [
+  "s4",
+  "s3"
+ ],
+ "dropDepois": [
+  "s4"
+ ],
+ "narrationAntes": "No final, quase sempre perguntam: ‘você tem alguma pergunta?’. Tenha duas prontas. Por exemplo: ‘como é um dia normal nessa vaga?’ ou ‘o que vou aprender nos primeiros meses?’. A recrutadora pergunta se você tem alguma pergunta. Agora, responda: o que você responde?",
+ "narrationDepois": "No final, quase sempre perguntam: ‘você tem alguma pergunta?’. Tenha duas prontas. Por exemplo: ‘como é um dia normal nessa vaga?’ ou ‘o que vou aprender nos primeiros meses?’. E se a resposta for não? Dói, mas faz parte. Pergunte, com educação, o que você pode melhorar. Anote, ajuste e siga para a próxima. A recrutadora pergunta se você tem alguma pergunta. Agora, responda: o que você responde?",
+ "cenasDesatualizadas": {
+  "antes": 0,
+  "depois": 0
+ },
+ "revisaoAntes": 429,
+ "revisaoDepois": 430
+}

@@ -1,0 +1,837 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.389Z",
+ "curso": {
+  "codigo": "C23",
+  "id": "crs_gl0hjkmqfgnnur9y",
+  "titulo": "Aprender faz parte do trabalho"
+ },
+ "status": "ok",
+ "revisaoAntes": 32,
+ "revisaoVistaPelaProposta": 31,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s3",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: registre algo que você já faz com mais autonomia e o que quer aprender a seguir.",
+   "depois": "Mais para o fim, você escreve duas frases: o que já faz sozinho e o que quer aprender a seguir."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "O que você já faz sozinho é o ponto de partida do próximo passo."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte um plano para aprender uma tarefa observando quem já faz.",
+   "depois": "E quando terminar, vai ter um plano curto para a próxima tarefa nova: como observar, o que anotar, como praticar."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Aprender também é observar, anotar e praticar com alguém por perto. Se você salvou, seu plano fica no Meu roteiro para a próxima tarefa nova.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Aprender também é observar, anotar e praticar com alguém por perto. Se você salvou, seu plano fica no Meu roteiro para a próxima tarefa nova. Na próxima aula, a Priscila descobre o que faltou na anotação, e você faz uma pergunta a alguém de verdade."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Observar, anotar, praticar com alguém por perto. Decorar não entra na lista."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Reconhecer o que você já faz sozinho e aprender uma tarefa nova observando quem já faz. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Reconhecer o que você já faz sozinho e aprender uma tarefa nova observando o passo e o critério de quem já faz. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Ao aprender uma tarefa, anotar o critério ao lado do passo, conferir o critério antes de assumir um caso diferente e combinar quais casos ainda vão para revisão."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 9
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Valentina, o que você diz?\" ainda não está na fala do vídeo \"No lugar da Valentina, o que você diz?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Fábio, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Fábio, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Priscila, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você faz?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Priscila, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você responde?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,3 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Valentina, o que você diz?\" ainda não está na fala do vídeo \"No lugar da Valentina, o que você diz?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Fábio, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Fábio, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Priscila, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você faz?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Priscila, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você responde?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão t",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 37.0 s, ≈ US$ 0.68). Recomend",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. A a02 continua sendo o plano de três partes (observar / anotar / praticar): (a) manter, e o anúncio novo do v03 promete o plano · (b) trocar pela prática “duas perguntas” do pacote (S3), que exige cortar o anúncio e d",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Missão a03 pede para perguntar a uma pessoa ao vivo: (a) manter, com “vale por mensagem” na alternativa · (b) permitir também “lembrar uma explicação que alguém já te deu” para quem não quer perguntar. Recomendo (a): ",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 238,
+  "palavrasReacoesNovas": 61,
+  "palavrasAberturasTrocadas": 40,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "O clique e o motivo",
+  "description": "A anotação dos cliques trava no caso diferente. Você aprende a anotar o critério, conferir antes de assumir e pergunta isso a alguém de verdade.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O clique e o motivo",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Três cliques. E o caso diferente?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já sabe observar, anotar e praticar com alguém por perto. Falta o detalhe que separa copiar de aprender. No fim, você pergunta a alguém que faz algo bem: “o que faz você escolher isso?” De verdade. E anota. A Priscila acompanhou o Sérgio num cadastro: abre a tela, escolhe a categoria, conclui. Ela anotou os três cliques. No dia seguinte, sozinha, chega um cadastro diferente. Os cliques ela sabe. A categoria certa, a anotação não diz. No lugar da Priscila, o que você faz?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já sabe observar, anotar e praticar com alguém por perto. Falta o detalhe que separa copiar de aprender.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você pergunta a alguém que faz algo bem: “o que faz você escolher isso?” De verdade. E anota.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "A Priscila acompanhou o Sérgio num cadastro: abre a tela, escolhe a categoria, conclui. Ela anotou os três cliques.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "A anotação da Priscila",
+         "bullets": [
+          "1. Abrir a **tela**",
+          "2. Escolher a **categoria**",
+          "3. **Concluir**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "No dia seguinte, sozinha, chega um cadastro diferente. Os cliques ela sabe. A categoria certa, a anotação não diz.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar da Priscila, o que você faz?",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Priscila, o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Surge um cadastro diferente do exemplo observado. A Priscila sabe os cliques, mas não sabe qual categoria atende a este caso. O Sérgio está na mesa ao lado, ocupado. No lugar da Priscila, o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Pergunto ao Sérgio: ‘neste caso, o que decide a categoria?’ e só concluo depois.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você usa o que aprendeu e aponta exatamente a parte nova. Faça assim: anote o critério ao lado do passo, para o próximo caso diferente não travar."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você não perguntou “qual categoria”. Perguntou o que decide. No próximo caso diferente, nada trava: você já tem o critério."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Uso a categoria do exemplo: o cadastro parece igual, e mantém o padrão.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Parecido não é igual: a aparência não garante que o critério seja o mesmo, e a categoria errada segue adiante. Faça assim: mostre o dado diferente e confirme antes de concluir."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Parece igual. Mas parecido não é igual, e a categoria errada segue para outra equipe. Padrão sem critério é repetição."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Faço como no exemplo e aviso depois, se der errado.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Confirmar antes custa um minuto; corrigir depois custa o seu tempo e o de outra equipe. Faça assim: pergunte o que decide a categoria e só então conclua."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Avisar depois custa mais que perguntar antes. E se der errado, você ainda não sabe por quê. O critério continua faltando."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Priscila, o que você faz?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Anote o critério, não só o botão",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Passo · Critério · O que ainda vai para revisão"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Anote o critério, não só o botão. O clique você repete. O motivo é o que resolve o caso que ninguém mostrou. Enquanto observa, pergunte: “O que fez você escolher isso?” A pessoa aponta um dado. Esse dado vai para a anotação, ao lado do passo. Antes de assumir, confira em voz alta: “Neste caso eu escolheria esta, por causa deste dado. Faz sentido?” Corrige antes de errar. Agora é com você: alguém que faz uma coisa bem, e a pergunta: o que decide a escolha? Depois, volte e conte.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Anote o critério, não só o botão. O clique você repete. O motivo é o que resolve o caso que ninguém mostrou.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Enquanto observa, pergunte: “O que fez você escolher isso?” A pessoa aponta um dado. Esse dado vai para a anotação, ao lado do passo.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Anotação que serve",
+         "bullets": [
+          "**Passo**: o que a pessoa fez",
+          "**Critério**: o dado que decidiu",
+          "**Revisar**: quais casos ainda levo para conferir"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "Antes de assumir, confira em voz alta: “Neste caso eu escolheria esta, por causa deste dado. Faz sentido?” Corrige antes de errar.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: alguém que faz uma coisa bem, e a pergunta: o que decide a escolha? Depois, volte e conte.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Anotação que serve\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Pergunte o critério a quem faz bem",
+     "type": "mission",
+     "intro": "A Priscila travou porque anotou o clique e não o motivo. Agora é com uma pessoa de verdade: alguém que faz algo bem e que você vê fazendo.",
+     "action": "1. Escolha uma pessoa que faz algo bem e que você vê fazendo: quem cozinha em casa, quem organiza o trabalho do grupo, alguém da equipe.\n2. Num momento em que ela escolhe algo (um tempero, uma ordem, uma categoria), pergunte: “O que faz você escolher isso?”\n3. Anote no celular, em duas linhas: o passo e o critério que ela disse.\n4. Se der, faça esse passo uma vez com ela por perto e diga antes: “Neste caso eu escolheria X, por causa de Y. Faz sentido?”\n5. Volte aqui, marque “Já experimentei” e conte o que ela respondeu.",
+     "alternative": "Sem estágio ou emprego? Em casa e na escola tem gente que faz coisa bem todo dia: a pessoa que cozinha, quem monta a escala do time, o colega que sempre fecha a conta certa. Vergonha de perguntar ao vivo? Vale por mensagem. Se trabalha, escolha uma tarefa que você já acompanha, sem pedir acesso novo.",
+     "example": "Passo: escolher a categoria do cadastro. Critério: o campo “tipo de pedido” do formulário; se vier “troca”, é categoria 2. Ainda levo para revisão: quando o campo vem vazio. Ele respondeu na hora; eu achava que era pelo valor."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O que fez você escolher essa opção?",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Observar · Perguntar o motivo · Praticar com alguém por perto"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "A Valentina contou o que já fazia sozinha. A Priscila anotou os cliques e travou no caso novo. Dois lados do mesmo aprendizado. Aprender faz parte do trabalho, não vem antes dele. Observe, pergunte o motivo, pratique com alguém por perto. Um caso por vez. Leve uma pergunta para a próxima tarefa: “o que fez você escolher essa opção?” Serve em qualquer lugar.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "A Valentina contou o que já fazia sozinha. A Priscila anotou os cliques e travou no caso novo. Dois lados do mesmo aprendizado.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "Aprender faz parte do trabalho, não vem antes dele. Observe, pergunte o motivo, pratique com alguém por perto. Um caso por vez.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Leve uma pergunta para a próxima tarefa: “o que fez você escolher essa opção?” Serve em qualquer lugar.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Diga com fatos o que já faz sozinho e o que quer aprender a seguir."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Para aprender uma tarefa: observe, anote passo e critério, pratique com alguém por perto."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de assumir: “neste caso eu escolheria esta, por causa deste dado. Faz sentido?”"
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha pergunta a quem faz bem",
+       "kind": "checklist",
+       "items": [
+        "escolhi a pessoa e a tarefa",
+        "perguntei “o que faz você escolher isso?”",
+        "anotei passo e critério",
+        "conferi em voz alta antes de fazer (se deu)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando fizer a pergunta, volte e conte o que a pessoa respondeu."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Diga com fatos o que já faz sozinho e o que quer aprender a seguir.\nPara aprender uma tarefa: observe, anote passo e critério, pratique com alguém por perto.\nAntes de assumir: “neste caso eu escolheria esta, por causa deste dado. Faz sentido?”",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O clique você repete. O critério você entende. Só o segundo resolve o caso novo."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 33,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Valentina, o que você diz?\" ainda não está na fala do vídeo \"No lugar da Valentina, o que você diz?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Fábio, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Fábio, o que você faz?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Priscila, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você faz?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Priscila, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Priscila, o que você responde?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

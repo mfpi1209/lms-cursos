@@ -1,0 +1,642 @@
+{
+  "geradoEm": "2026-10-31T19:10:04.209Z",
+  "cursos": [
+    {
+      "id": "dna-proposta-o-outro-so-e-diferente",
+      "slug": "o-outro-so-e-diferente",
+      "titulo": "O outro só é diferente",
+      "instrutor": "Patrícia (estudio8-patricia)",
+      "kit": "estudio8-patricia",
+      "trilhaProposta": "Convivência e respeito",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "1201",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 4,
+        "qualidades": "{\"strong\":5,\"ok\":2,\"weak\":5}"
+      },
+      "courseId": "crs_t303ykqfmhj3yb1g",
+      "revisao": 5,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Diferente de mim não significa errado",
+          "previa": "http://localhost:3010/estudio/cursos/crs_t303ykqfmhj3yb1g/aulas/aula_01/previa",
+          "origem": "o-outro-so-e-diferente/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Respeitar diferenças também exige limites",
+          "previa": "http://localhost:3010/estudio/cursos/crs_t303ykqfmhj3yb1g/aulas/aula_02/previa",
+          "origem": "novo (caso de diferença que não é erro, análise Fable 2.1)"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_t303ykqfmhj3yb1g",
+      "trilha": "Respeito e diálogo"
+    },
+    {
+      "id": "dna-proposta-ia-como-aliada",
+      "slug": "ia-como-aliada",
+      "titulo": "IA como aliada",
+      "instrutor": "Enzo (estudio8-enzo)",
+      "kit": "estudio8-enzo",
+      "trilhaProposta": "Tecnologia com critério",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "2210",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 4,
+        "qualidades": "{\"strong\":4,\"ok\":4,\"weak\":4}"
+      },
+      "courseId": "crs_m60hsx8on6ebcyqg",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Como pedir ajuda à IA",
+          "previa": "http://localhost:3010/estudio/cursos/crs_m60hsx8on6ebcyqg/aulas/aula_01/previa",
+          "origem": "ia-como-aliada/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Antes de usar, confira",
+          "previa": "http://localhost:3010/estudio/cursos/crs_m60hsx8on6ebcyqg/aulas/aula_02/previa",
+          "origem": "ia-como-aliada/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_m60hsx8on6ebcyqg",
+      "trilha": "Tecnologia com critério"
+    },
+    {
+      "id": "dna-proposta-parece-verdade-sera",
+      "slug": "parece-verdade-sera",
+      "titulo": "Parece verdade. Será?",
+      "instrutor": "Enzo (estudio8-enzo)",
+      "kit": "estudio8-enzo",
+      "trilhaProposta": "Tecnologia com critério",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "0122",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 3,
+        "qualidades": "{\"strong\":4,\"ok\":3,\"weak\":5}"
+      },
+      "courseId": "crs_au1463izc386by27",
+      "revisao": 5,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Print não conta a história toda",
+          "previa": "http://localhost:3010/estudio/cursos/crs_au1463izc386by27/aulas/aula_01/previa",
+          "origem": "parece-verdade-sera/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Como conferir antes de repassar",
+          "previa": "http://localhost:3010/estudio/cursos/crs_au1463izc386by27/aulas/aula_02/previa",
+          "origem": "parece-verdade-sera/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_au1463izc386by27",
+      "trilha": "Tecnologia com critério"
+    },
+    {
+      "id": "dna-proposta-seus-dados-tambem-trabalham",
+      "slug": "seus-dados-tambem-trabalham",
+      "titulo": "Seus dados também trabalham",
+      "instrutor": "Thiago (estudio8-thiago)",
+      "kit": "estudio8-thiago",
+      "trilhaProposta": "Tecnologia com critério",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "1001",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 5,
+        "qualidades": "{\"strong\":4,\"ok\":3,\"weak\":5}"
+      },
+      "courseId": "crs_tg9iqz8wmmf5pw77",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "O que aparece no seu print?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_tg9iqz8wmmf5pw77/aulas/aula_01/previa",
+          "origem": "seus-dados-tambem-trabalham/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Antes de enviar, confira o destino",
+          "previa": "http://localhost:3010/estudio/cursos/crs_tg9iqz8wmmf5pw77/aulas/aula_02/previa",
+          "origem": "seus-dados-tambem-trabalham/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_tg9iqz8wmmf5pw77",
+      "trilha": "Tecnologia com critério"
+    },
+    {
+      "id": "dna-proposta-tudo-e-urgente",
+      "slug": "tudo-e-urgente",
+      "titulo": "Tudo é urgente?",
+      "instrutor": "Júlia (estudio6-julia)",
+      "kit": "estudio6-julia",
+      "trilhaProposta": "Autonomia no trabalho",
+      "avisosMotor": {
+        "MEDIA_MISSING": 13,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 5,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 5,
+        "posicaoRecomendada": "2221",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 4,
+        "qualidades": "{\"strong\":4,\"ok\":2,\"weak\":6}"
+      },
+      "courseId": "crs_4jh683s5h351z2db",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Dois pedidos, um só tempo",
+          "previa": "http://localhost:3010/estudio/cursos/crs_4jh683s5h351z2db/aulas/aula_01/previa",
+          "origem": "tudo-e-urgente/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Quando as tarefas deixam de caber",
+          "previa": "http://localhost:3010/estudio/cursos/crs_4jh683s5h351z2db/aulas/aula_02/previa",
+          "origem": "seu-ritmo-tambem-importa/a01 + a02 (fundido; a cena de 40/50 minutos de tudo-e-urgente/a02 foi cortada)"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_4jh683s5h351z2db",
+      "trilha": "Autonomia no trabalho"
+    },
+    {
+      "id": "dna-proposta-errei-e-agora",
+      "slug": "errei-e-agora",
+      "titulo": "Errei. E agora?",
+      "instrutor": "Beatriz (estudio7-beatriz)",
+      "kit": "estudio7-beatriz",
+      "trilhaProposta": "Autonomia no trabalho",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "0120",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 6,
+        "qualidades": "{\"strong\":4,\"ok\":4,\"weak\":4}"
+      },
+      "courseId": "crs_njtlqq7y7fyfeqcr",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Percebi o erro: qual é o próximo passo?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_njtlqq7y7fyfeqcr/aulas/aula_01/previa",
+          "origem": "errei-e-agora/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Como corrigir e aprender",
+          "previa": "http://localhost:3010/estudio/cursos/crs_njtlqq7y7fyfeqcr/aulas/aula_02/previa",
+          "origem": "errei-e-agora/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_njtlqq7y7fyfeqcr",
+      "trilha": "Autonomia no trabalho"
+    },
+    {
+      "id": "dna-proposta-minha-ideia-tambem-conta",
+      "slug": "minha-ideia-tambem-conta",
+      "titulo": "Minha ideia também conta",
+      "instrutor": "Gustavo (estudio7-gustavo)",
+      "kit": "estudio7-gustavo",
+      "trilhaProposta": "Participação e crescimento",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "2120",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 3,
+        "qualidades": "{\"strong\":4,\"ok\":3,\"weak\":5}"
+      },
+      "courseId": "crs_5k5upah2xphlfvi5",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Não precisa ter a ideia perfeita",
+          "previa": "http://localhost:3010/estudio/cursos/crs_5k5upah2xphlfvi5/aulas/aula_01/previa",
+          "origem": "minha-ideia-tambem-conta/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Como propor uma melhoria pequena",
+          "previa": "http://localhost:3010/estudio/cursos/crs_5k5upah2xphlfvi5/aulas/aula_02/previa",
+          "origem": "minha-ideia-tambem-conta/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_5k5upah2xphlfvi5",
+      "trilha": "Respeito e diálogo"
+    },
+    {
+      "id": "dna-proposta-discordar-sem-brigar",
+      "slug": "discordar-sem-brigar",
+      "titulo": "Discordar sem brigar",
+      "instrutor": "Gustavo (estudio7-gustavo)",
+      "kit": "estudio7-gustavo",
+      "trilhaProposta": "Convivência e respeito",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "1022",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 2,
+        "qualidades": "{\"strong\":4,\"ok\":3,\"weak\":5}"
+      },
+      "courseId": "crs_2rt2rsoii8bpydp2",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Dá para pensar diferente",
+          "previa": "http://localhost:3010/estudio/cursos/crs_2rt2rsoii8bpydp2/aulas/aula_01/previa",
+          "origem": "discordar-sem-brigar/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Como sair do impasse",
+          "previa": "http://localhost:3010/estudio/cursos/crs_2rt2rsoii8bpydp2/aulas/aula_02/previa",
+          "origem": "discordar-sem-brigar/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_2rt2rsoii8bpydp2",
+      "trilha": "Respeito e diálogo"
+    },
+    {
+      "id": "dna-proposta-aprender-faz-parte",
+      "slug": "aprender-faz-parte",
+      "titulo": "Aprender faz parte do trabalho",
+      "instrutor": "Helena (estudio8-helena)",
+      "kit": "estudio8-helena",
+      "trilhaProposta": "Participação e crescimento",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "0120",
+        "recomendadaMaisLonga": 1,
+        "maiorDiferenca": 3,
+        "qualidades": "{\"strong\":4,\"ok\":4,\"weak\":4}"
+      },
+      "courseId": "crs_gl0hjkmqfgnnur9y",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "O que eu já faço com autonomia?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_gl0hjkmqfgnnur9y/aulas/aula_01/previa",
+          "origem": "novo (reorientação do curso, análise Fable 2.12); a abertura da aula 1 é do pacote reescrita"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Como aprender uma tarefa observando",
+          "previa": "http://localhost:3010/estudio/cursos/crs_gl0hjkmqfgnnur9y/aulas/aula_02/previa",
+          "origem": "novo (reorientação do curso, análise Fable 2.12)"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_gl0hjkmqfgnnur9y",
+      "trilha": "Autonomia no trabalho"
+    },
+    {
+      "id": "dna-proposta-por-onde-eu-comeco",
+      "slug": "por-onde-eu-comeco",
+      "titulo": "Por onde eu começo?",
+      "instrutor": "Renato (estudio6-renato)",
+      "kit": "estudio6-renato",
+      "trilhaProposta": "Pensar e resolver",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "1102",
+        "recomendadaMaisLonga": 1,
+        "maiorDiferenca": 2,
+        "qualidades": "{\"strong\":4,\"ok\":3,\"weak\":5}"
+      },
+      "courseId": "crs_dp9s7pdro9j6e3m0",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Entenda antes de sair fazendo",
+          "previa": "http://localhost:3010/estudio/cursos/crs_dp9s7pdro9j6e3m0/aulas/aula_01/previa",
+          "origem": "por-onde-eu-comeco/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Organize o próximo passo",
+          "previa": "http://localhost:3010/estudio/cursos/crs_dp9s7pdro9j6e3m0/aulas/aula_02/previa",
+          "origem": "por-onde-eu-comeco/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_dp9s7pdro9j6e3m0",
+      "trilha": "Pensar e resolver"
+    },
+    {
+      "id": "dna-proposta-faz-sentido",
+      "slug": "faz-sentido",
+      "titulo": "Faz sentido?",
+      "instrutor": "Helena (estudio8-helena)",
+      "kit": "estudio8-helena",
+      "trilhaProposta": "Pensar e resolver",
+      "avisosMotor": {
+        "MEDIA_MISSING": 12,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 2,
+        "videos": 4,
+        "decisoes": 4,
+        "opcoes": 12,
+        "retornos": 12,
+        "praticas": 2,
+        "reacoes": 12,
+        "cenasSemMidia": 4,
+        "posicaoRecomendada": "2011",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 2,
+        "qualidades": "{\"strong\":4,\"ok\":4,\"weak\":4}"
+      },
+      "courseId": "crs_0ua5onij460lpzs0",
+      "revisao": 6,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Eu sei ou estou supondo?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_0ua5onij460lpzs0/aulas/aula_01/previa",
+          "origem": "faz-sentido/a01"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Um caso não explica tudo",
+          "previa": "http://localhost:3010/estudio/cursos/crs_0ua5onij460lpzs0/aulas/aula_02/previa",
+          "origem": "faz-sentido/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_0ua5onij460lpzs0",
+      "trilha": "Pensar e resolver"
+    },
+    {
+      "id": "dna-proposta-onde-esta-o-problema",
+      "slug": "onde-esta-o-problema",
+      "titulo": "Onde está o problema?",
+      "instrutor": "Renato (estudio6-renato)",
+      "kit": "estudio6-renato",
+      "trilhaProposta": "Pensar e resolver",
+      "avisosMotor": {
+        "MEDIA_MISSING": 18,
+        "COURSE_TOO_LONG": 1
+      },
+      "resumo": {
+        "aulas": 3,
+        "videos": 6,
+        "decisoes": 6,
+        "opcoes": 18,
+        "retornos": 18,
+        "praticas": 3,
+        "reacoes": 18,
+        "cenasSemMidia": 6,
+        "posicaoRecomendada": "020021",
+        "recomendadaMaisLonga": 0,
+        "maiorDiferenca": 5,
+        "qualidades": "{\"strong\":6,\"ok\":6,\"weak\":6}"
+      },
+      "courseId": "crs_d5rsi8gt36rv0qbq",
+      "revisao": 4,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_01",
+          "titulo": "Antes de mexer: dá para desfazer?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_d5rsi8gt36rv0qbq/aulas/aula_01/previa",
+          "origem": "travei-como-peco-ajuda/a01 (a02 foi descartada: duplica C13·A2, análise Fable 2.6)"
+        },
+        {
+          "id": "aula_02",
+          "titulo": "Antes de consertar, investigue",
+          "previa": "http://localhost:3010/estudio/cursos/crs_d5rsi8gt36rv0qbq/aulas/aula_02/previa",
+          "origem": "onde-esta-o-problema/a01"
+        },
+        {
+          "id": "aula_03",
+          "titulo": "Funcionou mesmo?",
+          "previa": "http://localhost:3010/estudio/cursos/crs_d5rsi8gt36rv0qbq/aulas/aula_03/previa",
+          "origem": "onde-esta-o-problema/a02"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_d5rsi8gt36rv0qbq",
+      "trilha": "Pensar e resolver"
+    },
+    {
+      "id": "dna-proposta-nem-toda-brincadeira",
+      "slug": "nem-toda-brincadeira",
+      "titulo": "Nem toda brincadeira é brincadeira",
+      "instrutor": "Patrícia",
+      "kit": "—",
+      "trilha": null,
+      "trilhaProposta": "Convivência e respeito",
+      "aulas": [],
+      "curso": "http://localhost:3010/estudio/cursos/crs_i433lbkq93tu9bta",
+      "avisosMotor": {},
+      "resumo": {},
+      "motivo": "fundido em aula 3 do curso existente \"Liberdade e intimidade são coisas diferentes\" (crs_b8zeh4b2gguseghq); a aula 1 foi descartada (duplica \"Brincadeiras têm limite\")",
+      "courseId": "crs_i433lbkq93tu9bta",
+      "revisao": null,
+      "acao": "arquivado (já estava)"
+    },
+    {
+      "id": "dna-proposta-seu-ritmo-tambem-importa",
+      "slug": "seu-ritmo-tambem-importa",
+      "titulo": "Seu ritmo também importa",
+      "instrutor": "Júlia",
+      "kit": "—",
+      "trilha": null,
+      "trilhaProposta": "Autonomia no trabalho",
+      "aulas": [],
+      "curso": "http://localhost:3010/estudio/cursos/crs_7y0udlps2b7ri19i",
+      "avisosMotor": {},
+      "resumo": {},
+      "motivo": "fundido em aula 2 de \"Tudo é urgente?\"",
+      "courseId": "crs_7y0udlps2b7ri19i",
+      "revisao": null,
+      "acao": "arquivado (já estava)"
+    },
+    {
+      "id": "dna-proposta-travei-como-peco-ajuda",
+      "slug": "travei-como-peco-ajuda",
+      "titulo": "Travei. Como peço ajuda?",
+      "instrutor": "Renato",
+      "kit": "—",
+      "trilha": null,
+      "trilhaProposta": "Autonomia no trabalho",
+      "aulas": [],
+      "curso": "http://localhost:3010/estudio/cursos/crs_jt8kv51e0ftzi7zi",
+      "avisosMotor": {},
+      "resumo": {},
+      "motivo": "fundido em aula 1 de \"Onde está o problema?\"; a aula 2 foi descartada (duplica \"Comecei a trabalhar\")",
+      "courseId": "crs_jt8kv51e0ftzi7zi",
+      "revisao": null,
+      "acao": "arquivado (já estava)"
+    },
+    {
+      "id": "aula 3",
+      "slug": "nem-toda-brincadeira",
+      "titulo": "Brincadeiras têm limite · aula 3 (Como apoiar quando o alvo é outra pessoa)",
+      "instrutor": "Patrícia",
+      "kit": "(do próprio curso)",
+      "trilha": "Convivência",
+      "trilhaProposta": "Convivência e respeito",
+      "courseId": "crs_b8zeh4b2gguseghq",
+      "revisao": 98,
+      "acao": "sem mudanças",
+      "aulas": [
+        {
+          "id": "aula_03",
+          "titulo": "Como apoiar quando o alvo é outra pessoa",
+          "previa": "http://localhost:3010/estudio/cursos/crs_b8zeh4b2gguseghq/aulas/aula_03/previa",
+          "origem": "nem-toda-brincadeira/a02 (fusão; a aula 1 foi descartada, análise Fable 2.10)"
+        }
+      ],
+      "curso": "http://localhost:3010/estudio/cursos/crs_b8zeh4b2gguseghq",
+      "avisosMotor": {
+        "EMPTY_BODY": 2,
+        "CALL_NOT_SPOKEN": 3,
+        "MEDIA_MISSING": 6
+      },
+      "resumo": {
+        "aulas": 1,
+        "videos": 2,
+        "decisoes": 2,
+        "opcoes": 6,
+        "retornos": 6,
+        "praticas": 1,
+        "reacoes": 6,
+        "cenasSemMidia": 2,
+        "posicaoRecomendada": "02",
+        "recomendadaMaisLonga": 1,
+        "maiorDiferenca": 3,
+        "qualidades": "{\"strong\":2,\"ok\":1,\"weak\":3}"
+      }
+    }
+  ]
+}

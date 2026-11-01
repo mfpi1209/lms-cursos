@@ -1,0 +1,856 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.354Z",
+ "curso": {
+  "codigo": "C21",
+  "id": "crs_4jh683s5h351z2db",
+  "titulo": "Tudo é urgente?"
+ },
+ "status": "ok",
+ "revisaoAntes": 45,
+ "revisaoVistaPelaProposta": 44,
+ "versaoPublicadaComparada": 3,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s4",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escreva uma pergunta para esclarecer o prazo e o uso de um pedido.",
+   "depois": "Daqui a pouco você escreve a pergunta que resolve metade desses conflitos: para quando é, e para quê."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Para quando? Para quê? Duas perguntas antes de qualquer sim."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s3",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: prepare um pedido de ajuste com situação, impacto e alternativa.",
+   "depois": "Antes do fim, você sai com um pedido de ajuste pronto: a situação, o que está em risco e uma alternativa."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Pedir um ajuste é mostrar a situação, o impacto e uma alternativa, sem precisar contar a sua vida pessoal. Se a sobrecarga estiver pesando além do trabalho, procure alguém de confiança. Se você salvou, seu pedido fica no Meu roteiro.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Pedir um ajuste é mostrar a situação, o impacto e uma alternativa, sem precisar contar a sua vida pessoal. Se a sobrecarga estiver pesando além do trabalho, procure alguém de confiança. Se você salvou, seu pedido fica no Meu roteiro. Na próxima aula, a resposta ao seu pedido é “preciso dos dois”, e você faz a conta da sua semana."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Situação, impacto, alternativa. Três linhas que fazem o trabalho caber."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Comparar demandas e combinar prioridades com informações concretas. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Comparar demandas, combinar prioridades e oferecer saídas quando o trabalho não cabe no tempo. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Quando a resposta é “preciso dos dois”, mostrar a conta e oferecer saídas (entrega menor, dividir, prazo novo) sem escolher sozinho e sem abrir mão da pausa."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 9
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v05",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Rebeca, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Rebeca, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual é uma primeira ação útil?\" ainda não está na fala do vídeo \"Qual é uma primeira ação útil?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual mensagem ajuda?\" ainda não está na fala do vídeo \"Qual mensagem ajuda?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 8,6 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Rebeca, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Rebeca, o que você faz?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual é uma primeira ação útil?\" ainda não está na fala do vídeo \"Qual é uma primeira ação útil?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual mensagem ajuda?\" ainda não está na fala do vídeo \"Qual mensagem ajuda?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 3; quem já concluiu vê como conteúdo novo, sem reabrir matrícula · (b) opcional: aparece como extra. Recomendo (a), igual à decisão t",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "2. As 8 reações antigas com abertura repetida em vários cursos: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar só a segunda frase (≈ 36.6 s, ≈ US$ 0.67). Recomend",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Opção A da q05 (“pulo o intervalo e fico até mais tarde”) como opção média, com a regra do aprendiz no retorno: (a) manter, porque é a armadilha mais comum e protege o aprendiz · (b) trocar por uma opção neutra (“faço",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Missão a03 pede para avisar alguém de verdade (“se der”): (a) manter o aviso como passo opcional dentro da missão · (b) missão só da lista, sem aviso. Recomendo (a): o aviso é o que a aula ensina; “se der” já cobre qu",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 13,
+  "palavrasPlanosAulaNova": 242,
+  "palavrasReacoesNovas": 58,
+  "palavrasAberturasTrocadas": 39,
+  "palavrasTotal": 339,
+  "segundos": 129.4,
+  "usdEstimado": 2.37,
+  "nos": [
+   "v06:scenario",
+   "q05:choice",
+   "v07:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Quando a resposta é: preciso dos dois",
+  "description": "Você mostra a conta, ouve “preciso dos dois”, oferece saídas sem escolher sozinho, e depois faz a conta da sua semana.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v06",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Preciso dos dois",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Uma hora. Dois pedidos."
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você já sabe mostrar o conflito e pedir ajuste. Agora, a parte difícil: a resposta é “preciso dos dois”. No fim, você monta a lista da sua semana, com o tempo de cada coisa, e marca o que não cabe. A Rebeca tem uma hora até o fim do expediente. Relatório: uns quarenta minutos. Planilha: outros quarenta. Ela explica que não cabe. O gestor responde: “Preciso dos dois, completos, hoje.” E volta para a reunião. No lugar da Rebeca, o que você faz?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Você já sabe mostrar o conflito e pedir ajuste. Agora, a parte difícil: a resposta é “preciso dos dois”.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você monta a lista da sua semana, com o tempo de cada coisa, e marca o que não cabe.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "A Rebeca tem uma hora até o fim do expediente. Relatório: uns quarenta minutos. Planilha: outros quarenta.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "A conta da Rebeca",
+         "bullets": [
+          "**60 min** até o fim do expediente",
+          "Relatório: **~40 min**",
+          "Planilha: **~40 min**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Ela explica que não cabe. O gestor responde: “Preciso dos dois, completos, hoje.” E volta para a reunião.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar da Rebeca, o que você faz?",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Rebeca, o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Resta uma hora. O relatório e a planilha levam uns quarenta minutos cada. A Rebeca avisou que não cabe e ouviu: “Preciso dos dois, completos, hoje.” No lugar da Rebeca, o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Pulo o intervalo e fico até mais tarde. Assim os dois saem hoje.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você resolve hoje à custa da sua pausa e do seu horário, e amanhã a conta volta igual. Aprendiz não compensa horas depois; estágio segue o termo de compromisso. Faça assim: mostre a conta e ofereça saídas, sem esticar o dia."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Entendo a vontade. Mas a pausa é sua, e esticar o horário não resolve a conta: amanhã ela volta igual."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Repito a conta e proponho: uma versão mais curta, alguém que ajude ou um prazo novo. Ele escolhe.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você não escolheu qual pedido ignorar: mostrou a conta e três saídas, e deixou a decisão com quem decide. Faça assim: registre o que ele escolher e avise na hora se a estimativa mudar."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você não escolheu qual pedido ignorar. Mostrou a conta e três saídas. Agora a decisão é de quem pode decidir."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Faço o relatório e deixo a planilha, sem avisar. Alguém tinha que decidir.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Decidir sozinho e em silêncio deixa a planilha sumir sem ninguém saber, e a prioridade pode ser outra. Faça assim: diga que não cabe, proponha uma ordem e peça a decisão."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Alguém tinha que decidir, sim. Mas era ele. Você escolheu sozinho e a planilha sumiu sem ninguém saber."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Rebeca, o que você faz?"
+     }
+    },
+    {
+     "id": "v07",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O que cabe no tempo",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Entrega menor · Dividir · Prazo novo"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Os dois pedidos são importantes. Eles cabem? Importância não aumenta o tempo. O que cabe no tempo não muda por vontade. Quando ouvir “preciso dos dois”, ofereça saídas, não desculpas: uma entrega menor, alguém que divide, um prazo novo. Quem pediu escolhe. Estimativa não é promessa. Apareceu um bloqueio? Avise na hora, não no fim do prazo. E a pausa fica. Pular intervalo para caber um plano errado não é esforço: é esconder o problema de quem deveria resolver. Agora, a sua semana: liste o que precisa entregar, estime o tempo de cada coisa e marque o que não cabe.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Os dois pedidos são importantes. Eles cabem? Importância não aumenta o tempo. O que cabe no tempo não muda por vontade.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Quando ouvir “preciso dos dois”, ofereça saídas, não desculpas: uma entrega menor, alguém que divide, um prazo novo. Quem pediu escolhe.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Três saídas",
+         "bullets": [
+          "Entrega **menor**",
+          "**Dividir** com alguém",
+          "**Prazo** novo"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s3",
+        "line": "Estimativa não é promessa. Apareceu um bloqueio? Avise na hora, não no fim do prazo.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "s4",
+        "line": "E a pausa fica. Pular intervalo para caber um plano errado não é esforço: é esconder o problema de quem deveria resolver.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora, a sua semana: liste o que precisa entregar, estime o tempo de cada coisa e marque o que não cabe.",
+        "cameraId": "cam_vinicius6_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Três saídas\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Faça a conta da sua semana",
+     "type": "mission",
+     "intro": "A Rebeca mostrou a conta e três saídas. Agora é a sua conta: tudo o que você precisa entregar até domingo, com o tempo de cada coisa.",
+     "action": "1. No papel ou no bloco de notas, liste tudo o que você precisa entregar até domingo: escola, casa, curso, trabalho.\n2. Ao lado de cada item, escreva quanto tempo acha que leva. Chute honesto, não otimista.\n3. Some e compare com o tempo que você tem de verdade, descontando sono, trajeto e pausa.\n4. Marque o que não cabe. Ao lado, escreva para quem você precisa avisar e qual saída oferece: menor, dividir ou prazo novo.\n5. Se der, avise essa pessoa ainda esta semana. Volte aqui, marque “Já experimentei” e conte como foi.",
+     "alternative": "Sem estágio ou emprego? A conta funciona igual com prova, trabalho em grupo, tarefa de casa e curso. Se tudo coube, ótimo: anote o que você confirmou antes de dizer sim. Se trabalha, inclua só o que já é seu, sem assumir tarefa nova para a lista ficar cheia.",
+     "example": "Até domingo: relatório (40 min) · planilha (40 min) · prova de quinta (3 h) · trabalho em grupo, minha parte (2 h) · ajudar em casa sábado (2 h). Tenho: ~6 h livres. Não cabe: a planilha hoje. Avisar: o gestor. Saída: entregar amanhã de manhã ou uma versão só com os totais hoje."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Tudo é urgente? Quase nunca",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Para quando · A conta · As saídas · Quem decide"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Lembra do pedido “para agora”? E da Rebeca, com uma hora e dois pedidos? Em nenhum deles a saída era adivinhar. Tudo é urgente? Quase nunca. Pergunte para quando, mostre a conta, ofereça saídas. E deixe a decisão com quem decide. Uma última coisa: não espere o prazo acabar para avisar de um bloqueio que você já percebeu. Combinado?",
+     "motionPrompt": "nods slowly, warm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Lembra do pedido “para agora”? E da Rebeca, com uma hora e dois pedidos? Em nenhum deles a saída era adivinhar.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d2",
+        "line": "Tudo é urgente? Quase nunca. Pergunte para quando, mostre a conta, ofereça saídas. E deixe a decisão com quem decide.",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "d3",
+        "line": "Uma última coisa: não espere o prazo acabar para avisar de um bloqueio que você já percebeu. Combinado?",
+        "cameraId": "cam_vinicius6_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de dizer sim: para quando? para quê?"
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Quando não cabe: mostre a conta e ofereça saídas (menor, dividir, prazo)."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Quem decide é quem pediu. A pausa é sua. O bloqueio se avisa na hora."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "A conta da minha semana",
+       "kind": "checklist",
+       "items": [
+        "listei o que preciso entregar",
+        "estimei o tempo de cada coisa",
+        "marquei o que não cabe",
+        "avisei quem precisava saber, com uma saída"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando fizer a conta da semana, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de dizer sim: para quando? para quê?\nQuando não cabe: mostre a conta e ofereça saídas (menor, dividir, prazo).\nQuem decide é quem pediu. A pausa é sua. O bloqueio se avisa na hora.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "O que cabe no tempo não muda por vontade. O que você faz com isso, muda."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v07",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v07",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v07",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v07",
+     "from": "v07",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v06": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v07": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 46,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz primeiro?\" ainda não está na fala do vídeo \"O que você faz primeiro?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Rebeca, o que você faz?\" ainda não está na fala do vídeo \"No lugar da Rebeca, o que você faz?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual é uma primeira ação útil?\" ainda não está na fala do vídeo \"Qual é uma primeira ação útil?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual mensagem ajuda?\" ainda não está na fala do vídeo \"Qual mensagem ajuda?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

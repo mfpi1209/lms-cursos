@@ -1,0 +1,764 @@
+{
+ "videos": {
+  "C01·A1·v00": {
+   "items": [
+    "01"
+   ],
+   "drop": [
+    "s4"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C01·A1·v01": {
+   "items": [
+    "02",
+    "03"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {
+    "s1": 4
+   },
+   "skip": {},
+   "teaser": "O Davi tem o original, mas não conseguiu fazer a cópia pedida para amanhã. O que você faria no lugar dele?"
+  },
+  "C01·A2·v02": {
+   "items": [
+    "04",
+    "05"
+   ],
+   "drop": [
+    "s3"
+   ],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "É o primeiro dia da Luana. O ônibus parou e ela ainda não tem previsão. Como você avisaria que pode atrasar?"
+  },
+  "C02·A1·v01": {
+   "items": [
+    "08"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Rafael vai entrar numa área operacional e não recebeu a orientação de roupa e calçado. O que você faria?"
+  },
+  "C02·A2·v02": {
+   "items": [
+    "09"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "Pediram calça escura. A Bia tem uma azul e não sabe se o tom serve. O que você diria no lugar dela?"
+  },
+  "C03·A1·v01": {
+   "items": [
+    "12"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {
+    "s1": 5
+   },
+   "skip": {}
+  },
+  "C04·A1·v01": {
+   "items": [
+    "14",
+    "12*"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {
+    "s1": 5
+   },
+   "skip": {},
+   "teaser": "O Pedro precisa fazer um pedido, mas não sabe se a pessoa pode ouvir um áudio longo. O que você faria?"
+  },
+  "C04·A2·v02": {
+   "items": [
+    "15"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Pedro pediu uma confirmação de manhã para a tarefa da tarde e ainda não tem resposta. Qual é o próximo passo?"
+  },
+  "C04·A2·v03": {
+   "items": [
+    "16"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {
+    "s4": 1
+   },
+   "lead": {},
+   "skip": {}
+  },
+  "C05·A1·v00": {
+   "items": [
+    "17"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {
+    "boasvindas": [
+     "com folga"
+    ]
+   }
+  },
+  "C05·A1·v01": {
+   "items": [
+    "18"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C05·A2·v02": {
+   "items": [
+    "19"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C06·A1·v00": {
+   "items": [
+    "20"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {
+    "boasvindas": [
+     "participa das brincadeiras respeitando limites e"
+    ]
+   }
+  },
+  "C06·A1·v01": {
+   "items": [
+    "21",
+    "12*"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {
+    "s1": 5
+   },
+   "skip": {}
+  },
+  "C06·A2·v03": {
+   "items": [
+    "23"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {
+    "s2": [
+     "ou ao agente de integração do seu contrato."
+    ]
+   }
+  },
+  "C07·A1·v01": {
+   "items": [
+    "25"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O André recebeu uma orientação com duas etapas e um prazo novo. O que ele confirma antes de sair?"
+  },
+  "C08·A1·v01": {
+   "items": [
+    "26",
+    "27"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {
+    "s1": 4
+   },
+   "skip": {},
+   "teaser": "A Sara achou na geladeira da copa um alimento sem nome e sem aviso de uso coletivo. O que você faria?"
+  },
+  "C08·A2·v02": {
+   "items": [
+    "28"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "A Sara percebeu uma parte exposta no cabo de um equipamento da mesa nova. O que você faria no lugar dela?"
+  },
+  "C09·A1·v01": {
+   "items": [
+    "29"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Ícaro tem a autorização da colega, mas há um documento interno ao fundo. O que ele faz antes de postar?"
+  },
+  "C09·A2·v03": {
+   "items": [
+    "30"
+   ],
+   "drop": [
+    "s1"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C10·A1·v01": {
+   "items": [
+    "31"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O material da Jéssica está pronto, mas ainda não passou pela supervisão. O que ela deveria informar?"
+  },
+  "C10·A2·v02": {
+   "items": [
+    "32"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Henrique entregou a tarefa e a referência está ocupada. Há uma lista de atividades autorizadas. Como você continuaria?"
+  },
+  "C11·A1·v00": {
+   "items": [
+    "33"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C11·A1·v01": {
+   "items": [
+    "34"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Miguel quer confirmar se a reserva da sala precisa de aprovação antes de avisar os participantes. Como ele confirma?"
+  },
+  "C11·A2·v02": {
+   "items": [
+    "35"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "chamada": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Miguel recebeu duas orientações: reservar no sistema antes ou usar a sala sem reserva. O que ele faz?"
+  },
+  "C12·A1·v01": {
+   "items": [
+    "38"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "O Vitor foi corrigido por não responder uma mensagem quando estava sem acesso ao celular. Quando ele explica isso?"
+  },
+  "C14·A2·v03": {
+   "items": [
+    "46"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {
+    "s4": 1
+   },
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A3·v05": {
+   "items": [
+    "48"
+   ],
+   "drop": [
+    "s2"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A5·v10": {
+   "items": [
+    "52"
+   ],
+   "drop": [
+    "s4"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A6·v11": {
+   "items": [
+    "55"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {
+    "s3": 1
+   },
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A7·v13": {
+   "items": [
+    "58",
+    "59"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "s2": 2,
+    "s3": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {},
+   "teaser": "Neste teste dá para pular e voltar depois, sem penalidade. Faltam 15 minutos e você travou numa questão. O que você faz?"
+  },
+  "C14·A8·v14": {
+   "items": [
+    "61"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "s3": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A8·v15": {
+   "items": [
+    "62"
+   ],
+   "drop": [],
+   "cutFirst": {
+    "s4": 1
+   },
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A9·v17": {
+   "items": [
+    "64"
+   ],
+   "drop": [
+    "s4"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A10·v18": {
+   "items": [
+    "65"
+   ],
+   "drop": [
+    "s6"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A10·v19": {
+   "items": [
+    "66"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {
+    "s1": 1
+   },
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A11·v20": {
+   "items": [
+    "67",
+    "68"
+   ],
+   "drop": [
+    "s2"
+   ],
+   "cutFirst": {},
+   "cutLast": {},
+   "lead": {},
+   "skip": {
+    "s3": [
+     "As duas soam falsas."
+    ]
+   }
+  },
+  "C14·A11·v21": {
+   "items": [
+    "69"
+   ],
+   "drop": [],
+   "cutFirst": {},
+   "cutLast": {
+    "s4": 1
+   },
+   "lead": {},
+   "skip": {}
+  },
+  "C14·A12·v23": {
+   "items": [
+    "72",
+    "73"
+   ],
+   "drop": [
+    "s4"
+   ],
+   "cutFirst": {},
+   "cutLast": {
+    "s2": 2
+   },
+   "lead": {},
+   "skip": {}
+  }
+ },
+ "choices": {
+  "C02·A1·q02": {
+   "items": [
+    "08"
+   ],
+   "situacao": "O Rafael vai entrar em uma área operacional, mas ainda não recebeu a orientação sobre roupa e calçado."
+  },
+  "C02·A2·q03": {
+   "items": [
+    "09",
+    "10"
+   ],
+   "situacao": "Bia recebeu a orientação de usar calça escura. Tem uma calça azul sem estampas, mas não sabe se o tom atende à orientação e não pode comprar outra agora."
+  },
+  "C03·A1·q01": {
+   "items": [
+    "13"
+   ],
+   "options": {
+    "a": {
+     "trimOpener": true,
+     "quality": "strong",
+     "feedback": "Essa opção também funciona: você mantém a atenção no atendimento e consulta a mensagem no momento permitido."
+    }
+   }
+  },
+  "C06·A1·q02": {
+   "items": [
+    "22"
+   ],
+   "options": {
+    "b": {
+     "label": "“Eu paro, mas começo a justificar que era só uma brincadeira.”",
+     "feedback": "Parar é o passo certo, mas justificar a brincadeira leva a conversa para a sua intenção. Faça assim: reconheça o incômodo da colega e não repita.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C08·A1·q02": {
+   "items": [
+    "27"
+   ],
+   "situacao": "A Sara encontrou um alimento na geladeira da copa, sem identificação e sem aviso de uso coletivo. Ela não sabe de quem é."
+  },
+  "C12·A1·q02": {
+   "items": [
+    "39"
+   ],
+   "options": {
+    "a": {
+     "feedback": "A falta de acesso é uma informação importante para esclarecer o que aconteceu. Faça assim: escute, explique a condição e confirme um procedimento possível.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C13·A1·q01": {
+   "items": [
+    "41"
+   ],
+   "options": {
+    "b": {
+     "feedback": "Confirmar o pedido antes de começar reduz a chance de retrabalho. Faça assim: confirme o resultado esperado, o prazo e quem pode orientar.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A2·q03": {
+   "items": [
+    "47"
+   ],
+   "situacao": "A vaga pede ensino médio completo e coloca Excel avançado como diferencial. Você já concluiu o ensino médio e sabe Excel básico."
+  },
+  "C14·A3·q05": {
+   "items": [
+    "48"
+   ],
+   "situacao": "Você está no segundo semestre da faculdade e quer seu primeiro estágio. Você pode consultar as oportunidades disponíveis e os requisitos de cada vaga. Na aprendizagem profissional, a faixa geral é de 14 anos completos a 24 anos incompletos (o limite máximo não se aplica a pessoas com deficiência). Estágio e outras vagas têm requisitos próprios."
+  },
+  "C14·A4·q07": {
+   "items": [
+    "50"
+   ],
+   "situacao": "Você ajuda no lava-jato da família aos sábados: atende cerca de 20 clientes e fecha o caixa. Vai descrever essa experiência no currículo."
+  },
+  "C14·A5·q09": {
+   "items": [
+    "53",
+    "54"
+   ],
+   "options": {
+    "b": {
+     "feedback": "Se o recorte deixar outras pessoas ou dificultar a identificação do seu rosto, escolha outra imagem. Uma foto simples de celular pode funcionar.",
+     "disableReaction": true
+    },
+    "c": {
+     "feedback": "Você pode preparar o restante do perfil sem esperar uma foto profissional. Quando quiser adicionar uma imagem, uma foto simples e nítida pode funcionar.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A6·q11": {
+   "items": [
+    "57"
+   ],
+   "situacao": "Você quer conhecer a rotina de trabalho no administrativo de um hospital e pensou na Ana, ex-aluna da sua escola que trabalha lá.",
+   "options": {
+    "a": {
+     "quality": "ok",
+     "feedback": "Perguntar sobre vagas é legítimo. Se a intenção é conhecer a área, apresente-se e explique que tipo de conversa você busca.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A6·q12": {
+   "items": [
+    "56"
+   ],
+   "feedbackAppendAll": "Um lembrete respeitoso depois de alguns dias é uma possibilidade, não uma obrigação. Você também pode seguir buscando outros contatos."
+  },
+  "C14·A7·q14": {
+   "items": [
+    "58",
+    "60"
+   ],
+   "situacao": "O teste permite passar para a próxima questão e voltar depois, sem penalidade por resposta errada. Faltam 15 minutos e ainda há 10 questões."
+  },
+  "C14·A8·q15": {
+   "items": [
+    "63"
+   ],
+   "options": {
+    "c": {
+     "feedback": "Se estiver difícil entrar na conversa, você pode pedir a palavra, resumir uma ideia ou ajudar a acompanhar o tempo.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A11·q23": {
+   "items": [
+    "69",
+    "70"
+   ],
+   "situacao": "A vaga de estágio não informou o valor. Você pode perguntar sobre remuneração, jornada, benefícios e oportunidades de aprendizado: essas informações ajudam a avaliar se a vaga faz sentido para você.",
+   "options": {
+    "c": {
+     "feedback": "Pesquisar vagas semelhantes ajuda a justificar sua expectativa e a conversar sobre a faixa disponível.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A12·q24": {
+   "items": [
+    "74"
+   ],
+   "options": {
+    "c": {
+     "feedback": "Apoie o aparelho e procure uma posição confortável que mantenha imagem e som estáveis. Adapte o enquadramento às suas condições.",
+     "disableReaction": true
+    }
+   }
+  },
+  "C14·A12·q25": {
+   "items": [
+    "75",
+    "76",
+    "I08",
+    "72"
+   ],
+   "situacao": "A entrevista está terminando e a recrutadora abre espaço para você. Você pode esclarecer atividades, horários, remuneração, benefícios e próximos passos: escolha o que ainda precisa saber para avaliar a oportunidade.",
+   "options": {
+    "b": {
+     "feedback": "Se suas dúvidas já foram respondidas, tudo bem dizer isso. Você também pode confirmar uma informação importante ou perguntar pelos próximos passos.",
+     "disableReaction": true
+    },
+    "c": {
+     "label": "“Como funcionam os horários e as folgas nesta vaga?”",
+     "quality": "strong",
+     "feedback": "É válido esclarecer jornada e folgas. Essa pergunta ajuda você a avaliar se a rotina da vaga combina com a sua.",
+     "disableReaction": true,
+     "scoreLike": "a"
+    }
+   }
+  },
+  "C04·A1·q01": {
+   "items": [
+    "I02"
+   ],
+   "feedbackAppendAll": "Uma conversa possível: Iara: “Oi, sou a Iara e comecei hoje no atendimento. Você pode me orientar sobre o acesso ao sistema?” Colega: “Posso falar às 14h. Você já recebeu o e-mail de acesso?” Iara: “Ainda não. Vou conferir e te aviso às 14h.”"
+  }
+ },
+ "reflections": {
+  "C01·A2·m02": {
+   "items": [
+    "I01"
+   ],
+   "prompt": "Uma conversa possível: Luana: “Meu ônibus parou e ainda não tenho previsão de chegada. Vou avisar assim que souber.” Equipe: “Obrigada por avisar. Procure a recepção quando chegar.” Luana: “Certo. Atualizo vocês quando tiver uma previsão.”"
+  },
+  "C10·A2·m02": {
+   "items": [
+    "I03"
+   ],
+   "prompt": "Se a próxima atividade já está autorizada e a prioridade continua a mesma, siga a orientação disponível. Peça ajuda se faltar acesso, informação ou preparo."
+  },
+  "C13·A2·m02": {
+   "items": [
+    "I04"
+   ],
+   "prompt": "Para aprender uma tarefa: observe um exemplo, anote o que importa, pratique dentro dos seus acessos e confira o resultado. Se precisar de ajuda, explique onde travou."
+  },
+  "C13·A3·m03": {
+   "items": [
+    "I05"
+   ],
+   "prompt": "Um exemplo para adaptar: “Tenho duas entregas para o mesmo horário e só consigo concluir uma. Posso priorizar a lista e combinar outro prazo para o relatório?”"
+  },
+  "C13·A6·m06": {
+   "items": [
+    "I06"
+   ],
+   "prompt": "Que tarefa você consegue fazer hoje com mais autonomia? Pense em um exemplo, sem copiar informações internas."
+  },
+  "C14·A5·m04": {
+   "items": [
+    "I07",
+    "51",
+    "52"
+   ],
+   "prompt": "Você pode fazer esta aula preparando seu texto no Meu roteiro: não é preciso criar nem publicar um perfil para concluir. O LinkedIn exige idade mínima de 16 anos. Se você usa a plataforma, comece pelas pessoas que já conhece; não há quantidade obrigatória de conexões."
+  },
+  "C14·A6·m05": {
+   "items": [
+    "55"
+   ],
+   "prompt": "Explique por que escolheu aquela pessoa e faça um pedido que ela consiga avaliar com facilidade. A resposta depende da disponibilidade dela."
+  },
+  "C14·A8·m07": {
+   "items": [
+    "62"
+   ],
+   "prompt": "Pense em uma forma de contribuir e adapte sua participação ao que o grupo precisar."
+  }
+ },
+ "naoAplicados": {
+  "06": "Trocar “seu início” por outra formulação exige fala nova; o corte deixaria a frase quebrada. A orientação continua compreensível.",
+  "07": "Promessa de boas-vindas mantida (pedido do autor; o Selo fica). “A roupa certa” é compatível com o curso; trocar a formulação exige fala nova.",
+  "11": "Fala compatível com o cenário ajustado (calça azul sem estampas); nada a cortar.",
+  "24": "Promessa de boas-vindas mantida; a formulação não é enganosa e trocá-la exige fala nova.",
+  "36": "Tirar “Uma frase simples resolve a dúvida:” deixa o exemplo começar sem introdução; mantido.",
+  "37": "Promessa de boas-vindas mantida; trocá-la exige fala nova.",
+  "40": "Promessa de boas-vindas mantida; trocá-la exige fala nova.",
+  "42": "“Vou te acompanhar até a sua primeira vaga” é a apresentação da instrutora; trocar exige fala nova. Mantido.",
+  "43": "“Currículo, perfil e preparo”: o curso de fato prepara o texto do perfil; cortar “perfil” quebra a enumeração. Mantido.",
+  "44": "“Arrasar na entrevista” fecha a lista das quatro partes anunciadas; cortar deixaria “quatro partes” com três. Mantido (coloquial, não enganoso).",
+  "45": "“Toda vaga mistura duas coisas” introduz o conceito que a aula usa; sem ela a explicação seguinte perde o começo. Mantido.",
+  "49": "“Revise duas vezes” é orientação útil; “pode derrubar” não é absoluto. Mantido.",
+  "71": "Dicas práticas de lugar e luz, corretas; trocar a formulação exige fala nova. Mantido."
+ }
+}

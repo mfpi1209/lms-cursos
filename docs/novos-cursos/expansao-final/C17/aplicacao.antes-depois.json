@@ -1,0 +1,838 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.295Z",
+ "curso": {
+  "codigo": "C17",
+  "id": "crs_5k5upah2xphlfvi5",
+  "titulo": "Minha ideia também conta"
+ },
+ "status": "ok",
+ "revisaoAntes": 33,
+ "revisaoVistaPelaProposta": 32,
+ "versaoPublicadaComparada": 2,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v01/s4",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: descreva uma dificuldade fictícia usando fato e efeito, sem atacar pessoas.",
+   "depois": "Ao final, você descreve uma dificuldade em duas frases: o que acontece e o efeito. Sem apontar culpado. É assim que uma ideia começa."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_01/a01.instrucoes",
+   "estado": "ja-corrigido-fase0",
+   "antes": "Escolha um bloco em cada grupo para montar a frase. Só se quiser, use “Prefiro escrever” para dizer do seu jeito; nada de nomes, contatos ou informações internas.",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas.",
+   "motivo": "a Fase 0 já trocou a instrução (um dos 8 jeitos); a proposta não a sobrescreve"
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Fato e efeito abrem conversa. Julgamento fecha."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/s2",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte uma proposta com problema, teste pequeno e sinal de resultado.",
+   "depois": "Daqui a pouco, sua observação vira proposta: um problema, um teste pequeno e um sinal para saber se ajudou."
+  },
+  {
+   "tipo": "instrucao",
+   "onde": "aula_02/a02.instrucoes",
+   "estado": "ja-corrigido-fase0",
+   "antes": "Escolha uma opção em cada grupo e a sua frase vai se formando. Se nenhuma servir, toque em “Prefiro escrever”, sem nomes, contatos ou informações internas.",
+   "depois": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas.",
+   "motivo": "a Fase 0 já trocou a instrução (um dos 8 jeitos); a proposta não a sobrescreve"
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "Uma ideia ganha força quando vira um teste combinado, com um sinal para avaliar. Se você salvou, sua proposta fica no Meu roteiro para levar à equipe.\nVocê chegou ao final. Revise o que preparou e escolha uma ideia para aplicar na sua rotina.",
+   "depois": "Uma ideia ganha força quando vira um teste combinado, com um sinal para avaliar. Se você salvou, sua proposta fica no Meu roteiro para levar à equipe. Na próxima aula, aparece um segundo problema, e o atalho que funcionou antes não serve."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Teste pequeno, prazo curto, um sinal para olhar. É assim que uma ideia é avaliada."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Apresentar melhorias pequenas com observação e proposta testável. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego.",
+   "depois": "Apresentar melhorias pequenas com observação, proposta testável e um teste que combine com o problema. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Escolher um teste que combine com o problema observado e medir o resultado que tem relação com ele."
+  }
+ ],
+ "duracaoAlvoMinutos": {
+  "de": 5,
+  "para": 8
+ },
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v01",
+  "aula_02/v03"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "CALL_NOT_SPOKEN": 4,
+    "COURSE_TOO_LONG": 1
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você apresenta a observação?\" ainda não está na fala do vídeo \"Como você apresenta a observação?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Amanda, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Amanda, o que você responde?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual proposta permite avaliar a ideia?\" ainda não está na fala do vídeo \"Qual proposta permite avaliar a ideia?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Leandro, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Leandro, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "COURSE_TOO_LONG",
+     "message": "O curso está longo: cerca de 7,9 min estimados para uma meta de 5 min (limite 7,5). Encurte as aulas mais longas ou ajuste a duração alvo."
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "CALL_NOT_SPOKEN": 4,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você apresenta a observação?\" ainda não está na fala do vídeo \"Como você apresenta a observação?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Amanda, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Amanda, o que você responde?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual proposta permite avaliar a ideia?\" ainda não está na fala do vídeo \"Qual proposta permite avaliar a ideia?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Leandro, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Leandro, o que você faz?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 3 obrigatória ou opcional? (a) obrigatória · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Missão real: (a) anotar fato, efeito e teste, e propor só se houver alguém que responde por aquilo (a aula conclui de qualquer jeito) · (b) exigir que a proposta seja feita a alguém. Recomendo (a): quem não trabalha n",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "b",
+   "fallback": "a",
+   "texto": "3. Reações atuais com abertura repetida (ver custos): (a) deixar · (b) cortar a primeira frase, se o ajuste fino aceitar (grátis) · (c) regravar a segunda frase. Recomendo (b); se não der, (a).",
+   "efeito": "operação de ajuste fino de mídia (corte da 1ª frase), FORA deste aplicador; ver reacoesCortaveis (sem corte limpo → fica como está)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 269,
+  "palavrasReacoesNovas": 73,
+  "palavrasAberturasTrocadas": 43,
+  "palavrasTotal": 385,
+  "segundos": 146.9,
+  "usdEstimado": 2.69,
+  "nos": [
+   "v05:scenario",
+   "q05:choice",
+   "v06:content",
+   "a03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Do problema ao teste",
+  "description": "Você vê um segundo problema em que o atalho não serve, escolhe o teste que combina com ele e leva uma observação para a sua rotina.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v05",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O mesmo atalho não resolve tudo",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "A solução combina com o problema?"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Nesta última aula, você leva o olhar de melhoria para a sua rotina: uma dúvida que se repete e um teste pequeno para propor. O Leandro testou o atalho por uma semana. As dúvidas sobre onde fica o formulário caíram. Problema de acesso resolvido. Na semana seguinte, outra coisa: as pessoas acham o formulário, mas vários pedidos chegam sem a data. Quem recebe precisa voltar e perguntar. Um colega sugere: ‘Põe mais um atalho, deu certo da outra vez.’ No lugar do Leandro, qual teste você propõe?",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "promessa",
+        "line": "Nesta última aula, você leva o olhar de melhoria para a sua rotina: uma dúvida que se repete e um teste pequeno para propor.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s1",
+        "line": "O Leandro testou o atalho por uma semana. As dúvidas sobre onde fica o formulário caíram. Problema de acesso resolvido.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "s2",
+        "line": "Na semana seguinte, outra coisa: as pessoas acham o formulário, mas vários pedidos chegam sem a data. Quem recebe precisa voltar e perguntar.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "chamada",
+        "line": "Um colega sugere: ‘Põe mais um atalho, deu certo da outra vez.’ No lugar do Leandro, qual teste você propõe?",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar do Leandro, qual teste você propõe?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O acesso ao formulário já funciona. Agora vários pedidos chegam sem a data, e um colega sugere repetir o atalho. No lugar do Leandro, qual teste você propõe?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Crio mais um atalho para o formulário, já que o primeiro funcionou.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O acesso já funciona; mais um atalho não atua na data que falta. Faça assim: olhe onde a dúvida acontece, o campo de data, e teste uma ajuda ali."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "O primeiro atalho resolveu o acesso. Mas o problema agora é outro: encontrar não é o mesmo que preencher. O atalho não ensina a data."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Mando um aviso no grupo: ‘Pessoal, atenção com a data do pedido’.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O lembrete some em um dia e não aparece na hora de preencher. Faça assim: coloque a ajuda onde a dúvida acontece, ao lado do campo de data."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Avisar é natural, e custa pouco. Repare, porém: o lembrete some em um dia, e não aparece na hora em que a pessoa está preenchendo."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Testo uma orientação com exemplo ao lado do campo de data e observo os próximos pedidos.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A ajuda fica no ponto em que a informação está faltando, e o teste tem um sinal claro. Faça assim: combine com quem responde pelo formulário e conte os pedidos sem data por uma semana."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Problema de preenchimento, ajuda no preenchimento. Você pôs a orientação onde a dúvida acontece, e já sabe o que observar: pedidos sem data."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar do Leandro, qual teste você propõe?"
+     }
+    },
+    {
+     "id": "v06",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "A solução precisa combinar com o problema",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Isso deve ajudar porque…"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Dois problemas, duas soluções. Para quem não encontra o formulário, um atalho ajuda. Para quem deixa a data vazia, não. Antes de propor, complete a frase: ‘Isso deve ajudar porque…’. Se a ligação entre problema e ação ficar difícil de explicar, investigue mais. Depois do teste, observe o resultado que tem relação com o problema. Aqui, contar pedidos sem data ajuda mais do que contar cliques no atalho. Ouça quem preenche: o exemplo ficou claro? Criou outra dúvida? Perceber que a primeira tentativa errou o alvo também é contribuir. Agora é com você: ache um lugar da sua rotina onde a mesma dúvida se repete. Anote fato, efeito e um teste pequeno.",
+     "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Dois problemas, duas soluções. Para quem não encontra o formulário, um atalho ajuda. Para quem deixa a data vazia, não.",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "s2",
+        "line": "Antes de propor, complete a frase: ‘Isso deve ajudar porque…’. Se a ligação entre problema e ação ficar difícil de explicar, investigue mais.",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Antes de propor",
+         "bullets": [
+          "**Isso deve ajudar porque…**",
+          "Difícil de explicar? **Investigue mais**",
+          "Observe o **resultado que tem relação** com o problema"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s3",
+        "line": "Depois do teste, observe o resultado que tem relação com o problema. Aqui, contar pedidos sem data ajuda mais do que contar cliques no atalho.",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s4",
+        "line": "Ouça quem preenche: o exemplo ficou claro? Criou outra dúvida? Perceber que a primeira tentativa errou o alvo também é contribuir.",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: ache um lugar da sua rotina onde a mesma dúvida se repete. Anote fato, efeito e um teste pequeno.",
+        "cameraId": "cam_mauro7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Antes de propor\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "a03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Leve uma observação e um teste para a sua rotina",
+     "type": "mission",
+     "intro": "O Leandro acertou o segundo teste porque olhou o problema certo. Agora é um lugar seu: casa, escola, trabalho.",
+     "action": "1. Escolha um lugar da sua rotina onde a mesma dúvida ou o mesmo erro se repete.\n2. Anote o fato (o que acontece, quantas vezes) e o efeito (o que atrasa ou se repete).\n3. Complete “Isso deve ajudar porque…” e escreva um teste pequeno, com o que você vai observar.\n4. Se existe alguém que responde por aquilo, proponha o teste. Se não, guarde a nota: ela serve na próxima.\n5. Volte aqui, marque “Já experimentei” e conte como foi.",
+     "alternative": "Sem trabalho? Em casa: todo mundo pergunta onde está o carregador. Na escola: o grupo sempre perde o prazo do trabalho. Serve igual: fato, efeito, teste pequeno.",
+     "example": "Fato: três pessoas perguntaram no grupo a data da prova esta semana. Efeito: três mensagens repetidas. Teste: fixar a data no topo do grupo por duas semanas. Observar: quantas vezes ainda perguntam. Isso deve ajudar porque a dúvida é sobre a data, não sobre a matéria."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Minha ideia também conta",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Observar · Explicar · Testar · Aprender"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "A Amanda contou quantas pessoas perguntaram. O Leandro testou uma semana e ouviu quem preferia a pasta. Nenhum dos dois chegou com a ideia perfeita. Sua ideia pode começar com uma observação simples: uma dúvida que se repete, uma informação que falta. Mostre o que percebeu e proponha um teste. Participar não exige ter sempre a solução certa. Exige observar, explicar e aprender com o que acontece. Até a próxima.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "A Amanda contou quantas pessoas perguntaram. O Leandro testou uma semana e ouviu quem preferia a pasta. Nenhum dos dois chegou com a ideia perfeita.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "Sua ideia pode começar com uma observação simples: uma dúvida que se repete, uma informação que falta. Mostre o que percebeu e proponha um teste.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Participar não exige ter sempre a solução certa. Exige observar, explicar e aprender com o que acontece. Até a próxima.",
+        "cameraId": "cam_mauro7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Observe com fato e efeito, sem atacar pessoas."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Proponha um teste pequeno e combine quem autoriza."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "A solução precisa combinar com o problema; meça o que tem relação com ele."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minha observação desta semana",
+       "kind": "checklist",
+       "items": [
+        "achei um lugar onde a mesma dúvida se repete",
+        "anotei fato, efeito e um teste pequeno",
+        "completei “isso deve ajudar porque…”",
+        "propus a quem responde por aquilo (ou guardei a nota)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "a03",
+       "emptyText": "Você deixou para depois. Quando anotar a sua observação, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Observe com fato e efeito, sem atacar pessoas.\nProponha um teste pequeno e combine quem autoriza.\nA solução precisa combinar com o problema; meça o que tem relação com ele.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Se o problema é encontrar, ajude a encontrar. Se é preencher, ajude a preencher."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "q05"
+    },
+    {
+     "id": "e_q05_a",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "a"
+    },
+    {
+     "id": "e_q05_b",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q05_c",
+     "from": "q05",
+     "to": "v06",
+     "optionId": "c",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_v06",
+     "from": "v06",
+     "to": "a03"
+    },
+    {
+     "id": "e_a03",
+     "from": "a03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v05": {
+      "x": 0,
+      "y": 0
+     },
+     "q05": {
+      "x": 0,
+      "y": 180
+     },
+     "v06": {
+      "x": 0,
+      "y": 360
+     },
+     "a03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 34,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Como você apresenta a observação?\" ainda não está na fala do vídeo \"Como você apresenta a observação?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Amanda, o que você responde?\" ainda não está na fala do vídeo \"No lugar da Amanda, o que você responde?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual proposta permite avaliar a ideia?\" ainda não está na fala do vídeo \"Qual proposta permite avaliar a ideia?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Leandro, o que você faz?\" ainda não está na fala do vídeo \"No lugar do Leandro, o que você faz?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

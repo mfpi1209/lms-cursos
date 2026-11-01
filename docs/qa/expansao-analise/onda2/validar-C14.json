@@ -1,0 +1,63 @@
+[
+ {
+  "codigo": "C14",
+  "id": "crs_hvvgkvtd1rb2um0l",
+  "titulo": "Minha primeira vaga",
+  "revisao": 465,
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 0,
+   "simulated": 0,
+   "missing": 2,
+   "inProgress": 0
+  },
+  "ausentes": [
+   "aula_13/q26",
+   "aula_13/q26"
+  ],
+  "stale": [],
+  "outros": [
+   "EMPTY_BODY aula_01/m01",
+   "CALL_NOT_SPOKEN aula_01/q01",
+   "CALL_NOT_SPOKEN aula_01/q02",
+   "EMPTY_BODY aula_02/m02",
+   "CALL_NOT_SPOKEN aula_02/q03",
+   "CALL_NOT_SPOKEN aula_02/q04",
+   "CALL_NOT_SPOKEN aula_03/q05",
+   "CALL_NOT_SPOKEN aula_03/q06",
+   "EMPTY_BODY aula_04/m03",
+   "CALL_NOT_SPOKEN aula_04/q07",
+   "CALL_NOT_SPOKEN aula_04/q08",
+   "CALL_NOT_SPOKEN aula_05/q09",
+   "CALL_NOT_SPOKEN aula_05/q10",
+   "CALL_NOT_SPOKEN aula_06/q11",
+   "CALL_NOT_SPOKEN aula_06/q12",
+   "EMPTY_BODY aula_07/m06",
+   "CALL_NOT_SPOKEN aula_07/q13",
+   "CALL_NOT_SPOKEN aula_07/q14",
+   "CALL_NOT_SPOKEN aula_08/q15",
+   "EMPTY_BODY aula_09/m08",
+   "CALL_NOT_SPOKEN aula_09/q17",
+   "CALL_NOT_SPOKEN aula_09/q18",
+   "EMPTY_BODY aula_10/m09",
+   "CALL_NOT_SPOKEN aula_10/q19",
+   "CALL_NOT_SPOKEN aula_10/q20",
+   "EMPTY_BODY aula_11/m10",
+   "CALL_NOT_SPOKEN aula_11/q21",
+   "CALL_NOT_SPOKEN aula_11/q22",
+   "CALL_NOT_SPOKEN aula_11/q23",
+   "CALL_NOT_SPOKEN aula_12/q24",
+   "CALL_NOT_SPOKEN aula_12/q25"
+  ],
+  "ultimaAula": "aula_13",
+  "nosUltimaAula": [
+   "v24:scenario",
+   "q26:choice",
+   "v25:content",
+   "m11:mission",
+   "despedida:content",
+   "fim_aula_13:end"
+  ]
+ }
+]

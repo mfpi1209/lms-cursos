@@ -1,0 +1,989 @@
+{
+  "versao": 1,
+  "geradoEm": "2026-11-01",
+  "fonte": "docs/qa/raio-x/raio-x.json (versões publicadas) e checagens finais em packages/course-schema/src/trails.ts",
+  "leia": [
+    "Competências na linguagem de currículo e recrutamento: substantivo curto (≤60 caracteres) + uma frase observável (≤140) do que a pessoa praticou em situações de trabalho simuladas.",
+    "Nunca \"domina\", \"especialista\" ou reconhecimento por empregadores/órgãos. O treino é curto e por cenários: fraseamos como \"praticou/demonstrou\".",
+    "evidencia aponta cursos, aulas e situações da checagem final que sustentam cada competência; se um curso/aula mudar, revise aqui.",
+    "cargaHoraria é estimada pela fórmula descrita em docs/selos/competencias.md; não é carga horária certificada."
+  ],
+  "cargaHorariaFormula": {
+    "videoS": "duração real máxima dos vídeos publicados (videoReal.publicada.maxS)",
+    "minPorPergunta": 1.0,
+    "minPorMissao": 2.0,
+    "minPorAula": 0.5,
+    "minPorSituacaoDaChecagem": 1.5,
+    "arredondamento": "para baixo, em múltiplos de 5 min; ≥60 min exibe em horas e minutos"
+  },
+  "trilhas": [
+    {
+      "nome": "Primeiro emprego",
+      "slug": "primeiro-emprego",
+      "cursos": [
+        {
+          "codigo": "C01",
+          "titulo": "Meu primeiro dia"
+        },
+        {
+          "codigo": "C13",
+          "titulo": "Comecei a trabalhar"
+        },
+        {
+          "codigo": "C14",
+          "titulo": "Minha primeira vaga"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Alinhamento de tarefas, prazos e combinados",
+          "descricao": "Confirmou entrega, prazo, critério e pessoa de referência antes de começar e realinhou prioridades em situações de trabalho simuladas.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C01",
+                "titulo": "Meu primeiro dia",
+                "aulas": [
+                  "A1 Como confirmar local, horário e documentos"
+                ]
+              },
+              {
+                "curso": "C13",
+                "titulo": "Comecei a trabalhar",
+                "aulas": [
+                  "A1 Como confirmar a entrega, o prazo e quem orienta",
+                  "A3 Organize tarefas e prioridades"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pe1 O que o Kaio faz antes de sair para o primeiro dia?",
+              "pe3 O que o Gabriel confirma ao receber a tarefa?"
+            ]
+          }
+        },
+        {
+          "nome": "Comunicação de imprevistos e erros",
+          "descricao": "Praticou avisar atraso ou erro assim que percebido, com o que aconteceu, o impacto e o próximo passo ou a versão corrigida.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C01",
+                "titulo": "Meu primeiro dia",
+                "aulas": [
+                  "A2 Como avisar um atraso e se apresentar"
+                ]
+              },
+              {
+                "curso": "C13",
+                "titulo": "Comecei a trabalhar",
+                "aulas": [
+                  "A4 Avise quando algo der errado"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pe2 Como a Lívia avisa que pode atrasar?",
+              "pe5 O que o João faz ao perceber o erro?"
+            ]
+          }
+        },
+        {
+          "nome": "Pedido de ajuda com contexto",
+          "descricao": "Demonstrou pedir ajuda dizendo o que precisava fazer, o que já tentou e o erro encontrado, em vez de insistir sozinho.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C13",
+                "titulo": "Comecei a trabalhar",
+                "aulas": [
+                  "A2 Peça ajuda com clareza"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pe4 Como a Bianca pede ajuda?"
+            ]
+          }
+        },
+        {
+          "nome": "Aplicação de feedback e plano de desenvolvimento",
+          "descricao": "Praticou pedir exemplo do que melhorar, combinar uma ação com momento de revisão e propor uma próxima oportunidade de aprender.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C13",
+                "titulo": "Comecei a trabalhar",
+                "aulas": [
+                  "A5 Transforme feedback em ação",
+                  "A6 Proponha uma oportunidade de aprender"
+                ]
+              }
+            ],
+            "checagemFinal": []
+          }
+        },
+        {
+          "nome": "Preparação para processos seletivos",
+          "descricao": "Leu vagas separando exigido de desejável, montou currículo de uma página e perfil, e preparou apresentação e respostas de entrevista.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C14",
+                "titulo": "Minha primeira vaga",
+                "aulas": [
+                  "A1 Como reconhecer experiências que entram no currículo",
+                  "A2 Como ler uma vaga e decidir se candidatar",
+                  "A3 Como procurar vagas e reconhecer golpes",
+                  "A4 Currículo de uma página",
+                  "A5 Prepare seu perfil profissional",
+                  "A6 Como escrever uma mensagem para pedir uma conversa",
+                  "A7 Como se organizar nas etapas do processo seletivo",
+                  "A8 Como participar de uma dinâmica de grupo",
+                  "A9 Como responder \"fale sobre você\"",
+                  "A10 Como contar o que você fez, com exemplos",
+                  "A11 Como responder perguntas difíceis da entrevista",
+                  "A12 Prepare a entrevista e os próximos passos"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pe6 A Tainá deve se candidatar?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de entrada no trabalho: combinados do primeiro dia, comunicação com quem orienta, feedback e preparação para processos seletivos.",
+      "palavrasChave": [
+        "Comunicação",
+        "Proatividade",
+        "Responsabilidade",
+        "Abertura a feedback",
+        "Comprometimento",
+        "Entrevista de emprego",
+        "Currículo"
+      ],
+      "cargaHoraria": {
+        "videoMin": 34.5,
+        "aulas": 20,
+        "perguntas": 38,
+        "missoes": 18,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 112,
+        "totalCalculadoMin": 127.5,
+        "exibicaoMin": 125,
+        "exibicao": "2 h 05 min"
+      }
+    },
+    {
+      "nome": "Rotina e combinados",
+      "slug": "rotina-e-combinados",
+      "cursos": [
+        {
+          "codigo": "C03",
+          "titulo": "Celular no trabalho"
+        },
+        {
+          "codigo": "C04",
+          "titulo": "WhatsApp sem complicação"
+        },
+        {
+          "codigo": "C05",
+          "titulo": "Horário é combinado"
+        },
+        {
+          "codigo": "C10",
+          "titulo": "Terminei. E agora?"
+        },
+        {
+          "codigo": "C11",
+          "titulo": "Não entendi. Posso perguntar?"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Comunicação profissional por escrito",
+          "descricao": "Escreveu mensagens de trabalho com identificação, contexto e pedido, e retomou um pedido pendente sem pressionar.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C04",
+                "titulo": "WhatsApp sem complicação",
+                "aulas": [
+                  "A1 Como escrever uma mensagem com contexto e pedido",
+                  "A2 Como acompanhar um pedido sem pressionar"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rc6 Qual mensagem a Ana envia?"
+            ]
+          }
+        },
+        {
+          "nome": "Pontualidade e comunicação de ausências",
+          "descricao": "Planejou trajeto e chegada e praticou avisar mudança de horário com antecedência, combinando como registrar a ausência.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C05",
+                "titulo": "Horário é combinado",
+                "aulas": [
+                  "A1 Como planejar o trajeto e a chegada",
+                  "A2 Como avisar uma mudança de horário"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rc5 Como o Davi avisa a mudança de horário?"
+            ]
+          }
+        },
+        {
+          "nome": "Uso do celular conforme a orientação do local",
+          "descricao": "Distinguiu uso de trabalho de interrupção pessoal, confirmou o que é permitido e combinou canal para um recado necessário.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C03",
+                "titulo": "Celular no trabalho",
+                "aulas": [
+                  "A1 Como saber quando usar o celular",
+                  "A2 Como receber um recado importante"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rc2 O que a Larissa faz para entender a regra?",
+              "rc4 O que a Sofia faz com o recado da família?"
+            ]
+          }
+        },
+        {
+          "nome": "Comunicação de entregas e próximos passos",
+          "descricao": "Avisou conclusão de tarefa com local do resultado e pendências, e propôs a próxima atividade sem assumir acesso não combinado.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C10",
+                "titulo": "Terminei. E agora?",
+                "aulas": [
+                  "A1 Como entregar e avisar onde está o resultado",
+                  "A2 Como escolher a próxima tarefa"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rc1 Como o Mateus avisa que terminou?"
+            ]
+          }
+        },
+        {
+          "nome": "Esclarecimento de regras e orientações",
+          "descricao": "Pediu exemplo concreto para aplicar uma regra vaga e, diante de orientações divergentes, confirmou qual valia com quem decide.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C11",
+                "titulo": "Não entendi. Posso perguntar?",
+                "aulas": [
+                  "A1 Como pedir um exemplo",
+                  "A2 Como esclarecer orientações diferentes"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rc2 O que a Larissa faz para entender a regra?",
+              "rc3 Como o Heitor resolve as orientações diferentes?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de rotina de trabalho: mensagens profissionais, horários e ausências, celular no expediente, entrega de tarefas e esclarecimento de regras.",
+      "palavrasChave": [
+        "Pontualidade",
+        "Comunicação escrita",
+        "Organização",
+        "Disciplina",
+        "Cumprimento de normas",
+        "Compromisso com prazos"
+      ],
+      "cargaHoraria": {
+        "videoMin": 15.5,
+        "aulas": 10,
+        "perguntas": 15,
+        "missoes": 10,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 50,
+        "totalCalculadoMin": 64.5,
+        "exibicaoMin": 60,
+        "exibicao": "1 h"
+      }
+    },
+    {
+      "nome": "Imagem e postura",
+      "slug": "imagem-e-postura",
+      "cursos": [
+        {
+          "codigo": "C02",
+          "titulo": "Que roupa eu uso?"
+        },
+        {
+          "codigo": "C09",
+          "titulo": "Posso postar isso?"
+        },
+        {
+          "codigo": "C12",
+          "titulo": "Recebi uma correção. E agora?"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Apresentação pessoal adequada ao ambiente",
+          "descricao": "Consultou a orientação de roupa e calçado antes de decidir e propôs alternativa possível em vez de comprar por suposição.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C02",
+                "titulo": "Que roupa eu uso?",
+                "aulas": [
+                  "A1 Como confirmar roupa e calçado",
+                  "A2 Como conversar sobre alternativas de roupa"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "ip1 O que o Pedro faz sobre a roupa?",
+              "ip2 Como a Júlia resolve a falta da peça?"
+            ]
+          }
+        },
+        {
+          "nome": "Responsabilidade com imagem e dados nas redes",
+          "descricao": "Conferiu pessoas e informações visíveis antes de publicar, pediu autorização e retirou publicação indevida, avisando os envolvidos.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C09",
+                "titulo": "Posso postar isso?",
+                "aulas": [
+                  "A1 Como conferir o que a publicação mostra",
+                  "A2 Como comunicar uma publicação indevida"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "ip5 A Bia pode postar a foto?",
+              "ip6 O que o Rafael faz depois de perceber?"
+            ]
+          }
+        },
+        {
+          "nome": "Postura profissional diante de correções",
+          "descricao": "Pediu exemplo concreto do que mudar, combinou uma mudança observável e buscou apoio quando a correção veio com desrespeito.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C12",
+                "titulo": "Recebi uma correção. E agora?",
+                "aulas": [
+                  "A1 Como entender o que precisa mudar",
+                  "A2 Como combinar uma mudança e buscar apoio"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "ip3 Como o Lucas responde à correção?",
+              "ip4 O que a Carol faz diante do comentário?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de postura profissional: vestimenta adequada ao ambiente, publicações sobre o trabalho com autorização e resposta a correções.",
+      "palavrasChave": [
+        "Postura profissional",
+        "Apresentação pessoal",
+        "Receptividade a feedback",
+        "Ética profissional",
+        "Uso responsável de redes sociais",
+        "Sigilo de informações"
+      ],
+      "cargaHoraria": {
+        "videoMin": 9.9,
+        "aulas": 6,
+        "perguntas": 9,
+        "missoes": 6,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 30,
+        "totalCalculadoMin": 42.9,
+        "exibicaoMin": 40,
+        "exibicao": "40 min"
+      }
+    },
+    {
+      "nome": "Convivência",
+      "slug": "convivencia",
+      "cursos": [
+        {
+          "codigo": "C06",
+          "titulo": "Brincadeiras têm limite"
+        },
+        {
+          "codigo": "C07",
+          "titulo": "Como falar com a equipe"
+        },
+        {
+          "codigo": "C08",
+          "titulo": "O espaço também é do outro"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Respeito a limites nas relações de trabalho",
+          "descricao": "Perguntou como a pessoa prefere ser tratada, expressou um limite com calma e recorreu à referência quando o incômodo continuou.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C06",
+                "titulo": "Brincadeiras têm limite",
+                "aulas": [
+                  "A1 Nomes, apelidos e brincadeiras",
+                  "A2 Como expressar um limite e buscar apoio"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "cv5 Como a Nina chama o colega?",
+              "cv6 Como o Bruno coloca o limite?"
+            ]
+          }
+        },
+        {
+          "nome": "Apoio a colegas em situações de desconforto",
+          "descricao": "Escolheu, em caso simulado, uma frase de acolhimento e um caminho de apoio para colega alvo de brincadeira, sem expor nem confrontar.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C06",
+                "titulo": "Brincadeiras têm limite",
+                "aulas": [
+                  "A3 Como apoiar quando o alvo é outra pessoa"
+                ]
+              }
+            ],
+            "checagemFinal": []
+          }
+        },
+        {
+          "nome": "Comunicação assertiva com a equipe",
+          "descricao": "Pediu atenção informando assunto e urgência real e apresentou diferença de entendimento com fatos e proposta, sem atacar a pessoa.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C07",
+                "titulo": "Como falar com a equipe",
+                "aulas": [
+                  "A1 Como pedir orientação no momento certo",
+                  "A2 Como esclarecer uma diferença de entendimento"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "cv1 Como o Ícaro pede atenção?",
+              "cv2 Como a Elisa apresenta a diferença?"
+            ]
+          }
+        },
+        {
+          "nome": "Cuidado com espaços e recursos compartilhados",
+          "descricao": "Deixou o espaço coletivo pronto para a próxima pessoa e sinalizou um problema de manutenção sem improvisar a solução.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C08",
+                "titulo": "O espaço também é do outro",
+                "aulas": [
+                  "A1 Como deixar o espaço pronto para a próxima pessoa",
+                  "A2 Como avisar o que precisa de cuidado"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "cv3 O que o Luan faz depois de usar a copa?",
+              "cv4 O que a Malu faz com o problema?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de convivência no trabalho: limites e respeito entre colegas, conversa assertiva com a equipe e cuidado com espaços compartilhados.",
+      "palavrasChave": [
+        "Trabalho em equipe",
+        "Relacionamento interpessoal",
+        "Comunicação assertiva",
+        "Respeito",
+        "Empatia",
+        "Zelo pelo ambiente de trabalho"
+      ],
+      "cargaHoraria": {
+        "videoMin": 11.7,
+        "aulas": 7,
+        "perguntas": 11,
+        "missoes": 7,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 31,
+        "totalCalculadoMin": 49.2,
+        "exibicaoMin": 45,
+        "exibicao": "45 min"
+      }
+    },
+    {
+      "nome": "Respeito e diálogo",
+      "slug": "respeito-e-dialogo",
+      "cursos": [
+        {
+          "codigo": "C15",
+          "titulo": "O outro só é diferente"
+        },
+        {
+          "codigo": "C16",
+          "titulo": "Discordar sem brigar"
+        },
+        {
+          "codigo": "C17",
+          "titulo": "Minha ideia também conta"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Respeito à diversidade na equipe",
+          "descricao": "Reconheceu formas diferentes de participar, interveio diante de piada e insistência e fez convite que a pessoa pode recusar sem se explicar.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C15",
+                "titulo": "O outro só é diferente",
+                "aulas": [
+                  "A1 Diferente de mim não significa errado",
+                  "A2 Respeitar diferenças também exige limites"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rd1 O que a Heloísa faz?",
+              "rd2 O que o Evandro faz?"
+            ]
+          }
+        },
+        {
+          "nome": "Discordância construtiva e negociação",
+          "descricao": "Discordou com objetivo comum, preocupação e proposta; definiu critérios para sair de um impasse e manteve o diálogo ao ouvir crítica.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C16",
+                "titulo": "Discordar sem brigar",
+                "aulas": [
+                  "A1 Dá para pensar diferente",
+                  "A2 Como sair do impasse"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rd3 Como a Noemi discorda?",
+              "rd4 O que a Tamires responde?",
+              "rd5 O que o Ulisses propõe?"
+            ]
+          }
+        },
+        {
+          "nome": "Proposta de melhorias com base em observação",
+          "descricao": "Descreveu uma dificuldade com fato e efeito, sem culpar pessoas, e propôs um teste pequeno com sinal de resultado definido.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C17",
+                "titulo": "Minha ideia também conta",
+                "aulas": [
+                  "A1 Não precisa ter a ideia perfeita",
+                  "A2 Como propor uma melhoria pequena"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "rd6 Como o Gael apresenta a ideia?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de diálogo no trabalho: respeito às diferenças, discordância sem conflito e proposta de melhorias pequenas e testáveis.",
+      "palavrasChave": [
+        "Respeito à diversidade",
+        "Inclusão",
+        "Negociação",
+        "Argumentação",
+        "Iniciativa",
+        "Colaboração"
+      ],
+      "cargaHoraria": {
+        "videoMin": 7.8,
+        "aulas": 6,
+        "perguntas": 12,
+        "missoes": 6,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 6,
+        "totalCalculadoMin": 43.8,
+        "exibicaoMin": 40,
+        "exibicao": "40 min"
+      }
+    },
+    {
+      "nome": "Tecnologia com critério",
+      "slug": "tecnologia-com-criterio",
+      "cursos": [
+        {
+          "codigo": "C18",
+          "titulo": "Seus dados também trabalham"
+        },
+        {
+          "codigo": "C19",
+          "titulo": "Parece verdade. Será?"
+        },
+        {
+          "codigo": "C20",
+          "titulo": "IA como aliada"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Proteção de dados pessoais em prints e mensagens",
+          "descricao": "Identificou nome, telefone e conversas de terceiros em um print e os removeu antes de pedir ajuda, enviando só o necessário.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C18",
+                "titulo": "Seus dados também trabalham",
+                "aulas": [
+                  "A1 O que aparece no seu print?"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "tc1 O que a Cecília faz com o print?"
+            ]
+          }
+        },
+        {
+          "nome": "Compartilhamento seguro de arquivos e links",
+          "descricao": "Conferiu destinatário, conteúdo e nível de acesso antes de enviar e restringiu um link aberto a quem precisava dele.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C18",
+                "titulo": "Seus dados também trabalham",
+                "aulas": [
+                  "A2 Antes de enviar, confira o destino"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "tc2 O que o Ismael faz com o link?"
+            ]
+          }
+        },
+        {
+          "nome": "Verificação de informações antes de agir ou repassar",
+          "descricao": "Checou origem, data e contexto de um aviso antes de agir e reconheceu sinais de vaga falsa que pede documentos antes da entrevista.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C19",
+                "titulo": "Parece verdade. Será?",
+                "aulas": [
+                  "A1 Print não conta a história toda",
+                  "A2 Como conferir antes de repassar"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "tc3 O que a Abigail faz com o aviso?",
+              "tc4 O que o Tales faz com a vaga?"
+            ]
+          }
+        },
+        {
+          "nome": "Uso de inteligência artificial com revisão",
+          "descricao": "Formulou pedido à IA com objetivo, contexto e formato, revisou a resposta com checklist e trocou dados reais por fictícios.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C20",
+                "titulo": "IA como aliada",
+                "aulas": [
+                  "A1 Como pedir ajuda à IA",
+                  "A2 Antes de usar, confira"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "tc5 O que a Marisa faz com o texto da IA?",
+              "tc6 O que o Benício faz antes de pedir?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de tecnologia no trabalho: proteção de dados em prints e envios, checagem de informações e golpes, uso de IA com revisão.",
+      "palavrasChave": [
+        "Proteção de dados",
+        "Noções de segurança da informação",
+        "Letramento digital",
+        "Inteligência artificial",
+        "Atenção aos detalhes",
+        "Ética digital"
+      ],
+      "cargaHoraria": {
+        "videoMin": 7.7,
+        "aulas": 6,
+        "perguntas": 12,
+        "missoes": 6,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 6,
+        "totalCalculadoMin": 43.7,
+        "exibicaoMin": 40,
+        "exibicao": "40 min"
+      }
+    },
+    {
+      "nome": "Autonomia no trabalho",
+      "slug": "autonomia-no-trabalho",
+      "cursos": [
+        {
+          "codigo": "C21",
+          "titulo": "Tudo é urgente?"
+        },
+        {
+          "codigo": "C22",
+          "titulo": "Errei. E agora?"
+        },
+        {
+          "codigo": "C23",
+          "titulo": "Aprender faz parte do trabalho"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Priorização de demandas com informações concretas",
+          "descricao": "Diante de um pedido “urgente”, perguntou prazo e uso e avisou compromissos já assumidos antes de reordenar o trabalho.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C21",
+                "titulo": "Tudo é urgente?",
+                "aulas": [
+                  "A1 Dois pedidos, um só tempo"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "au1 O que o Odilon faz primeiro?"
+            ]
+          }
+        },
+        {
+          "nome": "Negociação de prazos e carga de trabalho",
+          "descricao": "Quando as tarefas não cabiam no tempo, listou o que faltava e pediu ajuste com situação, impacto e alternativa a quem decide.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C21",
+                "titulo": "Tudo é urgente?",
+                "aulas": [
+                  "A2 Quando as tarefas deixam de caber"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "au5 O que o Ronaldo faz?"
+            ]
+          }
+        },
+        {
+          "nome": "Correção de erros e melhoria de processo",
+          "descricao": "Avisou erro com fato, impacto e próximo passo e escolheu uma mudança no processo, definindo como verificar se reduziu o erro.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C22",
+                "titulo": "Errei. E agora?",
+                "aulas": [
+                  "A1 Percebi o erro: qual é o próximo passo?",
+                  "A2 Como corrigir e aprender"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "au2 O que a Raíssa faz?",
+              "au3 Qual mudança o Moisés escolhe?"
+            ]
+          }
+        },
+        {
+          "nome": "Aprendizagem autônoma de novas tarefas",
+          "descricao": "Registrou o que já faz sozinho e o que quer aprender e montou plano para aprender uma tarefa observando, anotando e tirando dúvidas.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C23",
+                "titulo": "Aprender faz parte do trabalho",
+                "aulas": [
+                  "A1 O que eu já faço com autonomia?",
+                  "A2 Como aprender uma tarefa observando"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "au4 O que a Iolanda diz ao gestor?",
+              "au6 O que a Lia faz?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de autonomia: priorização de demandas, negociação de prazos, comunicação e correção de erros, aprendizado de tarefas novas.",
+      "palavrasChave": [
+        "Autonomia",
+        "Gestão do tempo",
+        "Priorização",
+        "Melhoria contínua",
+        "Vontade de aprender",
+        "Autodesenvolvimento"
+      ],
+      "cargaHoraria": {
+        "videoMin": 7.5,
+        "aulas": 6,
+        "perguntas": 12,
+        "missoes": 6,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 6,
+        "totalCalculadoMin": 43.5,
+        "exibicaoMin": 40,
+        "exibicao": "40 min"
+      }
+    },
+    {
+      "nome": "Pensar e resolver",
+      "slug": "pensar-e-resolver",
+      "cursos": [
+        {
+          "codigo": "C24",
+          "titulo": "Por onde eu começo?"
+        },
+        {
+          "codigo": "C25",
+          "titulo": "Faz sentido?"
+        },
+        {
+          "codigo": "C26",
+          "titulo": "Onde está o problema?"
+        }
+      ],
+      "competencias": [
+        {
+          "nome": "Planejamento de tarefas a partir do objetivo",
+          "descricao": "Antes de agir, identificou o que precisa conseguir, o que já sabe e o que falta descobrir, e ordenou etapas marcando o que confirmar.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C24",
+                "titulo": "Por onde eu começo?",
+                "aulas": [
+                  "A1 Entenda antes de sair fazendo",
+                  "A2 Organize o próximo passo"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pr1 O que o Sidnei faz primeiro?",
+              "pr2 Qual sequência a Clarice segue?"
+            ]
+          }
+        },
+        {
+          "nome": "Raciocínio baseado em fatos, não em suposições",
+          "descricao": "Separou observação de conclusão, considerou explicações alternativas e comparou dados antes de apontar uma causa.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C25",
+                "titulo": "Faz sentido?",
+                "aulas": [
+                  "A1 Eu sei ou estou supondo?",
+                  "A2 Um caso não explica tudo"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pr3 O que o Hugo tem de confirmado?",
+              "pr4 O que a Mirela faz?"
+            ]
+          }
+        },
+        {
+          "nome": "Investigação de problemas com testes seguros",
+          "descricao": "Montou investigação com sintoma, hipótese e verificação segura, confirmando se há como desfazer e quando parar para pedir apoio.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C26",
+                "titulo": "Onde está o problema?",
+                "aulas": [
+                  "A1 Antes de mexer: dá para desfazer?",
+                  "A2 Antes de consertar, investigue"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pr5 O que o Ezequiel faz?"
+            ]
+          }
+        },
+        {
+          "nome": "Verificação de resultados após uma correção",
+          "descricao": "Definiu critério de sucesso e o que registrar após um teste, confirmando a solução com teste autorizado, não só pela tela.",
+          "evidencia": {
+            "cursos": [
+              {
+                "curso": "C26",
+                "titulo": "Onde está o problema?",
+                "aulas": [
+                  "A3 Funcionou mesmo?"
+                ]
+              }
+            ],
+            "checagemFinal": [
+              "pr6 Como a Selma confirma a solução?"
+            ]
+          }
+        }
+      ],
+      "resumoCurriculo": "Trilha prática de raciocínio no trabalho: planejar a partir do objetivo, separar fato de suposição, investigar causas com segurança e confirmar resultados.",
+      "palavrasChave": [
+        "Resolução de problemas",
+        "Pensamento crítico",
+        "Raciocínio lógico",
+        "Planejamento",
+        "Pensamento analítico",
+        "Tomada de decisão"
+      ],
+      "cargaHoraria": {
+        "videoMin": 9.2,
+        "aulas": 7,
+        "perguntas": 14,
+        "missoes": 7,
+        "situacoesChecagem": 6,
+        "somaEstimativaMinDasAulas": 7,
+        "totalCalculadoMin": 49.7,
+        "exibicaoMin": 45,
+        "exibicao": "45 min"
+      }
+    }
+  ]
+}

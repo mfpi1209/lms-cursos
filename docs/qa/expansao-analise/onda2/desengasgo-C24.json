@@ -1,0 +1,182 @@
+{
+ "geradoEm": "2026-11-01T12:12:13.107Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "Por onde eu começo?",
+   "courseId": "crs_dp9s7pdro9j6e3m0",
+   "rascunhoRevAntes": 49,
+   "varredura": {
+    "rascunho": {
+     "videos": 23,
+     "assets": 23,
+     "ge200": 2,
+     "tolerados": 8
+    },
+    "publicada": {
+     "versao": 3,
+     "videos": 20,
+     "assets": 20,
+     "ge200": 0,
+     "tolerados": 6,
+     "diferemDoRascunho": 0
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_03",
+     "no": "v05",
+     "tipo": "cena",
+     "de": "ast_mexmpn9pxta41dg4",
+     "para": "ast_dwalwl8kmu76ljv3",
+     "antes": 2,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 14,
+       "inicio": 23.16,
+       "ms": 200,
+       "quadro": 579,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 21,
+       "inicio": 29.28,
+       "ms": 280,
+       "quadro": 732,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 30,
+       "inicio": 33.36,
+       "ms": 200,
+       "quadro": 834,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 23,
+       "inicio": 40.16,
+       "ms": 280,
+       "quadro": 1004,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 28664962,
+      "tamanhoDepois": 35085672,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_03",
+     "no": "v06",
+     "tipo": "cena",
+     "de": "ast_s3jhv50l0tkac8lk",
+     "para": "ast_o6g25odavs4b6wow",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.0098,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 28,
+       "inicio": 21.12,
+       "ms": 640,
+       "quadro": 528,
+       "quadros": 16,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 23,
+       "inicio": 23.76,
+       "ms": 400,
+       "quadro": 594,
+       "quadros": 10,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 20,
+       "inicio": 42.2,
+       "ms": 200,
+       "quadro": 1055,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 17,
+       "inicio": 56,
+       "ms": 280,
+       "quadro": 1400,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 33416309,
+      "tamanhoDepois": 42737040,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [],
+   "rascunhoRevDepois": 50
+  }
+ ]
+}

@@ -1,0 +1,697 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C19",
+  "id": "crs_au1463izc386by27",
+  "titulo": "Parece verdade. Será?",
+  "instrutor": "Laís — Sua orientadora",
+  "versaoPublicada": 1,
+  "revisaoDoRascunho": 32
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou a fala do plano indicado (mesmo id, regrava só ele); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids não mudam.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. layout/camera seguem o padrão atual do curso.",
+  "A pergunta nova não ganha vídeo próprio: a cena anterior termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais).",
+  "A missão nova é fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; draftFromNodeId fica null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Aberturas: o plano 'missao'/'s4'/'s2' indicado troca de fala (mesmo id) por uma promessa concreta sem a palavra 'missão'. A regra do robô-aluno 'missao-sem-anuncio' precisa aceitar o anúncio sem a palavra (como no piloto C01).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "Reações novas: nenhuma usa as aberturas atuais do C19 ('Boa escolha', 'É por aí', 'Isso ajuda') nem as de frasesRepetidasEmVariosCursos.",
+  "Nenhum personagem novo: a aula 3 continua a Camille (q02) e devolve o Kelvin (q04) na despedida.",
+  "A prática a02 fica como está (sequência de três verificações): a prática S2 do banco não entra, porque o anúncio gravado em v03 a promete e a troca de fala proposta continua anunciando a mesma prática.",
+  "v05/s1 mostra o print fictício num cartão (pendência 1 do banco): marcar na tela como simulação."
+ ],
+ "diagnostico": [
+  "O curso trata o print sem contexto (aula 1) e o print repetido por várias fontes (aula 2), mas nunca a terceira situação: a informação existe e era verdadeira, mas ficou fora de data.",
+  "Nenhuma fala ensina a concluir só o que se conseguiu conferir: o aluno sai sabendo verificar, não sabendo o tamanho da resposta que pode dar a quem mandou.",
+  "A regra que fica (“vaga de verdade não cobra para você se inscrever”) está implícita no caso do Kelvin, mas ninguém a diz.",
+  "As duas práticas são montagem de blocos; nada acontece fora da tela. As aberturas usam a fórmula “No fim desta aula, tem uma missão para você”.",
+  "O curso termina numa tela de texto genérica: sem fecho da Laís."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Verificar origem, data e contexto antes de agir sobre uma informação, e responder a quem enviou concluindo só o que foi conferido. Público: Jovens do ensino médio, aprendizes, estagiários e pessoas no primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_03",
+    "texto": "Reconhecer a informação verdadeira fora de data e responder a quem enviou concluindo só o que foi conferido."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Camille",
+    "Kelvin"
+   ],
+   "novos": [
+    "amiga da Camille (sem nome)"
+   ]
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Print não conta a história toda",
+   "caminhoPrincipal": [
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "a01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v01",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s4 troca de fala; os demais planos ficam.",
+     "planos": [
+      {
+       "id": "s4",
+       "fala": "Daqui a pouco, você escreve a mensagem que pergunta o que falta num aviso: quem publicou, quando, e para quem vale.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "change",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva uma mensagem curta para verificar um aviso incompleto.",
+       "duracaoAnteriorS": 6.8
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com frase repetida em 12–13 cursos (ver custos.opcional_reacoesRepetidas)"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e C abrem com frase repetida"
+    },
+    {
+     "id": "a01",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução: o componente é de blocos, mas o texto diz 'Escreva uma resposta curta'. Molde, blocos e título ficam.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Print sem data e sem autor é pergunta, não aviso."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como conferir antes de repassar",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "a02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano s2 troca de fala. A prática a02 continua a mesma (sequência de três verificações), então o anúncio novo continua verdadeiro (resolve a pendência 2 do banco sem regravar nada a mais).",
+     "planos": [
+      {
+       "id": "s2",
+       "fala": "No fim, você monta a sua ordem de conferência: três passos, do print até a fonte, antes de repassar qualquer oportunidade.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "change",
+       "palavras": 21,
+       "segundos": 8.0,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: monte uma sequência de três verificações antes de compartilhar uma oportunidade.",
+       "duracaoAnteriorS": 8.1
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com frase repetida"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com frase repetida"
+    },
+    {
+     "id": "a02",
+     "tipo": "reflection",
+     "acao": "change",
+     "nota": "Só a instrução (mesmo defeito da a01). Molde, blocos e título ficam; a prática do pacote (S2) não entra, para não contradizer o anúncio gravado.",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     }
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Antes de repassar uma oportunidade, confirme na fonte oficial e diga com clareza o que ainda não foi confirmado. Se você salvou, sua sequência de verificações fica no Meu roteiro. Na próxima aula, a fonte existe, mas a informação mudou: o aviso era verdadeiro no ano passado.",
+      "closingLine": "Três perfis com o mesmo print são uma fonte só. Vá até a original."
+     },
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' e 'Você chegou ao final…' passam para fim_aula_03."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "add",
+   "modulo": "Parece verdade. Será?",
+   "titulo": "Era verdade. Ainda vale?",
+   "resumo": "Você vê um aviso verdadeiro que ficou fora de data, decide como responder a quem mandou e confere um print real do seu grupo nesta semana.",
+   "estimativaMin": 4,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_03",
+    "texto": "Reconhecer a informação verdadeira fora de data e responder a quem enviou concluindo só o que foi conferido."
+   },
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "a03",
+    "despedida",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Era verdade. Ainda vale?",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Verdadeiro, mas fora de data",
+     "planos": [
+      {
+       "id": "promessa",
+       "fala": "Nesta última aula, você faz a conferência de verdade: pega um print que circulou no seu grupo e vai até a fonte, com data.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2,
+       "nota": "Faz o papel do antigo anúncio, sem a fórmula e sem a palavra 'missão'."
+      },
+      {
+       "id": "s1",
+       "fala": "Olha este print. ‘Inscrições abertas: curso gratuito de atendimento. Até dia 30.’ Sem ano, sem link. Chegou hoje no grupo da Camille.",
+       "layout": "presenter_chips",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "cartao": {
+        "titulo": "O print (simulação)",
+        "topicos": [
+         "**Inscrições abertas** · curso gratuito de atendimento",
+         "Até **dia 30**",
+         "sem ano · sem link · encaminhado 3 vezes"
+        ]
+       },
+       "nota": "Direção visual (pendência 1 do banco): o cartão simula o print; a Laís narra o que se vê, em vez de “imagine”."
+      },
+      {
+       "id": "s2",
+       "fala": "A Camille faz o que aprendeu: acha a organização, abre o canal oficial. O aviso existe. Mas é do ano passado. Nova turma? Nada publicado.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5
+      },
+      {
+       "id": "chamada",
+       "fala": "A amiga que mandou o print pergunta: ‘E aí, me inscrevo ou não?’. No lugar da Camille, o que você responde?",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      }
+     ],
+     "cartaoPerguntaSeguinte": "O aviso original existe, mas é do ano passado, e não há nova abertura publicada. A amiga pergunta: “me inscrevo ou não?”. No lugar da Camille, o que você responde?",
+     "proximo": "q05",
+     "palavras": 92,
+     "segundos": 35.1,
+     "roteiroNovo": "Nesta última aula, você faz a conferência de verdade: pega um print que circulou no seu grupo e vai até a fonte, com data. Olha este print. ‘Inscrições abertas: curso gratuito de atendimento. Até dia 30.’ Sem ano, sem link. Chegou hoje no grupo da Camille. A Camille faz o que aprendeu: acha a organização, abre o canal oficial. O aviso existe. Mas é do ano passado. Nova turma? Nada publicado. A amiga que mandou o print pergunta: ‘E aí, me inscrevo ou não?’. No lugar da Camille, o que você responde?"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Camille, o que você responde?",
+     "apoioNaTela": "O aviso original existe no canal da organização, mas é do ano passado, e não há nova abertura publicada. A amiga pergunta se deve se inscrever.",
+     "bridge": {
+      "call": "No lugar da Camille, o que você responde?"
+     },
+     "video": "não gerar: v05 termina com a chamada e o player pula o vídeo da pergunta",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“O aviso original é do ano passado. Não achei nova abertura. Dá para acompanhar no canal deles.”",
+       "qualidade": "strong",
+       "feedback": "Você separa a informação localizada do que ainda não foi confirmado, e devolve um caminho. Faça assim: mande junto o link do canal oficial, para ela acompanhar sozinha.",
+       "reacao": {
+        "texto": "Você disse o que encontrou, o que ainda não está confirmado e onde conferir. Três frases, nenhuma certeza inventada. É isso.",
+        "palavras": 21,
+        "segundos": 8.0
+       },
+       "vaiPara": "v06",
+       "caracteres": 96
+      },
+      {
+       "id": "b",
+       "rotulo": "“Isso é golpe. A organização está enganando as pessoas.”",
+       "qualidade": "weak",
+       "feedback": "A data antiga não demonstra má intenção; a acusação é uma conclusão maior do que o que você conferiu. Faça assim: diga o que achou e o que falta confirmar, sem adjetivo.",
+       "reacao": {
+        "texto": "Golpe? Devagar. O que você conferiu foi uma data antiga, não uma intenção. Acusar sem prova também é espalhar informação sem base.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v06",
+       "caracteres": 56
+      },
+      {
+       "id": "c",
+       "rotulo": "“Deve ter aberto de novo. Se compartilharam hoje, vale.”",
+       "qualidade": "ok",
+       "feedback": "A data do compartilhamento não atualiza o conteúdo; ela pode se inscrever em algo que não existe. Faça assim: responda com o que a fonte mostra e indique onde acompanhar uma nova turma.",
+       "reacao": {
+        "texto": "O texto convence, mas a data de hoje é do compartilhamento, não do aviso. Encaminhar não atualiza nada. A fonte ainda diz: ano passado.",
+        "palavras": 24,
+        "segundos": 9.2
+       },
+       "vaiPara": "v06",
+       "caracteres": 56
+      }
+     ],
+     "porQueFunciona": "A resposta não está no enunciado: ele dá os fatos (aviso existe, é antigo, nada novo publicado); decidir o tamanho da conclusão (nem “golpe”, nem “vale”) é a decisão. A opção C é plausível porque “compartilharam hoje” parece atualizar. Sem vídeo próprio da pergunta."
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Conclua só o que você conferiu",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "textoTela": "Falso · Verdadeiro · Verdadeiro fora de data",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Uma informação pode ser falsa, verdadeira, ou verdadeira fora de contexto. O print sozinho não mostra a diferença. A fonte, com data, mostra.",
+       "layout": "presenter_chips",
+       "camera": "cam_lais8_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8,
+       "cartao": {
+        "titulo": "Três situações",
+        "topicos": [
+         "**Falsa**: a fonte não existe ou não diz aquilo",
+         "**Verdadeira**: fonte e data batem",
+         "**Verdadeira fora de data**: existiu, mudou"
+        ]
+       }
+      },
+      {
+       "id": "s2",
+       "fala": "Então conclua só o que você conseguiu conferir. Dá para confirmar a data antiga sem saber se haverá nova turma. Diga as duas coisas.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "s3",
+       "fala": "Evite preencher a lacuna com a resposta que você gostaria de dar. ‘Ainda não consegui confirmar’ orienta melhor do que uma certeza sem base.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: pegue um print de vaga ou curso que circulou no seu grupo. Vá até a fonte, com data. Depois, conte.",
+       "layout": "presenter",
+       "camera": "cam_lais8_esq",
+       "acao": "add",
+       "palavras": 24,
+       "segundos": 9.2,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra. A aula segue para a03."
+      }
+     ],
+     "proximo": "a03",
+     "naoRepete": "Não repete o v02 (procure o comunicado original, a data e a quem se aplica) nem o v04 (canal conhecido; “não consegui confirmar” é resposta): o novo é a terceira situação (verdadeiro fora de data), “conclua só o que conferiu” e não preencher a lacuna com a resposta desejada. “Evidência” não aparece (vocabulário da revisão).",
+     "palavras": 95,
+     "segundos": 36.3,
+     "roteiroNovo": "Uma informação pode ser falsa, verdadeira, ou verdadeira fora de contexto. O print sozinho não mostra a diferença. A fonte, com data, mostra. Então conclua só o que você conseguiu conferir. Dá para confirmar a data antiga sem saber se haverá nova turma. Diga as duas coisas. Evite preencher a lacuna com a resposta que você gostaria de dar. ‘Ainda não consegui confirmar’ orienta melhor do que uma certeza sem base. Agora é com você: pegue um print de vaga ou curso que circulou no seu grupo. Vá até a fonte, com data. Depois, conte."
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Confira um print que circulou no seu grupo",
+     "tipoDeMissao": "FAZER fora da tela: pegar um print real de vaga, curso ou inscrição, achar a publicação original, a data e para quem vale, e anotar o que confirmou e o que não",
+     "intro": "A Camille respondeu com o que achou e o que faltava. Agora é um print real: de vaga, curso ou inscrição, que passou pelo seu grupo.",
+     "action": [
+      "Escolha um print de vaga, curso ou inscrição que circulou num grupo seu nesta semana (ou no último mês).",
+      "Ache a publicação original pelo canal da organização, por um caminho que você já conhece. Não pelo link do print.",
+      "Anote: a data da publicação original e para quem o aviso vale.",
+      "Escreva em uma linha o que você confirmou e o que não conseguiu confirmar.",
+      "Se alguém do grupo perguntar, responda com essa linha. Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Não tem print de vaga? Serve aviso de prova, mudança de horário da escola, “inscrição grátis” de qualquer coisa. O caminho é o mesmo: fonte e data.",
+     "tip": {
+      "rotulo": "Exemplo de nota",
+      "texto": "Print: “Curso gratuito de informática, inscrições até sexta”. Fonte: a página da prefeitura. Data: edital de março do ano passado. Para quem: moradores do bairro. Confirmei: existiu. Não confirmei: nova turma.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Uma ou duas frases: o aviso era atual, antigo ou não existia? O que você respondeu ao grupo?",
+      "placeholder": "Ex.: era do ano passado; avisei no grupo e mandei o link da página oficial.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó: título da seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; o nó e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_03"
+     ],
+     "titulo": "Parece verdade. Será?",
+     "textoTela": "De onde veio · De quando é · Para quem vale",
+     "posicao": "depois da missão e antes do fim",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "O horário que mudou, a vaga até amanhã, o curso do ano passado. Em todos, as perguntas foram as mesmas.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "d2",
+       "fala": "De onde veio, de quando é, para quem vale. Ao responder a alguém, diga o que encontrou e o que continua incerto.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "d3",
+       "fala": "E guarde uma regra simples: vaga de verdade não cobra para você se inscrever.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 14,
+       "segundos": 5.3
+      },
+      {
+       "id": "d4",
+       "fala": "Quem pede pagamento, senha ou código antes de confirmar qualquer coisa já respondeu à sua pergunta. Até a próxima.",
+       "layout": "presenter",
+       "camera": "cam_lais8_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      }
+     ],
+     "palavras": 75,
+     "segundos": 28.6,
+     "forma": "termina com uma regra para guardar (“vaga de verdade não cobra para você se inscrever”), que devolve o Kelvin (q04) e resolve a pergunta do título. Sem recap, sem “você praticou”, sem “Meu roteiro”; sem a fórmula “não é… É…”.",
+     "motionPrompt": "desacelera na regra; dedo indicador leve na última frase, sem tom de bronca",
+     "roteiroNovo": "O horário que mudou, a vaga até amanhã, o curso do ano passado. Em todos, as perguntas foram as mesmas. De onde veio, de quando é, para quem vale. Ao responder a alguém, diga o que encontrou e o que continua incerto. E guarde uma regra simples: vaga de verdade não cobra para você se inscrever. Quem pede pagamento, senha ou código antes de confirmar qualquer coisa já respondeu à sua pergunta. Até a próxima."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Vaga de verdade não cobra para você se inscrever.",
+     "summary": "O que você levou\nAntes de agir: de onde veio, de quando é, para quem vale.\nVárias publicações podem ser uma só fonte.\nConclua só o que você conferiu, e diga o que ficou incerto.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Meu print conferido",
+       "kind": "checklist",
+       "items": [
+        "escolhi um print real do meu grupo",
+        "achei a publicação original por um caminho conhecido",
+        "anotei data e para quem vale",
+        "escrevi o que confirmei e o que não"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a03",
+       "composedNodeIds": [
+        "a03"
+       ],
+       "emptyText": "Você deixou para depois. Quando conferir o print, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de agir: de onde veio, de quando é, para quem vale.\nVárias publicações podem ser uma só fonte.\nConclua só o que você conferiu, e diga o que ficou incerto.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos \"keep\" custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 12,
+   "palavras": 262,
+   "segundos": 100.0
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 67,
+   "segundos": 25.6
+  },
+  "aberturasTrocadas": {
+   "quantidade": 2,
+   "palavras": 42,
+   "segundos": 16.0,
+   "duracaoAnteriorS": 14.9
+  },
+  "totalNovoFalado": {
+   "palavras": 371,
+   "segundos": 141.6,
+   "usd": 2.59
+  },
+  "teto": "150 s (alvo 90–130 s)",
+  "porNo": [
+   {
+    "no": "v05",
+    "planos": 4,
+    "palavras": 92,
+    "segundos": 35.1
+   },
+   {
+    "no": "q05 (3 reações)",
+    "planos": 3,
+    "palavras": 67,
+    "segundos": 25.6
+   },
+   {
+    "no": "v06",
+    "planos": 4,
+    "palavras": 95,
+    "segundos": 36.3
+   },
+   {
+    "no": "despedida",
+    "planos": 4,
+    "palavras": 75,
+    "segundos": 28.6
+   },
+   {
+    "no": "aberturas trocadas (aulas existentes)",
+    "planos": 2,
+    "palavras": 42,
+    "segundos": 16.0
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "palavras": 83,
+   "segundos": 31.7,
+   "usd": 0.58,
+   "nota": "Reações atuais que abrem com frase repetida em vários cursos. (b) cortar a primeira frase, se o ajuste fino aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no total acima.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Você não espalha a dúvida, mas pode perder um aviso real esperando.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Repare no que isso provoca.",
+     "resto": "Você amplia uma informação que ainda não foi confirmada.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q02",
+     "opcao": "a",
+     "abertura": "Pense no que acontece depois.",
+     "resto": "Você busca a origem, mas depende de quem respondeu e não olha o canal oficial.",
+     "palavras": 15,
+     "segundos": 5.7
+    },
+    {
+     "no": "q02",
+     "opcao": "c",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "Você amplia um aviso sem origem nem data.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q03",
+     "opcao": "a",
+     "abertura": "Veja o que essa escolha muda.",
+     "resto": "As três podem depender do mesmo conteúdo não verificado.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Olhe isso com calma.",
+     "resto": "Popularidade não confirma a informação.",
+     "palavras": 5,
+     "segundos": 1.9
+    },
+    {
+     "no": "q04",
+     "opcao": "a",
+     "abertura": "Vale pensar no que fica de fora.",
+     "resto": "Você busca uma prova, mas a resposta vem dos mesmos perfis que divulgaram.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vamos olhar o efeito disso.",
+     "resto": "Valor baixo não confirma a vaga, e você entrega dinheiro e dados.",
+     "palavras": 12,
+     "segundos": 4.6
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 145,
+    "maxS": 152.2,
+    "texto": "3 min"
+   },
+   "depois": {
+    "minS": 254.1,
+    "maxS": 262.5,
+    "texto": "cerca de 4.2–4.4 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença das aberturas trocadas (nova − gravada)."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 3 obrigatória ou opcional? (a) obrigatória · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+  "2. Prática a02: (a) manter a sequência de três verificações (o anúncio trocado continua verdadeiro; zero custo extra) · (b) trocar pela prática S2 do banco (“então me inscrevo ou não?”), que exigiria outro texto no v03/s2 e repete a decisão q05. Recomendo (a).",
+  "3. Print na tela (v05/s1): (a) cartão de texto marcado como simulação, como proposto · (b) imagem gerada de um print falso. Recomendo (a): mais barato e sem risco de parecer aviso real.",
+  "4. Reações atuais com abertura repetida (ver custos): (a) deixar · (b) cortar a primeira frase, se o ajuste fino aceitar (grátis) · (c) regravar a segunda frase. Recomendo (b); se não der, (a)."
+ ]
+}

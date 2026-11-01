@@ -1,0 +1,2018 @@
+{
+ "geradoEm": "2026-11-01",
+ "pacote": {
+  "fonte": "expansao-zip (snapshot raio-x 2026-11-01T03:01:35Z)",
+  "raioXComparado": "2026-11-01T05:33:46.732Z"
+ },
+ "escopo": "análise técnica, custo, conflitos e plano (pedagogia por curso: ver pedagogia-*.md; cortes: ver cortes.md)",
+ "veredito": {
+  "decisao": "adotar parcialmente, reescrevendo",
+  "resumo": "IDs e âncoras batem (26/26), mas a estratégia de inserção não é migrável, 23/26 práticas viram texto livre na tela (não são missões reais), os encerramentos seguem um molde único e o custo (~US$ 55) não cabe no saldo. Aproveitar: decisões+feedbacks textuais, demonstrações, fichas de voz como guia, correções C24/C22/C14 e os 95 cortes grátis. Refazer: inserção (aula nova no fim), práticas (missão real no padrão do piloto C01), encerramentos (60–90 palavras com callback). C01: o piloto prevalece."
+ },
+ "validacaoTecnica": {
+  "idsCursos": "26/26 batem",
+  "versoesPublicadas": "26/26 batem",
+  "ancoras": "26/26 existem no rascunho e na publicada",
+  "instrutores": "26/26 batem",
+  "snapshotDesatualizado": [
+   "C01 (rascunho rev 93 ≠ pacote rev 92: piloto aplicado, 4 aulas, despedida, m02 regravado)"
+  ],
+  "ancorasPrecedidasPorDecisao": [
+   "C06",
+   "C14",
+   "C15",
+   "C16",
+   "C17",
+   "C18",
+   "C19",
+   "C20",
+   "C22",
+   "C23",
+   "C24",
+   "C25",
+   "C26"
+  ],
+  "motor": {
+   "videoDemonstracao": {
+    "existe": true,
+    "como": "nó content/scenario com narration + direction (planos)",
+    "trabalho": "nenhum"
+   },
+   "decisaoComFeedbackSoTexto": {
+    "existe": true,
+    "como": "choice com options[].feedback (rich text) e sem reaction.media; arestas por optionId para o mesmo destino",
+    "trabalho": "nenhum; \"Comparar outra escolha\" já é possível via navegação back/goto (motor permite responder de novo)"
+   },
+   "aprofundamentoComum": {
+    "existe": true,
+    "como": "content",
+    "trabalho": "nenhum"
+   },
+   "videoAntesDoFim": {
+    "existe": true,
+    "como": "content entre a prática e o end (igual à despedida do piloto C01)",
+    "trabalho": "nenhum"
+   },
+   "praticaTextoCurto": {
+    "existe": "parcial",
+    "como": "reflection sem scaffold = texto livre (maxLength 800 ok)",
+    "falta": "critérios + exemplo sob demanda (\"Conferir minha resposta\"/\"Ver um exemplo\") → novos campos no ReflectionNode + UI nos 2 players + estúdio",
+    "tamanho": "P (1 dia)"
+   },
+   "praticaSelecaoMultipla": {
+    "existe": "parcial",
+    "como": "assessment mode=multiple com feedback por opção existe no schema e no player, mas nenhum curso publicado usa (0/68 aulas) e tem semântica de nota/tentativas",
+    "falta": "modo formativo (não apaga respostas, sem nota) + \"Fazer depois\"",
+    "tamanho": "M (1–2 dias)",
+    "alternativa": "converter em choice"
+   },
+   "praticaOrdenacao": {
+    "existe": false,
+    "falta": "novo tipo de nó (schema, motor, 2 players, estúdio, recap)",
+    "tamanho": "G (3–5 dias) para 1 prática (C24)",
+    "alternativa": "molde \"Primeiro {e1}, depois {e2}…\" (C24 a02 já é assim)"
+   },
+   "praticaClassificacao": {
+    "existe": false,
+    "falta": "novo tipo de nó",
+    "tamanho": "G (3–5 dias) para 1 prática (C25)",
+    "alternativa": "3 decisões curtas ou molde"
+   },
+   "preservarIdComNovaVersao": {
+    "existe": true,
+    "como": "matrícula fixa courseVersionId; respostas vivem no state da tentativa daquela versão → histórico por versão é automático; recap lê por nodeId",
+    "obs": "não há \"versão da atividade\" dentro do nó; não precisa"
+   },
+   "fazerDepoisComPendencia": {
+    "existe": false,
+    "como": "hoje \"Fazer depois\" envia reflect vazio e nada é salvo",
+    "falta": "estado de pendência, \"Retomar atividades\", textos condicionais da tela final",
+    "tamanho": "M (2 dias)"
+   },
+   "redirecionarEntradas": {
+    "existe": true,
+    "como": "editar edges (from/to/optionId) no documento; nas 14 aulas em que a âncora segue uma decisão são 3 arestas por opção",
+    "trabalho": "script simples, mesmo padrão da proposta.json do piloto"
+   },
+   "requisitoChecagemTrilha": {
+    "existe": true,
+    "como": "Math.ceil(total × 0.8) = 5 de 6 (trails.ts) → \"pelo menos 5 acertos\" está correto"
+   }
+  },
+  "migracaoMatriculas": {
+   "regraAtual": "sameShape | onlyRemovals | onlyAppendedLessons; fora disso \"matrícula fica na versão antiga\"",
+   "impactoDoPacote": "cena nova dentro de aula antiga em 26/26 cursos → nenhuma matrícula existente migra; só novas matrículas veem a expansão",
+   "caminhoSeguro": "aula nova no fim de cada curso (onlyAppendedLessons): matrículas migram; concluídas reabrem se a aula for obrigatória",
+   "alternativa": "estender matricula-migracao para aceitar inserções quando currentNodeId sobrevive (M, 1–2 dias + testes); risco baixo no replay (edges ausentes são tolerados), mas muda regra de produção"
+  },
+  "instrucaoIncompativel": {
+   "quantos": 26,
+   "onde": [
+    "C06·aula_03·a03",
+    "C15·aula_01·a01",
+    "C15·aula_02·a02",
+    "C16·aula_01·a01",
+    "C16·aula_02·a02",
+    "C17·aula_01·a01",
+    "C17·aula_02·a02",
+    "C18·aula_01·a01",
+    "C18·aula_02·a02",
+    "C19·aula_01·a01",
+    "C19·aula_02·a02",
+    "C20·aula_01·a01",
+    "C20·aula_02·a02",
+    "C21·aula_01·a01",
+    "C21·aula_02·a02",
+    "C22·aula_01·a01",
+    "C22·aula_02·a02",
+    "C23·aula_01·a01",
+    "C23·aula_02·a02",
+    "C24·aula_01·a01",
+    "C24·aula_02·a02",
+    "C25·aula_01·a01",
+    "C25·aula_02·a02",
+    "C26·aula_01·a01",
+    "C26·aula_02·a02",
+    "C26·aula_03·a03"
+   ],
+   "correcao": "trocar \"Escreva uma resposta curta…\" por \"Escolha uma opção em cada grupo. Se precisar, use Outra resposta…\" (grátis)"
+  }
+ },
+ "custo": {
+  "ritmoRealPalavrasPorSegundo": 2.62,
+  "segundosPorPalavra": 0.381,
+  "porInstrutor": {
+   "Marina": 2.55,
+   "Camila": 2.8,
+   "Rafael": 2.74,
+   "Thiago": 3.09,
+   "Júlia": 2.51,
+   "Patrícia": 2.46,
+   "Gustavo": 2.67,
+   "Aline": 2.58,
+   "Enzo": 2.54,
+   "Beatriz": 2.5,
+   "Renato": 2.58,
+   "Helena": 2.57,
+   "Mauro": 2.58,
+   "Laís": 2.65,
+   "Vinícius": 2.84,
+   "Flávia": 2.54
+  },
+  "referencia": "piloto C01: US$ 9,34 / 510 s = US$ 0,0183 por segundo",
+  "pacote": {
+   "palavras": 7938,
+   "segundosEstimados": 3012,
+   "minutos": 50.2,
+   "custoUsd": 55.2,
+   "faixaUsd": [
+    50.0,
+    61.0
+   ]
+  },
+  "comEncerramentoCurto75Palavras": {
+   "segundos": 2281,
+   "custoUsd": 41.8
+  },
+  "orcamento": {
+   "tetoAnterior": 100,
+   "limiteSistema": 140,
+   "gasto": 107,
+   "saldo": 33,
+   "pilotoC01Pendente": 9.34,
+   "conclusao": "pacote inteiro (~US$ 55) + piloto (US$ 9,34) não cabem no saldo; precisa de nova aprovação explícita (~US$ 65–70 ou elevar limite para ~US$ 175)"
+  },
+  "gratis": [
+   "todos os textos (decisões, feedbacks, enunciados, instruções, textos de interface)",
+   "95 cortes por media.adjust.drop + recomposição (≈ 503 s retirados; C01 fora, já regravado no piloto)",
+   "C24 a01 e C22 a01 via blocos do molde",
+   "recap/roteiro e tela final"
+  ],
+  "baratos": [
+   "C14: 4 substituições de fala = 6 planos regravados ≈ 55 s ≈ US$ 1"
+  ]
+ },
+ "conflitos": {
+  "pilotoC01": [
+   {
+    "item": "vídeo final",
+    "pacote": "aula_02 antes de fim_aula_02",
+    "piloto": "curso tem 4 aulas; despedida da Marina em aula_04 (60 palavras, callback)",
+    "resolucao": "descartar encerramento do pacote; manter despedida"
+   },
+   {
+    "item": "prática m02",
+    "pacote": "short_text \"Na situação de Luana, escreva…\" (exercício na tela)",
+    "piloto": "missão real GUARDAR: aviso pronto nas notas + contato salvo, com molde",
+    "resolucao": "manter piloto (é o que o dono pediu: missão de verdade)"
+   },
+   {
+    "item": "demonstração \"nome não está na lista\"",
+    "pacote": "novo vídeo exp_c01_demo antes de m02",
+    "piloto": "já contado em v03·ex3 (Davi) e a chegada é tema da aula_03",
+    "resolucao": "descartar ou, se o dono quiser, virar decisão extra na aula_03 (~US$ 1,2)"
+   },
+   {
+    "item": "personagens",
+    "pacote": "Paula (referência)",
+    "piloto": "Renata (RH), Caio; curso já tem Luana e Davi",
+    "resolucao": "Renata"
+   },
+   {
+    "item": "promessa antes da prática",
+    "pacote": "insere demo+decisão+aprofundamento entre v03 e m02",
+    "piloto": "v03 termina \"Agora, monte o seu aviso e salve nas notas\"",
+    "resolucao": "não inserir"
+   },
+   {
+    "item": "cortes C01 (4)",
+    "pacote": "cortar anúncios de missão",
+    "piloto": "esses 4 planos já são regravados com texto novo",
+    "resolucao": "sem ação"
+   },
+   {
+    "item": "regra \"não criar aulas novas\"",
+    "pacote": "proíbe",
+    "piloto/dono": "aulas novas no fim é o único caminho migrável e o dono quer cursos maiores",
+    "resolucao": "aulas novas com conteúdo, não para contagem"
+   },
+   {
+    "item": "orçamento",
+    "pacote": "~US$ 55",
+    "piloto": "US$ 9,34 aguardando aprovação",
+    "resolucao": "aprovar piloto primeiro; pacote só por fases"
+   }
+  ],
+  "decisoesDoDono": [
+   {
+    "regra": "CIEE/IEL/agente de integração",
+    "status": "ok (0 ocorrências)"
+   },
+   {
+    "regra": "slogans DNA Work",
+    "status": "ok (0 menções à marca nas falas novas)"
+   },
+   {
+    "regra": "THEO",
+    "status": "ok"
+   },
+   {
+    "regra": "avatar sem experiência pessoal",
+    "status": "ok (0 relatos em 1ª pessoa; pacote declara exemplos didáticos)"
+   },
+   {
+    "regra": "missões reais, não \"só uma pergunta\"",
+    "status": "VIOLA no espírito: 23/26 práticas viram \"escreva um texto curto sobre o caso fictício\" (na tela); nenhuma leva o aluno a fazer algo fora da tela"
+   },
+   {
+    "regra": "vozes distintas",
+    "status": "RISCO: 15/16 instrutores entre 11,5 e 14,4 palavras/frase, ~0 perguntas; nenhum exemplo das fichas aparece nos roteiros; encerramentos com 4 parágrafos iguais (\"Você praticou…\" ×7, \"Se preparou…\" ×7, \"Meu roteiro\" em 24/26)"
+   },
+   {
+    "regra": "fim memorável",
+    "status": "PARCIAL: encerramentos corretos mas genéricos (≈57 s, sem callback à história do curso); a despedida do piloto é o modelo"
+   },
+   {
+    "regra": "cursos maiores/mais conteúdo",
+    "status": "ok no volume (+90–120 s por curso), mas o pacote proíbe aulas novas"
+   },
+   {
+    "regra": "\"Fazer depois\" permanece",
+    "status": "ok, mas exige pendência (código novo) para os textos de tela propostos"
+   },
+   {
+    "regra": "mídia paga só com aprovação",
+    "status": "ok (pacote não gera)"
+   },
+   {
+    "regra": "frases repetidas entre cursos",
+    "status": "ok nos feedbacks novos (específicos, 7–20 palavras); não mexe nas reações antigas"
+   }
+  ]
+ },
+ "fichasDeVoz": {
+  "cobertura": "16/16 instrutores cadastrados",
+  "pontosFortes": [
+   "intenção + \"evitar\" funcionam como guarda-corpo (Patrícia, Júlia, Renato, Enzo)",
+   "nenhum estereótipo de raça/gênero/aparência"
+  ],
+  "limites": [
+   "são notas de direção, não voz: nada que a pipeline HeyGen/ElevenLabs consiga aplicar além de pontuação e quebra de planos",
+   "os roteiros não as realizam (métricas acima)",
+   "falta o que diferencia de verdade: abertura, fecho e tamanho de frase por pessoa"
+  ],
+  "proposta": "3 regras operacionais por instrutor (tamanho de frase alvo, 1 gesto-assinatura, 1 jeito de fechar) e aplicar primeiro nos 26 encerramentos"
+ },
+ "correcoesAdicionais": {
+  "C24_a01": {
+   "claim": "blocos misturam reunião/kits/relatório",
+   "verificado": true,
+   "fix": "manter molde e fixar os 4 grupos no caso da reunião (grátis); não precisa de componente de 4 campos"
+  },
+  "C22_a01": {
+   "claim": "fixar contexto R$ 480/840",
+   "verificado": "coerente com a02 (Elaine/valor)",
+   "fix": "ok, grátis; só 2×2 combinações → manter \"Outra resposta\""
+  },
+  "C14_falas": [
+   {
+    "onde": "A2·v03·s3",
+    "plano": "inteiro",
+    "segundos": 5.3,
+    "recomendacao": "aplicar (evita \"toda vaga\")"
+   },
+   {
+    "onde": "A4·v08·s4",
+    "plano": "inteiro",
+    "segundos": 4.9,
+    "recomendacao": "aplicar"
+   },
+   {
+    "onde": "A8·v14·s4+s5",
+    "plano": "parcial (regrava 2 planos, ~15 s)",
+    "recomendacao": "preferência de estilo; versão intermediária proposta no .md"
+   },
+   {
+    "onde": "A9·v17·s1+s2",
+    "plano": "parcial (regrava 2 planos, ~20 s)",
+    "recomendacao": "baixa prioridade"
+   }
+  ],
+  "textosDeInterface": "adotar como base (P2); \"sem pendências\" e \"Retomar atividades\" dependem da feature de pendência"
+ },
+ "cursos": [
+  {
+   "codigo": "C01",
+   "id": "crs_99hpdsc8w88osiuh",
+   "titulo": "Meu primeiro dia",
+   "trilha": "primeiro-emprego",
+   "instrutor": "Marina",
+   "instrutorPacote": "Marina",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 93,
+   "revisaoRascunhoPacote": 92,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_04",
+    "ok": false
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 89,
+    "aprofundamento": 74,
+    "encerramento": 151
+   },
+   "segundosEstimados": {
+    "demo": 34.9,
+    "aprofundamento": 29.0,
+    "encerramento": 59.2
+   },
+   "segundosTotais": 123.1,
+   "custoEstimadoUsd": 2.25,
+   "custoComEncerramentoCurtoUsd": 1.71,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 17.8,
+    "planosInteiros": 4,
+    "obs": "4 planos do C01 já são regravados pelo piloto"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "manter piloto; nada do pacote C01 entra",
+   "conflitos": [
+    "rascunho mudou depois do snapshot (pacote: rev 92, atual: rev 93)",
+    "vídeo final previsto em aula_02, mas a última aula do rascunho é aula_04",
+    "piloto já aplicado (rev 93): aulas 3–4, despedida em aula_04, m02 virou missão real (guardar aviso) com molde; pacote converteria m02 em texto livre e colocaria 'encerramento do curso' no meio do curso",
+    "personagem 'Paula' não existe: o piloto fixou Renata (RH) e Caio; a cena 'nome não está na lista' já é contada com o Davi (v03·ex3)"
+   ]
+  },
+  {
+   "codigo": "C02",
+   "id": "crs_arbeohlw3xp5v3zx",
+   "titulo": "Que roupa eu uso?",
+   "trilha": "imagem-e-postura",
+   "instrutor": "Camila",
+   "instrutorPacote": "Camila",
+   "versaoPublicada": 11,
+   "versaoPublicadaPacote": 11,
+   "revisaoRascunho": 88,
+   "revisaoRascunhoPacote": 88,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 88,
+    "aprofundamento": 74,
+    "encerramento": 154
+   },
+   "segundosEstimados": {
+    "demo": 31.4,
+    "aprofundamento": 26.4,
+    "encerramento": 54.9
+   },
+   "segundosTotais": 112.7,
+   "custoEstimadoUsd": 2.06,
+   "custoComEncerramentoCurtoUsd": 1.55,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 8.6,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C03",
+   "id": "crs_hd4jnnpx3oj0xf14",
+   "titulo": "Celular no trabalho",
+   "trilha": "rotina-e-combinados",
+   "instrutor": "Rafael",
+   "instrutorPacote": "Rafael",
+   "versaoPublicada": 11,
+   "versaoPublicadaPacote": 11,
+   "revisaoRascunho": 89,
+   "revisaoRascunhoPacote": 89,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 88,
+    "aprofundamento": 72,
+    "encerramento": 144
+   },
+   "segundosEstimados": {
+    "demo": 32.1,
+    "aprofundamento": 26.3,
+    "encerramento": 52.6
+   },
+   "segundosTotais": 111.0,
+   "custoEstimadoUsd": 2.03,
+   "custoComEncerramentoCurtoUsd": 1.57,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 12.9,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C04",
+   "id": "crs_4z17p0m6d43qxmmo",
+   "titulo": "WhatsApp sem complicação",
+   "trilha": "rotina-e-combinados",
+   "instrutor": "Thiago",
+   "instrutorPacote": "Thiago",
+   "versaoPublicada": 11,
+   "versaoPublicadaPacote": 11,
+   "revisaoRascunho": 110,
+   "revisaoRascunhoPacote": 110,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 90,
+    "aprofundamento": 68,
+    "encerramento": 146
+   },
+   "segundosEstimados": {
+    "demo": 29.2,
+    "aprofundamento": 22.0,
+    "encerramento": 47.3
+   },
+   "segundosTotais": 98.5,
+   "custoEstimadoUsd": 1.8,
+   "custoComEncerramentoCurtoUsd": 1.38,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 12.0,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C05",
+   "id": "crs_4tj8a3q3g9gudgb7",
+   "titulo": "Horário é combinado",
+   "trilha": "rotina-e-combinados",
+   "instrutor": "Júlia",
+   "instrutorPacote": "Júlia",
+   "versaoPublicada": 13,
+   "versaoPublicadaPacote": 13,
+   "revisaoRascunho": 94,
+   "revisaoRascunhoPacote": 94,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 86,
+    "aprofundamento": 67,
+    "encerramento": 152
+   },
+   "segundosEstimados": {
+    "demo": 34.2,
+    "aprofundamento": 26.7,
+    "encerramento": 60.5
+   },
+   "segundosTotais": 121.4,
+   "custoEstimadoUsd": 2.22,
+   "custoComEncerramentoCurtoUsd": 1.66,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 13.5,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C06",
+   "id": "crs_b8zeh4b2gguseghq",
+   "titulo": "Brincadeiras têm limite",
+   "trilha": "convivencia",
+   "instrutor": "Patrícia",
+   "instrutorPacote": "Patrícia",
+   "versaoPublicada": 10,
+   "versaoPublicadaPacote": 10,
+   "revisaoRascunho": 126,
+   "revisaoRascunhoPacote": 126,
+   "ancora": {
+    "aula": "aula_03",
+    "antesDe": "a03",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q05",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_03",
+    "antesDe": "fim_aula_03",
+    "ultimaAulaAtual": "aula_03",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a03",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 89,
+    "aprofundamento": 71,
+    "encerramento": 150
+   },
+   "segundosEstimados": {
+    "demo": 36.1,
+    "aprofundamento": 28.8,
+    "encerramento": 60.9
+   },
+   "segundosTotais": 125.8,
+   "custoEstimadoUsd": 2.3,
+   "custoComEncerramentoCurtoUsd": 1.75,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 23.8,
+    "planosInteiros": 4,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_04) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q05: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C07",
+   "id": "crs_bmf11akamtxoti28",
+   "titulo": "Como falar com a equipe",
+   "trilha": "convivencia",
+   "instrutor": "Gustavo",
+   "instrutorPacote": "Gustavo",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 97,
+   "revisaoRascunhoPacote": 97,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 83,
+    "aprofundamento": 65,
+    "encerramento": 149
+   },
+   "segundosEstimados": {
+    "demo": 31.1,
+    "aprofundamento": 24.4,
+    "encerramento": 55.9
+   },
+   "segundosTotais": 111.4,
+   "custoEstimadoUsd": 2.04,
+   "custoComEncerramentoCurtoUsd": 1.53,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 15.6,
+    "planosInteiros": 4,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C08",
+   "id": "crs_8g0csi2hflfztfge",
+   "titulo": "O espaço também é do outro",
+   "trilha": "convivencia",
+   "instrutor": "Aline",
+   "instrutorPacote": "Aline",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 92,
+   "revisaoRascunhoPacote": 92,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 93,
+    "aprofundamento": 68,
+    "encerramento": 149
+   },
+   "segundosEstimados": {
+    "demo": 36.0,
+    "aprofundamento": 26.3,
+    "encerramento": 57.7
+   },
+   "segundosTotais": 120.0,
+   "custoEstimadoUsd": 2.2,
+   "custoComEncerramentoCurtoUsd": 1.67,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 20.0,
+    "planosInteiros": 4,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C09",
+   "id": "crs_gjn468p3y6hwua4f",
+   "titulo": "Posso postar isso?",
+   "trilha": "imagem-e-postura",
+   "instrutor": "Enzo",
+   "instrutorPacote": "Enzo",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 104,
+   "revisaoRascunhoPacote": 104,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 101,
+    "aprofundamento": 64,
+    "encerramento": 147
+   },
+   "segundosEstimados": {
+    "demo": 39.8,
+    "aprofundamento": 25.2,
+    "encerramento": 57.9
+   },
+   "segundosTotais": 122.9,
+   "custoEstimadoUsd": 2.25,
+   "custoComEncerramentoCurtoUsd": 1.73,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 18.5,
+    "planosInteiros": 4,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C10",
+   "id": "crs_q52zsimeeahpa9bq",
+   "titulo": "Terminei. E agora?",
+   "trilha": "rotina-e-combinados",
+   "instrutor": "Beatriz",
+   "instrutorPacote": "Beatriz",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 95,
+   "revisaoRascunhoPacote": 95,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 92,
+    "aprofundamento": 65,
+    "encerramento": 147
+   },
+   "segundosEstimados": {
+    "demo": 36.9,
+    "aprofundamento": 26.0,
+    "encerramento": 58.9
+   },
+   "segundosTotais": 121.8,
+   "custoEstimadoUsd": 2.23,
+   "custoComEncerramentoCurtoUsd": 1.7,
+   "cortes": {
+    "candidatos": 4,
+    "segundos": 16.2,
+    "planosInteiros": 4,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C11",
+   "id": "crs_u4nfw88a4n2n0ubv",
+   "titulo": "Não entendi. Posso perguntar?",
+   "trilha": "rotina-e-combinados",
+   "instrutor": "Renato",
+   "instrutorPacote": "Renato",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 95,
+   "revisaoRascunhoPacote": 95,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 93,
+    "aprofundamento": 70,
+    "encerramento": 149
+   },
+   "segundosEstimados": {
+    "demo": 36.0,
+    "aprofundamento": 27.1,
+    "encerramento": 57.7
+   },
+   "segundosTotais": 120.8,
+   "custoEstimadoUsd": 2.21,
+   "custoComEncerramentoCurtoUsd": 1.69,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 12.4,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C12",
+   "id": "crs_5vccpfypr6fmxojb",
+   "titulo": "Recebi uma correção. E agora?",
+   "trilha": "imagem-e-postura",
+   "instrutor": "Helena",
+   "instrutorPacote": "Helena",
+   "versaoPublicada": 14,
+   "versaoPublicadaPacote": 14,
+   "revisaoRascunho": 94,
+   "revisaoRascunhoPacote": 94,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "m02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v03",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 88,
+    "aprofundamento": 65,
+    "encerramento": 146
+   },
+   "segundosEstimados": {
+    "demo": 34.3,
+    "aprofundamento": 25.3,
+    "encerramento": 56.9
+   },
+   "segundosTotais": 116.5,
+   "custoEstimadoUsd": 2.13,
+   "custoComEncerramentoCurtoUsd": 1.63,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 12.9,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C13",
+   "id": "crs_gujuaiykqcsl2n31",
+   "titulo": "Comecei a trabalhar",
+   "trilha": "primeiro-emprego",
+   "instrutor": "Rafael",
+   "instrutorPacote": "Rafael",
+   "versaoPublicada": 12,
+   "versaoPublicadaPacote": 12,
+   "revisaoRascunho": 180,
+   "revisaoRascunhoPacote": 180,
+   "ancora": {
+    "aula": "aula_06",
+    "antesDe": "m06",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v11",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_06",
+    "antesDe": "fim_aula_06",
+    "ultimaAulaAtual": "aula_06",
+    "ok": true
+   },
+   "pratica": {
+    "id": "m06",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 90,
+    "aprofundamento": 69,
+    "encerramento": 159
+   },
+   "segundosEstimados": {
+    "demo": 32.9,
+    "aprofundamento": 25.2,
+    "encerramento": 58.1
+   },
+   "segundosTotais": 116.2,
+   "custoEstimadoUsd": 2.13,
+   "custoComEncerramentoCurtoUsd": 1.57,
+   "cortes": {
+    "candidatos": 11,
+    "segundos": 43.9,
+    "planosInteiros": 11,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_07) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C14",
+   "id": "crs_hvvgkvtd1rb2um0l",
+   "titulo": "Minha primeira vaga",
+   "trilha": "primeiro-emprego",
+   "instrutor": "Marina",
+   "instrutorPacote": "Marina",
+   "versaoPublicada": 14,
+   "versaoPublicadaPacote": 14,
+   "revisaoRascunho": 431,
+   "revisaoRascunhoPacote": 431,
+   "ancora": {
+    "aula": "aula_12",
+    "antesDe": "fim_aula_12",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q25",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_12",
+    "antesDe": "fim_aula_12",
+    "ultimaAulaAtual": "aula_12",
+    "ok": true
+   },
+   "pratica": {
+    "id": "exp_c14_pratica",
+    "operacao": "create",
+    "formatoProposto": "short_text",
+    "formatoAtual": "não existe (aula_12 termina na decisão q25)"
+   },
+   "palavras": {
+    "demo": 93,
+    "aprofundamento": 68,
+    "encerramento": 160
+   },
+   "segundosEstimados": {
+    "demo": 36.5,
+    "aprofundamento": 26.7,
+    "encerramento": 62.7
+   },
+   "segundosTotais": 125.9,
+   "custoEstimadoUsd": 2.31,
+   "custoComEncerramentoCurtoUsd": 1.7,
+   "cortes": {
+    "candidatos": 19,
+    "segundos": 83.0,
+    "planosInteiros": 19,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_13) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q25: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C15",
+   "id": "crs_t303ykqfmhj3yb1g",
+   "titulo": "O outro só é diferente",
+   "trilha": "respeito-e-dialogo",
+   "instrutor": "Mauro",
+   "instrutorPacote": "Mauro",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 43,
+   "revisaoRascunhoPacote": 43,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 86,
+    "aprofundamento": 64,
+    "encerramento": 140
+   },
+   "segundosEstimados": {
+    "demo": 33.4,
+    "aprofundamento": 24.9,
+    "encerramento": 54.4
+   },
+   "segundosTotais": 112.7,
+   "custoEstimadoUsd": 2.06,
+   "custoComEncerramentoCurtoUsd": 1.6,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 13.5,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C16",
+   "id": "crs_2rt2rsoii8bpydp2",
+   "titulo": "Discordar sem brigar",
+   "trilha": "respeito-e-dialogo",
+   "instrutor": "Mauro",
+   "instrutorPacote": "Mauro",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 31,
+   "revisaoRascunhoPacote": 31,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 91,
+    "aprofundamento": 58,
+    "encerramento": 148
+   },
+   "segundosEstimados": {
+    "demo": 35.3,
+    "aprofundamento": 22.5,
+    "encerramento": 57.5
+   },
+   "segundosTotais": 115.3,
+   "custoEstimadoUsd": 2.11,
+   "custoComEncerramentoCurtoUsd": 1.59,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 14.9,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C17",
+   "id": "crs_5k5upah2xphlfvi5",
+   "titulo": "Minha ideia também conta",
+   "trilha": "respeito-e-dialogo",
+   "instrutor": "Mauro",
+   "instrutorPacote": "Mauro",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 32,
+   "revisaoRascunhoPacote": 32,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 88,
+    "aprofundamento": 62,
+    "encerramento": 154
+   },
+   "segundosEstimados": {
+    "demo": 34.2,
+    "aprofundamento": 24.1,
+    "encerramento": 59.8
+   },
+   "segundosTotais": 118.1,
+   "custoEstimadoUsd": 2.16,
+   "custoComEncerramentoCurtoUsd": 1.6,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 15.8,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C18",
+   "id": "crs_tg9iqz8wmmf5pw77",
+   "titulo": "Seus dados também trabalham",
+   "trilha": "tecnologia-com-criterio",
+   "instrutor": "Laís",
+   "instrutorPacote": "Laís",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 43,
+   "revisaoRascunhoPacote": 43,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 83,
+    "aprofundamento": 66,
+    "encerramento": 147
+   },
+   "segundosEstimados": {
+    "demo": 31.3,
+    "aprofundamento": 24.9,
+    "encerramento": 55.4
+   },
+   "segundosTotais": 111.6,
+   "custoEstimadoUsd": 2.04,
+   "custoComEncerramentoCurtoUsd": 1.55,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 14.4,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C19",
+   "id": "crs_au1463izc386by27",
+   "titulo": "Parece verdade. Será?",
+   "trilha": "tecnologia-com-criterio",
+   "instrutor": "Laís",
+   "instrutorPacote": "Laís",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 32,
+   "revisaoRascunhoPacote": 32,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 86,
+    "aprofundamento": 58,
+    "encerramento": 140
+   },
+   "segundosEstimados": {
+    "demo": 32.4,
+    "aprofundamento": 21.9,
+    "encerramento": 52.8
+   },
+   "segundosTotais": 107.1,
+   "custoEstimadoUsd": 1.96,
+   "custoComEncerramentoCurtoUsd": 1.51,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 14.8,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C20",
+   "id": "crs_m60hsx8on6ebcyqg",
+   "titulo": "IA como aliada",
+   "trilha": "tecnologia-com-criterio",
+   "instrutor": "Laís",
+   "instrutorPacote": "Laís",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 31,
+   "revisaoRascunhoPacote": 31,
+   "ancora": {
+    "aula": "aula_01",
+    "antesDe": "a01",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q02",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a01",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "multi_select",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 103,
+    "aprofundamento": 73,
+    "encerramento": 152
+   },
+   "segundosEstimados": {
+    "demo": 38.8,
+    "aprofundamento": 27.5,
+    "encerramento": 57.3
+   },
+   "segundosTotais": 123.6,
+   "custoEstimadoUsd": 2.26,
+   "custoComEncerramentoCurtoUsd": 1.73,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 16.2,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q02: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C21",
+   "id": "crs_4jh683s5h351z2db",
+   "titulo": "Tudo é urgente?",
+   "trilha": "autonomia-no-trabalho",
+   "instrutor": "Vinícius",
+   "instrutorPacote": "Vinícius",
+   "versaoPublicada": 2,
+   "versaoPublicadaPacote": 2,
+   "revisaoRascunho": 44,
+   "revisaoRascunhoPacote": 44,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "v05",
+    "tipoNoAnterior": "content"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 95,
+    "aprofundamento": 70,
+    "encerramento": 146
+   },
+   "segundosEstimados": {
+    "demo": 33.5,
+    "aprofundamento": 24.7,
+    "encerramento": 51.4
+   },
+   "segundosTotais": 109.6,
+   "custoEstimadoUsd": 2.01,
+   "custoComEncerramentoCurtoUsd": 1.55,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 13.3,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": []
+  },
+  {
+   "codigo": "C22",
+   "id": "crs_njtlqq7y7fyfeqcr",
+   "titulo": "Errei. E agora?",
+   "trilha": "autonomia-no-trabalho",
+   "instrutor": "Vinícius",
+   "instrutorPacote": "Vinícius",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 31,
+   "revisaoRascunhoPacote": 31,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 89,
+    "aprofundamento": 68,
+    "encerramento": 151
+   },
+   "segundosEstimados": {
+    "demo": 31.4,
+    "aprofundamento": 24.0,
+    "encerramento": 53.2
+   },
+   "segundosTotais": 108.6,
+   "custoEstimadoUsd": 1.99,
+   "custoComEncerramentoCurtoUsd": 1.5,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 14.6,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C23",
+   "id": "crs_gl0hjkmqfgnnur9y",
+   "titulo": "Aprender faz parte do trabalho",
+   "trilha": "autonomia-no-trabalho",
+   "instrutor": "Vinícius",
+   "instrutorPacote": "Vinícius",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 31,
+   "revisaoRascunhoPacote": 31,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 89,
+    "aprofundamento": 60,
+    "encerramento": 147
+   },
+   "segundosEstimados": {
+    "demo": 31.4,
+    "aprofundamento": 21.1,
+    "encerramento": 51.8
+   },
+   "segundosTotais": 104.3,
+   "custoEstimadoUsd": 1.91,
+   "custoComEncerramentoCurtoUsd": 1.44,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 13.9,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C24",
+   "id": "crs_dp9s7pdro9j6e3m0",
+   "titulo": "Por onde eu começo?",
+   "trilha": "pensar-e-resolver",
+   "instrutor": "Flávia",
+   "instrutorPacote": "Flávia",
+   "versaoPublicada": 2,
+   "versaoPublicadaPacote": 2,
+   "revisaoRascunho": 43,
+   "revisaoRascunhoPacote": 43,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "ordering",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 82,
+    "aprofundamento": 63,
+    "encerramento": 151
+   },
+   "segundosEstimados": {
+    "demo": 32.3,
+    "aprofundamento": 24.8,
+    "encerramento": 59.4
+   },
+   "segundosTotais": 116.5,
+   "custoEstimadoUsd": 2.13,
+   "custoComEncerramentoCurtoUsd": 1.59,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 20.1,
+    "planosInteiros": 2,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C25",
+   "id": "crs_0ua5onij460lpzs0",
+   "titulo": "Faz sentido?",
+   "trilha": "pensar-e-resolver",
+   "instrutor": "Flávia",
+   "instrutorPacote": "Flávia",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 34,
+   "revisaoRascunhoPacote": 34,
+   "ancora": {
+    "aula": "aula_02",
+    "antesDe": "a02",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q04",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_02",
+    "antesDe": "fim_aula_02",
+    "ultimaAulaAtual": "aula_02",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a02",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "classification",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 87,
+    "aprofundamento": 62,
+    "encerramento": 150
+   },
+   "segundosEstimados": {
+    "demo": 34.2,
+    "aprofundamento": 24.4,
+    "encerramento": 59.0
+   },
+   "segundosTotais": 117.6,
+   "custoEstimadoUsd": 2.15,
+   "custoComEncerramentoCurtoUsd": 1.61,
+   "cortes": {
+    "candidatos": 2,
+    "segundos": 17.8,
+    "planosInteiros": 2,
+    "obs": "v01·s3 tem frase de ensino antes do anúncio: cortar só a última frase (adjust.cut.last)"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_03) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q04: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  },
+  {
+   "codigo": "C26",
+   "id": "crs_d5rsi8gt36rv0qbq",
+   "titulo": "Onde está o problema?",
+   "trilha": "pensar-e-resolver",
+   "instrutor": "Flávia",
+   "instrutorPacote": "Flávia",
+   "versaoPublicada": 1,
+   "versaoPublicadaPacote": 1,
+   "revisaoRascunho": 44,
+   "revisaoRascunhoPacote": 44,
+   "ancora": {
+    "aula": "aula_03",
+    "antesDe": "a03",
+    "existeNoRascunho": true,
+    "existeNaPublicada": true,
+    "noAnterior": "q06",
+    "tipoNoAnterior": "choice"
+   },
+   "videoFinal": {
+    "aula": "aula_03",
+    "antesDe": "fim_aula_03",
+    "ultimaAulaAtual": "aula_03",
+    "ok": true
+   },
+   "pratica": {
+    "id": "a03",
+    "operacao": "revise_preserving_id_and_history",
+    "formatoProposto": "short_text",
+    "formatoAtual": "reflection com molde (montar frase)"
+   },
+   "palavras": {
+    "demo": 89,
+    "aprofundamento": 68,
+    "encerramento": 146
+   },
+   "segundosEstimados": {
+    "demo": 35.0,
+    "aprofundamento": 26.7,
+    "encerramento": 57.4
+   },
+   "segundosTotais": 119.1,
+   "custoEstimadoUsd": 2.18,
+   "custoComEncerramentoCurtoUsd": 1.67,
+   "cortes": {
+    "candidatos": 3,
+    "segundos": 22.8,
+    "planosInteiros": 3,
+    "obs": "drop por id de plano via media.adjust"
+   },
+   "migracao": "inserir dentro da aula → matrícula fica na versão antiga (nem sameShape, nem onlyRemovals, nem onlyAppendedLessons)",
+   "caminhoSeguro": "aula nova no fim (aula_04) com demo → decisão → aprofundamento → prática → despedida → fim",
+   "conflitos": [
+    "a âncora vem logo depois da decisão q06: ficaria decisão → reação → demo → nova decisão (duas decisões seguidas)"
+   ]
+  }
+ ],
+ "correcoes": [
+  {
+   "prioridade": "P0",
+   "id": "c01-piloto",
+   "oQue": "Não aplicar o C01 do pacote por cima do piloto",
+   "onde": "C01 (cursos/C01.md, expansao.json[0])",
+   "porque": "7 conflitos (vídeo final no meio do curso, m02 regride de missão real para texto na tela, personagem Paula, cena duplicada, promessa quebrada em v03)",
+   "fix": "descartar C01 do pacote; se quiser a cena \"nome não está na lista\", vira decisão extra na aula_03 do piloto com Renata",
+   "custo": "US$ 0 (ou ~US$ 1,2 com a decisão extra)",
+   "esforco": "nenhum"
+  },
+  {
+   "prioridade": "P0",
+   "id": "insercao",
+   "oQue": "Trocar \"inserir antes da prática\" por \"aula nova no fim\"",
+   "onde": "26 cursos (insertion_rule)",
+   "porque": "cena nova dentro de aula antiga impede a migração de matrículas (matricula-migracao.ts); em 13 cursos criaria duas decisões seguidas; quebra a promessa \"agora monte sua frase\" em 10 cursos",
+   "fix": "aula_0N+1 \"Na prática de verdade\": demo → decisão → aprofundamento → prática (missão real) → despedida → fim; aula antiga intacta",
+   "custo": "US$ 0",
+   "esforco": "script de montagem (mesmo padrão da proposta.json do piloto), 1 dia"
+  },
+  {
+   "prioridade": "P0",
+   "id": "praticas",
+   "oQue": "Reescrever as 26 práticas como missões reais, não texto livre sobre caso fictício",
+   "onde": "config.type em 23/26 = short_text",
+   "porque": "o dono criticou \"não é missão, é só uma pergunta\"; o pacote só troca a palavra e mantém exercício na tela; ordering/classification exigem tipos novos de nó (3–5 dias cada) para 1 prática cada",
+   "fix": "padrão do piloto: molde + ação fora da tela + caminho \"sem data marcada\"; C24 ordenação → molde de etapas; C25 classificação → 3 decisões curtas; C20 seleção múltipla → choice ou assessment formativo",
+   "custo": "US$ 0",
+   "esforco": "editorial 2–3 dias; motor só se quiser critérios/exemplo (P)"
+  },
+  {
+   "prioridade": "P0",
+   "id": "orcamento",
+   "oQue": "Aprovar orçamento antes de qualquer job",
+   "onde": "78 vídeos",
+   "porque": "~3.012 s de fala ≈ US$ 55 (0,0183 US$/s); saldo do sistema ≈ US$ 33 e piloto C01 (US$ 9,34) pendente",
+   "fix": "fases: piloto C01 + piloto C24 (≈ US$ 12) → avaliar → lote por trilha; encerramentos de 60–90 palavras cortam ≈ US$ 13",
+   "custo": "US$ 12 agora; ≈ US$ 42–55 total",
+   "esforco": "decisão do dono"
+  },
+  {
+   "prioridade": "P0",
+   "id": "pendencia",
+   "oQue": "Decidir a feature de pendência antes de adotar os textos de tela",
+   "onde": "CORRECOES_ADICIONAIS (Pendente / Retomar atividades / Sem pendências)",
+   "porque": "\"Fazer depois\" hoje envia resposta vazia e nada é salvo; os textos prometem estado que não existe",
+   "fix": "(a) construir pendência (M, 2 dias) ou (b) manter só a fala condicional \"se fez a atividade\" e tela sem textos de pendência",
+   "custo": "US$ 0",
+   "esforco": "M ou nenhum"
+  },
+  {
+   "prioridade": "P1",
+   "id": "instrucao",
+   "oQue": "Corrigir \"Escreva uma resposta curta…\" nas 26 práticas de montar frase",
+   "onde": "C06·a03 e todas as práticas C15–C26 (lista em validacaoTecnica.instrucaoIncompativel)",
+   "porque": "instrução de texto livre em componente de blocos (defeito funcional de texto, já no raio-x)",
+   "fix": "\"Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito.\"",
+   "custo": "US$ 0",
+   "esforco": "script, 1 h"
+  },
+  {
+   "prioridade": "P1",
+   "id": "cortes",
+   "oQue": "Aplicar os 95 cortes de anúncio de missão por media.adjust.drop",
+   "onde": "candidatos_cortes.json (ver cortes.md)",
+   "porque": "96/96 casam com planos inteiros com tempo whisper (503 s); não precisa de escuta; 4 do C01 já são regravados pelo piloto; C25·v01·s3 tem frase de ensino antes → cortar só a última frase",
+   "fix": "drop por id de plano + recomposição; conferir transição e a chamada da pergunta que segue",
+   "custo": "US$ 0",
+   "esforco": "lote, meio dia"
+  },
+  {
+   "prioridade": "P1",
+   "id": "encerramentos",
+   "oQue": "Encurtar e personalizar os 26 encerramentos",
+   "onde": "final_video.speech (140–160 palavras ≈ 53–61 s)",
+   "porque": "molde único em 4 parágrafos (recapitula → \"você praticou\" → \"escolha uma ação\" → \"Meu roteiro\" + outro curso); sem callback à história do curso; 24/26 vendem o Meu roteiro na fala (a tela já faz isso)",
+   "fix": "60–90 palavras: 1 callback ao personagem do curso, 1 ação real, despedida da pessoa (modelo: despedida do piloto); recomendação de curso só na tela",
+   "custo": "−US$ 13",
+   "esforco": "editorial 1–2 dias"
+  },
+  {
+   "prioridade": "P1",
+   "id": "c24-c22",
+   "oQue": "C24 a01 e C22 a01 com contexto fixo via blocos do molde",
+   "onde": "CORRECOES_ADICIONAIS",
+   "porque": "claim do C24 verificado (reunião/kits/relatório misturados); a solução não precisa de componente novo",
+   "fix": "C24 a01: a=[organizar uma reunião viável para seis pessoas / garantir que a reunião aconteça na próxima semana], b=[que serão seis pessoas / que é na próxima semana], c=[a duração / a disponibilidade das pessoas / duração e disponibilidade], d=[confirmar duração e disponibilidade antes de reservar / perguntar a quem pediu quanto tempo precisa]; C22 a01: molde do pacote + Outra resposta",
+   "custo": "US$ 0",
+   "esforco": "1 h"
+  },
+  {
+   "prioridade": "P1",
+   "id": "c14-falas",
+   "oQue": "C14: substituições de fala",
+   "onde": "A2·v03·s3, A4·v08·s4 (planos inteiros); A8·v14·s4+s5, A9·v17·s1+s2 (parciais)",
+   "porque": "A2 universaliza \"toda vaga\" (aplicar); A4 ameaça (aplicar); A8/A9 são preferência de estilo",
+   "fix": "A8 versão intermediária: \"Dois extremos atrapalham: ficar em silêncio o tempo todo ou falar por cima dos outros. Entre eles há várias formas de ajudar: fazer uma pergunta, organizar uma ideia, acompanhar o tempo.\"",
+   "custo": "A2+A4 ≈ US$ 0,2; os 4 ≈ US$ 1",
+   "esforco": "regravar 2–6 planos"
+  },
+  {
+   "prioridade": "P1",
+   "id": "self-review",
+   "oQue": "Campos de autorrevisão na reflexão (critérios + exemplo sob demanda)",
+   "onde": "ReflectionNode (schema) + 2 players + estúdio",
+   "porque": "é a única parte das práticas do pacote que acrescenta valor pedagógico e serve também às missões do piloto",
+   "fix": "reflection.selfReview = {criteria: string[≤5], example?: string}; botões \"Conferir minha resposta\" / \"Ver um exemplo\"; sem nota automática",
+   "custo": "US$ 0",
+   "esforco": "P (1 dia)"
+  },
+  {
+   "prioridade": "P2",
+   "id": "vozes",
+   "oQue": "Operacionalizar as fichas de voz",
+   "onde": "FICHAS_DE_VOZ.md → 3 regras por instrutor",
+   "porque": "roteiros homogêneos (11,5–14,4 palavras/frase; ~0 perguntas; nenhuma frase-exemplo das fichas usada)",
+   "fix": "tamanho de frase alvo, 1 gesto-assinatura (Laís mostra a evidência; Flávia pergunta \"de que depende?\"; Thiago lê a mensagem), 1 jeito de fechar; aplicar nos encerramentos primeiro",
+   "custo": "US$ 0",
+   "esforco": "editorial"
+  },
+  {
+   "prioridade": "P2",
+   "id": "textos-ui",
+   "oQue": "Adotar o conjunto de textos de interface",
+   "onde": "CORRECOES_ADICIONAIS › Novas instruções de interface",
+   "porque": "bons e consistentes; dependem da pendência em 3 itens",
+   "fix": "aplicar os que não dependem de pendência agora",
+   "custo": "US$ 0",
+   "esforco": "P"
+  },
+  {
+   "prioridade": "P2",
+   "id": "duas-fortes",
+   "oQue": "Manter as 4 decisões com duas opções fortes como estão",
+   "onde": "C03 q01, C06 q01, C14 q25, C15 q03",
+   "porque": "já estão marcadas forte/forte/fraca no banco (verificado); o pacote só pede para não rebaixar",
+   "fix": "nenhum",
+   "custo": "US$ 0",
+   "esforco": "nenhum"
+  }
+ ],
+ "plano": {
+  "fase0_gratis": [
+   "corrigir instrução das 26 práticas de molde",
+   "C24 a01 e C22 a01 por blocos",
+   "95 cortes por adjust.drop + recomposição (sem C01)",
+   "montar em rascunho as decisões + feedbacks textuais do pacote como nós da futura aula extra (sem mídia)"
+  ],
+  "fase1_pilotos_US12": [
+   "aprovar piloto C01 (US$ 9,34) — vira o padrão",
+   "piloto técnico C24: aula_03 extra com demo + decisão (texto) + aprofundamento + prática real (molde de etapas) + despedida de 70 palavras ≈ 150 s ≈ US$ 2,8",
+   "motor: selfReview (P); pendência fica para depois"
+  ],
+  "fase2_escala": [
+   "aplicar a 24 cursos por trilha, com práticas reescritas e encerramentos curtos: ≈ 24 × 90 s ≈ 2.160 s ≈ US$ 40",
+   "C14: aula_13 com a prática que falta na aula_12",
+   "medir vídeo real por curso depois da montagem; não inventar minutos"
+  ],
+  "decisoes": [
+   {
+    "id": "D1",
+    "pergunta": "C01",
+    "opcoes": [
+     "(a) manter piloto e descartar C01 do pacote",
+     "(b) manter piloto + decisão extra \"nome não está na lista\" na aula_03 (~US$ 1,2)"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D2",
+    "pergunta": "Onde entra o complemento",
+    "opcoes": [
+     "(a) aula nova no fim de cada curso",
+     "(b) dentro da aula + estender regra de migração (dev 1–2 dias)",
+     "(c) dentro da aula e aceitar que matrículas atuais ficam na versão antiga"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D3",
+    "pergunta": "Práticas",
+    "opcoes": [
+     "(a) reescrever as 26 como missões reais (padrão piloto)",
+     "(b) adotar texto curto do pacote + selfReview",
+     "(c) (b) + construir ordenação e classificação (dev 1–2 semanas)"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D4",
+    "pergunta": "Encerramentos",
+    "opcoes": [
+     "(a) 60–90 palavras com callback (−US$ 13)",
+     "(b) 140–160 palavras como estão"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D5",
+    "pergunta": "Orçamento",
+    "opcoes": [
+     "(a) aprovar só os pilotos agora (US$ 12,2)",
+     "(b) aprovar programa inteiro (~US$ 55) e elevar limite para ~US$ 175",
+     "(c) só mudanças grátis"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D6",
+    "pergunta": "Cortes",
+    "opcoes": [
+     "(a) aplicar os 95 agora (grátis, tempos do whisper)",
+     "(b) esperar escuta humana"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D7",
+    "pergunta": "C14 falas",
+    "opcoes": [
+     "(a) só A2 + A4 (~US$ 0,2)",
+     "(b) as quatro (~US$ 1)",
+     "(c) nenhuma"
+    ],
+    "recomendada": "a"
+   },
+   {
+    "id": "D8",
+    "pergunta": "Pendência de atividade",
+    "opcoes": [
+     "(a) construir agora (M)",
+     "(b) depois; manter só a fala condicional"
+    ],
+    "recomendada": "b"
+   }
+  ]
+ }
+}

@@ -1,0 +1,108 @@
+{
+ "geradoEm": "2026-11-01T11:04:13.650Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "C12",
+   "courseId": "crs_5vccpfypr6fmxojb",
+   "rascunhoRevAntes": 104,
+   "varredura": {
+    "rascunho": {
+     "videos": 19,
+     "assets": 19,
+     "ge200": 1,
+     "tolerados": 10
+    },
+    "publicada": {
+     "versao": 15,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 7,
+     "diferemDoRascunho": 2
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_03",
+     "no": "v04",
+     "tipo": "cena",
+     "de": "ast_370yvzlr4sqze80e",
+     "para": "ast_au8sanl5jr2wsfp1",
+     "antes": 1,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 11,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 3.28,
+       "ms": 200,
+       "quadro": 82,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 13,
+       "ok": true,
+       "dmaxAB": 32,
+       "inicio": 16.84,
+       "ms": 240,
+       "quadro": 421,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 20,
+       "inicio": 21.16,
+       "ms": 280,
+       "quadro": 529,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 17,
+       "inicio": 37,
+       "ms": 240,
+       "quadro": 925,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 18271868,
+      "tamanhoDepois": 23001947,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [],
+   "rascunhoRevDepois": 105
+  }
+ ]
+}

@@ -1,0 +1,876 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.074Z",
+ "curso": {
+  "codigo": "C09",
+  "id": "crs_gjn468p3y6hwua4f",
+  "titulo": "Posso postar isso?"
+ },
+ "status": "ok",
+ "revisaoAntes": 108,
+ "revisaoVistaPelaProposta": 104,
+ "versaoPublicadaComparada": 14,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [
+  "personagem novo sem nome próprio, fora do elenco: \"uma colega da Malu (sem nome; só compartilhou a foto)\""
+ ],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: confirme antes de publicar.",
+   "depois": "Antes de terminar, você monta uma pergunta curta para confirmar o que pode postar."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_01/fim_aula_01.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Perfil fechado não é cofre. O fundo da foto continua lá."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v02/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: avise sobre uma publicação.",
+   "depois": "Daqui a pouco, é você quem escreve o aviso: o que publicou, o que percebeu, o que quer confirmar."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_02/fim_aula_02.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_02/fim_aula_02.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nInterrompa a divulgação e avise pelo canal indicado.\nNão redistribua o conteúdo para pedir opiniões.\nAntes de postar, confira: pessoas, informações visíveis e autorização.",
+   "depois": "Interrompa a divulgação e avise pelo canal indicado. Não redistribua o conteúdo para pedir opiniões. Na próxima aula, a história da Malu continua: a foto já tinha sido copiada. E você vai olhar o fundo das suas próprias fotos."
+  },
+  {
+   "tipo": "closingLine",
+   "onde": "aula_02/fim_aula_02.closingLine",
+   "estado": "aplicar",
+   "antes": "",
+   "depois": "Apagar tira a foto do seu perfil. Não tira de onde ela já chegou."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Confira o que pode mostrar antes de publicar uma imagem ou relato do trabalho. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue verificar autorização e conteúdo antes de publicar e comunicar uma exposição percebida.",
+   "depois": "Confira o que pode mostrar antes de publicar uma imagem ou relato do trabalho, e saiba agir quando a foto já circulou. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego. Objetivo final: Ao final, a pessoa consegue verificar autorização e conteúdo antes de publicar, comunicar uma exposição percebida e atualizar o aviso quando o alcance muda."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_03",
+   "estado": "aplicar",
+   "depois": "Agir quando uma publicação indevida já foi copiada: reduzir a cópia e atualizar o aviso, sem reenviar a imagem, e revisar o fundo das próprias fotos."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": "O Ícaro tem a autorização da colega, mas há um documento interno ao fundo. O que ele faz antes de postar?"
+   },
+   "depois": {
+    "teaser": "O Ícaro tem a autorização da colega, mas há um documento interno ao fundo. O que ele faz antes de postar?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v02"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Confirme antes de publicar\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Malu, o que você confere antes de postar?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você confere antes de postar?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Ícaro, o que você faz antes de postar?\" ainda não está na fala do vídeo \"No lugar do Ícaro, o que você faz antes de postar?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Avise sobre uma publicação\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Malu, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você faria?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 2,
+    "EMPTY_BODY": 2,
+    "CALL_NOT_SPOKEN": 3,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Confirme antes de publicar\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Malu, o que você confere antes de postar?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você confere antes de postar?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar do Ícaro, o que você faz antes de postar?\" ainda não está na fala do vídeo \"No lugar do Ícaro, o que você faz antes de postar?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Avise sobre uma publicação\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"No lugar da Malu, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você faria?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   2
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~a",
+  "aula_01/q01~b",
+  "aula_01/q02~a",
+  "aula_02/q03~c"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Despedida: (a) versão enxuta da S5 (cabe no orçamento; mantém os três olhares, a Malu, as duas ações e a orientação) · (b) S5 integral, 98 palavras (+6 s; estoura o alvo, não o teto). Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Missão: (a) as últimas 10 fotos próprias, com retirada e aviso se for do trabalho · (b) só contar, sem pedir retirada (menos exposição para quem se assusta). Recomendo (a): retirar é a primeira ação que o curso ensina",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Explicação, trecho da lei: (a) “Ela pode ter prazo e obrigação de responder por aquele dado. É lei.” (sem citar LGPD) · (b) citar “LGPD” pelo nome. Recomendo (a): o nome não ajuda o aluno a agir e soa jurídico.",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. Personagem: (a) “uma colega” sem nome (menos um nome para lembrar) · (b) dar nome à colega. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 12,
+  "palavrasPlanosAulaNova": 244,
+  "palavrasReacoesNovas": 64,
+  "palavrasAberturasTrocadas": 33,
+  "palavrasTotal": 341,
+  "segundos": 130.2,
+  "usdEstimado": 2.38,
+  "nos": [
+   "v04:scenario",
+   "q04:choice",
+   "v05:content",
+   "m03:mission",
+   "despedida:content",
+   "fim_aula_03:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_03",
+  "title": "Apagou. E a cópia?",
+  "description": "Você aprende o que fazer quando a foto já circulou e confere o fundo das suas próprias fotos publicadas.",
+  "estimatedMinutes": 4,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_03"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v04",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "A cópia que circulou",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Retirar · Avisar · Alcance"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Na aula passada, a Malu apagou a foto e avisou o canal. Pronto? Nesta última aula, a parte difícil começa agora. No fim, você abre as suas próprias fotos publicadas e olha o fundo delas. Uma a uma. Rápido, e revelador. Uma colega avisa: compartilhei sua foto no grupo da família antes de você apagar. A Malu não sabe onde mais ela está. Apagar do perfil tira a foto de um lugar. A cópia já está em outra tela. E nela aparecia um documento com nome de cliente. No lugar da Malu, qual é o próximo passo?",
+     "motionPrompt": "opens both palms, honest",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Na aula passada, a Malu apagou a foto e avisou o canal. Pronto? Nesta última aula, a parte difícil começa agora.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "promessa",
+        "line": "No fim, você abre as suas próprias fotos publicadas e olha o fundo delas. Uma a uma. Rápido, e revelador.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Uma colega avisa: compartilhei sua foto no grupo da família antes de você apagar. A Malu não sabe onde mais ela está.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "s3",
+        "line": "Apagar do perfil tira a foto de um lugar. A cópia já está em outra tela. E nela aparecia um documento com nome de cliente.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Depois de apagar",
+         "bullets": [
+          "Seu perfil: **fora do ar**",
+          "A cópia: **ainda circula**",
+          "Quem viu: **você não sabe**"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "chamada",
+        "line": "No lugar da Malu, qual é o próximo passo?",
+        "cameraId": "cam_enzo8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q04",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "No lugar da Malu, qual é o próximo passo?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "A Malu já apagou a foto e avisou o canal. Agora uma colega diz que compartilhou a foto num grupo antes da retirada. Na foto havia um documento com nome de cliente. No lugar da Malu, qual é o próximo passo?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Respondo à colega que tudo bem, já apaguei do meu perfil, e sigo o dia.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "A cópia continua em outra tela, e a empresa avaliou o caso achando que acabou. Faça assim: peça que a colega apague e atualize o canal: a foto circulou além do seu perfil."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Do seu perfil, sumiu. Do grupo da colega, não. E quem avaliou o caso pela sua primeira mensagem está com informação velha."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Peço que a colega apague a cópia e aviso de novo o canal: a foto circulou.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Retirar é a primeira ação; avisar que o alcance mudou é a segunda. Faça assim: mensagem curta para a colega, mensagem curta para o canal, sem reenviar a imagem."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Duas ações, nenhuma substitui a outra. A colega apaga a cópia, e a empresa fica sabendo que o alcance mudou."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Peço que a colega apague e deixo por isso, para não virar um caso maior.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Reduzir a cópia é certo. Falta avisar o canal: você não sabe quem mais viu, e a empresa pode precisar tratar o caso. Faça assim: depois de pedir à colega, atualize o canal."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Pedir para apagar é certo. Mas você não sabe quem mais viu, e a empresa pode ter que responder por aquele nome."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "No lugar da Malu, qual é o próximo passo?"
+     }
+    },
+    {
+     "id": "v05",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "Por que avisar rápido",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Primeira ação · Segunda ação · Cada hora conta"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Retirar é a primeira ação. Avisar é a segunda. Com dado de cliente, a segunda não é opcional, e cada hora conta. Você não resolve isso sozinho, e não é para resolver. A empresa pode ter prazo e obrigação de responder por aquele dado. É lei. Se o alcance mudar de novo, avise de novo: o que circulou, onde, o que você já fez. Sem reenviar a imagem. Agora, o seu próprio perfil. O fundo das suas fotos também fala. Vamos conferir.",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Retirar é a primeira ação. Avisar é a segunda. Com dado de cliente, a segunda não é opcional, e cada hora conta.",
+        "cameraId": "cam_enzo8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s2",
+        "line": "Você não resolve isso sozinho, e não é para resolver. A empresa pode ter prazo e obrigação de responder por aquele dado. É lei.",
+        "cameraId": "cam_enzo8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s4",
+        "line": "Se o alcance mudar de novo, avise de novo: o que circulou, onde, o que você já fez. Sem reenviar a imagem.",
+        "cameraId": "cam_enzo8_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "A segunda mensagem",
+         "bullets": [
+          "**O que** circulou",
+          "**Onde**",
+          "**O que você já fez**",
+          "Sem a imagem"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora, o seu próprio perfil. O fundo das suas fotos também fala. Vamos conferir.",
+        "cameraId": "cam_enzo8_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"A segunda mensagem\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m03",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": false,
+     "title": "Olhe o fundo das suas últimas 10 fotos",
+     "type": "mission",
+     "intro": "A Malu descobriu a cópia depois. Você vai olhar antes: nas fotos que já estão no ar, no seu perfil.",
+     "action": "1. Abra o seu perfil e as últimas dez fotos ou stories que você publicou.\n2. Em cada uma, ignore você e olhe o fundo: tela, crachá, documento, placa com endereço, alguém que não autorizou.\n3. Conte quantas têm algo que você não tinha reparado.\n4. Se alguma mostra dado de outra pessoa ou de um trabalho, retire. Se era do trabalho, avise o canal, mesmo que faça tempo.\n5. Volte aqui, marque “Já experimentei” e conte o número.",
+     "alternative": "Não tem fotos publicadas? Faça com as últimas dez que você recebeu em grupos: quantas mostram no fundo algo que a pessoa talvez não quisesse mostrar? Não precisa avisar ninguém; é treino de olhar.",
+     "example": "Dez fotos. Em duas tinha coisa no fundo: numa, o crachá de um colega com nome completo; noutra, a tela do computador do curso com uma lista de nomes. Apaguei as duas. A do curso, avisei a coordenação."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_03"
+     ],
+     "required": true,
+     "title": "O fundo da foto também fala",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que aparece · Quem aparece · Que autorização vale"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Antes de postar, três olhares: o que aparece, quem aparece e que autorização vale. O fundo da foto também fala. A Malu aprendeu do jeito mais caro: depois de publicar. Apagar ajuda, mas não traz de volta o que já foi copiado. Na próxima foto do trabalho, pare um segundo e olhe o fundo. Dá para contar a conquista sem mostrar a tela de ninguém.",
+     "motionPrompt": "moves both hands gently while explaining, calm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Antes de postar, três olhares: o que aparece, quem aparece e que autorização vale. O fundo da foto também fala.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "d2",
+        "line": "A Malu aprendeu do jeito mais caro: depois de publicar. Apagar ajuda, mas não traz de volta o que já foi copiado.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d3",
+        "line": "Na próxima foto do trabalho, pare um segundo e olhe o fundo. Dá para contar a conquista sem mostrar a tela de ninguém.",
+        "cameraId": "cam_enzo8_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_03",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Antes de postar: o que aparece, quem aparece, que autorização vale."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Se escapou: retire e avise. Se circulou: avise de novo."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Não reenvie a imagem para explicar."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minhas 10 fotos",
+       "kind": "checklist",
+       "items": [
+        "abri as últimas 10 publicações",
+        "olhei o fundo de cada uma",
+        "contei quantas tinham algo",
+        "retirei (e avisei, se era do trabalho)"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m03",
+       "emptyText": "Você deixou para depois. Quando olhar as fotos, volte e conte quantas achou."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de postar: o que aparece, quem aparece, que autorização vale.\nSe escapou: retire e avise. Se circulou: avise de novo.\nNão reenvie a imagem para explicar.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Apagar é a primeira ação. Avisar é a segunda. O fundo da foto, você olha antes."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v04",
+     "from": "v04",
+     "to": "q04"
+    },
+    {
+     "id": "e_q04_a",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "a"
+    },
+    {
+     "id": "e_q04_b",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q04_c",
+     "from": "q04",
+     "to": "v05",
+     "optionId": "c",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_v05",
+     "from": "v05",
+     "to": "m03"
+    },
+    {
+     "id": "e_m03",
+     "from": "m03",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_03"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v04": {
+      "x": 0,
+      "y": 0
+     },
+     "q04": {
+      "x": 0,
+      "y": 180
+     },
+     "v05": {
+      "x": 0,
+      "y": 360
+     },
+     "m03": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_03": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 109,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 2,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Confirme antes de publicar\" está sem texto",
+    "nodeId": "m01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Malu, o que você confere antes de postar?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você confere antes de postar?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar do Ícaro, o que você faz antes de postar?\" ainda não está na fala do vídeo \"No lugar do Ícaro, o que você faz antes de postar?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Avise sobre uma publicação\" está sem texto",
+    "nodeId": "m02",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"No lugar da Malu, o que você faria?\" ainda não está na fala do vídeo \"No lugar da Malu, o que você faria?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   }
+  ]
+ }
+}

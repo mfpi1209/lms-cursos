@@ -1,0 +1,691 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C06",
+  "id": "crs_b8zeh4b2gguseghq",
+  "titulo": "Brincadeiras têm limite",
+  "instrutora": "Patrícia — Sua orientadora",
+  "versaoPublicada": 10,
+  "revisaoDoRascunho": 129
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado (ou, em plano, a fala nova com o mesmo id); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "Aula 4 é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids dos nós não mudam.",
+  "Nas aulas existentes há mudanças de texto (fins de aula, campos de prática) e a troca de fala do plano de abertura da prática (mesmo id, sem a palavra \"missão\"), que continua sendo o anúncio da prática daquela aula.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62; cena na cam_patricia8_34 com chamada na cam_patricia8_esq; explicação na cam_patricia8_esq; despedida na cam_patricia8_34.",
+  "q06 não ganha vídeo próprio: v06 termina com a chamada e o player pula o vídeo da pergunta.",
+  "a04 é missão fora da tela ('Leve para a vida real'): sem molde; 'Como foi?' é o único campo de texto; draftFromNodeId null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Reações novas: nenhuma usa as aberturas de frasesRepetidasEmVariosCursos nem as aberturas atuais do curso ('Boa escolha', 'Isso mesmo', 'Exatamente', 'Bom começo', 'Quase lá', 'É por aí').",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar."
+ ],
+ "diagnostico": [
+  "As três práticas (m01, m02, a03) são montagem de frase em blocos; nada acontece fora da tela.",
+  "O curso ensina a apoiar quem foi alvo (q04, q05), mas não diz como apoiar sem decidir pela pessoa, nem como respeitar “não quero falar agora” ou não exigir denúncia na hora.",
+  "Não fecha o triângulo: e se o alvo for você, e um colega oferecer ajuda? O que aceitar, como dizer “agora não”.",
+  "As aberturas das três aulas usam a fórmula “No fim desta aula, tem uma missão para você: …” (a da aula 3 com 24 palavras); o missao_fim de v01 já saiu na Fase 0.",
+  "O curso termina numa tela de texto quase genérica: sem fecho da Patrícia, sem volta a Nina, Bruno e Ravi."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Construa relações próximas respeitando limites de brincadeiras, comentários e contato; apoie quem foi alvo sem decidir por ela, e saiba o que aceitar quando o alvo é você. Público: Jovens do ensino médio e início da formação profissional, incluindo iniciantes e tímidos em aprendizagem, estágio ou primeiro emprego."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_04",
+    "texto": "Apoiar quem foi alvo sem expor nem decidir por ela, e, quando o alvo é você, aceitar só o apoio que quiser, inclusive “agora não”."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Nina",
+    "Bruno",
+    "Letícia",
+    "Ravi"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim, então a vinheta não interrompe a fala)"
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Nomes, apelidos e brincadeiras",
+   "caminhoPrincipal": [
+    "v00",
+    "q01",
+    "v01",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: respeite uma preferência.",
+       "para": "Daqui a pouco, você deixa pronta a frase que combina como tratar alguém: nome, cumprimento, dúvida.",
+       "camera": "cam_patricia8_34",
+       "layout": "presenter",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "missao_fim já tirado na Fase 0 (cortes.md §A, n 17): não mexer."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reação C abre com fórmula repetida"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução: o componente é de blocos."
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Risada não confirma conforto."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como expressar um limite e buscar apoio",
+   "caminhoPrincipal": [
+    "v02",
+    "q03",
+    "v03",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v02",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"missao\" muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "missao",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: prepare uma frase de limite.",
+       "para": "Hoje você sai com a sua frase de limite escrita. Curta, sua, para o dia em que precisar.",
+       "camera": "cam_patricia8_34",
+       "layout": "presenter",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "v03",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "v03/s5 termina com “Agora é com você: monte a sua frase.” e leva a m02: fica."
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "instrucoes": "Escolha uma opção em cada grupo. Se precisar, use Outra resposta para escrever do seu jeito. Não inclua nomes, contatos ou informações internas."
+     },
+     "nota": "Só a instrução."
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "closingLine": "Sentir incômodo não é exagero. Pedir ajuda não é fraqueza."
+     },
+     "nota": "Só acrescenta a frase de fechamento (hoje null)."
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "change",
+   "titulo": "Como apoiar quando o alvo é outra pessoa",
+   "caminhoPrincipal": [
+    "v04",
+    "q04",
+    "v05",
+    "q05",
+    "a03",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v04",
+     "tipo": "scenario",
+     "acao": "keep",
+     "nota": "só o plano \"s2\" (abertura da prática) muda de fala (abaixo)",
+     "planos": [
+      {
+       "id": "s2",
+       "acao": "change",
+       "de": "No fim desta aula, tem uma missão para você: escolha, em um caso fictício, uma frase de acolhimento e uma forma de buscar apoio.",
+       "para": "E esta aula termina com a sua escolha: o que dizer a quem foi alvo, e que apoio oferecer.",
+       "camera": "cam_patricia8_34",
+       "layout": "presenter",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Mesmo id de plano; regrava só esta fala. Continua sendo o anúncio da prática da aula, sem a palavra \"missão\"."
+      }
+     ]
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações B e C abrem com fórmula repetida"
+    },
+    {
+     "id": "v05",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "keep",
+     "opcional": "reações A e B abrem com fórmula repetida"
+    },
+    {
+     "id": "a03",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "tituloNaTela": "Uma frase de acolhimento e um apoio",
+      "ponte": "Você viu que apoiar não é expor nem confrontar. Agora monte o que você diria a quem foi alvo: uma frase de acolhimento e um apoio que ela possa aceitar."
+     },
+     "nota": "A instrução já foi corrigida na Fase 0 (fase0.antes-depois). Aqui só o título (hoje com 14 palavras) e a ponte, para caberem na tela e na abertura nova. Molde e blocos ficam."
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "Apoiar é ouvir, respeitar a vontade da pessoa e ajudar a achar um canal de confiança. Se você salvou, sua frase de acolhimento fica no Meu roteiro. Na próxima aula, o Ravi responde à Letícia, e você vê o que fazer quando o alvo é você.",
+      "closingLine": "Apoio que decide pela pessoa não é apoio.",
+      "itensDoRoteiro[a03].rotulo": "Minha frase de acolhimento"
+     },
+     "nota": "Deixa de ser o fim do curso: “Curso concluído” passa para fim_aula_04. O rótulo do item de roteiro acompanha o título novo de a03."
+    }
+   ]
+  },
+  {
+   "numero": 4,
+   "id": "aula_04",
+   "acao": "add",
+   "modulo": "Pratique os combinados",
+   "titulo": "Quando o alvo pede ajuda, e quando o alvo é você",
+   "resumo": "O Ravi responde à Letícia. Você decide como apoiar sem decidir por ele, vê o que aceitar quando o alvo é você e pergunta a duas pessoas como preferem ser tratadas.",
+   "estimativaMin": 4,
+   "obrigatoria": "obrigatória para quem está no curso; quem já concluiu vê como conteúdo novo (DECISOES-AUTONOMAS §1, mesma regra do C24)",
+   "objetivo": {
+    "id": "obj_aula_04",
+    "texto": "Apoiar quem foi alvo sem expor nem decidir por ela, e, quando o alvo é você, aceitar só o apoio que quiser, inclusive “agora não”."
+   },
+   "caminhoPrincipal": [
+    "v06",
+    "q06",
+    "v07",
+    "a04",
+    "despedida",
+    "fim_aula_04"
+   ],
+   "nos": [
+    {
+     "id": "v06",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "O Ravi responde",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "textoTela": "Não me exponha · Me ajude · Quem decide",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "A Letícia procurou o Ravi em particular. Ele respondeu. E a resposta pede cuidado.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 14,
+       "segundos": 5.3
+      },
+      {
+       "id": "promessa",
+       "fala": "Antes de terminar, você pergunta a duas pessoas próximas como preferem ser chamadas e cumprimentadas.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "nota": "Faz o papel do antigo plano \"missao\", sem a fórmula.",
+       "acao": "add",
+       "palavras": 15,
+       "segundos": 5.7
+      },
+      {
+       "id": "s2",
+       "fala": "O Ravi diz: não quero falar disso no grupo. Mas queria entender com quem posso falar. Só não sei como.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s3",
+       "fala": "Dois pedidos juntos: não me exponha, e me ajude. A Letícia quer ajudar, e tem pressa.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 16,
+       "segundos": 6.1
+      },
+      {
+       "id": "chamada",
+       "fala": "No lugar da Letícia, o que você faz?",
+       "layout": "presenter",
+       "camera": "cam_patricia8_esq",
+       "acao": "add",
+       "palavras": 8,
+       "segundos": 3.1
+      }
+     ],
+     "roteiroNovo": "A Letícia procurou o Ravi em particular. Ele respondeu. E a resposta pede cuidado. Antes de terminar, você pergunta a duas pessoas próximas como preferem ser chamadas e cumprimentadas. O Ravi diz: não quero falar disso no grupo. Mas queria entender com quem posso falar. Só não sei como. Dois pedidos juntos: não me exponha, e me ajude. A Letícia quer ajudar, e tem pressa. No lugar da Letícia, o que você faz?",
+     "cartaoPerguntaSeguinte": "O Ravi não quer falar no grupo, mas gostaria de ajuda para entender a quem recorrer. O que você faz no lugar da Letícia?",
+     "proximo": "q06",
+     "palavras": 73,
+     "segundos": 27.9
+    },
+    {
+     "id": "q06",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "No lugar da Letícia, o que você faz?",
+     "apoioNaTela": "O Ravi não quer falar no grupo, mas gostaria de ajuda para entender a quem recorrer. A Letícia quer ajudar.",
+     "bridge": {
+      "call": "No lugar da Letícia, o que você faz?"
+     },
+     "video": "não gerar: a cena anterior (v06) termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C06)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Falo com os colegas que fizeram a piada, sem avisar o Ravi.”",
+       "qualidade": "ok",
+       "feedback": "A intenção é boa, mas o Ravi pediu para não expor, e uma conversa com os colegas expõe. Faça assim: pergunte a ele antes de qualquer conversa com outras pessoas.",
+       "reacao": {
+        "texto": "Você quis proteger. Mas ele pediu para não expor, e falar com os colegas expõe. Pergunte a ele antes.",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v07",
+       "caracteres": 61
+      },
+      {
+       "id": "b",
+       "rotulo": "“Ajudo a achar uma pessoa ou canal de apoio e pergunto se ele quer companhia.”",
+       "qualidade": "strong",
+       "feedback": "Você responde ao pedido dele e deixa a decisão com ele. Faça assim: mostre as opções que conhece, ofereça ir junto e deixe que ele escolha o ritmo.",
+       "reacao": {
+        "texto": "Ele pediu para entender o caminho, e você deu isso. Companhia, se ele quiser. A decisão continua com o Ravi.",
+        "palavras": 20,
+        "segundos": 7.6
+       },
+       "vaiPara": "v07",
+       "caracteres": 78
+      },
+      {
+       "id": "c",
+       "rotulo": "“Digo que vou falar com a liderança por ele, para poupar o Ravi.”",
+       "qualidade": "weak",
+       "feedback": "Você tira dele a decisão, e ele vira assunto de uma conversa que não escolheu. Faça assim: pergunte primeiro: quer que eu vá junto, ou que eu fale por você?",
+       "reacao": {
+        "texto": "Poupar parece carinho. Mas quem decide se, quando e com quem é o Ravi. Pergunte: vou junto, ou falo?",
+        "palavras": 19,
+        "segundos": 7.3
+       },
+       "vaiPara": "v07",
+       "caracteres": 65
+      }
+     ],
+     "respostaForaDoEnunciado": "A resposta não está no enunciado: ele diz o que o Ravi pediu (não expor; ajuda para entender a quem recorrer); perceber que “falar com os colegas” expõe e “falar por ele” decide é a decisão."
+    },
+    {
+     "id": "v07",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "E se o alvo for você?",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "textoTela": "Oferecer, não decidir · “Agora não” é resposta · Adulto de confiança",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Apoiar é oferecer, não decidir. Vi o que aconteceu: quer que eu fique com você, ou ajude a procurar alguém?",
+       "layout": "presenter",
+       "camera": "cam_patricia8_esq",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "Se ela disser agora não, respeite. Apoiar não é publicar, falar por ela, nem exigir denúncia. Risco à segurança é a exceção.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_esq",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "s3",
+       "fala": "Agora, vira o jogo: o alvo é você, e um colega oferece ajuda. Pode aceitar só a companhia, ou só a escuta.",
+       "layout": "presenter_chips",
+       "camera": "cam_patricia8_esq",
+       "cartao": {
+        "titulo": "Se o alvo for você",
+        "topicos": [
+         "Aceite **só o que quiser**",
+         "“**Agora não**, obrigada” é resposta",
+         "Adolescente: um **adulto de confiança**",
+         "Risco à segurança: **ajuda já**"
+        ]
+       },
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4
+      },
+      {
+       "id": "s4",
+       "fala": "E pode dizer: agora não, obrigada. É resposta inteira. Adolescente? Um adulto de confiança continua sendo bom caminho.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_esq",
+       "acao": "add",
+       "palavras": 18,
+       "segundos": 6.9
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora, uma coisa pequena e real: pergunte a duas pessoas como preferem ser chamadas e cumprimentadas. Use a resposta.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_esq",
+       "nota": "Faz o papel do antigo \"missao_fim\", sem a palavra \"missão\". A aula segue para a04.",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      }
+     ],
+     "roteiroNovo": "Apoiar é oferecer, não decidir. Vi o que aconteceu: quer que eu fique com você, ou ajude a procurar alguém? Se ela disser agora não, respeite. Apoiar não é publicar, falar por ela, nem exigir denúncia. Risco à segurança é a exceção. Agora, vira o jogo: o alvo é você, e um colega oferece ajuda. Pode aceitar só a companhia, ou só a escuta. E pode dizer: agora não, obrigada. É resposta inteira. Adolescente? Um adulto de confiança continua sendo bom caminho. Agora, uma coisa pequena e real: pergunte a duas pessoas como preferem ser chamadas e cumprimentadas. Use a resposta.",
+     "proximo": "a04",
+     "palavras": 101,
+     "segundos": 38.5,
+     "naoRepete": "Não repete v01 (nome apresentado; contato físico), v03 (frase de limite; apoio; adolescente → adulto de confiança, que aqui volta em uma linha de propósito) nem v05 (não prometa sigilo). O novo: oferecer sem decidir; respeitar “agora não”; não exigir denúncia; o alvo é você."
+    },
+    {
+     "id": "a04",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Pergunte a duas pessoas como preferem ser chamadas",
+     "tipoDeMissao": "FAZER fora da tela: duas conversas curtas com pessoas próximas, e usar a resposta esta semana",
+     "intro": "O Ravi pediu ajuda do jeito dele. Agora, uma coisa pequena com pessoas suas: perguntar, em vez de supor.",
+     "action": [
+      "Escolha duas pessoas próximas: da escola, do curso, do trabalho, da família, do time.",
+      "Pergunte, de verdade: “Como você prefere que eu te chame?” e “Prefere abraço, aperto de mão ou só um oi?”",
+      "Use a resposta esta semana, toda vez.",
+      "Repare: alguém respondeu algo diferente do que você fazia?",
+      "Volte aqui, marque “Já experimentei” e conte o que percebeu."
+     ],
+     "alternative": "Não trabalha? Melhor ainda: a pergunta vale mais onde a gente acha que já sabe. Alguém da família, um amigo antigo, um colega de turma. Se trabalha, escolha uma pessoa do trabalho e uma de fora.",
+     "tip": {
+      "rotulo": "Exemplo: a nota de uma aluna",
+      "texto": "Perguntei à minha prima e a um colega do curso. Ela disse que odeia o apelido que a família usa. Ele prefere aperto de mão, não abraço. Mudei os dois.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Alguém respondeu diferente do que você fazia? Ou foi estranho perguntar?",
+      "placeholder": "Ex.: minha amiga pediu para parar de usar o diminutivo. Nunca tinha perguntado.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "Único campo de texto do nó: seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; a missão e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_04"
+     ],
+     "titulo": "Depois de perceber o limite",
+     "textoTela": "Perguntar antes · Parar quando ouve · Oferecer sem decidir",
+     "posicao": "depois de a04 e antes de fim_aula_04",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "A Nina e o apelido. O Bruno e o não. O Ravi e o pedido de ajuda. Três situações, um gesto.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "d2",
+       "fala": "Perguntar antes. Parar quando ouve. Oferecer sem decidir. Ninguém precisa provar motivo para se incomodar. Nem você.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "d3",
+       "fala": "Respeito aparece no que a gente faz depois de perceber o limite do outro. Cuide de você.",
+       "layout": "presenter",
+       "camera": "cam_patricia8_34",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      }
+     ],
+     "roteiroNovo": "A Nina e o apelido. O Bruno e o não. O Ravi e o pedido de ajuda. Três situações, um gesto. Perguntar antes. Parar quando ouve. Oferecer sem decidir. Ninguém precisa provar motivo para se incomodar. Nem você. Respeito aparece no que a gente faz depois de perceber o limite do outro. Cuide de você.",
+     "palavras": 55,
+     "segundos": 21.0,
+     "forma": "termina com a frase do curso (a que os revisores pediram como última) e uma despedida de cuidado; abertura por callback triplo em frases curtas, com espaço para respirar. Sem recap de “três posições”, sem “Meu roteiro”.",
+     "motionPrompt": "pausa curta antes da última frase, mão no peito, voz baixa"
+    },
+    {
+     "id": "fim_aula_04",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Perguntar não é fraqueza. É o jeito mais rápido de não machucar ninguém.",
+     "summary": "O que você levou\nAntes de supor, pergunte.\nOuviu um não? Pare, sem pedir explicação.\nQuem foi alvo decide o ritmo; você oferece.\nSe o alvo for você, aceite só o que quiser. “Agora não” é resposta.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Duas pessoas, duas respostas",
+       "kind": "checklist",
+       "items": [
+        "perguntei a duas pessoas",
+        "nome e cumprimento anotados",
+        "usei a resposta esta semana",
+        "reparei o que mudou"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "a04",
+       "composedNodeIds": [
+        "a04"
+       ],
+       "emptyText": "Você deixou para depois. Quando fizer, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Antes de supor, pergunte.\nOuviu um não? Pare, sem pedir explicação.\nQuem foi alvo decide o ritmo; você oferece.\nSe o alvo for você, aceite só o que quiser. “Agora não” é resposta.",
+       "emptyText": "Completar quando quiser"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos keep custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 16,
+   "palavras": 282,
+   "segundos": 107.6,
+   "nota": "inclui as aberturas trocadas (mesmo id de plano, fala nova)"
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 58,
+   "segundos": 22.1
+  },
+  "totalNovoFalado": {
+   "palavras": 340,
+   "segundos": 129.8,
+   "usd": 2.38,
+   "alvo": "90–130 s",
+   "teto": "150 s",
+   "dentroDoTeto": true
+  },
+  "porNo": [
+   {
+    "no": "v06",
+    "planos": 5,
+    "palavras": 73,
+    "segundos": 27.9
+   },
+   {
+    "no": "q06 (3 reações)",
+    "planos": 3,
+    "palavras": 58,
+    "segundos": 22.1
+   },
+   {
+    "no": "v07",
+    "planos": 5,
+    "palavras": 101,
+    "segundos": 38.5
+   },
+   {
+    "no": "despedida",
+    "planos": 3,
+    "palavras": 55,
+    "segundos": 21.0
+   },
+   {
+    "no": "aberturas trocadas (v00/missao, v02/missao, v04/s2)",
+    "planos": 3,
+    "palavras": 53,
+    "segundos": 20.2
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 8,
+   "quais": "q01 C, q02 C, q03 A, q03 B, q04 B, q04 C, q05 A, q05 B",
+   "segundos": 36.3,
+   "usd": 0.66,
+   "nota": "Aberturas: \"Vamos olhar isso com calma\", \"Muita gente responderia assim\", \"Faz sentido, mas dá para ir além\", \"Faz sentido pensar assim, mas repara\", \"Vamos olhar o efeito disso\", \"Repare no que isso provoca\", \"Pense no que acontece depois\", \"Veja o que essa escolha muda\". (b) cortar a 1ª frase se o ajustador aceitar (grátis); (c) regravar só o resto."
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 277.4,
+    "maxS": 295.4,
+    "texto": "5 min"
+   },
+   "depois": {
+    "minS": 373.1,
+    "maxS": 391.4,
+    "texto": "cerca de 6.2–6.5 min"
+   },
+   "comoCalculado": "antes + v06 + v07 + despedida + uma reação da q06 (mínima/máxima) + diferença das aberturas trocadas (+1.0 s). O “antes” é o raio-x das 02:33; a Fase 0 tirou o missao_fim de v01 (−4.9 s), não descontado aqui."
+  }
+ },
+ "perguntasAbertas": [
+  "1. Abertura da aula 3 (v04/s2, 24 palavras, 9,4 s): (a) trocar pela promessa curta proposta (18 palavras) · (b) deixar a fala antiga e trocar só as das aulas 1 e 2 (economiza ~6.9 s de gravação, mas mantém a fórmula numa aula). Recomendo (a).",
+  "2. Título de a03 (hoje “Escolha, em um caso fictício, uma frase de acolhimento e uma forma de buscar apoio”): (a) encurtar para “Uma frase de acolhimento e um apoio”, com ponte e rótulo do roteiro ajustados · (b) deixar. Recomendo (a).",
+  "3. As 8 reações antigas com abertura repetida: (a) deixar · (b) cortar a primeira frase, se o ajustador aceitar vídeo de reação (grátis) · (c) regravar (~36.3 s, ≈ US$ 0.66). Recomendo (b); se não der, (a).",
+  "4. Linha “Adolescente? Um adulto de confiança…” em v07/s4: (a) manter (segurança, pedida pelos revisores; v03 e v05 já dizem, mas aqui o contexto é o alvo recebendo ajuda) · (b) tirar da fala e deixar só no cartão. Recomendo (a)."
+ ]
+}

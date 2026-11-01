@@ -1,0 +1,1689 @@
+{
+ "script": "expansao-final",
+ "modo": "aplicar",
+ "geradoEm": "2026-11-01T07:24:46.232Z",
+ "curso": {
+  "codigo": "C14",
+  "id": "crs_hvvgkvtd1rb2um0l",
+  "titulo": "Minha primeira vaga"
+ },
+ "status": "ok",
+ "revisaoAntes": 442,
+ "revisaoVistaPelaProposta": 431,
+ "versaoPublicadaComparada": 16,
+ "onlyAppendedLessons": true,
+ "jobsAbertos": [],
+ "conflitos": [],
+ "inconsistenciasDaProposta": [],
+ "avisos": [],
+ "itens": [
+  {
+   "tipo": "plano",
+   "onde": "aula_01/v00/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: conte sua primeira experiência.",
+   "depois": "Daqui a pouco, você escreve a primeira frase do seu currículo: uma experiência da escola, da família ou do bairro."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_02/v03/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escolha sua vaga-alvo.",
+   "depois": "Ao final, você descreve a vaga que quer, a sua vaga-alvo: tipo, área e o que você já tem."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_04/v07/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escreva sua linha de currículo.",
+   "depois": "Hoje você sai com uma linha de currículo pronta: verbo, o que você fazia e quanto."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_05/v09/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escreva o seu Sobre do LinkedIn.",
+   "depois": "O que você monta nesta aula é o seu ‘Sobre’: três frases que apresentam você, com ou sem LinkedIn."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_06/v11/missao",
+   "estado": "aplicar",
+   "antes": "Daqui a pouco, você tem uma missão: escreva sua mensagem.",
+   "depois": "E a sua mensagem, você escreve ainda nesta aula. Fica salva para quando encontrar a pessoa certa."
+  },
+  {
+   "tipo": "ponte",
+   "onde": "aula_06/m05.ponte",
+   "estado": "aplicar",
+   "antes": "Esta é a missão da aula. Você viu que uma mensagem curta e um pedido simples abrem conversas. Agora monte a sua mensagem.",
+   "depois": "Você viu que uma mensagem curta e um pedido simples abrem conversas. Agora monte a sua mensagem."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_07/v12/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: monte seu plano para o teste.",
+   "depois": "No fim, você decide quando, onde e como faz o seu teste online, antes de o prazo apertar."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_08/v14/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: defina seu papel na dinâmica.",
+   "depois": "Ainda hoje, você escolhe o papel que assume no grupo, e entra na dinâmica sabendo por onde começar."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_09/v16/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: prepare sua apresentação.",
+   "depois": "Sua apresentação de um minuto fica pronta nesta aula: três frases, na ordem, do seu jeito."
+  },
+  {
+   "tipo": "ponte",
+   "onde": "aula_09/m08.ponte",
+   "estado": "aplicar",
+   "antes": "Esta é a missão da aula. Você viu que a apresentação cabe em três frases ligadas à vaga. Agora monte a sua.",
+   "depois": "Você viu que a apresentação cabe em três frases ligadas à vaga. Agora monte a sua."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_10/v18/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: conte sua história.",
+   "depois": "E você conta a sua: uma história pequena e verdadeira, em três partes, para levar na entrevista."
+  },
+  {
+   "tipo": "plano",
+   "onde": "aula_11/v20/missao",
+   "estado": "aplicar",
+   "antes": "No fim desta aula, tem uma missão para você: escolha seu ponto a melhorar.",
+   "depois": "Até o fim da aula, você escolhe um ponto seu a melhorar e o que já faz por ele."
+  },
+  {
+   "tipo": "ponte",
+   "onde": "aula_11/m10.ponte",
+   "estado": "aplicar",
+   "antes": "Esta é a missão da aula. Você viu que um ponto a melhorar convence quando é real e tem uma ação. Agora monte o seu.",
+   "depois": "Você viu que um ponto a melhorar convence quando é real e tem uma ação. Agora monte o seu."
+  },
+  {
+   "tipo": "reacao-texto",
+   "onde": "aula_12/q25.opcoes[b]",
+   "estado": "aplicar",
+   "antes": "Faz sentido, mas dá para ir além. É educado, mas perde a chance de mostrar interesse.",
+   "depois": "É educado, e se as suas dúvidas já foram respondidas, tudo bem. Mas uma pergunta pronta mostra interesse e ajuda você a avaliar a vaga."
+  },
+  {
+   "tipo": "reacao-texto",
+   "onde": "aula_12/q25.opcoes[c]",
+   "estado": "aplicar",
+   "antes": "Faz sentido pensar assim, mas repara. Condições importam, mas começar por folga passa a impressão errada.",
+   "depois": "Condições importam, e perguntar sobre horários é legítimo, ainda mais se você estuda. Se puder, comece pelo trabalho e deixe horários para a segunda pergunta."
+  },
+  {
+   "tipo": "outcomeLabel",
+   "onde": "aula_12/fim_aula_12.outcomeLabel",
+   "estado": "aplicar",
+   "antes": "Curso concluído",
+   "depois": "Aula concluída"
+  },
+  {
+   "tipo": "summary",
+   "onde": "aula_12/fim_aula_12.summary",
+   "estado": "aplicar",
+   "antes": "O que você levou\nOnline: teste antes, luz de frente e câmera na altura dos olhos.\nLeve duas perguntas; um agradecimento breve depois é opcional, se houver canal.\nUm \"não\" é treino: pergunte o que melhorar e siga.",
+   "depois": "O que você levou\nOnline: teste antes, luz de frente e câmera na altura dos olhos.\nLeve duas perguntas; um agradecimento breve depois é opcional, se houver canal.\nUm \"não\" é treino: pergunte o que melhorar e siga.\nNa próxima aula, a última: o que fazer enquanto a resposta não vem."
+  },
+  {
+   "tipo": "descricao",
+   "onde": "curso",
+   "estado": "aplicar",
+   "antes": "Um curso curto para conquistar o primeiro estágio ou emprego, treinando as decisões de cada etapa da busca. Público: jovens de 16 a 24 anos buscando estágio, Jovem Aprendiz ou primeiro emprego; iniciantes e tímidos. Objetivo final: Ao final, a pessoa consegue reconhecer as próprias experiências, montar currículo e perfil simples, passar pelas etapas do processo seletivo e se apresentar numa entrevista com segurança.",
+   "depois": "Um curso curto para conquistar o primeiro estágio ou emprego, treinando as decisões de cada etapa da busca. Público: jovens de 16 a 24 anos buscando estágio, Jovem Aprendiz ou primeiro emprego; iniciantes e tímidos. Objetivo final: Ao final, a pessoa consegue reconhecer as próprias experiências, montar currículo e perfil simples, passar pelas etapas do processo seletivo, se apresentar numa entrevista com segurança e acompanhar as candidaturas depois dela."
+  },
+  {
+   "tipo": "objetivo",
+   "onde": "obj_aula_13",
+   "estado": "aplicar",
+   "depois": "Acompanhar uma candidatura depois da entrevista sem paralisar a busca, e conferir uma proposta antes de aceitar."
+  }
+ ],
+ "carryAdjust": [
+  {
+   "aula": "aula_01",
+   "no": "v00",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v01",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_01",
+   "no": "v02",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v03",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_02",
+   "no": "v04",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_03",
+   "no": "v05",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_03",
+   "no": "v06",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_04",
+   "no": "v07",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_04",
+   "no": "v08",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_05",
+   "no": "v09",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_05",
+   "no": "v10",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_06",
+   "no": "v11",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_07",
+   "no": "v12",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_07",
+   "no": "v13",
+   "igual": true,
+   "antes": {
+    "teaser": "Neste teste dá para pular e voltar depois, sem penalidade. Faltam 15 minutos e você travou numa questão. O que você faz?"
+   },
+   "depois": {
+    "teaser": "Neste teste dá para pular e voltar depois, sem penalidade. Faltam 15 minutos e você travou numa questão. O que você faz?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_08",
+   "no": "v14",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_08",
+   "no": "v15",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_09",
+   "no": "v16",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_09",
+   "no": "v17",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_10",
+   "no": "v18",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [
+    "cortar missao: fala mudou"
+   ],
+   "alertas": []
+  },
+  {
+   "aula": "aula_10",
+   "no": "v19",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_11",
+   "no": "v20",
+   "igual": true,
+   "antes": {
+    "teaser": "Qual é o seu ponto fraco?"
+   },
+   "depois": {
+    "teaser": "Qual é o seu ponto fraco?"
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_11",
+   "no": "v21",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_12",
+   "no": "v22",
+   "igual": true,
+   "antes": null,
+   "depois": null,
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  },
+  {
+   "aula": "aula_12",
+   "no": "v23",
+   "igual": true,
+   "antes": {
+    "teaser": null
+   },
+   "depois": {
+    "teaser": null
+   },
+   "descartadosPeloPlanoMudado": [],
+   "alertas": []
+  }
+ ],
+ "cenasDesatualizadasAntes": [],
+ "cenasDesatualizadasDepois": [
+  "aula_01/v00",
+  "aula_02/v03",
+  "aula_04/v07",
+  "aula_05/v09",
+  "aula_06/v11",
+  "aula_07/v12",
+  "aula_08/v14",
+  "aula_09/v16",
+  "aula_10/v18",
+  "aula_11/v20"
+ ],
+ "compilador": {
+  "antes": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "EMPTY_BODY": 7,
+    "CALL_NOT_SPOKEN": 24
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Conte sua primeira experiência\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Isso entra no seu currículo?\" ainda não está na fala do vídeo \"Isso entra no seu currículo?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Que habilidade isso mostra?\" ainda não está na fala do vídeo \"Que habilidade isso mostra?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escolha sua vaga-alvo\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Você se candidata?\" ainda não está na fala do vídeo \"Você se candidata?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Com pouco tempo, que parte da vaga você lê primeiro?\" ainda não está na fala do vídeo \"Com pouco tempo, que parte da vaga você lê primeiro?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Onde você começa a procurar?\" ainda não está na fala do vídeo \"Onde você começa a procurar?\"",
+     "nodeId": "q05",
+     "lessonId": "aula_03"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz com esse pedido de pagamento?\" ainda não está na fala do vídeo \"O que você faz com esse pedido de pagamento?\"",
+     "nodeId": "q06",
+     "lessonId": "aula_03"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escreva sua linha de currículo\" está sem texto",
+     "nodeId": "m03",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual linha de currículo é mais forte?\" ainda não está na fala do vídeo \"Qual linha de currículo é mais forte?\"",
+     "nodeId": "q07",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você tira do currículo?\" ainda não está na fala do vídeo \"O que você tira do currículo?\"",
+     "nodeId": "q08",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual foto você usa no perfil?\" ainda não está na fala do vídeo \"Qual foto você usa no perfil?\"",
+     "nodeId": "q09",
+     "lessonId": "aula_05"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual título você coloca no perfil?\" ainda não está na fala do vídeo \"Qual título você coloca no perfil?\"",
+     "nodeId": "q10",
+     "lessonId": "aula_05"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual mensagem você manda?\" ainda não está na fala do vídeo \"Qual mensagem você manda?\"",
+     "nodeId": "q11",
+     "lessonId": "aula_06"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz depois de uma semana sem resposta?\" ainda não está na fala do vídeo \"O que você faz depois de uma semana sem resposta?\"",
+     "nodeId": "q12",
+     "lessonId": "aula_06"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Monte seu plano para o teste\" está sem texto",
+     "nodeId": "m06",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Quando você faz o teste?\" ainda não está na fala do vídeo \"Quando você faz o teste?\"",
+     "nodeId": "q13",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Você travou numa questão de lógica. O que faz?\" ainda não está na fala do vídeo \"Você travou numa questão de lógica. O que faz?\"",
+     "nodeId": "q14",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz para o grupo decidir a tempo?\" ainda não está na fala do vídeo \"O que você faz para o grupo decidir a tempo?\"",
+     "nodeId": "q15",
+     "lessonId": "aula_08"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Prepare sua apresentação\" está sem texto",
+     "nodeId": "m08",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual apresentação funciona melhor?\" ainda não está na fala do vídeo \"Qual apresentação funciona melhor?\"",
+     "nodeId": "q17",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz quando dá branco no meio da apresentação?\" ainda não está na fala do vídeo \"O que você faz quando dá branco no meio da apresentação?\"",
+     "nodeId": "q18",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Conte sua história\" está sem texto",
+     "nodeId": "m09",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual final completa melhor a história?\" ainda não está na fala do vídeo \"Qual final completa melhor a história?\"",
+     "nodeId": "q19",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual frase mostra melhor a sua parte?\" ainda não está na fala do vídeo \"Qual frase mostra melhor a sua parte?\"",
+     "nodeId": "q20",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escolha seu ponto a melhorar\" está sem texto",
+     "nodeId": "m10",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você responde sobre o seu ponto fraco?\" ainda não está na fala do vídeo \"Como você responde sobre o seu ponto fraco?\"",
+     "nodeId": "q21",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você responde por que quer trabalhar ali?\" ainda não está na fala do vídeo \"Como você responde por que quer trabalhar ali?\"",
+     "nodeId": "q22",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Perguntaram quanto você espera de bolsa. O que você diz?\" ainda não está na fala do vídeo \"Perguntaram quanto você espera de bolsa. O que você diz?\"",
+     "nodeId": "q23",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Onde você se posiciona para a entrevista online?\" ainda não está na fala do vídeo \"Onde você se posiciona para a entrevista online?\"",
+     "nodeId": "q24",
+     "lessonId": "aula_12"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"\"Você tem alguma pergunta?\" O que você responde?\" ainda não está na fala do vídeo \"\"Você tem alguma pergunta?\" O que você responde?\"",
+     "nodeId": "q25",
+     "lessonId": "aula_12"
+    }
+   ]
+  },
+  "depois": {
+   "ok": true,
+   "erros": [],
+   "avisos": {
+    "MEDIA_STALE": 10,
+    "EMPTY_BODY": 7,
+    "CALL_NOT_SPOKEN": 24,
+    "MEDIA_MISSING": 5
+   },
+   "avisosLista": [
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Conte sua primeira experiência\" está sem texto",
+     "nodeId": "m01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Isso entra no seu currículo?\" ainda não está na fala do vídeo \"Isso entra no seu currículo?\"",
+     "nodeId": "q01",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Que habilidade isso mostra?\" ainda não está na fala do vídeo \"Que habilidade isso mostra?\"",
+     "nodeId": "q02",
+     "lessonId": "aula_01"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escolha sua vaga-alvo\" está sem texto",
+     "nodeId": "m02",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Você se candidata?\" ainda não está na fala do vídeo \"Você se candidata?\"",
+     "nodeId": "q03",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Com pouco tempo, que parte da vaga você lê primeiro?\" ainda não está na fala do vídeo \"Com pouco tempo, que parte da vaga você lê primeiro?\"",
+     "nodeId": "q04",
+     "lessonId": "aula_02"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Onde você começa a procurar?\" ainda não está na fala do vídeo \"Onde você começa a procurar?\"",
+     "nodeId": "q05",
+     "lessonId": "aula_03"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz com esse pedido de pagamento?\" ainda não está na fala do vídeo \"O que você faz com esse pedido de pagamento?\"",
+     "nodeId": "q06",
+     "lessonId": "aula_03"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escreva sua linha de currículo\" está sem texto",
+     "nodeId": "m03",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual linha de currículo é mais forte?\" ainda não está na fala do vídeo \"Qual linha de currículo é mais forte?\"",
+     "nodeId": "q07",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você tira do currículo?\" ainda não está na fala do vídeo \"O que você tira do currículo?\"",
+     "nodeId": "q08",
+     "lessonId": "aula_04"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual foto você usa no perfil?\" ainda não está na fala do vídeo \"Qual foto você usa no perfil?\"",
+     "nodeId": "q09",
+     "lessonId": "aula_05"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual título você coloca no perfil?\" ainda não está na fala do vídeo \"Qual título você coloca no perfil?\"",
+     "nodeId": "q10",
+     "lessonId": "aula_05"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual mensagem você manda?\" ainda não está na fala do vídeo \"Qual mensagem você manda?\"",
+     "nodeId": "q11",
+     "lessonId": "aula_06"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz depois de uma semana sem resposta?\" ainda não está na fala do vídeo \"O que você faz depois de uma semana sem resposta?\"",
+     "nodeId": "q12",
+     "lessonId": "aula_06"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Monte seu plano para o teste\" está sem texto",
+     "nodeId": "m06",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Quando você faz o teste?\" ainda não está na fala do vídeo \"Quando você faz o teste?\"",
+     "nodeId": "q13",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Você travou numa questão de lógica. O que faz?\" ainda não está na fala do vídeo \"Você travou numa questão de lógica. O que faz?\"",
+     "nodeId": "q14",
+     "lessonId": "aula_07"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz para o grupo decidir a tempo?\" ainda não está na fala do vídeo \"O que você faz para o grupo decidir a tempo?\"",
+     "nodeId": "q15",
+     "lessonId": "aula_08"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Prepare sua apresentação\" está sem texto",
+     "nodeId": "m08",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual apresentação funciona melhor?\" ainda não está na fala do vídeo \"Qual apresentação funciona melhor?\"",
+     "nodeId": "q17",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"O que você faz quando dá branco no meio da apresentação?\" ainda não está na fala do vídeo \"O que você faz quando dá branco no meio da apresentação?\"",
+     "nodeId": "q18",
+     "lessonId": "aula_09"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Conte sua história\" está sem texto",
+     "nodeId": "m09",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual final completa melhor a história?\" ainda não está na fala do vídeo \"Qual final completa melhor a história?\"",
+     "nodeId": "q19",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Qual frase mostra melhor a sua parte?\" ainda não está na fala do vídeo \"Qual frase mostra melhor a sua parte?\"",
+     "nodeId": "q20",
+     "lessonId": "aula_10"
+    },
+    {
+     "code": "EMPTY_BODY",
+     "message": "\"Escolha seu ponto a melhorar\" está sem texto",
+     "nodeId": "m10",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você responde sobre o seu ponto fraco?\" ainda não está na fala do vídeo \"Como você responde sobre o seu ponto fraco?\"",
+     "nodeId": "q21",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Como você responde por que quer trabalhar ali?\" ainda não está na fala do vídeo \"Como você responde por que quer trabalhar ali?\"",
+     "nodeId": "q22",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Perguntaram quanto você espera de bolsa. O que você diz?\" ainda não está na fala do vídeo \"Perguntaram quanto você espera de bolsa. O que você diz?\"",
+     "nodeId": "q23",
+     "lessonId": "aula_11"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"Onde você se posiciona para a entrevista online?\" ainda não está na fala do vídeo \"Onde você se posiciona para a entrevista online?\"",
+     "nodeId": "q24",
+     "lessonId": "aula_12"
+    },
+    {
+     "code": "CALL_NOT_SPOKEN",
+     "message": "A chamada da pergunta \"\"Você tem alguma pergunta?\" O que você responde?\" ainda não está na fala do vídeo \"\"Você tem alguma pergunta?\" O que você responde?\"",
+     "nodeId": "q25",
+     "lessonId": "aula_12"
+    }
+   ]
+  }
+ },
+ "avisosNovosDoCompilador": [
+  [
+   "MEDIA_STALE",
+   10
+  ],
+  [
+   "MEDIA_MISSING",
+   5
+  ]
+ ],
+ "reacoesCortaveisPeloAjusteFino": [
+  "aula_01/q01~a",
+  "aula_01/q02~a",
+  "aula_02/q04~a",
+  "aula_06/q11~c"
+ ],
+ "perguntasAbertas": [
+  {
+   "pergunta": 1,
+   "recomendada": "a",
+   "texto": "1. Aula 13 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 13; quem já concluiu vê como conteúdo novo · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+   "efeito": "aula nova entra em completion.requiredLessonIds"
+  },
+  {
+   "pergunta": 2,
+   "recomendada": "a",
+   "texto": "2. Orçamento do C14 (~196 s, acima dos 150 s gerais): (a) aceitar até 200 s, porque são 12 aulas e 10 aberturas com a fórmula · (b) cortar para perto de 150 s deixando de trocar as aberturas A6 (variação, não literal), A",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 3,
+   "recomendada": "a",
+   "texto": "3. Trocas de fala do banco (S5 v08, S7 leve v14, S8 leve v17, A2 v03; 38.6 s no total): (a) não gravar agora: os revisores dizem que os originais são conselho prático, não ameaça · (b) gravar só S5 (8 s) e sincronizar o ",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 4,
+   "recomendada": "a",
+   "texto": "4. “Doze aulas” nas falas gravadas do v00 (boasvindas e s2): (a) deixar como está: a aula 13 fica dentro da quarta parte e o número não aparece em mais nenhuma fala · (b) regravar o boasvindas (18 palavras, 6.9 s). Recom",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 5,
+   "recomendada": "a",
+   "texto": "5. Frase de fechamento do fim_aula_13: (a) a frase do curso (“Você tem mais experiência do que imagina. Agora é mostrar.”), igual às outras aulas e dita na despedida · (b) frase própria da aula (“Processo em andamento nã",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  },
+  {
+   "pergunta": 6,
+   "recomendada": "a",
+   "texto": "6. Módulo da aula 13: (a) “Arrase na entrevista” (quatro partes continuam quatro) · (b) módulo novo “Depois da entrevista”. Recomendo (a).",
+   "efeito": "já refletida no texto/estrutura da proposta (nada a fazer no aplicador)"
+  }
+ ],
+ "contagem": {
+  "planosAulaNova": 14,
+  "palavrasPlanosAulaNova": 267,
+  "palavrasReacoesNovas": 69,
+  "palavrasAberturasTrocadas": 179,
+  "palavrasTotal": 515,
+  "segundos": 196.6,
+  "usdEstimado": 3.6,
+  "nos": [
+   "v24:scenario",
+   "q26:choice",
+   "v25:content",
+   "m11:mission",
+   "despedida:content",
+   "fim_aula_13:end"
+  ]
+ },
+ "aulaNova": {
+  "id": "aula_13",
+  "title": "Enquanto a resposta não vem",
+  "description": "Ao final, você acompanha uma candidatura sem parar a busca, sabe o que conferir numa proposta e monta seu quadro de candidaturas.",
+  "estimatedMinutes": 5,
+  "family": "decision_consequence",
+  "objectiveIds": [
+   "obj_aula_13"
+  ],
+  "graph": {
+   "schemaVersion": 1,
+   "startNodeId": "v24",
+   "variables": [
+    {
+     "name": "pontos",
+     "type": "number",
+     "initial": 0,
+     "label": "Pontos da aula",
+     "scope": "lesson"
+    },
+    {
+     "name": "acertos",
+     "type": "number",
+     "initial": 0,
+     "label": "Acertos da revisão",
+     "scope": "lesson"
+    }
+   ],
+   "nodes": [
+    {
+     "id": "v24",
+     "objectiveIds": [
+      "obj_aula_13"
+     ],
+     "required": true,
+     "title": "Sexta passou",
+     "type": "scenario",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Anote · Retome · Siga buscando"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Nesta última aula, você monta o seu quadro de candidaturas: cada vaga, a etapa e o próximo passo. Para usar de verdade. A entrevista terminou bem. A recrutadora disse: ‘Dou retorno até sexta’. Você anotou. Sexta chegou, e nada. Sábado, domingo, nada. Dá uma sensação ruim. Na segunda, aparece outra vaga, parecida com a sua vaga-alvo. E a primeira continua em silêncio. Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?",
+     "motionPrompt": "brings both hands together, focused",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "promessa",
+        "line": "Nesta última aula, você monta o seu quadro de candidaturas: cada vaga, a etapa e o próximo passo. Para usar de verdade.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s1",
+        "line": "A entrevista terminou bem. A recrutadora disse: ‘Dou retorno até sexta’. Você anotou. Sexta chegou, e nada. Sábado, domingo, nada.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "moves both hands gently while explaining, calm"
+       },
+       {
+        "id": "s2",
+        "line": "Dá uma sensação ruim. Na segunda, aparece outra vaga, parecida com a sua vaga-alvo. E a primeira continua em silêncio.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "chamada",
+        "line": "Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "tilts the head slightly, inviting"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).",
+      "source": "author"
+     }
+    },
+    {
+     "id": "q26",
+     "objectiveIds": [
+      "obj_aula_13"
+     ],
+     "required": true,
+     "title": "Sem resposta da primeira e com uma vaga nova: o que você faz?",
+     "type": "choice",
+     "prompt": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O prazo de retorno passou. Você ainda não recebeu resposta e encontrou outra vaga compatível com seus interesses. Sem resposta da primeira e com uma vaga nova: o que você faz?"
+         }
+        ]
+       }
+      ]
+     },
+     "options": [
+      {
+       "id": "a",
+       "label": "“Retomo o processo pelo canal combinado e me candidato à outra vaga enquanto espero.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "Você acompanha a candidatura sem paralisar a busca. Faça assim: mande a mensagem de retomada pelo canal combinado e anote a vaga nova com etapa e próxima ação."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "strong",
+       "reaction": {
+        "text": "Você acompanha a primeira e não para a busca. Uma mensagem educada hoje, e a vaga nova no quadro. As duas podem andar juntas."
+       }
+      },
+      {
+       "id": "b",
+       "label": "“Espero a resposta da primeira antes de olhar qualquer outra vaga, para não me dividir.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "É uma escolha possível, mas deixa toda a busca dependente de um retorno incerto. Faça assim: candidate-se à vaga nova e mande a retomada; processo em andamento não é contratação."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "ok",
+       "reaction": {
+        "text": "Esperar parece respeito, e é compreensível. Só que você deixou a sua busca inteira nas mãos de uma resposta que pode não vir."
+       }
+      },
+      {
+       "id": "c",
+       "label": "“Entendo o silêncio como um não e apago tudo daquele processo.”",
+       "feedback": {
+        "type": "doc",
+        "content": [
+         {
+          "type": "paragraph",
+          "content": [
+           {
+            "type": "text",
+            "text": "O silêncio não confirma o resultado, e apagar o registro dificulta o acompanhamento. Faça assim: guarde data, canal e nome da vaga; pergunte pelo canal combinado e siga buscando."
+           }
+          ]
+         }
+        ]
+       },
+       "quality": "weak",
+       "reaction": {
+        "text": "Qual informação você tem? Nenhuma ainda. Silêncio não é resposta, e apagar o registro tira de você a chance de retomar depois."
+       }
+      }
+     ],
+     "bridge": {
+      "call": "Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?"
+     }
+    },
+    {
+     "id": "v25",
+     "objectiveIds": [
+      "obj_aula_13"
+     ],
+     "required": true,
+     "title": "Acompanhar sem ficar parado",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Data · Canal · Vaga → Próxima ação"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Depois de cada entrevista, anote três coisas: data combinada do retorno, canal e nome da vaga. Esse é o seu quadro. Passou o prazo? Uma mensagem basta: ‘Olá! Participei da entrevista para a vaga de apoio administrativo. O retorno estava previsto para sexta. Houve alguma atualização?’ Sem prazo combinado? Pergunte a previsão quando der. Silêncio não é nota sobre você. Enquanto espera, siga buscando: processo em andamento não é contratação. Veio um não? Peça retorno, nem sempre vem; anote o que você percebeu. Veio proposta? Antes do sim, confira atividades, horários, bolsa ou salário. No estágio, isso está no termo de compromisso. Agora é com você: monte hoje o seu quadro de candidaturas. Etapa, data de retorno, próxima ação.",
+     "motionPrompt": "relaxes the shoulders and smiles, reassuring",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "s1",
+        "line": "Depois de cada entrevista, anote três coisas: data combinada do retorno, canal e nome da vaga. Esse é o seu quadro.",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "s2",
+        "line": "Passou o prazo? Uma mensagem basta: ‘Olá! Participei da entrevista para a vaga de apoio administrativo. O retorno estava previsto para sexta. Houve alguma atualização?’",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter_chips",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "slide": {
+         "title": "Mensagem de retomada",
+         "bullets": [
+          "Olá! Participei da entrevista para a vaga de **apoio administrativo**.",
+          "O retorno estava previsto para **sexta**.",
+          "Houve alguma **atualização** sobre os próximos passos?"
+         ],
+         "style": "checklist"
+        },
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "s3",
+        "line": "Sem prazo combinado? Pergunte a previsão quando der. Silêncio não é nota sobre você.",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "leans in slightly, curious"
+       },
+       {
+        "id": "s4",
+        "line": "Enquanto espera, siga buscando: processo em andamento não é contratação. Veio um não? Peça retorno, nem sempre vem; anote o que você percebeu.",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "smiles softly, welcoming"
+       },
+       {
+        "id": "s5",
+        "line": "Veio proposta? Antes do sim, confira atividades, horários, bolsa ou salário. No estágio, isso está no termo de compromisso.",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       },
+       {
+        "id": "lancamento",
+        "line": "Agora é com você: monte hoje o seu quadro de candidaturas. Etapa, data de retorno, próxima ação.",
+        "cameraId": "cam_j7_esq",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena; as pílulas \"Mensagem de retomada\" surgem na parede livre e a fala volta.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "m11",
+     "objectiveIds": [
+      "obj_aula_13"
+     ],
+     "required": false,
+     "title": "Monte seu quadro de candidaturas",
+     "type": "mission",
+     "intro": "Você acompanhou uma vaga sem parar a busca. Agora é com as suas candidaturas de verdade, hoje.",
+     "action": "1. Abra o bloco de notas do celular e escreva “Minhas candidaturas”.\n2. Para cada vaga que você já enviou, uma linha, sem nome da empresa nem contatos: “vaga 1, loja do bairro”.\n3. Em cada linha: etapa atual, data ou previsão de retorno, e a próxima ação que depende de você.\n4. Passou o prazo de alguma? Mande hoje a mensagem de retomada pelo canal combinado.\n5. Volte aqui, marque “Já experimentei” e conte como foi.",
+     "alternative": "Ainda não enviou nenhuma candidatura? Então a primeira linha é a sua vaga-alvo da aula 2: “etapa: vou me candidatar”, com a data em que você envia. Pode ser uma vaga que você viu esta semana, sem nome da empresa. O quadro começa antes da primeira resposta.",
+     "example": "Minhas candidaturas. Vaga 1, loja do bairro: entrevista feita; retorno previsto sexta; se passar, mando a retomada na segunda. Vaga 2, estágio administrativo: currículo enviado; sem prazo; preparar o exemplo da feira para a entrevista."
+    },
+    {
+     "id": "despedida",
+     "objectiveIds": [
+      "obj_aula_13"
+     ],
+     "required": true,
+     "title": "Enquanto a resposta não vem",
+     "type": "content",
+     "body": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "Descubra · Mostre · Passe · Arrase"
+         }
+        ]
+       }
+      ]
+     },
+     "narration": "Você começou achando que não tinha experiência. Doze aulas depois: currículo, perfil, apresentação, história e um quadro de candidaturas. Nada disso garante uma vaga. Garante que você chega com preparo, mostra o que viveu de verdade e avalia o que te oferecem. Se uma resposta não vier, isso não resume o seu valor. Ajuste o que der e siga. Você tem mais experiência do que imagina. Agora é mostrar.",
+     "motionPrompt": "nods slowly, warm",
+     "direction": {
+      "version": 1,
+      "shots": [
+       {
+        "id": "d1",
+        "line": "Você começou achando que não tinha experiência. Doze aulas depois: currículo, perfil, apresentação, história e um quadro de candidaturas.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "nods slowly, warm"
+       },
+       {
+        "id": "d2",
+        "line": "Nada disso garante uma vaga. Garante que você chega com preparo, mostra o que viveu de verdade e avalia o que te oferecem.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "relaxes the shoulders and smiles, reassuring"
+       },
+       {
+        "id": "d3",
+        "line": "Se uma resposta não vier, isso não resume o seu valor. Ajuste o que der e siga.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "brings both hands together, focused"
+       },
+       {
+        "id": "d4",
+        "line": "Você tem mais experiência do que imagina. Agora é mostrar.",
+        "cameraId": "cam_j7_34",
+        "framing": "medium",
+        "layout": "presenter",
+        "cameraMove": "static",
+        "transitionIn": "cut",
+        "motionPrompt": "opens both palms, honest"
+       }
+      ],
+      "intent": "Estúdio com zonas: a fala na câmera da cena.",
+      "source": "author"
+     }
+    },
+    {
+     "id": "fim_aula_13",
+     "objectiveIds": [],
+     "required": true,
+     "title": "Meu roteiro",
+     "type": "end",
+     "summary": {
+      "type": "doc",
+      "content": [
+       {
+        "type": "paragraph",
+        "content": [
+         {
+          "type": "text",
+          "text": "O que você levou"
+         }
+        ]
+       },
+       {
+        "type": "bulletList",
+        "content": [
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Anote data, canal e vaga depois de cada entrevista."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Passou o prazo? Uma mensagem de retomada, e a busca continua."
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "type": "listItem",
+          "content": [
+           {
+            "type": "paragraph",
+            "content": [
+             {
+              "type": "text",
+              "text": "Proposta se confere antes do sim: atividades, horários, bolsa ou salário."
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minhas candidaturas",
+       "kind": "checklist",
+       "items": [
+        "quadro criado no celular, sem nomes de empresa nem contatos",
+        "cada vaga com etapa, retorno e próxima ação",
+        "retomada enviada, se o prazo passou",
+        "vaga nova anotada, se apareceu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "mission",
+       "nodeId": "m11",
+       "emptyText": "Você deixou para depois. Quando montar o quadro, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Anote data, canal e vaga depois de cada entrevista.\nPassou o prazo? Uma mensagem de retomada, e a busca continua.\nProposta se confere antes do sim: atividades, horários, bolsa ou salário.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Você tem mais experiência do que imagina. Agora é mostrar."
+    }
+   ],
+   "edges": [
+    {
+     "id": "e_v24",
+     "from": "v24",
+     "to": "q26"
+    },
+    {
+     "id": "e_q26_a",
+     "from": "q26",
+     "to": "v25",
+     "optionId": "a",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 2
+      }
+     ]
+    },
+    {
+     "id": "e_q26_b",
+     "from": "q26",
+     "to": "v25",
+     "optionId": "b",
+     "effects": [
+      {
+       "op": "inc",
+       "var": "pontos",
+       "by": 1
+      }
+     ]
+    },
+    {
+     "id": "e_q26_c",
+     "from": "q26",
+     "to": "v25",
+     "optionId": "c"
+    },
+    {
+     "id": "e_v25",
+     "from": "v25",
+     "to": "m11"
+    },
+    {
+     "id": "e_m11",
+     "from": "m11",
+     "to": "despedida"
+    },
+    {
+     "id": "e_despedida",
+     "from": "despedida",
+     "to": "fim_aula_13"
+    }
+   ],
+   "layout": {
+    "positions": {
+     "v24": {
+      "x": 0,
+      "y": 0
+     },
+     "q26": {
+      "x": 0,
+      "y": 180
+     },
+     "v25": {
+      "x": 0,
+      "y": 360
+     },
+     "m11": {
+      "x": 0,
+      "y": 540
+     },
+     "despedida": {
+      "x": 0,
+      "y": 720
+     },
+     "fim_aula_13": {
+      "x": 0,
+      "y": 900
+     }
+    }
+   }
+  }
+ },
+ "revisaoDepois": 443,
+ "validateDraft": {
+  "ok": true,
+  "erros": [],
+  "midia": {
+   "stale": 10,
+   "simulated": 0,
+   "missing": 5,
+   "inProgress": 0
+  },
+  "avisos": [
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Conte sua primeira experiência\" está sem texto",
+    "nodeId": "m01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Isso entra no seu currículo?\" ainda não está na fala do vídeo \"Isso entra no seu currículo?\"",
+    "nodeId": "q01",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Que habilidade isso mostra?\" ainda não está na fala do vídeo \"Que habilidade isso mostra?\"",
+    "nodeId": "q02",
+    "lessonId": "aula_01"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Escolha sua vaga-alvo\" está sem texto",
+    "nodeId": "m02",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Você se candidata?\" ainda não está na fala do vídeo \"Você se candidata?\"",
+    "nodeId": "q03",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Com pouco tempo, que parte da vaga você lê primeiro?\" ainda não está na fala do vídeo \"Com pouco tempo, que parte da vaga você lê primeiro?\"",
+    "nodeId": "q04",
+    "lessonId": "aula_02"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Onde você começa a procurar?\" ainda não está na fala do vídeo \"Onde você começa a procurar?\"",
+    "nodeId": "q05",
+    "lessonId": "aula_03"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz com esse pedido de pagamento?\" ainda não está na fala do vídeo \"O que você faz com esse pedido de pagamento?\"",
+    "nodeId": "q06",
+    "lessonId": "aula_03"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Escreva sua linha de currículo\" está sem texto",
+    "nodeId": "m03",
+    "lessonId": "aula_04"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual linha de currículo é mais forte?\" ainda não está na fala do vídeo \"Qual linha de currículo é mais forte?\"",
+    "nodeId": "q07",
+    "lessonId": "aula_04"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você tira do currículo?\" ainda não está na fala do vídeo \"O que você tira do currículo?\"",
+    "nodeId": "q08",
+    "lessonId": "aula_04"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual foto você usa no perfil?\" ainda não está na fala do vídeo \"Qual foto você usa no perfil?\"",
+    "nodeId": "q09",
+    "lessonId": "aula_05"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual título você coloca no perfil?\" ainda não está na fala do vídeo \"Qual título você coloca no perfil?\"",
+    "nodeId": "q10",
+    "lessonId": "aula_05"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual mensagem você manda?\" ainda não está na fala do vídeo \"Qual mensagem você manda?\"",
+    "nodeId": "q11",
+    "lessonId": "aula_06"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz depois de uma semana sem resposta?\" ainda não está na fala do vídeo \"O que você faz depois de uma semana sem resposta?\"",
+    "nodeId": "q12",
+    "lessonId": "aula_06"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Monte seu plano para o teste\" está sem texto",
+    "nodeId": "m06",
+    "lessonId": "aula_07"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Quando você faz o teste?\" ainda não está na fala do vídeo \"Quando você faz o teste?\"",
+    "nodeId": "q13",
+    "lessonId": "aula_07"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Você travou numa questão de lógica. O que faz?\" ainda não está na fala do vídeo \"Você travou numa questão de lógica. O que faz?\"",
+    "nodeId": "q14",
+    "lessonId": "aula_07"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz para o grupo decidir a tempo?\" ainda não está na fala do vídeo \"O que você faz para o grupo decidir a tempo?\"",
+    "nodeId": "q15",
+    "lessonId": "aula_08"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Prepare sua apresentação\" está sem texto",
+    "nodeId": "m08",
+    "lessonId": "aula_09"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual apresentação funciona melhor?\" ainda não está na fala do vídeo \"Qual apresentação funciona melhor?\"",
+    "nodeId": "q17",
+    "lessonId": "aula_09"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"O que você faz quando dá branco no meio da apresentação?\" ainda não está na fala do vídeo \"O que você faz quando dá branco no meio da apresentação?\"",
+    "nodeId": "q18",
+    "lessonId": "aula_09"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Conte sua história\" está sem texto",
+    "nodeId": "m09",
+    "lessonId": "aula_10"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual final completa melhor a história?\" ainda não está na fala do vídeo \"Qual final completa melhor a história?\"",
+    "nodeId": "q19",
+    "lessonId": "aula_10"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Qual frase mostra melhor a sua parte?\" ainda não está na fala do vídeo \"Qual frase mostra melhor a sua parte?\"",
+    "nodeId": "q20",
+    "lessonId": "aula_10"
+   },
+   {
+    "code": "EMPTY_BODY",
+    "message": "\"Escolha seu ponto a melhorar\" está sem texto",
+    "nodeId": "m10",
+    "lessonId": "aula_11"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Como você responde sobre o seu ponto fraco?\" ainda não está na fala do vídeo \"Como você responde sobre o seu ponto fraco?\"",
+    "nodeId": "q21",
+    "lessonId": "aula_11"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Como você responde por que quer trabalhar ali?\" ainda não está na fala do vídeo \"Como você responde por que quer trabalhar ali?\"",
+    "nodeId": "q22",
+    "lessonId": "aula_11"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Perguntaram quanto você espera de bolsa. O que você diz?\" ainda não está na fala do vídeo \"Perguntaram quanto você espera de bolsa. O que você diz?\"",
+    "nodeId": "q23",
+    "lessonId": "aula_11"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"Onde você se posiciona para a entrevista online?\" ainda não está na fala do vídeo \"Onde você se posiciona para a entrevista online?\"",
+    "nodeId": "q24",
+    "lessonId": "aula_12"
+   },
+   {
+    "code": "CALL_NOT_SPOKEN",
+    "message": "A chamada da pergunta \"\"Você tem alguma pergunta?\" O que você responde?\" ainda não está na fala do vídeo \"\"Você tem alguma pergunta?\" O que você responde?\"",
+    "nodeId": "q25",
+    "lessonId": "aula_12"
+   }
+  ]
+ }
+}

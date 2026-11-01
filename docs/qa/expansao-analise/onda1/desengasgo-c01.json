@@ -1,0 +1,241 @@
+{
+ "geradoEm": "2026-11-01T08:05:24.965Z",
+ "modo": "tratar",
+ "minMs": 200,
+ "cursos": [
+  {
+   "curso": "C01",
+   "courseId": "crs_99hpdsc8w88osiuh",
+   "rascunhoRevAntes": 105,
+   "varredura": {
+    "rascunho": {
+     "videos": 21,
+     "assets": 21,
+     "ge200": 4,
+     "tolerados": 5
+    },
+    "publicada": {
+     "versao": 12,
+     "videos": 16,
+     "assets": 16,
+     "ge200": 0,
+     "tolerados": 1,
+     "diferemDoRascunho": 4
+    }
+   },
+   "linhas": [
+    {
+     "aula": "aula_03",
+     "no": "v05",
+     "tipo": "cena",
+     "de": "ast_16was7rl7fjoa7s0",
+     "para": "ast_tdx82ikj5dho59a5",
+     "antes": 2,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 15,
+       "ok": true,
+       "dmaxAB": 64,
+       "inicio": 2.32,
+       "ms": 200,
+       "quadro": 58,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 17,
+       "inicio": 3.6,
+       "ms": 200,
+       "quadro": 90,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 10,
+       "inicio": 41.84,
+       "ms": 200,
+       "quadro": 1046,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "fluxo",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 48,
+       "inicio": 57.6,
+       "ms": 200,
+       "quadro": 1440,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 28,
+       "inicio": 58.76,
+       "ms": 200,
+       "quadro": 1469,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": true
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 25607025,
+      "tamanhoDepois": 33593230,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    },
+    {
+     "aula": "aula_04",
+     "no": "v07",
+     "tipo": "cena",
+     "de": "ast_hr33s4ugygpu6wxa",
+     "para": "ast_6f3aeiiaju3jbnl0",
+     "antes": 2,
+     "depois": 0,
+     "estado": "trocado",
+     "trechos": [
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 3.8,
+       "ms": 200,
+       "quadro": 95,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 22,
+       "inicio": 4,
+       "ms": 320,
+       "quadro": 100,
+       "quadros": 8,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": true,
+       "metodo": "so-zoom",
+       "amp": 0.0063,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 223,
+       "inicio": 8.8,
+       "ms": 280,
+       "quadro": 220,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 27,
+       "inicio": 10.4,
+       "ms": 240,
+       "quadro": 260,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": true
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 9,
+       "ok": true,
+       "dmaxAB": 33,
+       "inicio": 21.96,
+       "ms": 240,
+       "quadro": 549,
+       "quadros": 6,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.005,
+       "minimo": 8,
+       "ok": true,
+       "dmaxAB": 10,
+       "inicio": 25.56,
+       "ms": 280,
+       "quadro": 639,
+       "quadros": 7,
+       "cauda": false,
+       "estrito": false
+      },
+      {
+       "corte": false,
+       "metodo": "mistura",
+       "amp": 0.004,
+       "minimo": 7,
+       "ok": true,
+       "dmaxAB": 10,
+       "inicio": 55.36,
+       "ms": 200,
+       "quadro": 1384,
+       "quadros": 5,
+       "cauda": false,
+       "estrito": false
+      }
+     ],
+     "validacao": {
+      "tamanhoAntes": 24388145,
+      "tamanhoDepois": 31835671,
+      "audioIgual": true,
+      "falaSemelhanca": 1
+     }
+    }
+   ],
+   "naoFicaramBons": [],
+   "excluidasComTrecho": [],
+   "ignoradas": [
+    "aula_01/v01 ast_fa2durozbm29ur2q: fora de --so",
+    "aula_02/v03 ast_n52k0b0c96251uxy: fora de --so"
+   ],
+   "rascunhoRevDepois": 106
+  }
+ ]
+}

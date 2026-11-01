@@ -1,0 +1,1501 @@
+{
+ "versao": 1,
+ "geradoEm": "2026-11-01",
+ "curso": {
+  "codigo": "C14",
+  "id": "crs_hvvgkvtd1rb2um0l",
+  "titulo": "Minha primeira vaga",
+  "instrutor": "Marina — Sua orientadora",
+  "versaoPublicada": 14,
+  "revisaoDoRascunho": 431
+ },
+ "leia": [
+  "acao: keep = não mexer (gravação reaproveitada); change = só o texto/campo indicado, ou a fala do plano indicado (mesmo id, regrava só ele); add = novo; drop = tirar. Nada aqui foi aplicado.",
+  "A aula nova é APENDADA no fim (migração de matrículas só aceita aulas novas no fim). Nenhum nó novo entra nas aulas existentes; os ids não mudam.",
+  "Planos de vídeo: 'id' é o id do plano no 'direction' da cena; falas ≤ 25 palavras; segundos = palavras / 2,62. layout/camera seguem o padrão atual do curso.",
+  "A pergunta nova não ganha vídeo próprio: a cena anterior termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais).",
+  "A missão nova é fora da tela ('Leve para a vida real'): não tem molde; 'Como foi?' é o único campo de texto; draftFromNodeId fica null; botões 'Já experimentei' / 'Vou fazer depois'.",
+  "Aberturas: o plano 'missao'/'s4'/'s2' indicado troca de fala (mesmo id) por uma promessa concreta sem a palavra 'missão'. A regra do robô-aluno 'missao-sem-anuncio' precisa aceitar o anúncio sem a palavra (como no piloto C01).",
+  "Campos de texto rico (ponte, prompt, summary, feedback) estão em texto simples: converter para RichText ao aplicar.",
+  "Aberturas: 10 aulas têm o plano 'missao' com a fórmula (A1, A2, A4, A5, A7, A8, A9, A10, A11 literal; A6 'Daqui a pouco, você tem uma missão'). Todas trocam de fala, mesmo id. A3 não muda; A12 só muda textos (q25 e fim_aula_12).",
+  "Os planos 'missao_fim' (A1, A2, A4, A5, A7, A8, A9, A10, A11) estão sendo tirados na Fase 0 (cortes.md §A, status a): esta proposta não mexe neles.",
+  "Nós da aula 13: v24 (cena), q26 (decisão), v25 (explicação), m11 (missão real; o curso usa o prefixo m), despedida, fim_aula_13. Módulo existente “Arrase na entrevista”, para não contradizer o v00/s2 gravado (“doze aulas, em quatro partes”).",
+  "Reações novas: nenhuma usa as aberturas atuais do C14 ('Mandou bem', 'Faz sentido pensar assim, mas repara', 'Muita gente responderia assim', 'Entendo por que você pensou nisso') nem as de frasesRepetidasEmVariosCursos.",
+  "q25: as reações B e C têm vídeo desativado; trocar o texto custa zero (S6 do banco).",
+  "Personagens: nenhum novo; a aula 13 fala em segunda pessoa, como a aula 12. Sem “Nina”. Sem citar o curso “Meu primeiro dia”."
+ ],
+ "diagnostico": [
+  "O curso termina na decisão q25 (“você tem alguma pergunta?”): a aula 12 não tem prática, e o aluno sai sem fazer nada com o que aprendeu sobre o depois da entrevista.",
+  "Falta o que vem depois: acompanhar sem ficar parado (data, canal, vaga), a mensagem de retomada, “processo em andamento não é contratação”, e conferir a proposta antes de dizer sim.",
+  "Todas as 10 práticas são montagem de blocos; nenhuma pede uma ação fora da tela com as candidaturas reais do aluno.",
+  "Dez aulas abrem com “No fim desta aula, tem uma missão para você: …” (ou variação): é a repetição que o dono criticou.",
+  "A reação da q25-C diz “passa a impressão errada” numa opção marcada como forte (perguntar horário é legítimo para quem estuda).",
+  "O curso não tem fecho falado da Marina: a frase que fecha todas as aulas (“Você tem mais experiência do que imagina. Agora é mostrar.”) só aparece escrita."
+ ],
+ "cursoNivel": {
+  "descricao": {
+   "acao": "change",
+   "para": "Um curso curto para conquistar o primeiro estágio ou emprego, treinando as decisões de cada etapa da busca. Público: jovens de 16 a 24 anos buscando estágio, Jovem Aprendiz ou primeiro emprego; iniciantes e tímidos. Objetivo final: Ao final, a pessoa consegue reconhecer as próprias experiências, montar currículo e perfil simples, passar pelas etapas do processo seletivo, se apresentar numa entrevista com segurança e acompanhar as candidaturas depois dela."
+  },
+  "objetivosNovos": [
+   {
+    "id": "obj_aula_13",
+    "texto": "Acompanhar uma candidatura depois da entrevista sem paralisar a busca, e conferir uma proposta antes de aceitar."
+   }
+  ],
+  "personagens": {
+   "mantidos": [
+    "Ana (aula 6)",
+    "recrutadora (aula 12, sem nome)"
+   ],
+   "novos": []
+  },
+  "vinheta": "sem mudança (toca no fim de cada aula; a despedida vem antes do fim). O v00/s2 gravado continua verdadeiro: “doze aulas” vira treze, mas a fala diz “doze aulas curtas, em quatro partes” e o boasvindas diz “ao final das doze aulas” (ver perguntasAbertas 4)."
+ },
+ "aulas": [
+  {
+   "numero": 1,
+   "id": "aula_01",
+   "acao": "change",
+   "titulo": "Como reconhecer experiências que entram no currículo",
+   "caminhoPrincipal": [
+    "v00",
+    "v01",
+    "q01",
+    "v02",
+    "q02",
+    "m01",
+    "fim_aula_01"
+   ],
+   "nos": [
+    {
+     "id": "v00",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Daqui a pouco, você escreve a primeira frase do seu currículo: uma experiência da escola, da família ou do bairro.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 20,
+       "segundos": 7.6,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: conte sua primeira experiência.",
+       "duracaoAnteriorS": 4.8
+      }
+     ]
+    },
+    {
+     "id": "v01",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q01",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v02",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q02",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m01",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_01",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "id": "aula_02",
+   "acao": "change",
+   "titulo": "Como ler uma vaga e decidir se candidatar",
+   "caminhoPrincipal": [
+    "v03",
+    "q03",
+    "v04",
+    "q04",
+    "m02",
+    "fim_aula_02"
+   ],
+   "nos": [
+    {
+     "id": "v03",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Ao final, você descreve a vaga que quer, a sua vaga-alvo: tipo, área e o que você já tem.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escolha sua vaga-alvo.",
+       "duracaoAnteriorS": 3.3
+      }
+     ]
+    },
+    {
+     "id": "q03",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v04",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q04",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m02",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_02",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 3,
+   "id": "aula_03",
+   "acao": "keep",
+   "titulo": "Como procurar vagas e reconhecer golpes",
+   "caminhoPrincipal": [
+    "v05",
+    "q05",
+    "v06",
+    "q06",
+    "fim_aula_03"
+   ],
+   "nos": [
+    {
+     "id": "v05",
+     "tipo": "scenario",
+     "acao": "keep"
+    },
+    {
+     "id": "q05",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v06",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q06",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_03",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 4,
+   "id": "aula_04",
+   "acao": "change",
+   "titulo": "Currículo de uma página",
+   "caminhoPrincipal": [
+    "v07",
+    "q07",
+    "v08",
+    "q08",
+    "m03",
+    "fim_aula_04"
+   ],
+   "nos": [
+    {
+     "id": "v07",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Hoje você sai com uma linha de currículo pronta: verbo, o que você fazia e quanto.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva sua linha de currículo.",
+       "duracaoAnteriorS": 4.6
+      }
+     ]
+    },
+    {
+     "id": "q07",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v08",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q08",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m03",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_04",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 5,
+   "id": "aula_05",
+   "acao": "change",
+   "titulo": "Prepare seu perfil profissional",
+   "caminhoPrincipal": [
+    "v09",
+    "q09",
+    "q10",
+    "v10",
+    "m04",
+    "fim_aula_05"
+   ],
+   "nos": [
+    {
+     "id": "v09",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "O que você monta nesta aula é o seu ‘Sobre’: três frases que apresentam você, com ou sem LinkedIn.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escreva o seu Sobre do LinkedIn.",
+       "duracaoAnteriorS": 5.0
+      }
+     ]
+    },
+    {
+     "id": "q09",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "q10",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v10",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "m04",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_05",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 6,
+   "id": "aula_06",
+   "acao": "change",
+   "titulo": "Como escrever uma mensagem para pedir uma conversa",
+   "caminhoPrincipal": [
+    "v11",
+    "q11",
+    "m05",
+    "q12",
+    "fim_aula_06"
+   ],
+   "nos": [
+    {
+     "id": "v11",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "E a sua mensagem, você escreve ainda nesta aula. Fica salva para quando encontrar a pessoa certa.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "Daqui a pouco, você tem uma missão: escreva sua mensagem.",
+       "duracaoAnteriorS": 3.7
+      }
+     ]
+    },
+    {
+     "id": "q11",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m05",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "ponte": "Você viu que uma mensagem curta e um pedido simples abrem conversas. Agora monte a sua mensagem."
+     },
+     "nota": "Tira só 'Esta é a missão da aula.' da ponte (texto); o anúncio falado em v11 continua."
+    },
+    {
+     "id": "q12",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_06",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 7,
+   "id": "aula_07",
+   "acao": "change",
+   "titulo": "Como se organizar nas etapas do processo seletivo",
+   "caminhoPrincipal": [
+    "v12",
+    "q13",
+    "v13",
+    "q14",
+    "m06",
+    "fim_aula_07"
+   ],
+   "nos": [
+    {
+     "id": "v12",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "No fim, você decide quando, onde e como faz o seu teste online, antes de o prazo apertar.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: monte seu plano para o teste.",
+       "duracaoAnteriorS": 4.7
+      }
+     ]
+    },
+    {
+     "id": "q13",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v13",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q14",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m06",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_07",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 8,
+   "id": "aula_08",
+   "acao": "change",
+   "titulo": "Como participar de uma dinâmica de grupo",
+   "caminhoPrincipal": [
+    "v14",
+    "q15",
+    "v15",
+    "m07",
+    "fim_aula_08"
+   ],
+   "nos": [
+    {
+     "id": "v14",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Ainda hoje, você escolhe o papel que assume no grupo, e entra na dinâmica sabendo por onde começar.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 18,
+       "segundos": 6.9,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: defina seu papel na dinâmica.",
+       "duracaoAnteriorS": 4.7
+      }
+     ]
+    },
+    {
+     "id": "q15",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v15",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "m07",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_08",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 9,
+   "id": "aula_09",
+   "acao": "change",
+   "titulo": "Como responder \"fale sobre você\"",
+   "caminhoPrincipal": [
+    "v16",
+    "q17",
+    "v17",
+    "q18",
+    "m08",
+    "fim_aula_09"
+   ],
+   "nos": [
+    {
+     "id": "v16",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Sua apresentação de um minuto fica pronta nesta aula: três frases, na ordem, do seu jeito.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 16,
+       "segundos": 6.1,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: prepare sua apresentação.",
+       "duracaoAnteriorS": 4.4
+      }
+     ]
+    },
+    {
+     "id": "q17",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v17",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q18",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m08",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "ponte": "Você viu que a apresentação cabe em três frases ligadas à vaga. Agora monte a sua."
+     },
+     "nota": "Tira só 'Esta é a missão da aula.' da ponte (texto)."
+    },
+    {
+     "id": "fim_aula_09",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 10,
+   "id": "aula_10",
+   "acao": "change",
+   "titulo": "Como contar o que você fez, com exemplos",
+   "caminhoPrincipal": [
+    "v18",
+    "q19",
+    "v19",
+    "q20",
+    "m09",
+    "fim_aula_10"
+   ],
+   "nos": [
+    {
+     "id": "v18",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "E você conta a sua: uma história pequena e verdadeira, em três partes, para levar na entrevista.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: conte sua história.",
+       "duracaoAnteriorS": 4.1
+      }
+     ]
+    },
+    {
+     "id": "q19",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v19",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q20",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m09",
+     "tipo": "reflection",
+     "acao": "keep"
+    },
+    {
+     "id": "fim_aula_10",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 11,
+   "id": "aula_11",
+   "acao": "change",
+   "titulo": "Como responder perguntas difíceis da entrevista",
+   "caminhoPrincipal": [
+    "v20",
+    "q21",
+    "v21",
+    "q22",
+    "q23",
+    "m10",
+    "fim_aula_11"
+   ],
+   "nos": [
+    {
+     "id": "v20",
+     "tipo": "scenario",
+     "acao": "change",
+     "nota": "Só o plano 'missao' troca de fala (mesmo id); os demais planos ficam.",
+     "planos": [
+      {
+       "id": "missao",
+       "fala": "Até o fim da aula, você escolhe um ponto seu a melhorar e o que já faz por ele.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "change",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Promessa concreta no lugar da fórmula 'No fim desta aula, tem uma missão para você'; continua sendo o anúncio da prática desta aula.",
+       "falaAnterior": "No fim desta aula, tem uma missão para você: escolha seu ponto a melhorar.",
+       "duracaoAnteriorS": 4.8
+      }
+     ]
+    },
+    {
+     "id": "q21",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v21",
+     "tipo": "content",
+     "acao": "keep",
+     "nota": "O plano 'missao_fim' deste nó está sendo tirado na Fase 0 (cortes.md §A, status a): não mexer aqui."
+    },
+    {
+     "id": "q22",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "q23",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "m10",
+     "tipo": "reflection",
+     "acao": "change",
+     "campos_alterados": {
+      "ponte": "Você viu que um ponto a melhorar convence quando é real e tem uma ação. Agora monte o seu."
+     },
+     "nota": "Tira só 'Esta é a missão da aula.' da ponte (texto)."
+    },
+    {
+     "id": "fim_aula_11",
+     "tipo": "end",
+     "acao": "keep"
+    }
+   ]
+  },
+  {
+   "numero": 12,
+   "id": "aula_12",
+   "acao": "change",
+   "titulo": "Prepare a entrevista e os próximos passos",
+   "caminhoPrincipal": [
+    "v22",
+    "q24",
+    "v23",
+    "q25",
+    "fim_aula_12"
+   ],
+   "nos": [
+    {
+     "id": "v22",
+     "tipo": "scenario",
+     "acao": "keep"
+    },
+    {
+     "id": "q24",
+     "tipo": "choice",
+     "acao": "keep"
+    },
+    {
+     "id": "v23",
+     "tipo": "content",
+     "acao": "keep"
+    },
+    {
+     "id": "q25",
+     "tipo": "choice",
+     "acao": "change",
+     "nota": "Só texto: as reações B e C têm vídeo desativado (videoDesativado: true), então trocar o texto custa zero. S6 do banco (a reação C contradizia o rótulo forte). Rótulos, qualidades e vaiPara ficam; o vaiPara das três opções passa a apontar para v24 (aula 13) só se a aula 13 for obrigatória no fluxo; se for apendada como aula seguinte, o fim_aula_12 continua o destino e a aula 13 vem depois.",
+     "campos_alterados": {
+      "opcoes": [
+       {
+        "id": "b",
+        "reacao.texto": "É educado, e se as suas dúvidas já foram respondidas, tudo bem. Mas uma pergunta pronta mostra interesse e ajuda você a avaliar a vaga."
+       },
+       {
+        "id": "c",
+        "reacao.texto": "Condições importam, e perguntar sobre horários é legítimo, ainda mais se você estuda. Se puder, comece pelo trabalho e deixe horários para a segunda pergunta."
+       }
+      ]
+     }
+    },
+    {
+     "id": "fim_aula_12",
+     "tipo": "end",
+     "acao": "change",
+     "campos_alterados": {
+      "outcomeLabel": "Aula concluída",
+      "summary": "O que você levou\nOnline: teste antes, luz de frente e câmera na altura dos olhos.\nLeve duas perguntas; um agradecimento breve depois é opcional, se houver canal.\nUm \"não\" é treino: pergunte o que melhorar e siga.\nNa próxima aula, a última: o que fazer enquanto a resposta não vem."
+     },
+     "nota": "Deixa de ser o fim do curso: 'Curso concluído' passa para fim_aula_13. A frase de fechamento continua (é a frase do curso em todas as aulas)."
+    }
+   ]
+  },
+  {
+   "numero": 13,
+   "id": "aula_13",
+   "acao": "add",
+   "modulo": "Arrase na entrevista",
+   "titulo": "Enquanto a resposta não vem",
+   "resumo": "Ao final, você acompanha uma candidatura sem parar a busca, sabe o que conferir numa proposta e monta seu quadro de candidaturas.",
+   "estimativaMin": 5,
+   "obrigatoria": "a decidir (perguntasAbertas 1)",
+   "objetivo": {
+    "id": "obj_aula_13",
+    "texto": "Acompanhar uma candidatura depois da entrevista sem paralisar a busca, e conferir uma proposta antes de aceitar."
+   },
+   "caminhoPrincipal": [
+    "v24",
+    "q26",
+    "v25",
+    "m11",
+    "despedida",
+    "fim_aula_13"
+   ],
+   "nos": [
+    {
+     "id": "v24",
+     "tipo": "scenario",
+     "acao": "add",
+     "titulo": "Sexta passou",
+     "objetivos": [
+      "obj_aula_13"
+     ],
+     "textoTela": "Anote · Retome · Siga buscando",
+     "planos": [
+      {
+       "id": "promessa",
+       "fala": "Nesta última aula, você monta o seu quadro de candidaturas: cada vaga, a etapa e o próximo passo. Para usar de verdade.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 22,
+       "segundos": 8.4,
+       "nota": "Faz o papel do antigo anúncio, sem a fórmula e sem a palavra 'missão'."
+      },
+      {
+       "id": "s1",
+       "fala": "A entrevista terminou bem. A recrutadora disse: ‘Dou retorno até sexta’. Você anotou. Sexta chegou, e nada. Sábado, domingo, nada.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "s2",
+       "fala": "Dá uma sensação ruim. Na segunda, aparece outra vaga, parecida com a sua vaga-alvo. E a primeira continua em silêncio.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 20,
+       "segundos": 7.6
+      },
+      {
+       "id": "chamada",
+       "fala": "Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      }
+     ],
+     "cartaoPerguntaSeguinte": "O prazo de retorno passou. Você ainda não recebeu resposta e encontrou outra vaga compatível com seus interesses. O que você faz?",
+     "proximo": "q26",
+     "palavras": 79,
+     "segundos": 30.2,
+     "roteiroNovo": "Nesta última aula, você monta o seu quadro de candidaturas: cada vaga, a etapa e o próximo passo. Para usar de verdade. A entrevista terminou bem. A recrutadora disse: ‘Dou retorno até sexta’. Você anotou. Sexta chegou, e nada. Sábado, domingo, nada. Dá uma sensação ruim. Na segunda, aparece outra vaga, parecida com a sua vaga-alvo. E a primeira continua em silêncio. Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?"
+    },
+    {
+     "id": "q26",
+     "tipo": "choice",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_13"
+     ],
+     "rotuloNaTela": "Você decide",
+     "titulo": "Sem resposta da primeira e com uma vaga nova: o que você faz?",
+     "apoioNaTela": "O prazo de retorno passou. Você ainda não recebeu resposta e encontrou outra vaga compatível com seus interesses.",
+     "bridge": {
+      "call": "Agora é com você: o que faz com a vaga nova e com o silêncio da primeira?"
+     },
+     "video": "não gerar: v24 termina com a chamada e o player pula o vídeo da pergunta (como nas perguntas atuais do C14)",
+     "opcoes": [
+      {
+       "id": "a",
+       "rotulo": "“Retomo o processo pelo canal combinado e me candidato à outra vaga enquanto espero.”",
+       "qualidade": "strong",
+       "feedback": "Você acompanha a candidatura sem paralisar a busca. Faça assim: mande a mensagem de retomada pelo canal combinado e anote a vaga nova com etapa e próxima ação.",
+       "reacao": {
+        "texto": "Você acompanha a primeira e não para a busca. Uma mensagem educada hoje, e a vaga nova no quadro. As duas podem andar juntas.",
+        "palavras": 24,
+        "segundos": 9.2
+       },
+       "vaiPara": "v25",
+       "caracteres": 85
+      },
+      {
+       "id": "b",
+       "rotulo": "“Espero a resposta da primeira antes de olhar qualquer outra vaga, para não me dividir.”",
+       "qualidade": "ok",
+       "feedback": "É uma escolha possível, mas deixa toda a busca dependente de um retorno incerto. Faça assim: candidate-se à vaga nova e mande a retomada; processo em andamento não é contratação.",
+       "reacao": {
+        "texto": "Esperar parece respeito, e é compreensível. Só que você deixou a sua busca inteira nas mãos de uma resposta que pode não vir.",
+        "palavras": 23,
+        "segundos": 8.8
+       },
+       "vaiPara": "v25",
+       "caracteres": 88
+      },
+      {
+       "id": "c",
+       "rotulo": "“Entendo o silêncio como um não e apago tudo daquele processo.”",
+       "qualidade": "weak",
+       "feedback": "O silêncio não confirma o resultado, e apagar o registro dificulta o acompanhamento. Faça assim: guarde data, canal e nome da vaga; pergunte pelo canal combinado e siga buscando.",
+       "reacao": {
+        "texto": "Qual informação você tem? Nenhuma ainda. Silêncio não é resposta, e apagar o registro tira de você a chance de retomar depois.",
+        "palavras": 22,
+        "segundos": 8.4
+       },
+       "vaiPara": "v25",
+       "caracteres": 63
+      }
+     ],
+     "porQueFunciona": "A resposta não está no enunciado: ele diz que o prazo passou e que apareceu outra vaga; decidir que as duas coisas andam juntas (retomar e seguir) é a decisão. A opção B é a tentação de quem acha que se dividir é deslealdade. Situação em segunda pessoa (S1 do banco: sem “Nina”). Sem vídeo próprio da pergunta."
+    },
+    {
+     "id": "v25",
+     "tipo": "content",
+     "acao": "add",
+     "titulo": "Acompanhar sem ficar parado",
+     "objetivos": [
+      "obj_aula_13"
+     ],
+     "textoTela": "Data · Canal · Vaga → Próxima ação",
+     "planos": [
+      {
+       "id": "s1",
+       "fala": "Depois de cada entrevista, anote três coisas: data combinada do retorno, canal e nome da vaga. Esse é o seu quadro.",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 21,
+       "segundos": 8.0
+      },
+      {
+       "id": "s2",
+       "fala": "Passou o prazo? Uma mensagem basta: ‘Olá! Participei da entrevista para a vaga de apoio administrativo. O retorno estava previsto para sexta. Houve alguma atualização?’",
+       "layout": "presenter_chips",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 25,
+       "segundos": 9.5,
+       "cartao": {
+        "titulo": "Mensagem de retomada",
+        "topicos": [
+         "Olá! Participei da entrevista para a vaga de **apoio administrativo**.",
+         "O retorno estava previsto para **sexta**.",
+         "Houve alguma **atualização** sobre os próximos passos?"
+        ]
+       }
+      },
+      {
+       "id": "s3",
+       "fala": "Sem prazo combinado? Pergunte a previsão quando der. Silêncio não é nota sobre você.",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 14,
+       "segundos": 5.3
+      },
+      {
+       "id": "s4",
+       "fala": "Enquanto espera, siga buscando: processo em andamento não é contratação. Veio um não? Peça retorno, nem sempre vem; anote o que você percebeu.",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "s5",
+       "fala": "Veio proposta? Antes do sim, confira atividades, horários, bolsa ou salário. No estágio, isso está no termo de compromisso.",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3,
+       "nota": "Exatidão legal: estágio segue o termo de compromisso; não entra em jornada de aprendiz."
+      },
+      {
+       "id": "lancamento",
+       "fala": "Agora é com você: monte hoje o seu quadro de candidaturas. Etapa, data de retorno, próxima ação.",
+       "layout": "presenter",
+       "camera": "cam_j7_esq",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5,
+       "nota": "Faz o papel do antigo 'missao_fim', sem a palavra. A aula segue para m11."
+      }
+     ],
+     "proximo": "m11",
+     "naoRepete": "Não repete a q12 (lembrete gentil a quem você pediu uma conversa: aqui a mensagem é para quem entrevistou), o v06 (golpes) nem o v23/s3 (“se a resposta for não, pergunte o que melhorar”): o novo é o quadro (data, canal, vaga), a mensagem de retomada pronta, “processo em andamento não é contratação”, “nem sempre o retorno vem; anote o que você percebeu” e conferir a proposta antes do sim.",
+     "palavras": 119,
+     "segundos": 45.4,
+     "roteiroNovo": "Depois de cada entrevista, anote três coisas: data combinada do retorno, canal e nome da vaga. Esse é o seu quadro. Passou o prazo? Uma mensagem basta: ‘Olá! Participei da entrevista para a vaga de apoio administrativo. O retorno estava previsto para sexta. Houve alguma atualização?’ Sem prazo combinado? Pergunte a previsão quando der. Silêncio não é nota sobre você. Enquanto espera, siga buscando: processo em andamento não é contratação. Veio um não? Peça retorno, nem sempre vem; anote o que você percebeu. Veio proposta? Antes do sim, confira atividades, horários, bolsa ou salário. No estágio, isso está no termo de compromisso. Agora é com você: monte hoje o seu quadro de candidaturas. Etapa, data de retorno, próxima ação."
+    },
+    {
+     "id": "m11",
+     "tipo": "reflection",
+     "acao": "add",
+     "objetivos": [
+      "obj_aula_13"
+     ],
+     "rotuloNaTela": "Leve para a vida real",
+     "title": "Monte seu quadro de candidaturas",
+     "tipoDeMissao": "FAZER fora da tela: um quadro real das candidaturas, no celular, com etapa, retorno e próxima ação; retomada enviada se o prazo passou",
+     "intro": "Você acompanhou uma vaga sem parar a busca. Agora é com as suas candidaturas de verdade, hoje.",
+     "action": [
+      "Abra o bloco de notas do celular e escreva “Minhas candidaturas”.",
+      "Para cada vaga que você já enviou, uma linha, sem nome da empresa nem contatos: “vaga 1, loja do bairro”.",
+      "Em cada linha: etapa atual, data ou previsão de retorno, e a próxima ação que depende de você.",
+      "Passou o prazo de alguma? Mande hoje a mensagem de retomada pelo canal combinado.",
+      "Volte aqui, marque “Já experimentei” e conte como foi."
+     ],
+     "alternative": "Ainda não enviou nenhuma candidatura? Então a primeira linha é a sua vaga-alvo da aula 2: “etapa: vou me candidatar”, com a data em que você envia. Pode ser uma vaga que você viu esta semana, sem nome da empresa. O quadro começa antes da primeira resposta.",
+     "tip": {
+      "rotulo": "Exemplo de quadro",
+      "texto": "Minhas candidaturas. Vaga 1, loja do bairro: entrevista feita; retorno previsto sexta; se passar, mando a retomada na segunda. Vaga 2, estágio administrativo: currículo enviado; sem prazo; preparar o exemplo da feira para a entrevista.",
+      "exibicao": "visível só ao tocar em “Ver um exemplo”"
+     },
+     "draftFromNodeId": null,
+     "comoFoi": {
+      "titulo": "Como foi?",
+      "campo": "O que você percebeu?",
+      "ajuda": "Uma ou duas frases: quantas linhas tem o seu quadro? Mandou alguma retomada? O que você percebeu ao ver tudo junto?",
+      "placeholder": "Ex.: três vagas; uma passou do prazo e eu mandei a mensagem hoje.",
+      "maxLength": 300,
+      "obrigatorio": false,
+      "nota": "É o único campo de texto do nó: título da seção “Como foi?”, campo opcional “O que você percebeu?”, texto de ajuda acima."
+     },
+     "ui": {
+      "botoes": [
+       "Já experimentei",
+       "Vou fazer depois"
+      ],
+      "concluiAulaSemFazer": true,
+      "nota": "Quem toca “Vou fazer depois” conclui a aula normalmente; o nó e “Como foi?” continuam no Meu roteiro."
+     },
+     "required": false,
+     "minLength": 0,
+     "maxLength": 300
+    },
+    {
+     "id": "despedida",
+     "tipo": "content",
+     "acao": "add",
+     "required": true,
+     "objetivos": [
+      "obj_aula_13"
+     ],
+     "titulo": "Enquanto a resposta não vem",
+     "textoTela": "Descubra · Mostre · Passe · Arrase",
+     "posicao": "depois da missão e antes do fim",
+     "planos": [
+      {
+       "id": "d1",
+       "fala": "Você começou achando que não tinha experiência. Doze aulas depois: currículo, perfil, apresentação, história e um quadro de candidaturas.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 19,
+       "segundos": 7.3
+      },
+      {
+       "id": "d2",
+       "fala": "Nada disso garante uma vaga. Garante que você chega com preparo, mostra o que viveu de verdade e avalia o que te oferecem.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 23,
+       "segundos": 8.8
+      },
+      {
+       "id": "d3",
+       "fala": "Se uma resposta não vier, isso não resume o seu valor. Ajuste o que der e siga.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 17,
+       "segundos": 6.5
+      },
+      {
+       "id": "d4",
+       "fala": "Você tem mais experiência do que imagina. Agora é mostrar.",
+       "layout": "presenter",
+       "camera": "cam_j7_34",
+       "acao": "add",
+       "palavras": 10,
+       "segundos": 3.8
+      }
+     ],
+     "palavras": 69,
+     "segundos": 26.3,
+     "forma": "termina na frase que fecha todas as doze aulas (“Você tem mais experiência do que imagina. Agora é mostrar.”), dita pela Marina pela primeira vez em vídeo, depois de dizer com clareza que nada garante contratação (S3 do banco, sem “Meu roteiro” nem link para outro curso). Sem recap de ferramentas além de uma linha.",
+     "motionPrompt": "pausa curta antes da última frase; sorriso aberto no fim",
+     "roteiroNovo": "Você começou achando que não tinha experiência. Doze aulas depois: currículo, perfil, apresentação, história e um quadro de candidaturas. Nada disso garante uma vaga. Garante que você chega com preparo, mostra o que viveu de verdade e avalia o que te oferecem. Se uma resposta não vier, isso não resume o seu valor. Ajuste o que der e siga. Você tem mais experiência do que imagina. Agora é mostrar."
+    },
+    {
+     "id": "fim_aula_13",
+     "tipo": "end",
+     "acao": "add",
+     "titulo": "Meu roteiro",
+     "recapTitle": "Meu roteiro",
+     "outcomeLabel": "Curso concluído",
+     "closingLine": "Você tem mais experiência do que imagina. Agora é mostrar.",
+     "summary": "O que você levou\nAnote data, canal e vaga depois de cada entrevista.\nPassou o prazo? Uma mensagem de retomada, e a busca continua.\nProposta se confere antes do sim: atividades, horários, bolsa ou salário.",
+     "recap": [
+      {
+       "id": "missao_real",
+       "label": "Minhas candidaturas",
+       "kind": "checklist",
+       "items": [
+        "quadro criado no celular, sem nomes de empresa nem contatos",
+        "cada vaga com etapa, retorno e próxima ação",
+        "retomada enviada, se o prazo passou",
+        "vaga nova anotada, se apareceu"
+       ],
+       "emptyText": "Marque quando fizer"
+      },
+      {
+       "id": "como_foi",
+       "label": "Como foi?",
+       "kind": "reflection",
+       "nodeId": "m11",
+       "composedNodeIds": [
+        "m11"
+       ],
+       "emptyText": "Você deixou para depois. Quando montar o quadro, volte e conte como foi."
+      },
+      {
+       "id": "o_que_levou",
+       "label": "O que você levou",
+       "kind": "text",
+       "text": "Anote data, canal e vaga depois de cada entrevista.\nPassou o prazo? Uma mensagem de retomada, e a busca continua.\nProposta se confere antes do sim: atividades, horários, bolsa ou salário.",
+       "emptyText": "Completar quando quiser"
+      }
+     ],
+     "nota": "Frase de fechamento: a do curso (todas as aulas). Alternativa própria da aula, se o dono preferir variar: 'Processo em andamento não é contratação. Anote, retome e siga buscando.'"
+    }
+   ]
+  }
+ ],
+ "custos": {
+  "regra": "segundos = palavras / 2,62 (ritmo real medido em 717 planos); custo = segundos × US$ 0,0183. Planos \"keep\" custam zero. A pergunta nova não gera vídeo próprio.",
+  "planosNovos": {
+   "quantidade": 14,
+   "palavras": 267,
+   "segundos": 101.9
+  },
+  "reacoesNovas": {
+   "quantidade": 3,
+   "palavras": 69,
+   "segundos": 26.3
+  },
+  "aberturasTrocadas": {
+   "quantidade": 10,
+   "palavras": 179,
+   "segundos": 68.3,
+   "duracaoAnteriorS": 44.1
+  },
+  "totalNovoFalado": {
+   "palavras": 515,
+   "segundos": 196.5,
+   "usd": 3.6
+  },
+  "teto": "150 s; para o C14 (12 aulas, 10 aberturas com a fórmula) até 200 s, justificado abaixo",
+  "porNo": [
+   {
+    "no": "v24",
+    "planos": 4,
+    "palavras": 79,
+    "segundos": 30.2
+   },
+   {
+    "no": "q26 (3 reações)",
+    "planos": 3,
+    "palavras": 69,
+    "segundos": 26.3
+   },
+   {
+    "no": "v25",
+    "planos": 6,
+    "palavras": 119,
+    "segundos": 45.4
+   },
+   {
+    "no": "despedida",
+    "planos": 4,
+    "palavras": 69,
+    "segundos": 26.3
+   },
+   {
+    "no": "aberturas trocadas (aulas existentes)",
+    "planos": 10,
+    "palavras": 179,
+    "segundos": 68.3
+   }
+  ],
+  "opcional_reacoesRepetidas": {
+   "quantidade": 28,
+   "palavras": 262,
+   "segundos": 100.0,
+   "usd": 1.83,
+   "nota": "Reações atuais que abrem com frase repetida em vários cursos. (b) cortar a primeira frase, se o ajuste fino aceitar vídeo de reação (grátis); (c) regravar só a segunda frase (números acima). Não entra no total acima.",
+   "itens": [
+    {
+     "no": "q01",
+     "opcao": "b",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Experiência não depende de salário.",
+     "palavras": 5,
+     "segundos": 1.9
+    },
+    {
+     "no": "q01",
+     "opcao": "c",
+     "abertura": "Faz sentido, mas dá para ir além.",
+     "resto": "Serve para qualquer vaga, porque mostra atendimento e responsabilidade.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q03",
+     "opcao": "b",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Diferencial não elimina ninguém. Se você tem o obrigatório, candidate-se.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q04",
+     "opcao": "b",
+     "abertura": "Vamos olhar isso com calma.",
+     "resto": "O nome engana e o valor não diz o que você vai fazer.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q04",
+     "opcao": "c",
+     "abertura": "Tem um caminho ainda melhor.",
+     "resto": "Conhecer a empresa ajuda, mas pode ficar para depois.",
+     "palavras": 9,
+     "segundos": 3.4
+    },
+    {
+     "no": "q05",
+     "opcao": "b",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Indicação ajuda, mas não dá para só esperar. Procure ativamente e avise conhecidos.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q05",
+     "opcao": "c",
+     "abertura": "Faz sentido, mas dá para ir além.",
+     "resto": "Quantidade sem foco rende pouco.",
+     "palavras": 5,
+     "segundos": 1.9
+    },
+    {
+     "no": "q06",
+     "opcao": "c",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Boleto também pode ser golpe, e empresa séria não cobra.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q07",
+     "opcao": "a",
+     "abertura": "Faz sentido, mas dá para ir além.",
+     "resto": "Diz onde, mas não o que você faz.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q08",
+     "opcao": "b",
+     "abertura": "Faz sentido, mas dá para ir além.",
+     "resto": "Letra pequena cansa quem lê.",
+     "palavras": 5,
+     "segundos": 1.9
+    },
+    {
+     "no": "q08",
+     "opcao": "c",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Essas atividades são a sua experiência. Corte documentos e frases genéricas.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q10",
+     "opcao": "c",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Frases genéricas não ajudam ninguém a te encontrar.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q12",
+     "opcao": "b",
+     "abertura": "Vamos olhar isso com calma.",
+     "resto": "Insistir todo dia incomoda e fecha a porta.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q12",
+     "opcao": "c",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Uma pessoa sem tempo não é todo mundo.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q13",
+     "opcao": "b",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Barulho e conexão ruim atrapalham, e o teste não pausa. Reserve um horário calmo.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q13",
+     "opcao": "c",
+     "abertura": "Vamos olhar isso com calma.",
+     "resto": "Qualquer imprevisto vira eliminação. Faça com folga, nos primeiros dias do prazo.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q14",
+     "opcao": "c",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Uma questão difícil não define o teste. Termine todas, mesmo sem certeza.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q15",
+     "opcao": "b",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Ganhar a discussão não é o objetivo.",
+     "palavras": 7,
+     "segundos": 2.7
+    },
+    {
+     "no": "q17",
+     "opcao": "a",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Detalhes pessoais não mostram o que você faz.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q17",
+     "opcao": "c",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Adjetivos sem exemplo não convencem.",
+     "palavras": 5,
+     "segundos": 1.9
+    },
+    {
+     "no": "q18",
+     "opcao": "b",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Desculpas demais aumentam o nervosismo. Uma frase para retomar já basta.",
+     "palavras": 11,
+     "segundos": 4.2
+    },
+    {
+     "no": "q18",
+     "opcao": "c",
+     "abertura": "Vamos olhar isso com calma.",
+     "resto": "Inventar pode virar problema nas próximas perguntas. Respire e retome de onde parou.",
+     "palavras": 13,
+     "segundos": 5.0
+    },
+    {
+     "no": "q19",
+     "opcao": "c",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Opinião no lugar de resultado enfraquece. Diga o que aconteceu, com número se tiver.",
+     "palavras": 14,
+     "segundos": 5.3
+    },
+    {
+     "no": "q20",
+     "opcao": "a",
+     "abertura": "Faz sentido, mas dá para ir além.",
+     "resto": "Reconhecer o grupo é bom, mas falta a sua parte.",
+     "palavras": 10,
+     "segundos": 3.8
+    },
+    {
+     "no": "q21",
+     "opcao": "a",
+     "abertura": "Muita gente responderia assim.",
+     "resto": "Essa resposta é tão comum que soa ensaiada.",
+     "palavras": 8,
+     "segundos": 3.1
+    },
+    {
+     "no": "q21",
+     "opcao": "c",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Todo mundo tem algo a melhorar.",
+     "palavras": 6,
+     "segundos": 2.3
+    },
+    {
+     "no": "q22",
+     "opcao": "c",
+     "abertura": "Vamos olhar isso com calma.",
+     "resto": "Tamanho e fama não dizem por que você combina com a vaga.",
+     "palavras": 12,
+     "segundos": 4.6
+    },
+    {
+     "no": "q24",
+     "opcao": "b",
+     "abertura": "Faz sentido pensar assim, mas repara.",
+     "resto": "Com a luz atrás, seu rosto fica escuro.",
+     "palavras": 8,
+     "segundos": 3.1
+    }
+   ]
+  },
+  "videoDoCurso": {
+   "antes": {
+    "minS": 1099.6,
+    "maxS": 1175.2,
+    "texto": "19–20 min"
+   },
+   "depois": {
+    "minS": 1234.3,
+    "maxS": 1310.7,
+    "texto": "cerca de 20.6–21.8 min"
+   },
+   "comoCalculado": "antes + cena + explicação + despedida + uma reação da pergunta nova (mínima/máxima) + diferença das aberturas trocadas (nova − gravada)."
+  },
+  "opcional_trocasDeFalaDoBanco": {
+   "nota": "Trocas de fala revisadas do banco C14.md que NÃO entram no total (orçamento). Só a pedido do dono (perguntasAbertas 3). As versões do pacote para A8/A9 não entram em hipótese alguma.",
+   "itens": [
+    {
+     "aula": "aula_04",
+     "no": "v08",
+     "plano": "s4",
+     "rotulo": "S5 · versão curta",
+     "fala": "E revise com calma: erros de escrita atrapalham a leitura de um currículo bom. Se puder, peça para alguém ler também.",
+     "palavras": 21,
+     "segundos": 8.0,
+     "sincronizar": "fim_aula_04 summary: 'Revise o português duas vezes.' → 'Revise com calma e peça uma segunda leitura.'"
+    },
+    {
+     "aula": "aula_08",
+     "no": "v14",
+     "plano": "s4",
+     "rotulo": "S7 · versão leve (mantém sumir/atropelar)",
+     "fala": "Dois extremos atrapalham: sumir, sem falar nada o tempo todo, e atropelar, falando por cima de todo mundo. Entre eles tem muito espaço, inclusive para quem é mais quieto: perguntar, resumir, cuidar do tempo.",
+     "palavras": 34,
+     "segundos": 13.0,
+     "aviso": "passa de 25 palavras: se entrar, dividir em dois planos (s4 + s4b) ao aplicar"
+    },
+    {
+     "aula": "aula_09",
+     "no": "v17",
+     "plano": "s1",
+     "rotulo": "S8 · versão leve",
+     "fala": "Resposta decorada palavra por palavra costuma soar robótica; se uma palavra foge, trava tudo. Guarde só a ordem: hoje, orgulho, busco. O resto, fale do seu jeito.",
+     "palavras": 27,
+     "segundos": 10.3,
+     "aviso": "passa de 25 palavras e repete o s2 (“Decore só a ordem…”): se entrar, cortar a segunda frase"
+    },
+    {
+     "aula": "aula_02",
+     "no": "v03",
+     "plano": "s3",
+     "rotulo": "A2 · generalização leve (opcional)",
+     "fala": "Muitas vagas distinguem o que é obrigatório do que seria bom ter. Quando isso não estiver claro, vale confirmar.",
+     "palavras": 19,
+     "segundos": 7.3
+    }
+   ],
+   "segundosSeTudoEntrar": 38.6
+  }
+ },
+ "perguntasAbertas": [
+  "1. Aula 13 obrigatória ou opcional? (a) obrigatória: quem está no curso passa pela aula 13; quem já concluiu vê como conteúdo novo · (b) opcional, como extra. Recomendo (a), como no piloto C24.",
+  "2. Orçamento do C14 (~196 s, acima dos 150 s gerais): (a) aceitar até 200 s, porque são 12 aulas e 10 aberturas com a fórmula · (b) cortar para perto de 150 s deixando de trocar as aberturas A6 (variação, não literal), A2, A4 e A9 (as mais curtas de ganho), ≈ −27 s, e encurtando a despedida para três planos (−3.8 s). Recomendo (a); se não, (b) nessa ordem.",
+  "3. Trocas de fala do banco (S5 v08, S7 leve v14, S8 leve v17, A2 v03; 38.6 s no total): (a) não gravar agora: os revisores dizem que os originais são conselho prático, não ameaça · (b) gravar só S5 (8 s) e sincronizar o fim da aula 4 · (c) gravar todas (S7 e S8 precisam ser divididas/cortadas para caber em 25 palavras). Recomendo (a).",
+  "4. “Doze aulas” nas falas gravadas do v00 (boasvindas e s2): (a) deixar como está: a aula 13 fica dentro da quarta parte e o número não aparece em mais nenhuma fala · (b) regravar o boasvindas (18 palavras, 6.9 s). Recomendo (a).",
+  "5. Frase de fechamento do fim_aula_13: (a) a frase do curso (“Você tem mais experiência do que imagina. Agora é mostrar.”), igual às outras aulas e dita na despedida · (b) frase própria da aula (“Processo em andamento não é contratação. Anote, retome e siga buscando.”). Recomendo (a): é o único curso em que a frase repetida é marca, não fórmula.",
+  "6. Módulo da aula 13: (a) “Arrase na entrevista” (quatro partes continuam quatro) · (b) módulo novo “Depois da entrevista”. Recomendo (a)."
+ ]
+}
