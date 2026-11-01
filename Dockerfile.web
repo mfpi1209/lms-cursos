@@ -19,7 +19,8 @@ FROM deps AS build
 WORKDIR /app
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @lms/web build
+# o Next carrega as rotas no build e elas exigem a URL; este valor falso não abre conexão e não fica na imagem final
+RUN DATABASE_URL=postgres://build:build@127.0.0.1:5432/build pnpm --filter @lms/web build
 
 FROM node:22.20.0-bookworm-slim AS runner
 WORKDIR /app
