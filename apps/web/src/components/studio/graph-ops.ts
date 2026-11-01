@@ -157,6 +157,8 @@ export function createNode(type: ExecutableNodeType, id = newNodeId(type)): AnyN
       return { ...base, type, body: emptyDoc(), tone: 'neutral' };
     case 'reflection':
       return { ...base, type, prompt: emptyDoc(), minLength: 20, maxLength: 1500 };
+    case 'mission':
+      return { ...base, type, title: 'Leve para a vida real', intro: '', action: '', alternative: '' };
     case 'assessment':
       return {
         ...base,

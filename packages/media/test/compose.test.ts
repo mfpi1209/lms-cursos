@@ -1,12 +1,18 @@
+import { execFileSync } from 'node:child_process';
 import { copyFileSync, mkdtempSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ElevenLabsAdapter } from '../src';
 import {
-  ShotLineNotFoundError, buildComposeCommand, slideSizeForLayout, cinematicShotTiming, cinematicSlowdown, composeScene, extractScenePlate, generateStandInClip, runFfmpeg, cutAudioSegments, ffprobe, framingCropRatio, generateMotionStandInClip, generateTestClip, generateToneMp3, renderCornerTagToFile,
+  ShotLineNotFoundError, buildComposeCommand, crossfadeForPose, poseDifference, POSE_SAME_MAX, POSE_FAR_MIN, SHORT_CROSSFADE, slideSizeForLayout, cinematicShotTiming, cinematicSlowdown, composeScene, extractScenePlate, generateStandInClip, runFfmpeg, cutAudioSegments, ffprobe, framingCropRatio, generateMotionStandInClip, generateTestClip, generateToneMp3, renderCornerTagToFile,
   mapShotTimings, normalizeForMatch, pngSize, renderBrandCardPng, renderCaptionPng, renderShotGraphics, renderSlidePng, syntheticAlignment, cardBoldSegments, brandCardTokens, layoutHidesPresenter, type CharAlignment, type ComposePlan,
 } from '../src/compose';
+
+/** duração de uma faixa (v = imagem, a = som) */
+async function ffprobeStream(file: string, kind: 'v' | 'a'): Promise<number> {
+  return Number(execFileSync('ffprobe', ['-v', 'error', '-select_streams', `${kind}:0`, '-show_entries', 'stream=duration', '-of', 'csv=p=0', file]).toString().trim());
+}
 
 const tmp = () => mkdtempSync(path.join(tmpdir(), 'lms-compose-'));
 
@@ -124,6 +130,48 @@ describe('filtergraph (função pura)', () => {
     shots: over.map((o, i) => ({ id: `s${i}`, layout: 'presenter', framing: 'medium', nativeFraming: 'medium', move: 'static', transition: 'cut', duration: 4, clip: { path: `/c${i}.mp4`, width: 1920, height: 1072, hasAudio: true }, ...o })),
   });
 
+  it('fusão adaptada à pose: duração própria (curta) ou corte seco (0) no lugar da padrão', () => {
+    const cmd = buildComposeCommand(base([{}, { transition: 'crossfade', transitionSeconds: 0.12 }, { transition: 'crossfade', transitionSeconds: 0 }]));
+    const g = cmd.filterComplex;
+    expect(g).toContain('[hv1][cn1]xfade=transition=fade:duration=0.120:offset=4.000,settb=AVTB,setpts=N/(25*TB)[xv1]');
+    expect(g).toContain('[cv2][cn2]concat=n=2:v=1:a=0,settb=AVTB,setpts=N/(25*TB)[xv2]');
+    expect(cmd.transitions).toEqual([0, 0.12, 0]);
+  });
+
+  it('fusão seguida de corte seco: a imagem vai até o fim (antes o xfade descartava o resto e a imagem congelava)', async () => {
+    const dir = tmp();
+    const clips = [0, 1, 2].map((i) => path.join(dir, `c${i}.mp4`));
+    for (const [i, c] of clips.entries())
+      await runFfmpeg(['-f', 'lavfi', '-i', `testsrc=size=320x180:rate=25:duration=2`, '-f', 'lavfi', '-i', `sine=f=${300 + i * 100}:d=2`, '-shortest', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-c:a', 'aac', c]);
+    const plan: ComposePlan = {
+      width: 320, height: 180, fps: 25, background: '#000000',
+      shots: clips.map((c, i) => ({ id: `s${i}`, layout: 'presenter' as const, framing: 'medium' as const, nativeFraming: 'medium' as const, move: 'static' as const, transition: i === 1 ? ('crossfade' as const) : ('cut' as const), ...(i === 1 ? { transitionSeconds: 0.12 } : {}), duration: 2, clip: { path: c, width: 320, height: 180, hasAudio: true } })),
+    };
+    const cmd = buildComposeCommand(plan);
+    const out = path.join(dir, 'out.mp4');
+    await runFfmpeg([...cmd.inputArgs, '-filter_complex', cmd.filterComplex, '-map', cmd.videoLabel, '-map', cmd.audioLabel, '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', '-r', '25', '-c:a', 'aac', '-t', String(cmd.totalDuration), out]);
+    const v = await ffprobeStream(out, 'v');
+    const a = await ffprobeStream(out, 'a');
+    expect(v).toBeGreaterThan(a - 0.3);
+  }, 60_000);
+
+  it('regra da pose: mesma pose mantém a fusão; pose próxima, fusão curta; pose muito diferente, corte seco', () => {
+    expect(crossfadeForPose(null)).toBeNull();
+    expect(crossfadeForPose(POSE_SAME_MAX - 1)).toBeNull();
+    expect(crossfadeForPose((POSE_SAME_MAX + POSE_FAR_MIN) / 2)).toBe(SHORT_CROSSFADE);
+    expect(crossfadeForPose(POSE_FAR_MIN + 5)).toBe(0);
+  });
+
+  it('diferença de pose medida: mesmo quadro ≈ 0; quadros diferentes, alta', async () => {
+    const dir = tmp();
+    const a = path.join(dir, 'a.mp4');
+    const b = path.join(dir, 'b.mp4');
+    await runFfmpeg(['-f', 'lavfi', '-i', 'color=c=0x202020:s=320x180:r=25:d=1', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', a]);
+    await runFfmpeg(['-f', 'lavfi', '-i', 'color=c=0xe0e0e0:s=320x180:r=25:d=1', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', b]);
+    expect(await poseDifference(a, 0.2, a, 0.6)).toBeLessThan(2);
+    expect(await poseDifference(a, 0.2, b, 0.2)).toBeGreaterThan(POSE_FAR_MIN);
+  }, 30_000);
+
   it('enquadramento relativo à câmera nativa (nunca abre além do nativo)', () => {
     expect(framingCropRatio('medium', 'medium')).toBe(1);
     expect(framingCropRatio('close', 'medium')).toBeCloseTo(0.75);
@@ -135,12 +183,12 @@ describe('filtergraph (função pura)', () => {
     const cmd = buildComposeCommand(base([{}, { transition: 'crossfade' }, { transition: 'whip' }, { transition: 'dip_to_color' }, { transition: 'cut' }]));
     const g = cmd.filterComplex;
     // o plano que sai ganha T segundos de quadro congelado; a transição começa no FIM real dele
-    expect(g).toContain('[v0]tpad=stop_mode=clone:stop_duration=0.400[hv1]');
-    expect(g).toContain('[hv1][v1]xfade=transition=fade:duration=0.400:offset=4.000[xv1]');
-    expect(g).toContain('[xv1]tpad=stop_mode=clone:stop_duration=0.240[hv2]');
-    expect(g).toContain('[hv2][v2]xfade=transition=slideleft:duration=0.240:offset=8.000[xv2]');
-    expect(g).toContain('[hv3][v3]xfade=transition=fadeblack:duration=0.480:offset=12.000[xv3]');
-    expect(g).toContain('[xv3][v4]concat=n=2:v=1:a=0,settb=AVTB[xv4]');
+    expect(g).toContain('[v0]settb=AVTB,setpts=N/(25*TB),tpad=stop_mode=clone:stop_duration=0.400[hv1]');
+    expect(g).toContain('[hv1][cn1]xfade=transition=fade:duration=0.400:offset=4.000,settb=AVTB,setpts=N/(25*TB)[xv1]');
+    expect(g).toContain('[xv1]settb=AVTB,setpts=N/(25*TB),tpad=stop_mode=clone:stop_duration=0.240[hv2]');
+    expect(g).toContain('[hv2][cn2]xfade=transition=slideleft:duration=0.240:offset=8.000,settb=AVTB,setpts=N/(25*TB)[xv2]');
+    expect(g).toContain('[hv3][cn3]xfade=transition=fadeblack:duration=0.480:offset=12.000,settb=AVTB,setpts=N/(25*TB)[xv3]');
+    expect(g).toContain('[cv4][cn4]concat=n=2:v=1:a=0,settb=AVTB,setpts=N/(25*TB)[xv4]');
     expect(g).not.toContain('acrossfade');
     for (let i = 1; i <= 4; i++) expect(g).toContain(`[a${i}]concat=n=2:v=0:a=1[xa${i}]`);
     expect(cmd.overlaps).toEqual([0, 0, 0, 0, 0]);
@@ -241,7 +289,7 @@ describe('filtergraph (função pura)', () => {
     ]));
     const g = cmd.filterComplex;
     // narração começa 1,2 s depois; silêncio completa até o fim do plano (7 s)
-    expect(g).toContain('[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,adelay=delays=1200:all=1,apad,atrim=duration=7.000');
+    expect(g).toContain('[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,adelay=delays=1200:all=1,apad,atrim=duration=7.000,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.012,afade=t=out:st=6.975:d=0.025');
     const chain = g.split(';').find((c) => c.startsWith('[0:v]'))!;
     expect(chain).not.toContain('setpts=1.');
     expect(chain).toContain('trim=duration=7.000');
@@ -335,7 +383,7 @@ describe('composição real (ffmpeg)', () => {
     const quiet = await generateTestClip({ output: path.join(dir, 'b.mp4'), seconds: 2, width: 1920, height: 1080, audioPath: silence });
     const out = path.join(dir, 'out.mp4');
     const shots = [{ id: 'a', transitionIn: 'cut' as const }, { id: 'b', transitionIn: 'crossfade' as const }];
-    const r = await composeScene({ shots, clips: new Map([['a', { videoPath: speaking }], ['b', { videoPath: quiet }]]), output: out, preset: 'ultrafast' });
+    const r = await composeScene({ shots, clips: new Map([['a', { videoPath: speaking }], ['b', { videoPath: quiet }]]), output: out, preset: 'ultrafast', joins: false });
     expect(r.transitions).toEqual([0, 0.4]);
     expect(r.expectedDurationSeconds).toBeCloseTo(6, 2);
     expect(Math.abs((await ffprobe(out)).durationSeconds - 6)).toBeLessThan(0.15);

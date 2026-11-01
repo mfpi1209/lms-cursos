@@ -304,3 +304,49 @@ describe('avisos do cenário com balcão (presentationSceneryWarnings)', () => {
     expect(codes(compileCourse(doc).warnings)).toContain('PRESENTER_ABOVE_DESK');
   });
 });
+
+
+describe('missão "Leve para a vida real"', () => {
+  const missao = (over: Record<string, unknown> = {}): import('../src/nodes').AnyNode =>
+    ({ id: 'missao', type: 'mission', title: 'Leve para a vida real', objectiveIds: [], required: true, intro: 'Para treinar de verdade.', action: 'Hoje, ofereça ajuda a um colega.', alternative: 'Se ainda não trabalha, treine com um colega.', ...over }) as import('../src/nodes').AnyNode;
+  /** a decisão `ca` vai para a missão, que segue para o encerramento */
+  const withMission = (node: import('../src/nodes').AnyNode, recap?: NonNullable<Extract<import('../src/nodes').AnyNode, { type: 'end' }>['recap']>) => {
+    const g = linearGraph();
+    g.nodes.push(node);
+    g.edges = g.edges.map((e) => (e.id === 'e4' ? { ...e, to: 'missao' } : e));
+    g.edges.push({ id: 'e6', from: 'missao', to: 'fim' });
+    const end = g.nodes.find((n) => n.id === 'fim')!;
+    if (recap && end.type === 'end') end.recap = recap;
+    return g;
+  };
+  const mission = (r: { errors: { code: string }[]; warnings: { code: string }[] }) => codes(r.errors).filter((c) => c.startsWith('MISSION'));
+
+  it('uma missão completa compila, sem aviso de objetivo (não é cobrada)', () => {
+    const r = compileLesson(withMission(missao()));
+    expect(r.ok).toBe(true);
+    expect(mission(r)).toEqual([]);
+    expect(codes(r.warnings)).not.toContain('NO_OBJECTIVE');
+  });
+  it('exige título, intro, ação e alternativa (rascunho em branco salva, publicar não)', () => {
+    const r = compileLesson(withMission(missao({ title: ' ', intro: '', action: '  ', alternative: '' })));
+    expect(r.ok).toBe(false);
+    expect(mission(r)).toEqual(['MISSION_TITLE', 'MISSION_INTRO', 'MISSION_ACTION', 'MISSION_ALTERNATIVE']);
+    expect(LessonGraphSchema.safeParse(withMission(missao({ title: undefined, intro: undefined, action: undefined, alternative: undefined }))).success).toBe(true);
+  });
+  it('a frase de outra cena precisa ser uma atividade "Na prática" desta aula', () => {
+    expect(mission(compileLesson(withMission(missao({ draftFromNodeId: 'nao_existe' }))))).toEqual(['MISSION_DRAFT_SOURCE']);
+    expect(mission(compileLesson(withMission(missao({ draftFromNodeId: 'intro' }))))).toEqual(['MISSION_DRAFT_SOURCE']);
+    const g = withMission(missao({ draftFromNodeId: 'refl' }));
+    g.nodes.push({ id: 'refl', type: 'reflection', prompt: p('Monte'), objectiveIds: [], required: true, minLength: 0, maxLength: 500 });
+    g.edges = g.edges.map((e) => (e.id === 'e4' ? { ...e, to: 'refl' } : e));
+    g.edges.push({ id: 'e7', from: 'refl', to: 'missao' });
+    g.edges = g.edges.filter((e) => !(e.from === 'refl' && e.to === 'missao') || e.id === 'e7');
+    expect(mission(compileLesson(g))).toEqual([]);
+  });
+  it('o roteiro aceita um item de missão com a cena certa e recusa o tipo errado', () => {
+    const ok = compileLesson(withMission(missao(), [{ id: 'm', label: 'Minha missão', kind: 'mission', nodeId: 'missao', emptyText: 'x' }]));
+    expect(codes(ok.errors).filter((c) => c.startsWith('RECAP'))).toEqual([]);
+    const bad = compileLesson(withMission(missao(), [{ id: 'm', label: 'Errada', kind: 'mission', nodeId: 'intro', emptyText: 'x' }, { id: 'n', label: 'Sem fonte', kind: 'mission', emptyText: 'x' }]));
+    expect(codes(bad.errors).filter((c) => c.startsWith('RECAP'))).toEqual(['RECAP_SOURCE_MISSING', 'RECAP_SOURCE_MISSING']);
+  });
+});

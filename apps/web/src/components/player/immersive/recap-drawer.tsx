@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { FileText, X } from 'lucide-react';
-import { resolveRecap, type AttemptState, type CourseAnswer, type RecapSourceNode, type ResolvedRecapItem } from '@lms/course-engine';
+import { resolveRecap, type AttemptState, type CourseAnswer, type MissionRecord, type RecapSourceNode, type ResolvedRecapItem } from '@lms/course-engine';
 import type { EndNode, Lesson } from '@lms/course-schema';
 import { useFocusTrap } from '@/components/ui/focus-trap';
 import { RecapView } from '../recap-view';
@@ -12,6 +12,8 @@ import type { PlatformContext } from '../types';
 interface CourseAnswers {
   answers: Record<string, CourseAnswer>;
   nodes: Record<string, RecapSourceNode>;
+  /** missões "Leve para a vida real" (registro do banco, editável fora da aula) */
+  missions: Record<string, MissionRecord>;
 }
 
 /**
@@ -27,7 +29,7 @@ function useCourseAnswers(enrollmentId: string | undefined, refreshKey: unknown)
     fetch(`/api/enrollments/${encodeURIComponent(enrollmentId)}/answers`, { credentials: 'same-origin' })
       .then((r) => (r.ok ? r.json() : null))
       .then((j: CourseAnswers | null) => {
-        if (!cancelled && j && typeof j === 'object' && j.answers) setData({ answers: j.answers ?? {}, nodes: j.nodes ?? {} });
+        if (!cancelled && j && typeof j === 'object' && j.answers) setData({ answers: j.answers ?? {}, nodes: j.nodes ?? {}, missions: j.missions ?? {} });
       })
       .catch(() => undefined);
     return () => {
@@ -42,6 +44,10 @@ export interface CourseRecap {
   title: string;
   closingLine?: string;
   items: ResolvedRecapItem[];
+  /** respostas salvas no curso (por cena), para restaurar uma atividade ao revisitá-la */
+  answers?: Record<string, CourseAnswer>;
+  /** registros das missões do curso (por cena) */
+  missions?: Record<string, MissionRecord>;
 }
 
 /**
@@ -65,13 +71,13 @@ export function useCourseRecap(platform: PlatformContext, lesson: Lesson, state:
       startedAt: '',
     };
     const nodes: Record<string, RecapSourceNode> = { ...(platform.recap?.nodes ?? {}), ...(course?.nodes ?? {}) };
-    const items = resolveRecap(lesson.graph, endNode, empty, { answers: course?.answers, lookupNode: (id) => nodes[id] });
-    return { endNode, title: endNode.recapTitle?.trim() || DEFAULT_RECAP_TITLE, closingLine: endNode.closingLine?.trim() || undefined, items };
+    const items = resolveRecap(lesson.graph, endNode, empty, { answers: course?.answers, ...(course?.missions ? { missions: course.missions } : {}), lookupNode: (id) => nodes[id] });
+    return { endNode, title: endNode.recapTitle?.trim() || DEFAULT_RECAP_TITLE, closingLine: endNode.closingLine?.trim() || undefined, items, ...(course?.answers ? { answers: course.answers } : {}), ...(course?.missions ? { missions: course.missions } : {}) };
   }, [platform.recap, lesson.graph, state, course]);
 }
 
 /** Gaveta lateral "Meu roteiro": Esc fecha, foco preso, foco volta ao botão que abriu. */
-export function RecapDrawer({ open, onClose, recap }: { open: boolean; onClose: () => void; recap: CourseRecap | null }) {
+export function RecapDrawer({ open, onClose, recap, enrollmentId }: { open: boolean; onClose: () => void; recap: CourseRecap | null; enrollmentId?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const close = useCallback(() => onClose(), [onClose]);
@@ -113,7 +119,7 @@ export function RecapDrawer({ open, onClose, recap }: { open: boolean; onClose: 
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 md:px-7">
           {recap ? (
-            <RecapView items={recap.items} title={recap.title} closingLine={recap.closingLine} variant="drawer" headingLevel={2} />
+            <RecapView items={recap.items} title={recap.title} closingLine={recap.closingLine} variant="drawer" headingLevel={2} {...(enrollmentId ? { enrollmentId } : {})} />
           ) : (
             <div className="space-y-2">
               <h2 className="text-2xl! font-semibold! text-fg">Meu roteiro</h2>
@@ -140,9 +146,10 @@ export function CourseRecapButton({ recap, enrollmentId, className }: { recap: P
     const empty: AttemptState = { stateVersion: 1, status: 'in_progress', currentNodeId: endNode.id, variables: {}, path: [], answers: {}, completedNodeIds: [], startedAt: '' };
     const items = resolveRecap({ schemaVersion: 1, startNodeId: endNode.id, nodes: [], edges: [], variables: [] } as unknown as Lesson['graph'], endNode, empty, {
       answers: course?.answers,
+      ...(course?.missions ? { missions: course.missions } : {}),
       lookupNode: (id) => nodes[id],
     });
-    return { endNode, title: endNode.recapTitle?.trim() || DEFAULT_RECAP_TITLE, closingLine: endNode.closingLine?.trim() || undefined, items };
+    return { endNode, title: endNode.recapTitle?.trim() || DEFAULT_RECAP_TITLE, closingLine: endNode.closingLine?.trim() || undefined, items, ...(course?.answers ? { answers: course.answers } : {}), ...(course?.missions ? { missions: course.missions } : {}) };
   }, [recap, course]);
   return (
     <>
@@ -159,7 +166,7 @@ export function CourseRecapButton({ recap, enrollmentId, className }: { recap: P
       >
         <FileText className="size-5" aria-hidden="true" /> Meu roteiro
       </button>
-      <RecapDrawer open={open} onClose={() => setOpen(false)} recap={resolved} />
+      <RecapDrawer open={open} onClose={() => setOpen(false)} recap={resolved} enrollmentId={enrollmentId} />
     </>
   );
 }

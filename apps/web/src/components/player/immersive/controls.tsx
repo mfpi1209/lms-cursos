@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Maximize, Minimize, Pause, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useImmersiveFullscreenState } from './fullscreen';
 import { clock } from './theme';
 import type { SceneVideo } from './use-scene-video';
 
@@ -14,27 +14,16 @@ const ICON_BTN =
  * tocar/pausar, posição com o acento, tempo, legendas, volume e tela cheia (do
  * palco inteiro, com as respostas). No celular: só tocar, posição, tempo,
  * legendas e tela cheia.
+ * A tela cheia é do player inteiro (ver `fullscreen.tsx`), não do palco desta cena.
  */
-export function ControlBar({ video, fullscreenTarget, className, skip }: {
+export function ControlBar({ video, className, skip }: {
   video: SceneVideo;
-  fullscreenTarget: React.RefObject<HTMLElement | null>;
   className?: string;
   /** atalho "Pular vídeo"/"Responder agora" na barra (desktop), enquanto o vídeo ocupa o palco inteiro */
   skip?: { label: string; onClick: () => void; testId: string };
 }) {
-  const [isFull, setIsFull] = useState(false);
-  const [canFull, setCanFull] = useState(false);
-  useEffect(() => {
-    setCanFull(!!document.fullscreenEnabled);
-    const on = () => setIsFull(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', on);
-    return () => document.removeEventListener('fullscreenchange', on);
-  }, []);
-
-  const toggleFull = () => {
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else void fullscreenTarget.current?.requestFullscreen?.().catch(() => undefined);
-  };
+  // tela cheia do player inteiro (raiz que não desmonta entre as cenas): continua na cena seguinte
+  const fs = useImmersiveFullscreenState();
 
   const { phase, currentTime, duration } = video;
   const pct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
@@ -123,9 +112,9 @@ export function ControlBar({ video, fullscreenTarget, className, skip }: {
           {video.muted ? <VolumeX className="size-7" strokeWidth={2} aria-hidden="true" /> : <Volume2 className="size-7" strokeWidth={2} aria-hidden="true" />}
         </button>
       </div>
-      {canFull && (
-        <button type="button" className={ICON_BTN} onClick={toggleFull} aria-label={isFull ? 'Sair da tela cheia' : 'Tela cheia'}>
-          {isFull ? <Minimize className="size-6" strokeWidth={2.25} aria-hidden="true" /> : <Maximize className="size-6" strokeWidth={2.25} aria-hidden="true" />}
+      {fs.ready && (
+        <button type="button" className={ICON_BTN} onClick={fs.toggle} aria-label={fs.active ? 'Sair da tela cheia' : 'Tela cheia'} data-testid="video-fullscreen-toggle">
+          {fs.active ? <Minimize className="size-6" strokeWidth={2.25} aria-hidden="true" /> : <Maximize className="size-6" strokeWidth={2.25} aria-hidden="true" />}
         </button>
       )}
     </div>

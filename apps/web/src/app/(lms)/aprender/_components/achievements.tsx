@@ -1,5 +1,7 @@
-import { Award, Briefcase, CalendarClock, Check, Shirt, Users, type LucideIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Award, Briefcase, CalendarClock, Shirt, Users, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TrailSeal } from '@/components/trail-seal';
 
 /** Ícone do selo de cada trilha (nomes atuais; trilha nova usa a medalha). */
 const TRAIL_ICONS: Record<string, LucideIcon> = {
@@ -14,6 +16,10 @@ export interface TrailProgress {
   trail: string;
   done: number;
   total: number;
+  /** Selo DNA Work da trilha emitido (cursos + atividades + checagem final) */
+  badge?: boolean;
+  /** página da trilha (caminho até o selo) */
+  href?: string;
 }
 
 /** Os últimos 7 dias (hoje por último), em AAAA-MM-DD no fuso de São Paulo, com a inicial do dia. */
@@ -41,7 +47,8 @@ function Ring({ value, total }: { value: number; total: number }) {
 
 /**
  * Faixa de conquistas do aluno: cursos concluídos (anel), aulas, decisões tomadas, dias com prática
- * na semana e um selo por trilha (aceso quando a trilha inteira foi concluída).
+ * na semana e um selo por trilha (aceso só quando o Selo DNA Work da trilha foi emitido: cursos concluídos,
+ * atividades salvas e checagem final aprovada).
  */
 export function Achievements({ coursesDone, coursesTotal, lessonsDone, choices, activeDays, trails }: { coursesDone: number; coursesTotal: number; lessonsDone: number; choices: number; activeDays: string[]; trails: TrailProgress[] }) {
   const week = lastWeek();
@@ -91,20 +98,26 @@ export function Achievements({ coursesDone, coursesTotal, lessonsDone, choices, 
           <ul className="mt-3 grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 md:grid-cols-4">
             {trails.map((t) => {
               const Icon = iconFor(t.trail);
-              const earned = t.total > 0 && t.done >= t.total;
+              const earned = !!t.badge;
+              const status = earned ? 'Selo conquistado' : t.total > 0 && t.done >= t.total ? 'Cursos concluídos · falta a checagem' : `${t.done} de ${t.total} cursos`;
               return (
                 <li key={t.trail} className="flex items-center gap-3">
-                  <span className={cn('relative grid size-11 shrink-0 place-items-center rounded-full', earned ? 'bg-accent-fill text-accent-fill-fg shadow-[0_8px_20px_-10px_var(--im-accent)]' : 'border border-dashed border-line-strong text-fg-muted')}>
-                    <Icon className="size-5" aria-hidden="true" />
-                    {earned && (
-                      <span className="absolute -bottom-0.5 -right-0.5 grid size-5 place-items-center rounded-full border-2 border-surface bg-success text-white">
-                        <Check className="size-3" strokeWidth={3} aria-hidden="true" />
-                      </span>
-                    )}
-                  </span>
+                  {earned ? (
+                    <TrailSeal trail={t.trail} size={48} tone="light" className="shrink-0" />
+                  ) : (
+                    <span className="relative grid size-11 shrink-0 place-items-center rounded-full border border-dashed border-line-strong text-fg-muted">
+                      <Icon className="size-5" aria-hidden="true" />
+                    </span>
+                  )}
                   <span className="min-w-0">
-                    <span className="block text-[15px] font-semibold leading-snug text-fg">{t.trail}</span>
-                    <span className="block text-sm text-fg-muted">{earned ? 'Selo conquistado' : `${t.done} de ${t.total} cursos`}</span>
+                    {t.href ? (
+                      <Link href={t.href} className="block text-[15px] font-semibold leading-snug text-fg underline-offset-4 hover:underline">
+                        {t.trail}
+                      </Link>
+                    ) : (
+                      <span className="block text-[15px] font-semibold leading-snug text-fg">{t.trail}</span>
+                    )}
+                    <span className="block text-sm text-fg-muted">{status}</span>
                   </span>
                 </li>
               );

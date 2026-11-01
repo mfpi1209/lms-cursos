@@ -1,220 +1,304 @@
 'use client';
 
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Check, Pencil } from 'lucide-react';
-import { assembleScaffold, cleanScaffoldValue, isScaffoldComplete, parseScaffoldTemplate, type ReflectionScaffold } from '@lms/course-schema';
+import { useEffect, useId, useMemo, useState } from 'react';
+import { CircleCheck, CircleDashed, MessageCircle } from 'lucide-react';
+import {
+  assembleScaffold,
+  cleanScaffoldValue,
+  restoreScaffoldPicks,
+  scaffoldGroupLabel,
+  scaffoldGroups,
+  scaffoldMissingCount,
+  scaffoldSegments,
+  type ReflectionScaffold,
+  type ScaffoldSlot,
+} from '@lms/course-schema';
 import { cn } from '@/lib/utils';
+import { composeProgressText } from './compose-state';
 
 export interface ComposedSentence {
-  /** frase montada (lacunas vazias como "…") */
+  /** resposta montada (só vale para envio quando `complete`) */
   text: string;
-  /** todas as lacunas preenchidas */
+  /** todos os grupos escolhidos */
   complete: boolean;
+  /** grupos ainda sem escolha */
+  missing: number;
+  /** total de grupos */
+  total: number;
 }
 
+type Pick = { kind: 'option'; value: string } | { kind: 'custom' };
+const CUSTOM = '__escrever__';
+
 /**
- * "Monte sua frase": o molde vira uma frase com botões nas lacunas. Tocar numa
- * lacuna abre os blocos prontos dela; "Outro…" (quando a lacuna permite) abre um
- * campo curto. Abaixo, a frase montada ao vivo. Quem envia é o painel que usa
- * este componente ("Usar esta frase" → intenção `reflect` com o texto).
+ * Montagem de resposta "tudo visível": todos os grupos de opções à mostra (um `fieldset` com rádios
+ * nativos por lacuna do molde, na ordem do molde), e UMA prévia ao lado com a resposta montada pelo
+ * molde (texto fixo, ordem, pontuação e lacunas repetidas). "Prefiro escrever" aparece só quando a
+ * lacuna aceita escrita. Quem salva é o painel que usa este componente (`actions` entra no fim da
+ * coluna da prévia). Sem escolha automática; o foco não se move a cada escolha.
  *
- * Teclado e leitor de tela: cada lacuna é um botão `aria-expanded` que controla
- * o grupo de opções (botões `aria-pressed`); Esc fecha e devolve o foco; ao
- * escolher, o foco vai para a próxima lacuna vazia. A prévia é `aria-live`.
- * Só tokens de tema (claro/escuro).
+ * As cores vêm dos tokens do tema; dentro de `.compose-surface` (globals.css) viram a paleta roxa
+ * da atividade, sem mudar o tema da plataforma.
  */
 export function ScaffoldComposer({
   scaffold,
   disabled = false,
+  readOnly = false,
+  initialText,
   onChange,
+  actions,
+  stickyActions = false,
   className,
 }: {
   scaffold: ReflectionScaffold;
   disabled?: boolean;
-  onChange: (sentence: ComposedSentence) => void;
+  /** resposta já salva: escolhas visíveis, sem edição */
+  readOnly?: boolean;
+  /** resposta salva antes (revisita): as escolhas voltam marcadas quando casam com o molde */
+  initialText?: string | null;
+  onChange?: (sentence: ComposedSentence) => void;
+  /** botões e avisos do painel: abaixo da prévia (computador) ou no fim (celular) */
+  actions?: React.ReactNode;
+  /** celular: as ações ficam presas no rodapé do painel (quando a resposta está completa) */
+  stickyActions?: boolean;
   className?: string;
 }) {
-  const parts = useMemo(() => parseScaffoldTemplate(scaffold.template), [scaffold.template]);
-  const slots = useMemo(() => new Map(scaffold.slots.map((s) => [s.id, s])), [scaffold.slots]);
-  const order = useMemo(() => [...new Set(parts.flatMap((p) => (p.kind === 'slot' && slots.has(p.slotId) ? [p.slotId] : [])))], [parts, slots]);
-  const [values, setValues] = useState<Record<string, string>>({});
-  const [open, setOpen] = useState<string | null>(order[0] ?? null);
-  const [custom, setCustom] = useState<{ slotId: string; text: string } | null>(null);
-  const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const customRef = useRef<HTMLInputElement>(null);
+  const groups = useMemo(() => scaffoldGroups(scaffold), [scaffold]);
+  const [picks, setPicks] = useState<Record<string, Pick>>(() => fromSaved(scaffold, initialText).picks);
+  const [customText, setCustomText] = useState<Record<string, string>>(() => fromSaved(scaffold, initialText).custom);
   const baseId = useId();
-  const panelId = `${baseId}-panel`;
-  const previewId = `${baseId}-preview`;
+  // a resposta salva pode chegar depois (respostas do curso carregam à parte): restaura enquanto o aluno não mexeu
+  const [touched, setTouched] = useState(false);
+  const [restoredFrom, setRestoredFrom] = useState(initialText ?? null);
+  if (!touched && (initialText ?? null) !== restoredFrom) {
+    const r = fromSaved(scaffold, initialText);
+    setRestoredFrom(initialText ?? null);
+    setPicks(r.picks);
+    setCustomText(r.custom);
+  }
 
-  // prévia com as lacunas vazias como "___" (a frase enviada só sai quando completa)
-  const text = assembleScaffold(scaffold, values, '___');
-  const complete = isScaffoldComplete(scaffold, values);
-  useEffect(() => onChange({ text, complete }), [text, complete, onChange]);
-  useEffect(() => {
-    if (custom) customRef.current?.focus();
-  }, [custom]);
-
-  const focusChip = (id: string) => requestAnimationFrame(() => chipRefs.current[id]?.focus());
-
-  const choose = (slotId: string, value: string) => {
-    const v = cleanScaffoldValue(value);
-    if (!v) return;
-    const next = { ...values, [slotId]: v };
-    setValues(next);
-    setCustom(null);
-    // próxima lacuna vazia (depois desta, em ordem circular); sem vazias, fecha e volta o foco à lacuna
-    const i = order.indexOf(slotId);
-    const nextEmpty = [...order.slice(i + 1), ...order.slice(0, i)].find((id) => !next[id]);
-    if (nextEmpty) {
-      setOpen(nextEmpty);
-      focusChip(nextEmpty);
-    } else {
-      setOpen(null);
-      focusChip(slotId);
+  const values = useMemo(() => {
+    const v: Record<string, string> = {};
+    for (const g of groups) {
+      const p = picks[g.id];
+      if (!p) continue;
+      const raw = p.kind === 'option' ? p.value : (customText[g.id] ?? '');
+      const c = cleanScaffoldValue(raw);
+      if (c) v[g.id] = c;
     }
-  };
+    return v;
+  }, [groups, picks, customText]);
 
-  const toggle = (slotId: string) => {
-    setCustom(null);
-    setOpen((cur) => (cur === slotId ? null : slotId));
-  };
+  const total = groups.length;
+  const missing = scaffoldMissingCount(scaffold, values);
+  const complete = missing === 0 && total > 0;
+  const text = complete ? assembleScaffold(scaffold, values) : '';
+  useEffect(() => onChange?.({ text, complete, missing, total }), [text, complete, missing, total, onChange]);
 
-  const openSlot = open ? slots.get(open) : undefined;
+  const segments = scaffoldSegments(scaffold, values);
+  const nothingYet = missing === total;
+  const locked = disabled || readOnly;
 
   return (
-    <div className={cn('space-y-4', className)} data-testid="scaffold-composer">
-      {/* a frase com as lacunas como botões */}
-      <p className="m-0 text-[20px] leading-[2.35] text-fg md:text-[22px]" data-testid="scaffold-sentence">
-        {parts.map((p, i) => {
-          if (p.kind === 'text') return <span key={i}>{p.text}</span>;
-          const slot = slots.get(p.slotId);
-          if (!slot) return <span key={i}>…</span>;
-          const value = values[slot.id];
-          const isOpen = open === slot.id;
-          return (
-            <button
-              key={i}
-              ref={(el) => {
-                chipRefs.current[slot.id] = el;
-              }}
-              type="button"
-              disabled={disabled}
-              aria-expanded={isOpen}
-              aria-controls={isOpen ? panelId : undefined}
-              aria-label={`${slot.label || slot.id}: ${value ? value : 'escolher'}`}
-              onClick={() => toggle(slot.id)}
-              data-testid={`scaffold-slot-${slot.id}`}
-              data-filled={value ? 'true' : undefined}
-              className={cn(
-                'mx-0.5 inline-flex min-h-11 max-w-full items-center rounded-[12px] border-2 px-3 py-0.5 align-middle text-[18px] leading-snug transition-colors disabled:opacity-60 md:text-[19px]',
-                value ? 'border-accent-strong bg-accent-soft font-medium text-fg' : 'border-dashed border-line-strong text-fg-muted hover:border-fg/50 hover:text-fg',
-                isOpen && 'ring-2 ring-accent-strong ring-offset-2 ring-offset-bg',
-              )}
-            >
-              <span className="whitespace-normal text-left">{value || 'escolha aqui'}</span>
-            </button>
-          );
-        })}
-      </p>
+    <div className={cn('grid gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] lg:items-start lg:gap-x-6', className)} data-testid="scaffold-composer">
+      {/* escolhas: todos os grupos, compactos (opções em pílulas lado a lado) */}
+      <div className="min-w-0 space-y-3">
+        {groups.map((slot, i) => (
+          <Group
+            key={slot.id}
+            slot={slot}
+            position={i + 1}
+            name={`${baseId}-${slot.id}`}
+            pick={picks[slot.id]}
+            customText={customText[slot.id] ?? ''}
+            disabled={locked}
+            onPick={(p) => {
+              setTouched(true);
+              setPicks((cur) => ({ ...cur, [slot.id]: p }));
+            }}
+            onCustomText={(t) => {
+              setTouched(true);
+              setCustomText((cur) => ({ ...cur, [slot.id]: t }));
+            }}
+          />
+        ))}
+      </div>
 
-      {/* opções da lacuna aberta */}
-      {openSlot && (
-        <div
-          id={panelId}
-          role="group"
-          aria-label={`Opções para ${openSlot.label || openSlot.id}`}
-          data-testid="scaffold-options"
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              e.stopPropagation();
-              setOpen(null);
-              setCustom(null);
-              focusChip(openSlot.id);
-            }
-          }}
-          className="rounded-[16px] border border-line bg-surface-2/80 p-3 backdrop-blur-md md:p-4"
-        >
-          <p className="mb-2.5 text-sm font-medium text-fg-muted" aria-hidden="true">
-            Escolha uma opção para completar a frase:
+      {/* coluna da direita: prévia + ações (no celular, `contents`: viram itens da grade, e a barra presa no rodapé vale para o painel todo) */}
+      <div className="min-w-0 max-lg:contents lg:space-y-3">
+      {/* prévia única + estado */}
+      <section aria-labelledby={`${baseId}-preview`} className="min-w-0 rounded-[16px] border border-line bg-surface-2 p-4 md:p-5" data-testid="scaffold-preview">
+        <h3 id={`${baseId}-preview`} className="flex items-center gap-2 text-[16px] font-semibold text-fg md:text-[17px]">
+          <MessageCircle className="size-5 shrink-0 text-fg-muted" aria-hidden="true" />
+          Sua resposta
+        </h3>
+        {nothingYet ? (
+          <p className="mt-2 text-[15px] leading-relaxed text-fg-muted" data-testid="scaffold-preview-empty">
+            Suas escolhas aparecerão aqui.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {openSlot.options
-              .map((o) => o.trim())
-              .filter(Boolean)
-              .map((o) => {
-                const on = values[openSlot.id] === cleanScaffoldValue(o);
+        ) : (
+          // não é região viva: a resposta inteira não é relida a cada clique (o estado curto abaixo é)
+          <p className="mt-2 text-[17px] font-medium leading-[1.6] text-fg md:text-[18px]" data-testid="scaffold-sentence">
+            {segments.map((s, k) => {
+              if (s.kind === 'text') return <span key={k}>{s.text}</span>;
+              if (s.kind === 'value')
                 return (
-                  <button
-                    key={o}
-                    type="button"
-                    disabled={disabled}
-                    aria-pressed={on}
-                    onClick={() => choose(openSlot.id, o)}
-                    className={cn(
-                      'inline-flex min-h-11 items-center gap-2 rounded-[12px] border px-3.5 py-2 text-left text-[16px] leading-snug text-fg transition-colors disabled:opacity-60',
-                      on ? 'border-accent-strong bg-accent-soft font-medium' : 'border-line-strong bg-bg/40 hover:border-fg/40 hover:bg-fg/5',
-                    )}
-                  >
-                    {on && <Check className="size-4 shrink-0 text-accent-strong" strokeWidth={3} aria-hidden="true" />}
-                    {o}
-                  </button>
+                  <mark key={k} data-slot={s.slotId} className="rounded-[6px] bg-[var(--cp-chip,var(--t-accent-soft))] px-1 py-0.5 text-fg [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">
+                    {s.text}
+                  </mark>
                 );
-              })}
-            {openSlot.allowCustom && custom?.slotId !== openSlot.id && (
-              <button
-                type="button"
-                disabled={disabled}
-                onClick={() => setCustom({ slotId: openSlot.id, text: '' })}
-                data-testid="scaffold-custom"
-                className="inline-flex min-h-11 items-center gap-2 rounded-[12px] border border-dashed border-line-strong px-3.5 py-2 text-[16px] text-fg-muted hover:border-fg/40 hover:text-fg disabled:opacity-60"
-              >
-                <Pencil className="size-4" aria-hidden="true" /> Outro…
-              </button>
-            )}
-          </div>
-          {openSlot.allowCustom && custom?.slotId === openSlot.id && (
-            <form
-              className="mt-3 flex flex-wrap items-end gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                choose(openSlot.id, custom.text);
-              }}
-            >
-              <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-sm font-medium text-fg-muted">
-                Escreva do seu jeito
-                <input
-                  ref={customRef}
-                  value={custom.text}
-                  maxLength={openSlot.customMaxLength}
-                  onChange={(e) => setCustom({ slotId: openSlot.id, text: e.target.value })}
-                  disabled={disabled}
-                  data-testid="scaffold-custom-input"
-                  className="min-h-11 rounded-[12px] border border-line-strong bg-bg/60 px-3 text-[16px] text-fg outline-none placeholder:text-fg-faint focus-visible:border-accent-strong"
-                  placeholder={openSlot.options[0] ?? ''}
-                />
-              </label>
-              <button
-                type="submit"
-                disabled={disabled || !cleanScaffoldValue(custom.text)}
-                className="inline-flex min-h-11 items-center rounded-[12px] border border-accent-strong px-4 text-[16px] font-medium text-fg hover:bg-accent-soft disabled:opacity-50"
-              >
-                Usar
-              </button>
-            </form>
+              const pos = groups.findIndex((g) => g.id === s.slotId) + 1;
+              return (
+                <span key={k} data-missing={s.slotId} className="mx-0.5 inline-block rounded-[6px] border border-dashed border-line-strong px-1.5 text-[0.82em] font-normal leading-normal text-fg-muted">
+                  <span className="sr-only">falta escolher </span>parte {pos}
+                </span>
+              );
+            })}
+          </p>
+        )}
+        <p role="status" className="mt-3 flex items-center gap-2 border-t border-line pt-3 text-[14px] text-fg-muted" data-testid="scaffold-progress">
+          {complete ? <CircleCheck className="size-5 shrink-0 text-fg" aria-hidden="true" /> : <CircleDashed className="size-5 shrink-0" aria-hidden="true" />}
+          {composeProgressText(missing, total)}
+          {!readOnly && !complete && !nothingYet && <span className="sr-only">Você pode mudar suas escolhas antes de salvar.</span>}
+        </p>
+      </section>
+
+      {/* ações: abaixo da prévia no computador; no celular, no fim, presas no rodapé quando a resposta está pronta */}
+      {actions && (
+        <div
+          className={cn(
+            'min-w-0',
+            stickyActions && 'max-lg:sticky max-lg:bottom-0 max-lg:z-10 max-lg:-mx-5 max-lg:border-t max-lg:border-line max-lg:bg-[var(--t-bg)] max-lg:px-5 max-lg:pb-3 max-lg:pt-1',
           )}
+          data-testid="scaffold-actions"
+        >
+          {actions}
         </div>
       )}
-
-      {/* prévia ao vivo */}
-      <div className="rounded-[16px] border border-line bg-surface/70 px-4 py-3 backdrop-blur-md md:px-5" data-testid="scaffold-preview">
-        <p id={previewId} className="text-sm font-medium text-fg-muted">
-          Sua frase
-        </p>
-        <p aria-live="polite" className="mt-1 text-[18px] font-medium leading-relaxed text-fg">
-          {text}
-        </p>
       </div>
     </div>
+  );
+}
+
+function fromSaved(scaffold: ReflectionScaffold, saved: string | null | undefined): { picks: Record<string, Pick>; custom: Record<string, string> } {
+  const restored = restoreScaffoldPicks(scaffold, saved);
+  const picks: Record<string, Pick> = {};
+  const custom: Record<string, string> = {};
+  for (const [id, p] of Object.entries(restored ?? {})) {
+    if (p.kind === 'option') picks[id] = { kind: 'option', value: p.value.trim() };
+    else {
+      picks[id] = { kind: 'custom' };
+      custom[id] = p.text;
+    }
+  }
+  return { picks, custom };
+}
+
+const OPTION =
+  'inline-flex min-h-11 max-w-full cursor-pointer items-center gap-2.5 rounded-full border border-line bg-[var(--cp-option,transparent)] py-2 pl-3 pr-4 text-left text-[15px] leading-snug text-fg/90 transition-colors duration-150 hover:border-line-strong motion-reduce:transition-none md:text-[16px] ' +
+  // selecionada: indicador + borda laranja + fundo levemente destacado
+  'has-[:checked]:border-[var(--t-accent-fill)] has-[:checked]:bg-[var(--cp-selected,var(--t-accent-soft))] has-[:checked]:text-fg ' +
+  // foco (teclado): contorno próprio, diferente da seleção
+  'has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--cp-focus,var(--im-accent-ink,currentColor))] ' +
+  'has-[:disabled]:cursor-default has-[:disabled]:hover:border-line';
+
+function Radio() {
+  return (
+    <span aria-hidden="true" className="grid size-[18px] shrink-0 place-items-center rounded-full border-2 border-line-strong bg-transparent group-has-[:checked]/opt:border-[var(--t-accent-fill)] group-has-[:checked]/opt:bg-[var(--t-accent-fill)]">
+      <span className="size-1.5 rounded-full bg-[var(--t-accent-fill-fg)] opacity-0 group-has-[:checked]/opt:opacity-100" />
+    </span>
+  );
+}
+
+function Group({
+  slot,
+  position,
+  name,
+  pick,
+  customText,
+  disabled,
+  onPick,
+  onCustomText,
+}: {
+  slot: ScaffoldSlot;
+  position: number;
+  name: string;
+  pick: Pick | undefined;
+  customText: string;
+  disabled: boolean;
+  onPick: (p: Pick) => void;
+  onCustomText: (t: string) => void;
+}) {
+  const label = scaffoldGroupLabel(slot, position);
+  const options = slot.options.map((o) => o.trim()).filter(Boolean);
+  const customOn = pick?.kind === 'custom';
+  const inputId = `${name}-escrever`;
+  const customEmpty = customOn && !cleanScaffoldValue(customText);
+  return (
+    <fieldset className="min-w-0" data-testid={`scaffold-group-${slot.id}`}>
+      <legend className="mb-1.5 flex items-center gap-2 text-[16px] font-semibold leading-snug text-fg md:text-[17px]">
+        <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center rounded-full bg-[var(--t-accent-fill)] text-[13px] font-bold text-[var(--t-accent-fill-fg)]">
+          {position}
+        </span>
+        <span className="min-w-0">{label}</span>
+      </legend>
+      <div className="flex flex-wrap items-center gap-2">
+        {options.map((o) => (
+          <label key={o} className={cn('group/opt', OPTION)}>
+            <input
+              type="radio"
+              className="sr-only"
+              name={name}
+              value={o}
+              checked={pick?.kind === 'option' && pick.value === o}
+              disabled={disabled}
+              onChange={() => onPick({ kind: 'option', value: o })}
+            />
+            <Radio />
+            <span className="min-w-0">{o}</span>
+          </label>
+        ))}
+        {/* escrever: link discreto no fim do grupo (não é uma pílula a mais); abre o campo só quando escolhido */}
+        {slot.allowCustom && !customOn && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => onPick({ kind: 'custom' })}
+            data-testid={`scaffold-custom-${slot.id}`}
+            className="inline-flex min-h-11 items-center rounded-[10px] px-2 text-[14px] text-fg-muted underline decoration-line-strong underline-offset-4 hover:text-fg hover:decoration-fg disabled:opacity-60"
+          >
+            Prefiro escrever
+          </button>
+        )}
+      </div>
+      {slot.allowCustom && customOn && (
+        <div className="pt-2">
+          {/* rádio da escolha "escrever" (mantém o grupo como seleção única para leitores de tela) */}
+          <input type="radio" className="sr-only" name={name} value={CUSTOM} checked readOnly tabIndex={-1} aria-hidden="true" />
+          <label htmlFor={inputId} className="mb-1 block text-[14px] font-medium text-fg-muted">
+            Escreva sua versão
+          </label>
+          <input
+            id={inputId}
+            type="text"
+            value={customText}
+            maxLength={slot.customMaxLength}
+            disabled={disabled}
+            autoFocus
+            onChange={(e) => onCustomText(e.target.value)}
+            aria-describedby={`${inputId}-hint`}
+            data-testid={`scaffold-custom-input-${slot.id}`}
+            className="min-h-11 w-full rounded-[12px] border border-line-strong bg-[var(--cp-field,transparent)] px-4 text-[16px] text-fg outline-none placeholder:text-fg-faint focus-visible:border-[var(--t-accent-fill)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--cp-focus,var(--im-accent-ink,currentColor))] disabled:opacity-70"
+            placeholder={options[0] ?? ''}
+          />
+          <p id={`${inputId}-hint`} className="mt-1 flex justify-between gap-3 text-[13px] text-fg-muted">
+            <span>{customEmpty ? 'Escreva algo para completar esta parte.' : 'Ou volte e escolha uma das opções acima.'}</span>
+            <span className="tabular-nums" aria-hidden="true">
+              {customText.length}/{slot.customMaxLength}
+            </span>
+          </p>
+        </div>
+      )}
+    </fieldset>
   );
 }

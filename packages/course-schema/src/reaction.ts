@@ -48,7 +48,7 @@ export const REACTION_WORDS = { min: 8, max: 26 } as const;
  */
 export function reactionScene(choice: ChoiceNode, option: ChoiceOption): ConsequenceNode | null {
   const text = option.reaction?.text?.trim();
-  if (!text) return null;
+  if (!text || option.reaction?.disabled) return null;
   const label = option.label.replace(/^["“”]+|["“”]+$/g, '').trim();
   return {
     id: reactionTargetId(choice.id, option.id),
@@ -58,7 +58,7 @@ export function reactionScene(choice: ChoiceNode, option: ChoiceOption): Consequ
     required: false,
     body: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] },
     narration: text,
-    motionPrompt: REACTION_GESTURE[option.quality ?? 'none'],
+    motionPrompt: option.reaction?.motionPrompt ?? REACTION_GESTURE[option.quality ?? 'none'],
     tone: option.quality === 'strong' ? 'positive' : 'neutral',
     ...(option.reaction?.media ? { media: option.reaction.media } : {}),
   };

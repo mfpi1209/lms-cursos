@@ -2,8 +2,12 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Check, Clock3, Info, ListVideo, Play, X } from 'lucide-react';
+import { BookOpen, Check, Clock3, Info, ListVideo, Play, Sparkles, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { formatCourseVideo } from '@lms/course-schema';
+import { videoShort, videoSpoken, type CourseVideo } from '../_lib/video-text';
+
+export type { CourseVideo };
 
 export interface CourseTileData {
   id: string;
@@ -19,12 +23,15 @@ export interface CourseTileData {
   posterThumb?: string;
   /** capa em pé desenhada (título e marca já na arte): mostrada inteira, sem texto por cima */
   posterArt?: string;
+  /** imagem do cartão deitado: banner largo do instrutor, retrato no estúdio ou quadro do vídeo (nessa ordem); `fallback` entra se a imagem não carregar */
+  wide?: { src: string; kind: 'banner' | 'portrait' | 'frame'; fallback?: string };
   /** vídeo de abertura do curso (prévia muda na ficha) */
   previewSrc?: string;
   presenter?: string;
   lessons: number;
   completed: number;
-  minutes: number;
+  /** tempo de vídeo do percurso publicado (segundos; faixa pelos ramos) */
+  video: CourseVideo;
   decisions: number;
   lessonTitles: string[];
   /** aula concluída (mesma ordem de `lessonTitles`) */
@@ -34,14 +41,39 @@ export interface CourseTileData {
   status: 'new' | 'in_progress' | 'completed';
   cta: string;
   trail?: string;
+  /**
+   * Conteúdo novo disponível: aula(s) acrescentada(s) depois de o aluno concluir o curso. NÃO é pendência (o curso segue
+   * concluído); só um aviso com atalho para a primeira aula nova.
+   */
+  news?: { count: number; href: string; title: string; /** posição (base 0) das aulas novas em `lessonTitles` */ indexes: number[] };
+}
+
+/** "Novo": sinal discreto de conteúdo novo num curso concluído (não vira pendente, nem muda a %). */
+export function NewContentChip({ news, className }: { news: NonNullable<CourseTileData['news']>; className?: string }) {
+  return (
+    <span data-testid="new-content-chip" className={cn('inline-flex items-center gap-1 rounded-full bg-white py-0.5 px-2.5 text-xs font-bold text-[#1d1e4c]', className)}>
+      <Sparkles className="size-3.5" aria-hidden="true" />
+      Novo
+      <span className="sr-only">: conteúdo novo disponível{news.count > 1 ? ` (${news.count} aulas)` : ''}</span>
+    </span>
+  );
+}
+
+/** "5 min de vídeo", "6–8 min de vídeo", "Menos de 1 min de vídeo", "Duração indisponível" ou null (sem vídeo). */
+export function videoLabel(v: CourseVideo, withSuffix = true): string | null {
+  if (v.unavailable) return 'Duração indisponível';
+  const t = formatCourseVideo(v);
+  return t ? (withSuffix ? `${t} de vídeo` : t) : null;
 }
 
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = () => typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-/** "≈ 8 min · 2 aulas · 6 decisões" (texto corrido, para rótulos acessíveis) */
-export function courseFacts(c: Pick<CourseTileData, 'minutes' | 'lessons' | 'decisions'>): string {
-  return [c.minutes > 0 ? `≈ ${c.minutes} min` : null, `${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}`, c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter(Boolean).join(' · ');
+const aulas = (n: number) => `${n} ${n === 1 ? 'aula' : 'aulas'}`;
+
+/** "4 minutos de vídeo, 2 aulas, 6 decisões" (texto corrido, para rótulos acessíveis) */
+export function courseFacts(c: Pick<CourseTileData, 'video' | 'lessons' | 'decisions'>): string {
+  return [videoSpoken(c.video) ?? (c.video.unavailable ? 'duração indisponível' : null), aulas(c.lessons), c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter(Boolean).join(', ');
 }
 
 /** Vídeo mudo em laço curto (prévia): só toca com movimento permitido; pausa fora da tela. */
@@ -93,16 +125,29 @@ export function Swoosh({ className }: { className?: string }) {
   );
 }
 
-function Badge({ status }: { status: CourseTileData['status'] }) {
-  if (status === 'new') return <span aria-hidden="true" className="absolute left-2.5 top-2.5 rounded-full bg-accent-fill px-2.5 py-0.5 text-xs font-semibold text-accent-fill-fg">Novo</span>;
-  if (status === 'completed')
-    return (
-      <span aria-hidden="true" className="absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full bg-accent-fill py-0.5 pl-1.5 pr-2.5 text-xs font-semibold text-accent-fill-fg">
-        <Check className="size-3.5" strokeWidth={3} />
-        Concluído
+/** "🕒 6 min | 📖 2 aulas": ícones e texto curto para os olhos; o texto por extenso fica para o leitor de tela. */
+function Facts({ c, className, compact }: { c: Pick<CourseTileData, 'video' | 'lessons'>; className?: string; compact?: boolean }) {
+  const short = videoShort(c.video);
+  const spoken = videoSpoken(c.video);
+  return (
+    <span className={cn('flex flex-wrap items-center gap-y-0.5 text-[13px] leading-tight tabular-nums', compact ? 'gap-x-1.5 text-[12px] sm:gap-x-2 sm:text-[13px]' : 'gap-x-2', className)}>
+      {short && (
+        <>
+          <span aria-hidden="true" className="inline-flex items-center gap-1 sm:gap-1.5">
+            <Clock3 className={cn('shrink-0', compact ? 'size-3.5 sm:size-4' : 'size-4')} />
+            {short}
+          </span>
+          <span className="sr-only">{spoken}, </span>
+          <span aria-hidden="true" className="opacity-50">|</span>
+        </>
+      )}
+      <span aria-hidden="true" className="inline-flex items-center gap-1.5">
+        <BookOpen className={cn('shrink-0', compact ? 'size-3.5 sm:size-4' : 'size-4')} />
+        {aulas(c.lessons)}
       </span>
-    );
-  return null;
+      <span className="sr-only">{aulas(c.lessons)}.</span>
+    </span>
+  );
 }
 
 const percentOf = (c: CourseTileData) => (c.status === 'completed' ? 100 : c.lessons > 0 ? Math.round((c.completed / c.lessons) * 100) : 0);
@@ -110,8 +155,8 @@ const percentOf = (c: CourseTileData) => (c.status === 'completed' ? 100 : c.les
 function ProgressEdge({ c }: { c: CourseTileData }) {
   if (c.status === 'new') return null;
   return (
-    <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 bg-white/25">
-      <span className="block h-full bg-accent-fill" style={{ width: `${Math.max(4, percentOf(c))}%` }} />
+    <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-white/25">
+      <span className="block h-full bg-[#FF7A08]" style={{ width: `${Math.max(4, percentOf(c))}%` }} />
     </span>
   );
 }
@@ -153,7 +198,7 @@ function DetailsActions({ c, first }: { c: CourseTileData; first?: React.Ref<HTM
  */
 function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string }) {
   const pct = percentOf(c);
-  const facts = [c.minutes > 0 ? `≈ ${c.minutes} min` : null, `${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}`, c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter((x): x is string => !!x);
+  const facts = [videoLabel(c.video), `${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}`, c.decisions > 0 ? `${c.decisions} ${c.decisions === 1 ? 'decisão' : 'decisões'}` : null].filter((x): x is string => !!x);
   return (
     <div className="space-y-4">
       <div>
@@ -166,7 +211,7 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
           {facts.map((f, i) => (
             <li key={f} className="inline-flex items-center gap-2">
               {i > 0 && <span aria-hidden="true" className="size-1 rounded-full bg-fg/30" />}
-              {i === 0 && c.minutes > 0 && <Clock3 className="size-4" aria-hidden="true" />}
+              {i === 0 && !!videoLabel(c.video) && <Clock3 className="size-4" aria-hidden="true" />}
               {f}
             </li>
           ))}
@@ -179,6 +224,14 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
         <p className="text-sm text-fg-muted">
           {c.status === 'completed' ? 'Curso concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas concluídas` : 'Você ainda não começou'}
         </p>
+        {c.news && (
+          <p data-testid="new-content-note" className="text-sm text-fg">
+            <span className="font-semibold text-[var(--im-accent-ink,var(--im-accent))]">Conteúdo novo disponível</span>
+            {': '}
+            <a href={c.news.href} className="underline underline-offset-4">{c.news.title}</a>
+            <span className="text-fg-muted"> (opcional; o curso segue concluído)</span>
+          </p>
+        )}
       </div>
       {c.summary && <p className="text-[15px] leading-relaxed text-fg/85">{c.summary}</p>}
       {c.lessonTitles.length > 0 && (
@@ -196,6 +249,7 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
                   <span>
                     {t}
                     <span className="sr-only">{done ? ' (concluída)' : next ? ' (próxima)' : ''}</span>
+                    {!done && c.news?.indexes.includes(i) && <span className="ml-1.5 text-xs font-medium text-[var(--im-accent-ink,var(--im-accent))]">novo</span>}
                     {next && <span aria-hidden="true" className="ml-1.5 text-xs font-medium text-[var(--im-accent-ink,var(--im-accent))]">próxima</span>}
                   </span>
                 </li>
@@ -206,6 +260,44 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
       )}
       {c.trail && <p className="text-sm text-fg-muted">Trilha: <span className="font-medium text-fg">{c.trail}</span></p>}
     </div>
+  );
+}
+
+/**
+ * Imagem do cartão deitado, à direita. Banner largo do instrutor: cobre o cartão todo (o marinho já está na arte).
+ * Retrato ou quadro do vídeo: ocupa a direita e funde no marinho pelo degradê do cartão. O retrato do estúdio vem
+ * de um endereço que pode expirar: se não carregar, entra o quadro do vídeo de abertura.
+ */
+function WideImage({ c }: { c: CourseTileData }) {
+  const w = c.wide;
+  const [failed, setFailed] = React.useState(false);
+  const ref = React.useRef<HTMLImageElement>(null);
+  React.useEffect(() => {
+    // erro que aconteceu antes de a página hidratar
+    const el = ref.current;
+    if (el && el.complete && el.naturalWidth === 0) setFailed(true);
+  }, []);
+  if (!w) return null;
+  const useFallback = failed && !!w.fallback;
+  if (failed && !w.fallback) return null;
+  const src = useFallback ? w.fallback! : w.src;
+  const kind = useFallback ? 'frame' : w.kind;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={ref}
+      src={src}
+      alt=""
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      onError={() => setFailed(true)}
+      className={cn(
+        'absolute -z-[2] object-cover',
+        kind === 'banner' ? 'inset-0 h-full w-full object-right' : 'inset-y-0 right-0 h-full w-[68%]',
+        kind === 'portrait' && 'object-[50%_18%]',
+        kind === 'frame' && 'object-[50%_20%]',
+      )}
+    />
   );
 }
 
@@ -274,14 +366,15 @@ export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileDat
     };
   }, [anchor, close]);
 
-  const state = c.status === 'completed' ? 'Concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas concluídas` : 'Novo';
   const headingId = `tile-${c.id}`;
-  const subtitle = c.fullTitle && c.fullTitle !== c.title ? ` (${c.fullTitle})` : '';
+
+  const done = c.status === 'completed';
+  const lessonsDone = c.status === 'in_progress' ? `${c.completed} de ${c.lessons} ${c.lessons === 1 ? 'aula' : 'aulas'}` : null;
 
   return (
     <li
       ref={liRef}
-      className={variant === 'poster' ? 'w-[40vw] max-w-[260px] shrink-0 snap-start sm:w-[220px] xl:w-[240px] 2xl:w-[260px]' : 'w-[80vw] max-w-[420px] shrink-0 snap-start sm:w-[360px] xl:w-[380px]'}
+      className={variant === 'poster' ? 'flex w-[44vw] max-w-[260px] shrink-0 snap-start sm:w-[220px] xl:w-[240px] 2xl:w-[260px]' : 'flex w-[85vw] max-w-[440px] shrink-0 snap-start sm:w-[380px] xl:w-[420px]'}
       onMouseEnter={() => finePointer() && openSoon(450)}
       onMouseLeave={close}
       onFocus={(e) => {
@@ -293,82 +386,106 @@ export function CourseTile({ c, testId, variant = 'poster' }: { c: CourseTileDat
         if (!liRef.current?.contains(e.relatedTarget as Node | null)) close();
       }}
     >
-      <div ref={cardRef} className="relative">
+      <div ref={cardRef} className="relative w-full">
+        {/* um só controle por cartão: o link é o cartão inteiro e o "botão" é só visual (nada interativo dentro dele) */}
         <Link
           ref={linkRef}
           href={c.href}
           data-testid={testId}
-          aria-label={`${c.title}${subtitle}. ${c.presenter ? `Com ${c.presenter}. ` : ''}${state}. ${courseFacts(c)}. ${c.cta}.`}
-          className="group/cc block rounded-[16px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
+          className="group/cc block h-full rounded-[16px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           {variant === 'poster' ? (
-            <div className="relative aspect-[3/4] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
-              {c.posterArt ? (
-                // a arte é 3:4 como o cartão: aparece inteira (título, nome e rosto), sem texto por cima
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.posterArt} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
-              ) : (
-                <>
-                  {(c.posterThumb || c.thumb) && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
-                  )}
-                  <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#12132f]/95 via-[#12132f]/30 via-45% to-transparent" />
-                  <span aria-hidden="true" className="absolute inset-x-3.5 bottom-3.5 block">
-                    <span className="font-hand line-clamp-3 -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
-                    <Swoosh className="mt-1 h-3 w-[68%]" />
-                  </span>
-                </>
-              )}
-              <Badge status={c.status} />
+            <div className="relative flex h-full flex-col overflow-hidden rounded-[16px] bg-[#1d1e4c] text-white shadow-[0_22px_45px_-30px_rgba(29,30,76,0.6)] ring-1 ring-inset ring-white/10 transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
+              <div className="relative aspect-[3/4] overflow-hidden">
+                {c.news && <NewContentChip news={c.news} className="absolute left-2.5 top-2.5 z-10 shadow" />}
+                {c.posterArt ? (
+                  // a arte é 3:4 como o cartão: aparece inteira (título, nome e rosto), sem texto por cima
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={c.posterArt} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
+                ) : (
+                  <>
+                    {(c.posterThumb || c.thumb) && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className="h-full w-full origin-[50%_8%] scale-[1.3] object-cover object-[50%_12%]" />
+                    )}
+                    <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1d1e4c] via-[#1d1e4c]/30 via-45% to-transparent" />
+                    <span aria-hidden="true" className="absolute inset-x-3.5 bottom-2 block">
+                      <span className="font-hand line-clamp-3 block -rotate-2 text-[30px] font-bold leading-[0.95] text-white [text-wrap:balance] sm:text-[32px]">{c.title}</span>
+                      <Swoosh className="mt-1 h-3 w-[68%]" />
+                    </span>
+                  </>
+                )}
+              </div>
+              {/* dentro do cartão, embaixo do título: instrutor e a linha de duração e aulas */}
+              <span className="relative flex flex-1 flex-col justify-center gap-1 px-3 pb-3.5 pt-2.5 sm:px-3.5">
+                <span className="sr-only">{c.title}. </span>
+                {/* a capa desenhada já traz "com X" na arte: aqui só para leitor de tela (sem repetir na tela) */}
+                {c.presenter && <span className={c.posterArt ? 'sr-only' : 'text-[13px] leading-tight text-[#d9d8f5]'}>com {c.presenter}</span>}
+                <Facts c={c} className="text-white" compact />
+                <span className="sr-only">
+                  {done ? 'Concluído. ' : c.status === 'in_progress' ? `${lessonsDone} concluídas. ` : 'Novo. '}
+                  {c.cta}.
+                </span>
+              </span>
               <ProgressEdge c={c} />
             </div>
           ) : (
-            <div className="relative flex aspect-[2.6/1] overflow-hidden rounded-[16px] bg-[#1d1e4c] shadow-[0_14px_30px_-18px_rgba(29,30,76,0.55)] transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0">
-              {(c.posterThumb || c.thumb) && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.posterThumb ?? c.thumb} alt="" loading="lazy" className={cn('absolute inset-y-0 right-0 h-full w-[62%] object-cover', c.posterArt ? 'object-[50%_8%]' : 'object-[50%_20%]')} />
+            <div className="relative isolate flex h-full min-h-[184px] overflow-hidden rounded-[16px] bg-[#1d1e4c] text-white shadow-[0_22px_45px_-30px_rgba(29,30,76,0.6)] ring-1 ring-inset ring-white/10 transition-transform duration-200 group-hover/cc:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/cc:translate-y-0 xl:min-h-[190px]">
+              <WideImage c={c} />
+              {/* a foto funde com o marinho: o texto fica sempre sobre marinho (contraste AA) */}
+              <div aria-hidden="true" className={cn('absolute inset-0 -z-[1] bg-gradient-to-r from-[#1d1e4c] via-[#1d1e4c]/90 to-[#1d1e4c]/0', c.wide?.kind === 'banner' ? 'from-30% via-48%' : 'from-38% via-56%')} />
+              {c.news && <NewContentChip news={c.news} className="absolute right-3 top-3 z-10 shadow" />}
+              {done && (
+                <span className="absolute left-4 top-3.5 inline-flex items-center gap-1 rounded-full bg-[#FF7A08] py-0.5 pl-2 pr-3 text-xs font-bold text-[#1d1e4c]">
+                  <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+                  Concluído
+                </span>
               )}
-              <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#1d1e4c] from-40% via-[#1d1e4c]/70 via-55% to-transparent" />
-              <span aria-hidden="true" className="relative flex max-w-[62%] flex-col justify-center gap-1.5 p-4 pt-9">
-                <span className="line-clamp-2 text-[17px] font-bold leading-tight text-white">{c.title}</span>
-                <span className="flex items-center gap-1.5 text-[13px] text-white/85">
-                  <Clock3 className="size-4" aria-hidden="true" />
-                  {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
+              <span className={cn('relative flex w-[70%] max-w-[300px] flex-col justify-center gap-1.5 px-4 py-3.5 sm:w-[66%] sm:px-5', done && 'pt-11')}>
+                <span className="line-clamp-2 text-[18px] font-extrabold leading-[1.1] text-white [text-wrap:balance] sm:text-[20px]">{c.title}</span>
+                {c.presenter && <span className="text-[13px] leading-tight text-[#d9d8f5]">com {c.presenter}</span>}
+                <Facts c={c} className="text-white/90" />
+                <span className="sr-only">
+                  {done ? 'Concluído. ' : c.status === 'in_progress' ? `${lessonsDone} concluídas. ` : 'Novo. '}
+                </span>
+                <span className="mt-1 flex items-center gap-2.5 sm:gap-3">
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold sm:px-4 sm:text-[14px]',
+                      done ? 'border-2 border-white/85 text-white' : 'bg-[#FF7A08] text-[#1d1e4c] shadow-[0_10px_24px_-12px_#FF7A08]',
+                    )}
+                  >
+                    <Play className="size-3.5 fill-current" />
+                    {done ? 'Rever' : c.status === 'in_progress' ? 'Continuar' : 'Começar'}
+                  </span>
+                  <span className="sr-only">{c.cta}.</span>
+                  {lessonsDone && (
+                    <span aria-hidden="true" className="whitespace-nowrap text-[12px] tabular-nums text-white/90 sm:text-[13px]">
+                      {lessonsDone}
+                    </span>
+                  )}
                 </span>
               </span>
-              <span aria-hidden="true" className="absolute bottom-3 right-3 grid size-11 place-items-center rounded-full bg-white/90 text-[#1d1e4c] shadow-lg transition-transform group-hover/cc:scale-105">
-                <Play className="ml-0.5 size-5 fill-current" />
-              </span>
-              <Badge status={c.status} />
               <ProgressEdge c={c} />
             </div>
           )}
-          {variant === 'poster' && (
-            <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-sm tabular-nums text-fg-muted">
-              <Clock3 className="size-4" aria-hidden="true" />
-              {c.minutes > 0 ? `${c.minutes} min` : `${c.lessons} aulas`}
-              {c.status === 'in_progress' && <span className="text-fg">· {c.completed} de {c.lessons} aulas</span>}
-            </p>
-          )}
         </Link>
-        {/* camada com a proporção da capa: o botão ⓘ fica no canto de cima, fora do link */}
-        <div className={cn('pointer-events-none absolute inset-x-0 top-0', variant === 'poster' ? 'aspect-[3/4]' : 'aspect-[2.6/1]')}>
-          <button
-            type="button"
-            onClick={() => {
-              close();
-              dialogRef.current?.showModal();
-            }}
-            aria-haspopup="dialog"
-            aria-label={`Detalhes de ${c.title}`}
-            className="pointer-events-auto absolute right-1.5 top-1.5 grid size-11 place-items-center rounded-full text-white focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-accent"
-          >
-            <span className="grid size-9 place-items-center rounded-full bg-black/45 backdrop-blur-sm hover:bg-black/70">
-              <Info className="size-[18px]" aria-hidden="true" />
-            </span>
-          </button>
-        </div>
+        {/* o botão ⓘ é irmão do link (não fica dentro dele): abre a ficha completa, também no celular */}
+        <button
+          type="button"
+          onClick={() => {
+            close();
+            dialogRef.current?.showModal();
+          }}
+          aria-haspopup="dialog"
+          aria-label={`Detalhes de ${c.title}`}
+          className="absolute right-1.5 top-1.5 grid size-11 place-items-center rounded-full text-white focus-visible:outline-3 focus-visible:outline-offset-0 focus-visible:outline-accent"
+        >
+          <span className="grid size-9 place-items-center rounded-full bg-black/45 backdrop-blur-sm hover:bg-black/70">
+            <Info className="size-[18px]" aria-hidden="true" />
+          </span>
+        </button>
       </div>
 
       {anchor && (

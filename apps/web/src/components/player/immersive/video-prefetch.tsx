@@ -12,7 +12,8 @@ const nodeOf = (lesson: Lesson, id: string) => lesson.graph.nodes.find((n) => n.
 function reactionIds(node: AnyNode | undefined): string[] {
   if (!node || node.type !== 'choice') return [];
   return node.options.flatMap((o) => {
-    const m = (o as { reaction?: { media?: { kind?: string; assetId?: string } } }).reaction?.media;
+    const r = (o as { reaction?: { disabled?: boolean; media?: { kind?: string; assetId?: string } } }).reaction;
+    const m = r?.disabled ? undefined : r?.media;
     return m?.kind === 'video' && m.assetId ? [m.assetId] : [];
   });
 }

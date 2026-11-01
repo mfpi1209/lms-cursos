@@ -1,4 +1,4 @@
-import type { AnyNode, EndNode, LessonGraph, RecapItem } from '@lms/course-schema';
+import type { AnyNode, EndNode, LessonGraph, MissionStatus, RecapItem } from '@lms/course-schema';
 import type { AnswerRecord, AttemptState } from './state';
 
 /**
@@ -17,7 +17,20 @@ export interface CourseAnswer {
 }
 
 /** Resposta em qualquer dos dois formatos (tentativa atual ou curso). */
-export type AnswerLike = Pick<AnswerRecord, 'optionIds' | 'text' | 'passed' | 'answeredAt'>;
+export type AnswerLike = Pick<AnswerRecord, 'optionIds' | 'text' | 'passed' | 'answeredAt' | 'missionStatus'>;
+
+/**
+ * Registro de uma missão "Leve para a vida real" (tabela `mission_responses`): vale mais que a resposta da tentativa, porque
+ * o aluno pode voltar depois da aula e marcar "Já experimentei" ou editar o que percebeu.
+ */
+export interface MissionRecord {
+  lessonId: string;
+  status: MissionStatus;
+  note: string | null;
+  /** versão do registro (concorrência otimista ao editar) */
+  revision: number;
+  updatedAt: string;
+}
 
 /**
  * Junta as respostas do curso com as da tentativa atual. A tentativa atual
@@ -29,7 +42,7 @@ export function mergeAnswers(
   courseAnswers: Record<string, CourseAnswer | AnswerLike> | undefined,
 ): Record<string, AnswerLike> {
   const out: Record<string, AnswerLike> = {};
-  for (const [id, a] of Object.entries(courseAnswers ?? {})) out[id] = { optionIds: a.optionIds, text: a.text, passed: a.passed, answeredAt: a.answeredAt };
+  for (const [id, a] of Object.entries(courseAnswers ?? {})) out[id] = { optionIds: a.optionIds, text: a.text, passed: a.passed, answeredAt: a.answeredAt, ...('missionStatus' in a && a.missionStatus ? { missionStatus: a.missionStatus } : {}) };
   for (const [id, a] of Object.entries(stateAnswers ?? {})) out[id] = a;
   return out;
 }
@@ -43,6 +56,8 @@ export interface RecapSourceNode {
   type: string;
   title?: string;
   options?: ReadonlyArray<{ id: string; label: string }>;
+  /** missão: o que fazer e a alternativa (o roteiro mostra a ação ao lado do estado) */
+  mission?: { intro?: string; action?: string; alternative?: string };
 }
 
 /**
@@ -58,6 +73,17 @@ export interface ResolvedRecapItem {
   emptyText: string;
   /** cena de origem (reflexão/decisão), quando identificada */
   source?: { nodeId: string; title: string };
+  /** só `kind: 'mission'`: o estado da missão (`none` = ainda não chegou ou não respondeu) e o que fazer */
+  mission?: {
+    nodeId: string;
+    title: string;
+    status: 'none' | MissionStatus;
+    note: string | null;
+    action?: string;
+    alternative?: string;
+    /** versão do registro salvo; ausente = ainda não há registro no banco */
+    revision?: number;
+  };
 }
 
 export interface ResolveRecapOptions {
@@ -72,6 +98,8 @@ export interface ResolveRecapOptions {
    * via `mergeAnswers` — a tentativa atual vence.
    */
   answers?: Record<string, CourseAnswer | AnswerLike>;
+  /** registros de missão do curso (por cena): valem mais que a resposta da tentativa */
+  missions?: Record<string, MissionRecord>;
 }
 
 function sourceOf(node: RecapSourceNode | undefined, nodeId: string): ResolvedRecapItem['source'] {
@@ -103,7 +131,11 @@ export function resolveRecap(graph: LessonGraph, endNode: EndNode, state: Attemp
   const items = endNode.recap ?? [];
   if (items.length === 0) return [];
   const local = new Map<string, AnyNode>(graph.nodes.map((n) => [n.id, n]));
-  const find = (id: string): RecapSourceNode | undefined => local.get(id) ?? opts.lookupNode?.(id);
+  const find = (id: string): RecapSourceNode | undefined => {
+    const n = local.get(id);
+    if (n?.type === 'mission') return { type: 'mission', title: n.title, mission: { intro: n.intro, action: n.action, alternative: n.alternative } };
+    return n ?? opts.lookupNode?.(id);
+  };
   const answers = opts.answers ? mergeAnswers(state.answers, opts.answers) : state.answers;
 
   /**
@@ -156,6 +188,22 @@ export function resolveRecap(graph: LessonGraph, endNode: EndNode, state: Attemp
         const label = node?.type === 'choice' && optionId ? node.options?.find((o) => o.id === optionId)?.label?.trim() : undefined;
         return { ...base, value: label ? label : null, source: sourceOf(node, nodeId) };
       }
+      case 'mission': {
+        const nodeId = item.nodeId;
+        if (!nodeId) return { ...base, value: null };
+        const node = find(nodeId);
+        const rec = opts.missions?.[nodeId];
+        const ans = answers[nodeId];
+        const status: 'none' | MissionStatus = rec?.status ?? ans?.missionStatus ?? 'none';
+        const note = (rec ? rec.note : ans?.text)?.trim() || null;
+        const title = node?.title?.trim() || nodeId;
+        return {
+          ...base,
+          value: status === 'done' ? note : null,
+          source: sourceOf(node, nodeId),
+          mission: { nodeId, title, status, note: status === 'done' ? note : null, ...(node?.mission?.action ? { action: node.mission.action } : {}), ...(node?.mission?.alternative ? { alternative: node.mission.alternative } : {}), ...(rec ? { revision: rec.revision } : {}) },
+        };
+      }
       case 'checklist': {
         const list = (item.items ?? []).map((s) => s.trim()).filter(Boolean);
         return { ...base, value: list.length ? list : null };
@@ -176,7 +224,11 @@ export function recapToPlainText(title: string, items: ResolvedRecapItem[], clos
   const lines: string[] = [title, ''];
   for (const it of items) {
     lines.push(it.label);
-    if (it.value === null) lines.push(`  ${it.emptyText}`);
+    if (it.mission) {
+      if (it.mission.action) lines.push(`  ${it.mission.action}`);
+      lines.push(`  ${it.mission.status === 'done' ? 'Já experimentei' : it.mission.status === 'later' ? 'Vou fazer depois' : 'Ainda não registrei'}`);
+      if (it.mission.note) lines.push(`  O que percebi: ${it.mission.note}`);
+    } else if (it.value === null) lines.push(`  ${it.emptyText}`);
     else if (Array.isArray(it.value)) for (const v of it.value) lines.push(`  [ ] ${v}`);
     else lines.push(`  ${it.value}`);
     lines.push('');

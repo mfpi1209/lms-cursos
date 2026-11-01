@@ -1,4 +1,5 @@
 import { richTextToPlain, type AnyNode, type RichTextDocument } from '@lms/course-schema';
+import type { BrandMark } from '@/config/brand';
 import type { PlatformContext } from '../types';
 
 export const DEFAULT_ACCENT = '#C8F03C';
@@ -46,8 +47,10 @@ export function darkInk(hex: string): string {
 }
 
 export interface ResolvedBrand {
-  wordmark: string;
-  subtitle: string;
+  /** nome curto do curso, o mesmo do catálogo: centro do cabeçalho (no computador) e nome acessível do link do logo */
+  title: string;
+  /** marca do workspace no canto esquerdo: o logo do catálogo (ou, no preset só de texto, o nome da marca em texto) */
+  mark?: BrandMark;
   tagline?: string;
   /** acento próprio do curso; `undefined` = herda o acento do preset do workspace (`.theme-platform` em globals.css) */
   accent?: string;
@@ -58,7 +61,8 @@ export interface ResolvedBrand {
 }
 
 /**
- * Marca com padrões: wordmark do título, "Aula N de M" como subtítulo.
+ * Cabeçalho: logo da marca do workspace à esquerda e o nome curto do curso (o do catálogo) no centro. A posição na aula
+ * fica na barra de etapas, não aqui. `branding.wordmark` e `branding.subtitle` do curso não entram no player.
  * Acento: o do curso (`branding.accent`), aplicado SÓ dentro do player (variáveis `--im-*`
  * no elemento raiz). Sem acento no curso, nada é posto inline e o player herda o acento
  * do preset de marca do workspace (config/brand.ts → globals.css), como o resto da área do aluno.
@@ -66,11 +70,10 @@ export interface ResolvedBrand {
 export function resolveBrand(platform: PlatformContext): ResolvedBrand {
   const b = platform.branding;
   const own = b.accent && /^#[0-9a-fA-F]{6}$/.test(b.accent) ? b.accent : undefined;
-  const idx = platform.lessons.findIndex((l) => l.id === platform.currentLessonId);
-  const subtitle = b.subtitle?.trim() || (idx >= 0 && platform.lessons.length > 1 ? `Aula ${idx + 1} de ${platform.lessons.length}` : platform.courseTitle);
+  const title = platform.courseShortTitle?.trim() || platform.courseTitle;
   const base = {
-    wordmark: b.wordmark?.trim() || defaultWordmark(platform.courseTitle),
-    subtitle,
+    title,
+    ...(platform.brandMark ? { mark: platform.brandMark } : {}),
     tagline: b.tagline?.trim() || undefined,
     // Marca do curso > elenco (apresentador/mentor/entrevistador) > sem legenda (nunca o nome técnico do avatar).
     presenterName: b.presenterName?.trim() || platform.castPresenter?.name,

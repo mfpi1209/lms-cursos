@@ -17,3 +17,6 @@ export * from './reaction';
 export * from './library';
 export * from './library-defaults';
 export * from './learner-sim';
+export * from './trails';
+export * from './video-runtime';
+export * from './trail-credentials';

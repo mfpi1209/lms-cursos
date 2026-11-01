@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
-import { Resvg } from '@resvg/resvg-js';
+import { rasterizeSvg, rasterizeSvgSync } from './raster';
 import { brandLogoFile } from '../bumper-spec';
 import type { WatermarkCorner } from '../brand-tokens';
 
@@ -75,9 +75,10 @@ export function brandLogoTrimmed(brand: string | null | undefined, tone: 'light'
   const iw = bytes.readUInt32BE(16);
   const ih = bytes.readUInt32BE(20);
   const dataUri = `data:image/png;base64,${bytes.toString('base64')}`;
-  const full = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${iw}" height="${ih}"><image href="${dataUri}" width="${iw}" height="${ih}"/></svg>`, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render();
-  const box = alphaBox(new Uint8Array(full.pixels), full.width, full.height);
-  const trimmed = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${box.w}" height="${box.h}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}"><image href="${dataUri}" width="${iw}" height="${ih}"/></svg>`, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng();
+  // síncrono (chamada em código síncrono, resultado em cache): resvg num processo filho
+  const full = rasterizeSvgSync(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${iw}" height="${ih}"><image href="${dataUri}" width="${iw}" height="${ih}"/></svg>`, { pixels: true });
+  const box = alphaBox(full.pixels!, full.width, full.height);
+  const trimmed = rasterizeSvgSync(`<svg xmlns="http://www.w3.org/2000/svg" width="${box.w}" height="${box.h}" viewBox="${box.x} ${box.y} ${box.w} ${box.h}"><image href="${dataUri}" width="${iw}" height="${ih}"/></svg>`).png;
   const out: TrimmedLogo = { dataUri, trimmedUri: `data:image/png;base64,${Buffer.from(trimmed).toString('base64')}`, iw, ih, box };
   logoCache.set(key, out);
   return out;
@@ -146,7 +147,7 @@ export async function renderWatermarkPng(o: { brand: string | null | undefined; 
     + `<g opacity="${alpha.toFixed(3)}"${shadow ? ' filter="url(#s)"' : ''}>`
     + `<image href="${logo.trimmedUri}" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}"/>`
     + '</g></svg>';
-  return new Uint8Array(new Resvg(svg, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng());
+  return (await rasterizeSvg(svg)).png;
 }
 
 export async function renderWatermarkToFile(path: string, o: Parameters<typeof renderWatermarkPng>[0]): Promise<string | null> {

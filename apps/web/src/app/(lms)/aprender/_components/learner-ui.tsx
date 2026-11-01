@@ -78,30 +78,34 @@ export function ChapterCard({
   href,
   index,
   title,
-  minutes,
+  video,
   thumb,
   status,
   percent,
   isNext,
+  isNew = false,
   testId,
 }: {
   href: string;
   index: number;
   title: string;
-  minutes: number;
+  /** duração de vídeo da aula ("3:20" ou faixa) e a leitura acessível; null sem vídeo */
+  video: { text: string; spoken: string } | null;
   thumb?: string;
   status: 'not_started' | 'in_progress' | 'completed';
   percent: number;
   isNext: boolean;
+  /** conteúdo novo (aula acrescentada depois de o aluno concluir o curso): opcional, não é pendência */
+  isNew?: boolean;
   testId?: string;
 }) {
-  const action = status === 'completed' ? 'Rever' : status === 'in_progress' ? 'Continuar' : 'Começar';
-  const state = status === 'completed' ? 'Concluída' : status === 'in_progress' ? `Em andamento, ${percent}%` : 'Não iniciada';
+  const action = isNew && status !== 'completed' ? (status === 'in_progress' ? 'Continuar' : 'Ver conteúdo novo') : status === 'completed' ? 'Rever' : status === 'in_progress' ? 'Continuar' : 'Começar';
+  const state = status === 'completed' ? 'Concluída' : status === 'in_progress' ? `Em andamento, ${percent}%` : isNew ? 'Conteúdo novo disponível, opcional' : 'Não iniciada';
   return (
     <Link
       href={href}
       data-testid={testId}
-      aria-label={`Aula ${index}: ${title}. ${state}. ${action}.`}
+      aria-label={`Aula ${index}: ${title}. ${video ? `${video.spoken}. ` : ''}${state}. ${action}.`}
       className="group/ch block w-[78vw] max-w-[320px] shrink-0 snap-start rounded-[14px] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent sm:w-[300px]"
     >
       <div
@@ -127,7 +131,12 @@ export function ChapterCard({
             <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L20 7" /></svg>
           </span>
         )}
-        <span aria-hidden="true" className="absolute bottom-3 right-2.5 rounded-md bg-black/60 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white">{minutes} min</span>
+        {isNew && status !== 'completed' && (
+          <span data-testid="chapter-new" className="absolute right-2.5 top-2.5 inline-flex items-center rounded-full bg-white px-2.5 py-0.5 text-xs font-bold text-[#1D1E4C] shadow">
+            Novo
+          </span>
+        )}
+        {video && <span aria-hidden="true" title={video.spoken} className="absolute bottom-3 right-2.5 rounded-md bg-black/60 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white">{video.text}</span>}
         {/* tocar: aparece ao passar o mouse ou focar */}
         <span aria-hidden="true" className="absolute inset-0 grid place-items-center opacity-0 transition-opacity duration-200 group-hover/ch:opacity-100 group-focus-visible/ch:opacity-100">
           <span className="grid size-14 place-items-center rounded-full bg-white/90 text-[#1D1E4C] shadow-lg">
@@ -142,7 +151,7 @@ export function ChapterCard({
       </div>
       <div className="mt-3 px-0.5">
         <p className="text-[13px] font-medium text-fg-muted">
-          Aula {index} · {status === 'completed' ? <span className="text-success">Concluída</span> : status === 'in_progress' ? <span className="text-accent">Em andamento</span> : 'Não iniciada'}
+          Aula {index} · {status === 'completed' ? <span className="text-success">Concluída</span> : status === 'in_progress' ? <span className="text-accent">Em andamento</span> : isNew ? <span className="font-semibold text-accent">Conteúdo novo disponível</span> : 'Não iniciada'}
         </p>
         <p className="mt-0.5 line-clamp-2 text-[17px] font-semibold leading-snug text-fg">{title}</p>
       </div>

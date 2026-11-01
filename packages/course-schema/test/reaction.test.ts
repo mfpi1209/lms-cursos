@@ -59,6 +59,14 @@ describe('reação da instrutora a cada resposta (contrato)', () => {
     expect(reactionScenes(g).map((s) => s.id)).toEqual(['q01~b']);
   });
 
+  it('reação desligada (revisão sem regravar): sai da produção e da cena de mídia, o texto fica guardado', () => {
+    const g = graph();
+    const q = g.nodes.find((n) => n.id === 'q01') as { options: Array<{ id: string; reaction?: { text: string; disabled?: boolean } }> };
+    q.options.find((o) => o.id === 'b')!.reaction!.disabled = true;
+    expect(reactionScenes(g)).toEqual([]);
+    expect(mediaSceneOf(g, 'q01~b')).toBeNull();
+  });
+
   it('reação padrão a partir do retorno: abertura pela qualidade + explicação + dica curta, 5 a 10 s', () => {
     const t = reactionFromFeedback(doc('É uma responsabilidade real. Faça assim: coloque em ‘Experiências’ e diga o que você fazia.'), 'strong', 0)!;
     expect(t).toBe('Boa escolha! É uma responsabilidade real. Coloque em ‘Experiências’ e diga o que você fazia.');

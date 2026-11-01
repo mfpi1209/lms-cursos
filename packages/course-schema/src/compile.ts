@@ -204,6 +204,18 @@ export function compileLesson(graph: LessonGraph, opts: CompileLessonOptions = {
       const optIds = new Set<string>();
       for (const o of n.options) { if (optIds.has(o.id)) err({ code: 'DUPLICATE_OPTION_ID', message: `Opção duplicada "${o.id}"`, nodeId: n.id }); optIds.add(o.id); }
     }
+    if (n.type === 'mission') {
+      const label = n.title?.trim() || n.id;
+      if (!n.title?.trim()) err({ code: 'MISSION_TITLE', message: `A missão "${n.id}" precisa de um título`, nodeId: n.id });
+      if (!n.intro.trim()) err({ code: 'MISSION_INTRO', message: `A missão "${label}" precisa dizer por que vale a pena (intro)`, nodeId: n.id });
+      if (!n.action.trim()) err({ code: 'MISSION_ACTION', message: `A missão "${label}" precisa de uma ação concreta para fazer fora da plataforma`, nodeId: n.id });
+      if (!n.alternative.trim()) err({ code: 'MISSION_ALTERNATIVE', message: `A missão "${label}" precisa de uma alternativa para quem ainda não trabalha`, nodeId: n.id });
+      if (n.draftFromNodeId) {
+        const src = nodeById.get(n.draftFromNodeId);
+        if (!src) err({ code: 'MISSION_DRAFT_SOURCE', message: `A missão "${label}" usa a frase de "${n.draftFromNodeId}", que não existe nesta aula`, nodeId: n.id });
+        else if (src.type !== 'reflection') err({ code: 'MISSION_DRAFT_SOURCE', message: `A missão "${label}" usa a frase de "${src.title ?? src.id}", que não é uma atividade "Na prática"`, nodeId: n.id });
+      }
+    }
     if (n.type === 'reflection' && n.scaffold) {
       for (const i of scaffoldIssues(n.scaffold, n.maxLength)) (i.level === 'error' ? err : warn)({ code: i.code, message: `"${n.title ?? n.id}": ${i.message}`, nodeId: n.id });
     }
@@ -270,8 +282,8 @@ export function compileLesson(graph: LessonGraph, opts: CompileLessonOptions = {
     for (const item of n.recap) {
       if (recapIds.has(item.id)) err({ code: 'RECAP_DUPLICATE_ID', message: `Item de roteiro repetido "${item.id}" em "${n.title ?? n.id}"`, nodeId: n.id });
       recapIds.add(item.id);
-      if (item.kind !== 'reflection' && item.kind !== 'choice') continue;
-      const want = item.kind === 'reflection' ? 'reflexão' : 'decisão';
+      if (item.kind !== 'reflection' && item.kind !== 'choice' && item.kind !== 'mission') continue;
+      const want = item.kind === 'reflection' ? 'reflexão' : item.kind === 'mission' ? 'missão' : 'decisão';
       // frases compostas (reflexões com molde) que têm prioridade sobre a escolha
       for (const sourceId of item.composedNodeIds ?? []) {
         const src = nodeById.get(sourceId) ?? opts.externalNodes?.get(sourceId);

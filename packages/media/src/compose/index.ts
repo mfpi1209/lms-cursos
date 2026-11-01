@@ -14,3 +14,6 @@ export * from './watermark';
 export * from './panel';
 export * from './zones';
 export * from './loudness';
+export * from './pose';
+export * from './join';
+export * from './raster';

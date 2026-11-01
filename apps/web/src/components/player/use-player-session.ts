@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { backAvailability, type AssessmentOutcome, type AttemptState, type Intent, type NavigationTarget, type ProgressSummary } from '@lms/course-engine';
-import type { AnyNode, Lesson, MediaRef, RichTextDocument } from '@lms/course-schema';
+import type { AnyNode, Lesson, MediaRef, MissionStatus, RichTextDocument } from '@lms/course-schema';
 import { ApiError, newEventId } from '@/lib/api';
 import type { PlayerDriver, PlayerStart, PlayerStepResult } from './types';
+import { missionAckAnnouncement } from './immersive/scene-flow';
 
 /**
  * Estado e intenções do player, compartilhados pelos dois visuais (clássico e
@@ -43,6 +44,25 @@ export type Carry =
     }
   | { kind: 'assessment'; nodeId: string; outcome: AssessmentOutcome; feedback?: RichTextDocument };
 
+/**
+ * Resposta montada ("Na prática") salva: o motor já foi para a cena seguinte, mas o painel mostra a
+ * confirmação ("Resposta salva no Meu roteiro" + "Continuar aula") até o aluno seguir.
+ */
+export interface SavedComposition {
+  /** cena da atividade */
+  fromNodeId: string;
+  /** cena para onde o motor seguiu (o destino previsto) */
+  toNodeId: string;
+  text: string;
+  /** missão "Leve para a vida real": o que ficou valendo no servidor (`text` = "O que você percebeu?", se houve) */
+  mission?: MissionStatus;
+  /** missão: o que a pessoa tocou agora (difere de `mission` quando o servidor manteve "Já experimentei") */
+  requested?: MissionStatus;
+}
+
+/** O que o servidor deixou valendo para uma missão (por cena): fonte única do chip final e da confirmação. */
+export type MissionResults = Record<string, { status: MissionStatus; note: string | null }>;
+
 /** Avaliação reprovada com tentativas restantes: o aluno continua no mesmo nó. */
 export interface RetryInfo {
   nodeId: string;
@@ -75,7 +95,8 @@ export function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
+export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /** a cena do fechamento do curso (despedida), se esta aula tiver */ closingNodeId?: string | null } = {}) {
+  const closingNodeId = opts.closingNodeId ?? null;
   const [session, setSession] = useState<Session | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -85,6 +106,8 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
   const [conflict, setConflict] = useState(false);
   const [carry, setCarry] = useState<Carry | null>(null);
   const [retry, setRetry] = useState<RetryInfo | null>(null);
+  const [saved, setSaved] = useState<SavedComposition | null>(null);
+  const [missions, setMissions] = useState<MissionResults>({});
   const [announce, setAnnounce] = useState('');
   /** o aluno já clicou para avançar: o vídeo da próxima cena pode tocar sozinho */
   const [gesture, setGesture] = useState(false);
@@ -95,6 +118,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
     setFieldError(null);
     setCarry(null);
     setRetry(null);
+    setSaved(null);
   }, []);
 
   const begin = useCallback(
@@ -141,7 +165,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
       const intent = sub.intent;
       if (intent.kind === 'choose' && node?.type === 'choice') {
         const opt = node.options.find((o) => o.id === intent.optionId);
-        const reaction = opt?.reaction?.text && opt.reaction.media?.kind === 'video' ? { text: opt.reaction.text, media: opt.reaction.media } : undefined;
+        const reaction = opt?.reaction?.text && !opt.reaction.disabled && opt.reaction.media?.kind === 'video' ? { text: opt.reaction.text, media: opt.reaction.media } : undefined;
         setCarry({ kind: 'choice', nodeId: res.toNodeId, optionLabel: opt?.label ?? intent.optionId, feedback: res.feedback, ...(reaction ? { reaction } : {}) });
         setRetry(null);
       } else if (intent.kind === 'assess' && res.assessment) {
@@ -156,14 +180,35 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
         setCarry(null);
         setRetry(null);
       }
+      const composed = intent.kind === 'reflect' && node?.type === 'reflection' && !!node.scaffold && intent.text.trim().length > 0;
+      // missão registrada: a confirmação só chega aqui DEPOIS de o servidor responder (applyResult roda no sucesso).
+      // Vale o status que o servidor devolve: ele não rebaixa "Já experimentei" para "Vou fazer depois".
+      const missionSaved = intent.kind === 'mission' && node?.type === 'mission';
+      const missionNow = missionSaved && intent.kind === 'mission' ? { status: res.mission?.status ?? intent.status, note: res.mission ? (res.mission.note ?? '') : (intent.status === 'done' ? (intent.note ?? '').trim() : '') } : null;
+      if (missionNow) setMissions((prev) => ({ ...prev, [sub.nodeId]: { status: missionNow.status, note: missionNow.note || null } }));
+      setSaved(
+        composed && intent.kind === 'reflect'
+          ? { fromNodeId: sub.nodeId, toNodeId: res.toNodeId, text: intent.text.trim() }
+          : missionNow && intent.kind === 'mission'
+            ? { fromNodeId: sub.nodeId, toNodeId: res.toNodeId, text: missionNow.note, mission: missionNow.status, requested: intent.status }
+            : null,
+      );
       // "Continuar"/"Pular vídeo" não registram resposta: só anunciam a próxima cena.
       const nextTitle = res.transitioned ? findNode(lesson, res.toNodeId)?.title?.trim() : undefined;
       const nextCopy = nextTitle ? `Próxima cena: ${nextTitle}${/[.!?…]$/.test(nextTitle) ? '' : '.'}` : 'Próxima cena.';
+      if (composed) {
+        setAnnounce('Resposta salva no Meu roteiro.');
+        return;
+      }
+      if (missionNow && intent.kind === 'mission') {
+        setAnnounce(missionAckAnnouncement(missionNow.status, { farewell: !!closingNodeId && res.toNodeId === closingNodeId, requested: intent.status }));
+        return;
+      }
       setAnnounce(
         res.lessonCompleted ? 'Aula concluída.' : intent.kind === 'advance' ? nextCopy : res.transitioned ? `Resposta registrada. ${nextCopy}` : 'Resposta registrada.',
       );
     },
-    [lesson],
+    [lesson, closingNodeId],
   );
 
   const submit = useCallback(
@@ -207,6 +252,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
     (intent: PlayerIntent) => {
       if (!session || pending) return;
       setGesture(true);
+      setSaved(null);
       // Campos extras (ex.: openAnswer) seguem no corpo; o motor ignora o que não conhece.
       void submit({ eventId: newEventId(), nodeId: session.state.currentNodeId, expectedRevision: session.revision, intent: intent as Intent });
     },
@@ -294,6 +340,12 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver) {
     setConflict,
     carry,
     retry,
+    /** resposta montada recém-salva (confirmação antes de seguir) */
+    saved,
+    /** o que o servidor deixou valendo em cada missão registrada nesta sessão */
+    missions,
+    /** "Continuar aula": tira a confirmação e mostra a cena seguinte */
+    dismissSaved: () => setSaved(null),
     announce,
     gesture,
     begin,

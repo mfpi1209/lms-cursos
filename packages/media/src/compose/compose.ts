@@ -1,9 +1,12 @@
-import { mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ffprobe, runFfmpeg, sec } from './ffmpeg';
 import { normalizeLoudnessInPlace, type LoudnessResult } from './loudness';
+import { crossfadeForPose, poseDifference } from './pose';
+import { JOIN, cleanTransitions, framingPunchPlan, joinPause, tightenFromFile, zoneFocusX, type TightenResult } from './join';
 import { renderBrandCardToFile, renderCaptionToFile, renderSlideToFile, slideToneFor, type SlideSpec } from './slides';
 import { renderWatermarkToFile, watermarkPlacementFor } from './watermark';
+import { skipIfUnrenderable } from './raster';
 import { PANEL_SHIFT, panelRevealTimes, panelSpecFromSlide, renderPanelStatesToFiles } from './panel';
 import { LOWER_THIRD_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, renderChipsGraphics, renderLowerThirdSprite, renderTeaserSprite, teaserWindow, type ChipsGraphics, type PlacedSprite, type Zone, type ZonePaletteInput } from './zones';
 import type { WatermarkCorner } from '../brand-tokens';
@@ -14,9 +17,16 @@ import type { WatermarkCorner } from '../brand-tokens';
  * digital relativo ao enquadramento nativo da câmera, movimento de câmera,
  * layout (apresentador, tela dividida com slide, slide com PiP, slide, letreiro)
  * e junta os planos com transições. A FALA NUNCA É ENCOBERTA: o áudio dos planos
- * é sempre concatenado (sem acrossfade) e a transição visual (xfade) acontece
- * sobre o último quadro congelado do plano que sai (tpad) enquanto o plano que
- * entra já começa — duração total = soma das durações dos planos.
+ * é sempre concatenado (sem acrossfade) e a transição visual (xfade), quando existe,
+ * acontece sobre o último quadro congelado do plano que sai (tpad) enquanto o plano
+ * que entra já começa — duração total = soma das durações dos planos.
+ *
+ * Emendas sem "travamento" (`ComposeSceneInput.joins`, padrão ligado; ver join.ts): o
+ * plano do apresentador que sai termina logo depois da última palavra e o que entra
+ * começa um instante antes da primeira (corte no ponto de menor volume), a imagem não
+ * congela além de 1 quadro, a troca é corte seco (a fusão sobre quadro congelado só
+ * escondia a parada) e planos seguidos da mesma câmera alternam o enquadramento
+ * (punch-in leve, centrado no rosto). Com `joins: false` vale a montagem antiga.
  *
  * O grafo de filtros é gerado por uma função pura (`buildComposeCommand`), testável
  * sem ffmpeg; `composeScene` só sonda os clipes, monta o plano e executa.
@@ -73,6 +83,10 @@ export interface ComposeShot {
   transitionIn?: Transition;
   slide?: SlideSpec;
   caption?: string;
+  /** câmera do plano (a mesma câmera em planos seguidos alterna o enquadramento: `framingPunchPlan`) */
+  cameraId?: string;
+  /** fala do plano (a pausa na emenda é maior depois de fim de frase) */
+  line?: string;
 }
 
 /**
@@ -98,6 +112,11 @@ export interface ShotClip {
   focusX?: number;
   /** estúdio com zonas: onde a apresentadora está no quadro da câmera do plano (a parede livre fica do outro lado) */
   zone?: Zone;
+  /**
+   * alinhamento por palavra do clipe (tempo do ARQUIVO do clipe): a emenda termina ~0,1 s depois da última palavra
+   * e começa um instante antes da primeira (`tightenBounds`); sem ele, só o som decide
+   */
+  words?: Array<{ start: number; end: number }>;
 }
 
 /** fração do quadro largo visível em cada enquadramento */
@@ -160,6 +179,8 @@ export interface PlannedShot {
   nativeFraming: Framing;
   move: CameraMove;
   transition: Transition;
+  /** duração da transição (s), no lugar da padrão do tipo; 0 = corte seco (fusão adaptada à pose) */
+  transitionSeconds?: number;
   duration: number;
   clip: {
     path: string; width?: number; height?: number; hasAudio: boolean; /** padrão true */ hasVideo?: boolean; start?: number;
@@ -167,7 +188,10 @@ export interface PlannedShot {
     audioPath?: string;
     /** atraso (s) do áudio separado: respiro antes da narração (cena em movimento mais longa que a fala) */
     audioDelay?: number;
-    /** duração do vídeo do clipe (cena em movimento: desacelera até 10% se for mais curto que o plano) */
+    /**
+     * duração do vídeo do clipe a partir de `start`: cena em movimento desacelera até 10% se for mais curto que o
+     * plano; apresentador congela no máximo 1 quadro além dela (`presenterFreeze`)
+     */
     videoSeconds?: number;
     /** centro horizontal do apresentador no clipe (padrão 0,5) */
     focusX?: number;
@@ -180,6 +204,8 @@ export interface PlannedShot {
   panelStates?: Array<{ path: string; from: number }>;
   /** pílulas (`presenter_chips`): painel e sprites com os tempos (s, no plano) */
   chips?: PlannedChips;
+  /** punch-in alternado (zoom ≥ 1 sobre o enquadramento do plano; ausente/1 = enquadramento base) */
+  punch?: number;
 }
 
 export interface PlannedChips {
@@ -216,6 +242,8 @@ export interface ShotTimelineEntry {
   duration: number;
   /** atraso do áudio dentro do plano (s); 0 fora da cena em movimento */
   audioDelay: number;
+  /** onde, no clipe, este plano realmente começa (s): o começo do trecho depois do aperto da emenda; ausente = plano sem clipe de vídeo */
+  clipStart?: number;
 }
 
 export interface ComposeCommand {
@@ -243,7 +271,7 @@ function focusCropX(W: number, cw: number, fx = 0.5): number {
   return Math.min(W - cw, Math.max(0, Math.round(fx * W - cw / 2)));
 }
 
-function moveFilter(move: CameraMove, ratio: number, W: number, H: number, fps: number, duration: number, focusX = 0.5): string {
+function moveFilter(move: CameraMove, ratio: number, W: number, H: number, fps: number, duration: number, focusX = 0.5, punched = false): string {
   const fy = framingFocusY(ratio);
   const Z0 = 1 / ratio;
   if (move === 'static') {
@@ -251,7 +279,10 @@ function moveFilter(move: CameraMove, ratio: number, W: number, H: number, fps: 
     const cw = even(W * ratio);
     const ch = even(H * ratio);
     const x = focusCropX(W, cw, focusX);
-    const y = Math.round(Math.min(H - ch, Math.max(0, fy * H - ch / 2)));
+    // punch-in: o recorte tira quase tudo de baixo (o corpo) e no máximo `punchTopCut` do topo — a cabeça nunca é cortada
+    const y = punched
+      ? Math.round(Math.min(H - ch, Math.max(0, Math.min(JOIN.punchTopCut * H, (H - ch) * 0.12))))
+      : Math.round(Math.min(H - ch, Math.max(0, fy * H - ch / 2)));
     return `crop=${cw}:${ch}:${x}:${y},scale=${W}:${H}:flags=lanczos,setsar=1`;
   }
   const N = Math.max(1, Math.round(duration * fps) - 1);
@@ -297,6 +328,16 @@ function moveFilter(move: CameraMove, ratio: number, W: number, H: number, fps: 
 export function cinematicSlowdown(videoSeconds: number | undefined, duration: number): number {
   if (!videoSeconds || videoSeconds <= 0 || videoSeconds >= duration) return 1;
   return Math.min(CINEMATIC_MAX_SLOWDOWN, duration / videoSeconds);
+}
+
+/**
+ * Quanto quadro congelado ao fim do clipe (tpad): o apresentador nunca congela além de 1 quadro. Com a duração do
+ * vídeo conhecida, só o que falta (no máximo 1 quadro a mais); sem ela, o padrão antigo de 2 s.
+ */
+export function presenterFreeze(videoSeconds: number | undefined, duration: number, fps: number): number {
+  if (videoSeconds === undefined) return 2;
+  const frame = 1 / fps;
+  return Math.max(frame, Math.min(2, duration - videoSeconds + frame));
 }
 
 function normalizeClip(clip: PlannedShot['clip'], W: number, H: number, fps: number, bg: string, duration: number, slow = 1, freezeSeconds = 2): string {
@@ -356,7 +397,9 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     const delayMs = s.clip.audioPath && s.clip.audioDelay && s.clip.audioDelay > 0 ? Math.round(Math.min(s.clip.audioDelay, Math.max(0, D - 0.1)) * 1000) : 0;
     const aDelay = delayMs > 0 ? `,adelay=delays=${delayMs}:all=1` : '';
     delays.push(delayMs / 1000);
-    chains.push(`[${ai}:a]${aHead}aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo${aDelay},apad,atrim=duration=${sec(D)},asetpts=PTS-STARTPTS[a${i}]`);
+    // micro-fades nas bordas do plano (entrada 12 ms, saída 25 ms): a junção concatenada não estala nem "fissura"
+    const aEdge = D > 0.1 ? `,afade=t=in:st=0:d=0.012,afade=t=out:st=${sec(Math.max(0, D - 0.025))}:d=0.025` : '';
+    chains.push(`[${ai}:a]${aHead}aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo${aDelay},apad,atrim=duration=${sec(D)},asetpts=PTS-STARTPTS${aEdge}[a${i}]`);
 
     const needsPresenter = !layoutHidesPresenter(layout);
     if (cinematic) {
@@ -365,9 +408,11 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     } else if (needsPresenter) {
       // painel: só o deslocamento; pílulas: nada (nenhum zoom/movimento digital)
       const fixed = layout === 'presenter_panel' || layout === 'presenter_chips';
-      const ratio = fixed ? 1 : framingCropRatio(s.framing, s.nativeFraming);
-      const mv = fixed ? '' : moveFilter(s.move, ratio, W, H, fps, D, s.clip.focusX);
-      chains.push(`[${ci}:v]${normalizeClip(s.clip, W, H, fps, background, D)}${mv ? `,${mv}` : ''}[p${i}]`);
+      // punch-in alternado (só onde cabe sem cortar nada: ver `punchFits`); com ele, o plano fixo vira recorte estático
+      const punch = s.punch && s.punch > 1 && (layout === 'presenter' || layout === 'lower_third' || layout === 'presenter_chips') ? s.punch : 1;
+      const ratio = (fixed ? 1 : framingCropRatio(s.framing, s.nativeFraming)) / punch;
+      const mv = fixed && punch === 1 ? '' : moveFilter(punch > 1 ? 'static' : s.move, ratio, W, H, fps, D, s.clip.focusX, punch > 1);
+      chains.push(`[${ci}:v]${normalizeClip(s.clip, W, H, fps, background, D, 1, presenterFreeze(s.clip.videoSeconds, D, fps))}${mv ? `,${mv}` : ''}[p${i}]`);
     }
     // com marca d'água, o layout sai em [r i] e a marca d'água fecha em [v i]
     const vo = s.watermarkPath ? `r${i}` : `v${i}`;
@@ -490,7 +535,8 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     }
     if (s.watermarkPath) {
       const wi = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(D), '-i', s.watermarkPath]);
-      chains.push(`[${wi}:v]format=rgba,trim=duration=${sec(D)},setpts=PTS-STARTPTS[w${i}]`);
+      // mesma base de tempo do plano (AVTB): com bases diferentes o overlay perdia o ÚLTIMO quadro de cada plano (~1 por plano; imagem mais curta que o som)
+      chains.push(`[${wi}:v]format=rgba,trim=duration=${sec(D)},setpts=PTS-STARTPTS,settb=AVTB[w${i}]`);
       chains.push(`[${vo}][w${i}]overlay=0:0:format=auto,${tail}[v${i}]`);
     }
   });
@@ -506,17 +552,24 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
   for (let i = 1; i < plan.shots.length; i++) {
     starts.push(acc);
     const spec = TRANSITION_SPEC[plan.shots[i]!.transition] ?? TRANSITION_SPEC.cut;
+    const want = plan.shots[i]!.transitionSeconds ?? spec.duration;
     // a transição cobre o começo do plano que entra: no máximo 45% dele
-    const T = spec.xfade ? Math.min(spec.duration, 0.45 * Math.min(durations[i - 1]!, durations[i]!)) : 0;
+    const T = spec.xfade && want > 0 ? Math.min(want, 0.45 * Math.min(durations[i - 1]!, durations[i]!)) : 0;
     const T3 = Number((Math.floor(T * fps) / fps).toFixed(3));
     const nv = `xv${i}`;
     const na = `xa${i}`;
+    // relógio único em toda junção (base AVTB, pts pelo nº do quadro): misturar concat (corte seco) e xfade com
+    // bases diferentes fazia o xfade descartar o resto da imagem (vídeo acabava antes do áudio: imagem congelada)
+    const clock = `settb=AVTB,setpts=N/(${fps}*TB)`;
     if (T3 <= 0 || !spec.xfade) {
-      chains.push(`[${v}][v${i}]concat=n=2:v=1:a=0,settb=AVTB[${nv}]`);
+      chains.push(`[${v}]${clock}[cv${i}]`);
+      chains.push(`[v${i}]${clock}[cn${i}]`);
+      chains.push(`[cv${i}][cn${i}]concat=n=2:v=1:a=0,${clock}[${nv}]`);
       transitions.push(0);
     } else {
-      chains.push(`[${v}]tpad=stop_mode=clone:stop_duration=${sec(T3)}[hv${i}]`);
-      chains.push(`[hv${i}][v${i}]xfade=transition=${spec.xfade}:duration=${sec(T3)}:offset=${sec(acc)}[${nv}]`);
+      chains.push(`[${v}]${clock},tpad=stop_mode=clone:stop_duration=${sec(T3)}[hv${i}]`);
+      chains.push(`[v${i}]${clock}[cn${i}]`);
+      chains.push(`[hv${i}][cn${i}]xfade=transition=${spec.xfade}:duration=${sec(T3)}:offset=${sec(acc)},${clock}[${nv}]`);
       transitions.push(T3);
     }
     chains.push(`[${a}][a${i}]concat=n=2:v=0:a=1[${na}]`);
@@ -551,7 +604,7 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
   }
   chains.push(v === joined ? `[${v}]null[vout]` : `[${v}]format=yuv420p[vout]`);
   chains.push(`[${a}]anull[aout]`);
-  const timeline = plan.shots.map((s, i) => ({ id: s.id, start: Number(starts[i]!.toFixed(3)), duration: durations[i]!, audioDelay: delays[i] ?? 0 }));
+  const timeline = plan.shots.map((s, i) => ({ id: s.id, start: Number(starts[i]!.toFixed(3)), duration: durations[i]!, audioDelay: delays[i] ?? 0, ...(s.clip.start !== undefined && s.clip.hasVideo !== false && !s.clip.audioPath && !layoutHidesPresenter(layouts[i]) ? { clipStart: s.clip.start } : {}) }));
   return { inputArgs, filterComplex: chains.join(';'), videoLabel: '[vout]', audioLabel: '[aout]', totalDuration: Number(acc.toFixed(3)), overlaps, transitions, timeline, layouts, overlays };
 }
 
@@ -595,6 +648,13 @@ export interface ComposeSceneInput {
   lowerThird?: { name: string; role?: string; brand?: string } | null;
   /** cores dos gráficos (pergunta a seguir, letreiro); ausente = as da marca */
   palette?: ZonePaletteInput | null;
+  /**
+   * emendas sem "travamento" (padrão ligado; `false` ou env `COMPOSE_JOINS=0` = montagem antiga): o plano que sai
+   * termina logo depois da última palavra e o que entra começa um instante antes da primeira (corte no ponto de
+   * menor volume, imagem e som juntos); a imagem nunca congela além de 1 quadro; a troca de plano é corte seco
+   * (nunca fusão sobre quadro congelado); e planos seguidos da mesma câmera alternam o enquadramento (punch-in)
+   */
+  joins?: boolean;
 }
 
 export interface ComposeWatermark {
@@ -621,7 +681,7 @@ export async function watermarkFilesFor(shots: Array<Pick<ComposeShot, 'id' | 'l
     if (SLIDE_LAYOUTS.includes(layout) && !slides?.get(s.id)) layout = 'presenter';
     const p = watermarkPlacementFor(layout, tone, wm.position);
     const key = `${p.surface}-${p.side}`;
-    if (!cache.has(key)) cache.set(key, await renderWatermarkToFile(path.join(dir, `watermark-${key}.png`), { brand: wm.brand, surface: p.surface, side: p.side, opacity: wm.opacity, width, height }));
+    if (!cache.has(key)) cache.set(key, (await skipIfUnrenderable(`marca d'água (${key})`, () => renderWatermarkToFile(path.join(dir, `watermark-${key}.png`), { brand: wm.brand, surface: p.surface, side: p.side, opacity: wm.opacity, width, height }))) ?? null);
     const file = cache.get(key);
     if (file) out.set(s.id, file);
   }
@@ -639,6 +699,8 @@ export interface ComposeSceneResult {
   timeline: ShotTimelineEntry[];
   /** janelas das camadas da cena (letreiro, pergunta a seguir), quando aplicadas */
   overlays: ComposeCommand['overlays'];
+  /** emendas: quanto saiu do começo e do fim de cada plano, de onde veio o fim da fala e o punch-in aplicado */
+  joins: Array<{ id: string; headTrim: number; tailTrim: number; source: TightenResult['source']; punch: number }>;
   /** volume antes/depois da normalização (A15) */
   loudness?: LoudnessResult;
 }
@@ -686,11 +748,15 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   const height = input.height ?? 1080;
   // o HeyGen entrega 25 fps; montar em 25 evita duplicar/descartar quadros
   const fps = input.fps ?? 25;
+  const joinsOn = input.joins !== false && process.env.COMPOSE_JOINS !== '0';
   const shots: PlannedShot[] = [];
+  const joinInfo: ComposeSceneResult['joins'] = [];
   await mkdir(path.dirname(input.output), { recursive: true });
   const outDir = path.dirname(input.output);
   const marks = input.watermark ? await watermarkFilesFor(input.shots, input.slides, input.watermark, outDir, width, height) : null;
-  for (const s of input.shots) {
+  // enquadramento alternado: planos seguidos da mesma câmera (base, punch-in, base…)
+  const punches = joinsOn ? framingPunchPlan(input.shots.map((s) => ({ id: s.id, cameraId: s.cameraId, layout: s.layout, framing: s.framing, cameraMove: s.cameraMove, zone: input.clips.get(s.id)?.zone }))) : new Map<string, number>();
+  for (const [idx, s] of input.shots.entries()) {
     const clip = input.clips.get(s.id);
     const src = clip?.videoPath ?? clip?.audioPath;
     if (!clip || !src) throw new Error(`plano "${s.id}" sem clipe do apresentador nem áudio`);
@@ -698,13 +764,46 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
     if (clip.videoPath && !p.hasVideo) throw new Error(`clipe do plano "${s.id}" sem vídeo`);
     if (!p.hasVideo && !p.hasAudio) throw new Error(`mídia do plano "${s.id}" sem vídeo e sem áudio`);
     const full = p.videoDurationSeconds && p.audioDurationSeconds ? Math.max(p.videoDurationSeconds, p.audioDurationSeconds) : p.durationSeconds;
-    const start = Math.max(0, clip.startSeconds ?? 0);
+    let start = Math.max(0, clip.startSeconds ?? 0);
     // vídeo + áudio separado (cena em movimento): dura o maior entre a narração e o clipe; narração com respiro inicial
     const separate = clip.videoPath && clip.audioPath ? await ffprobe(clip.audioPath) : null;
     if (separate && !separate.hasAudio) throw new Error(`narração do plano "${s.id}" sem áudio`);
     const videoSeconds = separate ? Math.max(0.1, (p.videoDurationSeconds ?? p.durationSeconds) - start) : undefined;
     const cine = separate ? cinematicShotTiming(Math.max(0.1, separate.audioDurationSeconds ?? separate.durationSeconds), videoSeconds) : null;
-    const duration = clip.durationSeconds ?? (cine ? Math.max(0.1, cine.duration) : Math.max(0.1, full - start));
+    let duration = clip.durationSeconds ?? (cine ? Math.max(0.1, cine.duration) : Math.max(0.1, full - start));
+    // emendas: o apresentador do clipe (som do próprio clipe) tem o começo e o fim apertados na fala; a imagem não
+    // passa de 1 quadro além do que o clipe tem (se acabar antes, corta o som ali: o resto é silêncio)
+    let tight: TightenResult | undefined;
+    if (joinsOn && clip.videoPath && p.hasVideo && !clip.audioPath) {
+      const videoEnd = p.videoDurationSeconds ?? p.durationSeconds;
+      const head = start <= 1e-3;
+      const tail = clip.durationSeconds === undefined;
+      if ((head || tail) && p.hasAudio) {
+        const prevLine = input.shots[idx - 1]?.line;
+        const to = start + duration;
+        const ws = clip.words?.filter((w) => w.start >= start - 0.05 && w.start < to);
+        tight = await tightenFromFile(src, {
+          from: start, to, head, tail, fps, videoEnd,
+          lead: idx === 0 ? JOIN.sceneLead : joinPause(prevLine) * (1 - JOIN.tailShare),
+          tailPad: idx === input.shots.length - 1 ? JOIN.sceneTail : joinPause(s.line) * JOIN.tailShare,
+          ...(ws?.length ? { firstWord: ws[0]!.start, lastWord: ws[ws.length - 1]!.end } : {}),
+        });
+        if (tight.source !== 'none') {
+          start = tight.start;
+          duration = tight.end - tight.start;
+        }
+      }
+      duration = Math.min(duration, Math.max(0.1, videoEnd - start + 1 / fps));
+    }
+    const headTrim = tight && tight.source !== 'none' ? tight.headTrim : 0;
+    const punch = punches.get(s.id) ?? 1;
+    joinInfo.push({ id: s.id, headTrim, tailTrim: tight && tight.source !== 'none' ? tight.tailTrim : 0, source: tight?.source ?? 'none', punch });
+    // com o começo apertado, as palavras (pílulas e painel) chegam antes no plano
+    const shiftWords = (ws?: Array<{ text: string; start: number }>) => (ws && headTrim > 0 ? ws.map((w) => ({ ...w, start: w.start - headTrim })) : ws);
+    const panelIn = input.panels?.get(s.id);
+    const chipsIn = input.chips?.get(s.id);
+    const focusX = clip.focusX !== undefined && Math.abs(clip.focusX - 0.5) > 1e-6 ? clip.focusX : punch > 1 ? zoneFocusX(clip.zone) : undefined;
+    const videoLeft = clip.videoPath && p.hasVideo ? Math.max(0.1, (p.videoDurationSeconds ?? p.durationSeconds) - start) : undefined;
     shots.push({
       id: s.id,
       layout: s.layout ?? 'presenter',
@@ -713,17 +812,34 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
       move: s.cameraMove ?? 'static',
       transition: s.transitionIn ?? 'cut',
       duration,
+      ...(punch > 1 ? { punch } : {}),
       clip: {
         path: src, width: p.width, height: p.height, hasAudio: p.hasAudio, hasVideo: !!clip.videoPath && p.hasVideo, start,
-        ...(clip.focusX !== undefined && Math.abs(clip.focusX - 0.5) > 1e-6 ? { focusX: clip.focusX } : {}),
-        ...(separate ? { audioPath: clip.audioPath, videoSeconds, audioDelay: clip.durationSeconds === undefined ? cine!.leadIn : 0 } : {}),
+        ...(focusX !== undefined && Math.abs(focusX - 0.5) > 1e-6 ? { focusX } : {}),
+        ...(separate ? { audioPath: clip.audioPath, videoSeconds, audioDelay: clip.durationSeconds === undefined ? cine!.leadIn : 0 } : joinsOn && videoLeft !== undefined ? { videoSeconds: videoLeft } : {}),
       },
       slidePath: input.slides?.get(s.id),
       captionPath: input.captions?.get(s.id),
       ...(marks?.get(s.id) ? { watermarkPath: marks.get(s.id) } : {}),
-      ...(s.layout === 'presenter_panel' && input.panels?.get(s.id) ? { panelStates: panelStatesFor(input.panels.get(s.id)!.states, panelRevealTimes(panelBullets(s.slide), input.panels.get(s.id)!.words, duration)) } : {}),
-      ...(s.layout === 'presenter_chips' && input.chips?.get(s.id) ? { chips: plannedChipsFor(input.chips.get(s.id)!.graphics, chipsBullets(s.slide), input.chips.get(s.id)!.words, duration, fps) } : {}),
+      ...(s.layout === 'presenter_panel' && panelIn ? { panelStates: panelStatesFor(panelIn.states, panelRevealTimes(panelBullets(s.slide), shiftWords(panelIn.words), duration)) } : {}),
+      ...(s.layout === 'presenter_chips' && chipsIn ? { chips: plannedChipsFor(chipsIn.graphics, chipsBullets(s.slide), shiftWords(chipsIn.words), duration, fps) } : {}),
     });
+  }
+  if (joinsOn) {
+    // troca de plano = corte seco: a fusão (xfade) só existia sobre o último quadro congelado do plano que sai
+    const clean = cleanTransitions(shots.map((x) => ({ layout: x.layout, transition: x.transition, hasVideo: x.clip.hasVideo !== false && !x.clip.audioPath })));
+    clean.forEach((t, i) => { if (t !== undefined) shots[i] = { ...shots[i]!, transitionSeconds: t }; });
+  }
+  // fusões entre planos do apresentador: com a pose muito diferente nos dois lados, a fusão longa mostra
+  // "braços fantasma" — fica curta ou vira corte seco (o áudio segue emendado com micro-fades)
+  for (let i = 1; i < shots.length && !joinsOn; i++) {
+    const cur = shots[i]!;
+    const prev = shots[i - 1]!;
+    if (!TRANSITION_SPEC[cur.transition]?.xfade || cur.transition === 'whip' || cur.transition === 'dip_to_color') continue;
+    if (cur.clip.hasVideo === false || prev.clip.hasVideo === false || cur.clip.audioPath || prev.clip.audioPath) continue;
+    const diff = await poseDifference(prev.clip.path, (prev.clip.start ?? 0) + Math.max(0, prev.duration - 0.06), cur.clip.path, cur.clip.start ?? 0);
+    const t = crossfadeForPose(diff);
+    if (t !== null) shots[i] = { ...cur, transitionSeconds: t };
   }
   // camadas da cena: pergunta na parede livre do ÚLTIMO plano; letreiro no canto inferior esquerdo, longe da marca d'água
   const lastShot = input.shots[input.shots.length - 1]!;
@@ -731,11 +847,16 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   // último plano com véu e pílulas: a pergunta entra abaixo delas, dentro do véu (modelo aprovado)
   const lastChips = lastShot.layout === 'presenter_chips' ? input.chips?.get(lastShot.id)?.graphics : undefined;
   const below = lastChips?.contentBottom ?? null;
-  const teaser = input.teaser?.question?.trim() ? await renderTeaserSprite(path.join(outDir, 'teaser.png'), input.teaser.question, { width, height, zone: lastZone, below, palette: input.palette }) : undefined;
+  const teaser = input.teaser?.question?.trim() ? await skipIfUnrenderable('pergunta a seguir', () => renderTeaserSprite(path.join(outDir, 'teaser.png'), input.teaser!.question, { width, height, zone: lastZone, below, palette: input.palette })) : undefined;
   const lowerThird = input.lowerThird?.name?.trim()
-    ? await renderLowerThirdSprite(path.join(outDir, 'lower-third.png'), input.lowerThird, { width, height, watermarkSide: input.watermark ? (input.watermark.position === 'bottom-left' ? 'left' : 'right') : null, palette: input.palette })
+    ? await skipIfUnrenderable('letreiro com o nome', () => renderLowerThirdSprite(path.join(outDir, 'lower-third.png'), input.lowerThird!, { width, height, watermarkSide: input.watermark ? (input.watermark.position === 'bottom-left' ? 'left' : 'right') : null, palette: input.palette }))
     : undefined;
   const cmd = buildComposeCommand({ width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}) });
+  // DIAGNÓSTICO, só quando a variável de ambiente COMPOSE_DUMP=<arquivo.json> está definida (nunca em produção):
+  // grava o comando da montagem (entradas, filter_complex, duração, transições) para investigar imagem e som
+  // desencontrados. Não altera a montagem; sem a variável, não faz nada. Mantido de propósito: foi o que achou o
+  // desvio de relógio nas emendas (ver os testes de compose.test.ts).
+  if (process.env.COMPOSE_DUMP) await writeFile(process.env.COMPOSE_DUMP, JSON.stringify({ inputArgs: cmd.inputArgs, filterComplex: cmd.filterComplex, totalDuration: cmd.totalDuration, transitions: cmd.transitions }, null, 1));
   await runFfmpeg([
     ...cmd.inputArgs,
     '-filter_complex', cmd.filterComplex,
@@ -749,7 +870,7 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   // volume único (A15): a mesma voz sai no mesmo nível em todos os cursos, e a vinheta (−16 LUFS) emenda sem salto
   const loudness = input.loudnorm === false ? undefined : await normalizeLoudnessInPlace(input.output);
   const out = await ffprobe(input.output);
-  return { output: input.output, durationSeconds: out.durationSeconds, expectedDurationSeconds: cmd.totalDuration, layouts: cmd.layouts, overlaps: cmd.overlaps, transitions: cmd.transitions, timeline: cmd.timeline, overlays: cmd.overlays, ...(loudness ? { loudness } : {}) };
+  return { output: input.output, durationSeconds: out.durationSeconds, expectedDurationSeconds: cmd.totalDuration, layouts: cmd.layouts, overlaps: cmd.overlaps, transitions: cmd.transitions, timeline: cmd.timeline, overlays: cmd.overlays, joins: joinInfo, ...(loudness ? { loudness } : {}) };
 }
 
 /**
@@ -801,21 +922,27 @@ export async function renderShotGraphics(opts: {
       const label = opts.chipLabelFor ?? ((b: string) => (/\*\*([^*]+?)\*\*/.exec(b)?.[1] ?? b.replace(/\*\*/g, '')).split(/\s+/).slice(0, 4).join(' '));
       const iconFor = opts.panelIconFor ?? ((_b: string, e?: string | null) => e ?? 'check');
       const spec = { title: s.slide.title ?? '', chips: bullets.map(label), icons: bullets.map((b, i) => iconFor(b, (s.slide as { icons?: Array<string | null> }).icons?.[i] ?? null)), eyebrow: (s.slide as { eyebrow?: string }).eyebrow?.trim() || opts.panelEyebrow };
-      chips.set(s.id, await renderChipsGraphics(opts.outDir, safe, spec, { width: W, height: H, fps: opts.fps ?? 25, zone: opts.zones?.get(s.id), palette: opts.palette }));
+      const g = await skipIfUnrenderable(`pílulas do plano ${s.id}`, () => renderChipsGraphics(opts.outDir, safe, spec, { width: W, height: H, fps: opts.fps ?? 25, zone: opts.zones?.get(s.id), palette: opts.palette }));
+      if (g) chips.set(s.id, g);
     } else if (layout === 'presenter_panel' && s.slide) {
       const spec = panelSpecFromSlide(s.slide, opts.panelIconFor ?? ((_b, e) => e ?? 'check'), opts.panelEyebrow);
-      panels.set(s.id, await renderPanelStatesToFiles(opts.outDir, safe, spec, { width: W, height: H }));
+      const g = await skipIfUnrenderable(`painel do plano ${s.id}`, () => renderPanelStatesToFiles(opts.outDir, safe, spec, { width: W, height: H }));
+      if (g) panels.set(s.id, g);
     } else if (layout === 'card' && s.slide) {
       // cartão de marca: claro/marinho alternando por cartão na cena quando a variante não é pedida
-      slides.set(s.id, await renderBrandCardToFile(path.join(opts.outDir, `card-${safe}.png`), s.slide, { ...size!, brand: opts.brand, index: cardIndex++, ...(opts.cardWatermark !== undefined ? { watermark: opts.cardWatermark } : {}) }));
+      const index = cardIndex++;
+      const g = await skipIfUnrenderable(`cartão do plano ${s.id}`, () => renderBrandCardToFile(path.join(opts.outDir, `card-${safe}.png`), s.slide!, { ...size!, brand: opts.brand, index, ...(opts.cardWatermark !== undefined ? { watermark: opts.cardWatermark } : {}) }));
+      if (g) slides.set(s.id, g);
     } else if (size && s.slide) {
       const imageDataUri = s.slide.imageAssetId && opts.loadImage ? await opts.loadImage(s.slide.imageAssetId) : undefined;
-      slides.set(s.id, await renderSlideToFile(path.join(opts.outDir, `slide-${safe}.png`), s.slide, { ...size, accent: opts.accent, imageDataUri }));
+      const g = await skipIfUnrenderable(`slide do plano ${s.id}`, () => renderSlideToFile(path.join(opts.outDir, `slide-${safe}.png`), s.slide!, { ...size, accent: opts.accent, imageDataUri }));
+      if (g) slides.set(s.id, g);
     }
     // cena em movimento: letreiro só com caption explícito (não usa título de slide)
     const text = layout === 'cinematic' ? s.caption : (s.caption ?? s.slide?.title);
     if ((layout === 'lower_third' || layout === 'cinematic') && text) {
-      captions.set(s.id, await renderCaptionToFile(path.join(opts.outDir, `caption-${safe}.png`), text, { width: W, height: H, accent: opts.accent }));
+      const g = await skipIfUnrenderable(`letreiro do plano ${s.id}`, () => renderCaptionToFile(path.join(opts.outDir, `caption-${safe}.png`), text, { width: W, height: H, accent: opts.accent }));
+      if (g) captions.set(s.id, g);
     }
   }
   return { slides, captions, panels, chips };

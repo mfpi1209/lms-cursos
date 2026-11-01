@@ -689,8 +689,23 @@ export const DirectionStyleSchema = z.object({
 });
 export type DirectionStyle = z.infer<typeof DirectionStyleSchema>;
 
-export function directionNarration(d: SceneDirection): string {
+export function directionNarration(d: Pick<SceneDirection, 'shots'>): string {
   return d.shots.map((s) => s.line.trim()).join(' ');
+}
+
+/**
+ * Cena com a fala igual à soma dos planos (a direção é a fonte). Usado quando
+ * o autor edita os PLANOS de uma cena cuja fala batia com eles: a fala
+ * acompanha, e o orçamento não recusa a cena por "direção desatualizada".
+ * Devolve o mesmo nó quando não há planos ou a fala já bate (ignora espaços).
+ */
+export function syncNarrationFromShots<T extends { narration?: string | null; direction?: { shots: ReadonlyArray<{ line: string }> } | null }>(node: T): T {
+  const shots = node.direction?.shots;
+  if (!shots?.length) return node;
+  const joined = shots.map((s) => s.line.trim()).join(' ');
+  const squash = (t: string) => t.replace(/\s+/g, ' ').trim();
+  if (squash(node.narration ?? '') === squash(joined)) return node;
+  return { ...node, narration: joined };
 }
 
 /* ------------------------------------------------------------------ */

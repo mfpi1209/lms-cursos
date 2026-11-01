@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { rasterizeSvg } from './raster';
 import { clampText, loadSlideFonts } from './slides';
 import { iconNode } from './panel';
 
@@ -236,8 +236,8 @@ export function teaserWindow(total: number): { from: number; to: number } {
 
 async function render(tree: Node, width: number, height: number): Promise<{ png: Uint8Array; pixels: Uint8Array; width: number; height: number }> {
   const svg = await satori(tree as never, { width, height, fonts: loadSlideFonts() });
-  const r = new Resvg(svg, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render();
-  return { png: new Uint8Array(r.asPng()), pixels: new Uint8Array(r.pixels), width: r.width, height: r.height };
+  const r = await rasterizeSvg(svg, { pixels: true });
+  return { png: r.png, pixels: r.pixels!, width: r.width, height: r.height };
 }
 
 /** Caixa dos pixels com alfa acima de `threshold` (null = vazio). */
@@ -321,13 +321,22 @@ function chipNode(label: string, icon: string, o: { k: number; scale?: number; r
   const px = (n: number) => Math.round(n * k);
   const size = o.fontSize ?? chipFontSize(label, o.maxWidth, k);
   const halo = o.halo ?? 0;
-  const shadow = o.shadow === false ? 'none' : `0 ${px(10)}px ${px(30)}px rgba(0,0,0,0.25)`;
+  const opacity = o.opacity ?? 1;
+  const rotate = o.rotate ?? 0;
+  // O resvg 2.6.2 dá pânico nativo (derruba o processo) com sombra desfocada + giro + opacidade < 1 numa
+  // pílula larga (o ícone vira <image clip-path>): ver `raster.ts`. Nos quadros do pop (giro e opacidade
+  // parcial) a sombra fica de fora: dura 2-3 quadros e a 30-60% de opacidade quase não aparece.
+  const popping = rotate !== 0 && opacity < 1;
+  const shadow = o.shadow === false || popping ? undefined : `0 ${px(10)}px ${px(30)}px rgba(0,0,0,0.25)`;
+  // sem sombra o `boxShadow` é omitido: o satori transforma `'none'` em filtro com NaN
+  const haloShadow = halo > 0 ? `0 0 0 ${px(6)}px rgba(${ar},${ag},${ab},${(0.35 + 0.25 * halo).toFixed(3)}), 0 0 ${px(22)}px ${px(4)}px rgba(${ar},${ag},${ab},${(0.3 * halo).toFixed(3)})` : undefined;
+  const boxShadow = [haloShadow, shadow].filter(Boolean).join(', ');
   return h('div', {
     display: 'flex', flexDirection: 'row', alignItems: 'center', height: px(ZONE_GEOMETRY.chipHeight), maxWidth: o.maxWidth,
     padding: `0 ${px(26)}px 0 ${px(14)}px`, borderRadius: 999, background: '#FFFFFF',
-    boxShadow: halo > 0 ? `0 0 0 ${px(6)}px rgba(${ar},${ag},${ab},${(0.35 + 0.25 * halo).toFixed(3)}), 0 0 ${px(22)}px ${px(4)}px rgba(${ar},${ag},${ab},${(0.3 * halo).toFixed(3)}), ${shadow}` : shadow,
-    opacity: o.opacity ?? 1,
-    transform: `scale(${o.scale ?? 1}) rotate(${o.rotate ?? 0}deg)`,
+    ...(boxShadow ? { boxShadow } : {}),
+    opacity,
+    transform: `scale(${o.scale ?? 1}) rotate(${rotate}deg)`,
   },
   h('div', { display: 'flex', width: px(48), height: px(48), borderRadius: 999, background: col.accent, alignItems: 'center', justifyContent: 'center', marginRight: px(14), flexShrink: 0 }, iconNode(icon, px(26), col.onAccent)),
   h('div', { display: 'flex', fontSize: size, fontWeight: 700, color: col.chipText, whiteSpace: 'nowrap', letterSpacing: -0.2 * k }, label),
@@ -491,7 +500,7 @@ export async function renderTeaserSprite(file: string, question: string, o: { wi
     // satori soma padding e borda à largura: o cartão inteiro ocupa a coluna
     display: 'flex', width: col.width - px(30) * 2 - border * 2, padding: `${px(26)}px ${px(30)}px`, borderRadius: px(24),
     background: onShade ? (colors.onBase === '#FFFFFF' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.35)') : colors.panel, border: `${border}px solid ${colors.onBase === '#FFFFFF' ? 'rgba(255,255,255,0.16)' : 'rgba(29,30,76,0.18)'}`,
-    boxShadow: onShade ? 'none' : `0 ${px(18)}px ${px(36)}px rgba(15,16,48,0.30)`,
+    ...(onShade ? {} : { boxShadow: `0 ${px(18)}px ${px(36)}px rgba(15,16,48,0.30)` }),
   },
   h('div', { display: 'block', fontSize: size, lineHeight: 1.3, fontWeight: 500, color: colors.onBase },
     'Pergunta que vem a seguir: ',
@@ -503,7 +512,7 @@ export async function renderTeaserSprite(file: string, question: string, o: { wi
   const box = alphaBBox(r.pixels, r.width, r.height, onShade ? 8 : 200) ?? { x: sp, y: sp, w: col.width, h: px(160) };
   // recorta o sprite à altura do cartão + margem da sombra
   const sh = Math.min(ch, box.y + box.h + sp);
-  const cropped = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${sh}" viewBox="0 0 ${cw} ${sh}"><image href="data:image/png;base64,${Buffer.from(r.png).toString('base64')}" width="${cw}" height="${ch}"/></svg>`, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng();
+  const cropped = (await rasterizeSvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${sh}" viewBox="0 0 ${cw} ${sh}"><image href="data:image/png;base64,${Buffer.from(r.png).toString('base64')}" width="${cw}" height="${ch}"/></svg>`)).png;
   await writeFile(file, cropped);
   // abaixo das pílulas (sem passar da base segura) ou centrado em 47% da altura
   const maxTop = Math.round(H * ZONE_GEOMETRY.panelMaxBottom) - box.h;
@@ -550,7 +559,7 @@ export async function renderLowerThirdSprite(file: string, who: { name: string; 
   const box = alphaBBox(r.pixels, r.width, r.height, 200) ?? { x: sp, y: sp, w: px(420), h: px(84) };
   const sw = Math.min(cw, box.x + box.w + sp);
   const sh = Math.min(ch, box.y + box.h + sp);
-  const cropped = new Resvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${sw}" height="${sh}" viewBox="0 0 ${sw} ${sh}"><image href="data:image/png;base64,${Buffer.from(r.png).toString('base64')}" width="${cw}" height="${ch}"/></svg>`, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng();
+  const cropped = (await rasterizeSvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${sw}" height="${sh}" viewBox="0 0 ${sw} ${sh}"><image href="data:image/png;base64,${Buffer.from(r.png).toString('base64')}" width="${cw}" height="${ch}"/></svg>`)).png;
   await writeFile(file, cropped);
   const rect = lowerThirdRect({ width: W, height: H, w: box.w, h: box.h, watermarkSide: o.watermarkSide });
   return { path: file, x: rect.x - box.x, y: rect.y - box.y, w: sw, h: sh };

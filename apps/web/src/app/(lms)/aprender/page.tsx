@@ -6,7 +6,11 @@ import { ctaPrimary } from './_components/learner-ui';
 import { Catalog, type CatalogItem } from './_components/catalog';
 import { ExploreButton } from './_components/explore-button';
 import { loadLearnerCourses, type LearnerCourse } from './_lib/learner-courses';
-import { HERO_COURSE_IDS } from './_lib/short-titles';
+import { HERO_BANNER_COURSE_IDS } from './_lib/short-titles';
+import { HeroCarousel, type HeroSlide } from './_components/hero-carousel';
+import { formatLessonVideo, trailCheckFor, trailSlug } from '@lms/course-schema';
+import { getDb, recognition } from '@lms/db';
+import { buildSeriesCards, partLabel, seriesInfoFor, type SeriesCardData } from './_lib/series';
 
 export const metadata = { title: 'Explorar' };
 export const dynamic = 'force-dynamic';
@@ -26,14 +30,28 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
 
   // continuar: o curso em andamento mais recente
   const resume = [...courses].sort((a, b) => b.lastActivity - a.lastActivity).find((c) => c.started && !c.isDone);
-  // destaque: as três capas aprovadas (Feedback sem medo, Conviver no trabalho, Mensagem profissional), quando o aluno tem esses cursos
-  const fixed = HERO_COURSE_IDS.map((id) => courses.find((c) => c.enr.courseId === id && c.posterArt)).filter((c): c is LearnerCourse => !!c);
-  const collage = fixed.length === 3 ? fixed : courses.filter((c) => c.posterArt).slice(0, 3);
+  // destaque: os banners largos dos instrutores (carrossel), só dos cursos em que o aluno está matriculado
+  // trilha em série: um cartão por trilha (cursos continuam matriculados e concluídos como antes)
+  const badges = new Set((await recognition.listBadgesForUser(getDb(), viewer.user.id)).filter((b) => !b.revokedAt).map((b) => b.trailKey));
+  const seriesByTrail = buildSeriesCards(courses, trails, badges, (t) => !!trailCheckFor(t));
+  const series: Record<string, SeriesCardData> = Object.fromEntries(seriesByTrail);
+  const seenSeries = new Set<string>();
+  const slides: HeroSlide[] = HERO_BANNER_COURSE_IDS.flatMap((id) => {
+    const c = courses.find((x) => x.enr.courseId === id);
+    // no destaque, a série entra uma vez só (não um slide por parte)
+    const card = c?.trail ? series[c.trail] : undefined;
+    if (c && card) {
+      if (seenSeries.has(card.key)) return [];
+      seenSeries.add(card.key);
+      return [{ id, image: `/destaque/${id}.webp`, title: card.trail, ...(card.instructor ? { presenter: card.instructor } : {}), href: card.cta.href, cta: card.cta.label }];
+    }
+    return c ? [{ id, image: `/destaque/${id}.webp`, title: c.shortTitle, ...(c.tagline ? { tagline: c.tagline } : {}), ...(c.presenter ? { presenter: c.presenter } : {}), href: c.startHref, cta: c.started && !c.isDone ? 'Continuar' : c.isDone ? 'Rever o curso' : 'Começar' }] : [];
+  });
   const items: CatalogItem[] = courses.map((c) => ({ tile: c.tile, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started }));
 
   return (
     <div className="lms-editorial space-y-8 sm:space-y-10">
-      <section className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:gap-8 lg:gap-12" aria-labelledby="explore-title">
+      <section className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.4fr)] lg:gap-10" aria-labelledby="explore-title">
         <div className="space-y-3 md:space-y-4">
           {firstName && <p className="text-[15px] font-medium text-fg-muted">Olá, {firstName}.</p>}
           {/* com retomada, o celular mostra um título compacto; o computador mantém o título grande (um só h1: lê-se o que se vê) */}
@@ -54,12 +72,17 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
             <ExploreButton />
           </div>
         </div>
-        {collage.length > 0 && <Collage items={collage} />}
+        {/* celular com curso em andamento: a retomada vem primeiro (o destaque fica para o computador) */}
+        {slides.length > 0 && (
+          <div className={cn(resume && 'max-md:hidden')}>
+            <HeroCarousel slides={slides} />
+          </div>
+        )}
       </section>
 
       {resume && <ContinueCard c={resume} />}
 
-      <Catalog items={items} trails={trails} {...(q ? { query: q } : {})} />
+      <Catalog items={items} series={series} trails={trails.map((name) => ({ name, slug: trailSlug(name) }))} {...(q ? { query: q } : {})} />
 
       {courses.length === 0 && (
         <div className="rounded-[20px] border border-line bg-surface p-6 sm:p-8" data-testid="enrollment-empty">
@@ -72,37 +95,14 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
 }
 
 /**
- * Três capas aprovadas em leque, inteiras (3:4, com o título da própria arte), bordas claras e sombra suave.
- * Só no computador: no celular a retomada e o catálogo vêm primeiro.
- */
-function Collage({ items }: { items: LearnerCourse[] }) {
-  const tilt = ['-rotate-[4deg] translate-y-3', 'z-10 rotate-[1.5deg] -translate-y-1 scale-[1.06]', '-rotate-[1deg] translate-y-4'];
-  return (
-    <div className="relative mx-auto hidden w-full max-w-[700px] grid-cols-3 items-center gap-0 px-2 py-2 md:grid" data-testid="explore-collage">
-      {items.map((c, i) => (
-        <Link
-          key={c.enr.id}
-          href={c.startHref}
-          aria-label={`${c.shortTitle}${c.shortTitle !== c.enr.courseTitle ? ` (${c.enr.courseTitle})` : ''}${c.presenter ? `, com ${c.presenter}` : ''}. ${c.cta}.`}
-          className={cn(
-            'relative -mx-1 block aspect-[3/4] overflow-hidden rounded-[12px] border-[4px] border-white bg-[#1d1e4c] shadow-[0_22px_45px_-24px_rgba(29,30,76,0.6)] transition-transform duration-300 hover:z-20 hover:rotate-0 focus-visible:z-20 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent motion-reduce:transition-none',
-            tilt[i],
-          )}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={c.posterArt ?? c.posterThumb} alt="" className="h-full w-full object-cover object-top" />
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-/**
  * "Continuar assistindo": a aula em andamento (o player retoma do ponto registrado). Andamento em
  * aulas concluídas, sem inventar porcentagem de reprodução. Um único controle: o botão "Continuar".
  */
 function ContinueCard({ c }: { c: LearnerCourse }) {
-  const lessonLine = c.nextLessonIndex !== undefined && c.nextLessonTitle ? `Aula ${c.nextLessonIndex + 1} de ${c.totalLessons} · ${c.nextLessonTitle}` : null;
+  const lessonVideo = c.nextLessonVideo ? formatLessonVideo(c.nextLessonVideo) : null;
+  // curso de uma trilha em série: diz de qual trilha e qual parte (o título continua sendo o do curso)
+  const part = seriesInfoFor(c);
+  const lessonLine = c.nextLessonIndex !== undefined && c.nextLessonTitle ? `${part ? `${part.trail} · ${partLabel(part.part, part.total)} · ` : ''}Aula ${c.nextLessonIndex + 1} de ${c.totalLessons} · ${c.nextLessonTitle}${lessonVideo ? ` · ${lessonVideo} de vídeo` : ''}` : null;
   return (
     <section aria-labelledby="resume-title" className="rounded-[20px] border border-line bg-surface p-3 shadow-[0_18px_40px_-30px_rgba(29,30,76,0.45)] sm:p-4" data-testid="continue-bar">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 sm:flex-nowrap sm:gap-6">

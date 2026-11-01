@@ -317,9 +317,9 @@ export type WatermarkBranding = z.infer<typeof WatermarkBrandingSchema>;
  */
 export const BrandingSchema = z.object({
   theme: z.enum(['classic', 'immersive']).default('immersive'),
-  /** marca curta no cabeçalho (ex.: "pode entrar") — sem ela, usa o título do curso */
+  /** marca curta do curso (ex.: "pode entrar"); o cabeçalho do player não a usa: mostra o logo da plataforma e o nome curto do catálogo */
   wordmark: z.string().max(40).optional(),
-  /** texto central do cabeçalho (ex.: "Sua próxima entrevista") */
+  /** texto da ficha do curso (ex.: "Sua próxima entrevista"); não aparece no cabeçalho do player */
   subtitle: z.string().max(60).optional(),
   /** frase do rodapé (ex.: "Uma conversa. Vários caminhos. No seu ritmo.") */
   tagline: z.string().max(120).optional(),
@@ -396,4 +396,14 @@ export function findLesson(doc: CourseDocument, lessonId: string): { module: Mod
 
 export function allLessons(doc: CourseDocument): Lesson[] {
   return doc.modules.flatMap((m) => m.lessons);
+}
+
+/**
+ * Aulas OBRIGATÓRIAS para concluir o curso nesta matrícula: as de `completion.requiredLessonIds` (ou todas, se vazio),
+ * menos as `optionalLessonIds` da matrícula (aulas acrescentadas depois de a pessoa concluir: conteúdo novo, opcional).
+ */
+export function requiredLessonIdsFor(doc: CourseDocument, optionalLessonIds: Iterable<string> = []): string[] {
+  const optional = new Set(optionalLessonIds);
+  const base = doc.completion.requiredLessonIds.length > 0 ? doc.completion.requiredLessonIds : allLessons(doc).map((l) => l.id);
+  return base.filter((id) => !optional.has(id));
 }

@@ -45,8 +45,24 @@ export const MediaRefSchema = z.object({
   adjust: z
     .object({
       drop: z.array(z.string().max(40)).max(12).default([]),
-      cut: z.record(z.string().max(40), z.object({ first: z.number().int().min(0).max(20).default(0), last: z.number().int().min(0).max(20).default(0) })).default({}),
+      cut: z
+        .record(
+          z.string().max(40),
+          z.object({
+            first: z.number().int().min(0).max(20).default(0),
+            last: z.number().int().min(0).max(20).default(0),
+            /** palavras aparadas no começo da 1ª frase que sobra (ex.: "Seja qual for a sua escolha,") */
+            lead: z.number().int().min(0).max(40).optional(),
+            /** trechos tirados do meio do plano (índices de palavra da gravação, inclusivos) */
+            skip: z.array(z.tuple([z.number().int().min(0).max(2000), z.number().int().min(0).max(2000)])).max(10).optional(),
+            /** texto normalizado das palavras de cada `skip` ('' = desconhecido): ao regravar, o trecho só volta se as palavras ainda baterem */
+            skipText: z.array(z.string().max(400)).max(10).optional(),
+          }),
+        )
+        .default({}),
       teaser: z.string().max(300).nullable().optional(),
+      /** falas dos planos da gravação ajustada (plano → fala): ao regravar, os cortes só voltam onde a fala não mudou */
+      baseLines: z.record(z.string().max(40), z.string().max(2000)).optional(),
     })
     .optional(),
 });
@@ -114,6 +130,13 @@ export const ChoiceOptionSchema = z.object({
     .object({
       text: z.string().trim().min(1).max(400),
       media: MediaRefSchema.optional(),
+      /**
+       * reação em vídeo desligada (revisão editorial sem regravar): o player não toca o vídeo e segue para o
+       * retorno escrito; a produção não a grava de novo. O vídeo antigo fica guardado em `media`.
+       */
+      disabled: z.boolean().optional(),
+      /** gesto desta reação (sobrepõe o padrão pela qualidade da opção; ex.: regravar uma reação com defeito de imagem) */
+      motionPrompt: z.string().trim().min(1).max(300).optional(),
     })
     .optional(),
 });
@@ -179,6 +202,11 @@ export const ReflectionNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('reflection'),
   prompt: RichTextDocumentSchema,
+  /**
+   * Ponte (opcional): uma frase que fecha o fio da aula e diz o que o aluno vai montar agora e para quê.
+   * Aparece no topo da atividade "Na prática", logo abaixo do título.
+   */
+  intro: z.string().max(300).optional(),
   /** Reflexão registra a resposta; não presume avaliação automática. */
   minLength: z.number().int().min(0).max(2000).default(20),
   maxLength: z.number().int().min(10).max(5000).default(1500),
@@ -189,6 +217,41 @@ export const ReflectionNodeSchema = z.object({
    * enviada pela mesma intenção `reflect` e vira o texto da resposta.
    */
   scaffold: ReflectionScaffoldSchema.optional(),
+});
+
+/** Estado de uma missão para o aluno: sem registro ainda, "Vou fazer depois" (pendente) ou "Já experimentei" (feita). */
+export const MISSION_STATUSES = ['later', 'done'] as const;
+export type MissionStatus = (typeof MISSION_STATUSES)[number];
+export const MISSION_NOTE_MAX = 500;
+export const MISSION_LABELS = { moment: 'Leve para a vida real', done: 'Já experimentei', later: 'Vou fazer depois', note: 'O que você percebeu?' } as const;
+
+/**
+ * Missão "Leve para a vida real": aplicar algo FORA da plataforma. É o terceiro momento da aula, depois de "Você decide"
+ * (as decisões dentro da aula) e antes de "Como foi?" (o registro curto do resultado ou da dificuldade).
+ *
+ * Por que um tipo próprio e não uma `reflection`: a reflexão exige texto (minLength, molde, "Na prática") e entra na
+ * conta do Selo DNA Work; a missão NUNCA bloqueia a aula, o curso nem o selo. O aluno termina a aula mesmo quando a ação
+ * depende de outro momento ("Vou fazer depois") e volta depois para marcar "Já experimentei" e, se quiser, contar
+ * "O que você percebeu?" (até `MISSION_NOTE_MAX` caracteres, editável).
+ *
+ * Os campos de texto aceitam vazio no rascunho (o estúdio salva o que está em andamento); o compilador bloqueia a
+ * publicação sem título, intro, ação e alternativa (`MISSION_*`).
+ */
+export const MissionNodeSchema = z.object({
+  ...BaseNode,
+  type: z.literal('mission'),
+  /** por que vale a pena fazer isso (1 a 2 frases) */
+  intro: z.string().max(400).default(''),
+  /** a ação no mundo real, concreta ("Hoje, ofereça ajuda a um colega com uma frase pronta") */
+  action: z.string().max(800).default(''),
+  /** alternativa para quem ainda não trabalha ou não tem a situação à mão */
+  alternative: z.string().max(500).default(''),
+  /** dica curta (opcional) */
+  tip: z.string().max(300).optional(),
+  /** exemplo curto de como pode ser (opcional) */
+  example: z.string().max(400).optional(),
+  /** cena de composição ("Na prática") DESTA aula cuja frase montada pelo aluno aparece na missão, com botão Copiar */
+  draftFromNodeId: NodeIdSchema.optional(),
 });
 
 export const AssessmentOptionSchema = z.object({
@@ -223,8 +286,8 @@ export const AssessmentNodeSchema = z.object({
 export const RecapItemSchema = z.object({
   id: z.string().min(1).max(40),
   label: z.string().min(1).max(80),
-  kind: z.enum(['reflection', 'choice', 'checklist', 'text']),
-  /** cena de origem (reflection: texto do aluno; choice: rótulo da opção escolhida) */
+  kind: z.enum(['reflection', 'choice', 'mission', 'checklist', 'text']),
+  /** cena de origem (reflection: texto do aluno; choice: rótulo da opção escolhida; mission: a missão, com o estado e o que o aluno percebeu) */
   nodeId: z.string().max(80).optional(),
   /**
    * cenas alternativas da MESMA atividade (ex.: uma variante por perfil): o item
@@ -306,6 +369,7 @@ export const ExecutableNodeSchema = z.discriminatedUnion('type', [
   ChoiceNodeSchema,
   ConsequenceNodeSchema,
   ReflectionNodeSchema,
+  MissionNodeSchema,
   AssessmentNodeSchema,
   EndNodeSchema,
 ]);
@@ -316,6 +380,7 @@ export const AnyNodeSchema = z.discriminatedUnion('type', [
   ChoiceNodeSchema,
   ConsequenceNodeSchema,
   ReflectionNodeSchema,
+  MissionNodeSchema,
   AssessmentNodeSchema,
   EndNodeSchema,
   DialogueNodeSchema,
@@ -330,6 +395,7 @@ export type ContentNode = z.infer<typeof ContentNodeSchema>;
 export type ChoiceNode = z.infer<typeof ChoiceNodeSchema>;
 export type ConsequenceNode = z.infer<typeof ConsequenceNodeSchema>;
 export type ReflectionNode = z.infer<typeof ReflectionNodeSchema>;
+export type MissionNode = z.infer<typeof MissionNodeSchema>;
 export type AssessmentNode = z.infer<typeof AssessmentNodeSchema>;
 export type EndNode = z.infer<typeof EndNodeSchema>;
 export type ExecutableNode = z.infer<typeof ExecutableNodeSchema>;
@@ -337,7 +403,7 @@ export type AnyNode = z.infer<typeof AnyNodeSchema>;
 export type NodeType = AnyNode['type'];
 
 /** Tipos com executor + renderer registrados no incremento atual. */
-export const EXECUTABLE_NODE_TYPES = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'assessment', 'end'] as const;
+export const EXECUTABLE_NODE_TYPES = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'assessment', 'end'] as const;
 export type ExecutableNodeType = (typeof EXECUTABLE_NODE_TYPES)[number];
 export const PLANNED_NODE_TYPES = ['dialogue', 'task', 'evidence', 'resource_simulation', 'ai_feedback'] as const;
 
@@ -345,7 +411,10 @@ export function isExecutableNodeType(t: string): t is ExecutableNodeType {
   return (EXECUTABLE_NODE_TYPES as readonly string[]).includes(t);
 }
 
-/** Nós que esperam uma resposta do aluno antes de avançar. */
+/**
+ * Nós que esperam uma resposta do aluno antes de avançar (e ligam a um objetivo). A missão responde, mas nenhuma das
+ * duas respostas ("Vou fazer depois" / "Já experimentei") é cobrada: não entra aqui.
+ */
 export function nodeRequiresAnswer(type: NodeType): boolean {
   return type === 'choice' || type === 'reflection' || type === 'assessment';
 }
@@ -356,6 +425,7 @@ export const NODE_TYPE_LABELS: Record<NodeType, string> = {
   choice: 'Decisão',
   consequence: 'Consequência',
   reflection: 'Reflexão',
+  mission: 'Leve para a vida real',
   assessment: 'Avaliação',
   end: 'Encerramento',
   dialogue: 'Conversa (em breve)',

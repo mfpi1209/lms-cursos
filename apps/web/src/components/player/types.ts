@@ -1,4 +1,5 @@
 import type { Branding, BumperPlayOn, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
+import type { BrandMark } from '@/config/brand';
 import type { AttemptState, Intent, NavigationTarget, ProgressSummary, AssessmentOutcome } from '@lms/course-engine';
 
 /** Resultado de um passo do motor, igual para LMS (persistido) e prévia (sem persistência). */
@@ -13,6 +14,8 @@ export interface PlayerStepResult {
   progress: ProgressSummary;
   lessonCompleted: boolean;
   courseCompleted: boolean;
+  /** só na missão "Leve para a vida real": o que o servidor deixou valendo (não rebaixa "Já experimentei") */
+  mission?: { status: 'later' | 'done'; note: string | null };
 }
 
 export interface PlayerStart {
@@ -57,6 +60,22 @@ export interface RecapNodeRef {
   title?: string;
   type: string;
   options?: Array<{ id: string; label: string }>;
+  /** missão "Leve para a vida real": o que fazer (o roteiro mostra ao lado do estado) */
+  mission?: { intro?: string; action?: string; alternative?: string };
+}
+
+/** Posição do curso numa trilha em série e para onde ir ao concluí-lo. */
+export interface PlatformSeries {
+  trail: string;
+  /** página da trilha (as partes e o selo) */
+  trailHref: string;
+  /** esta parte (Parte 1 = 1) e quantas a série tem */
+  part: number;
+  total: number;
+  /** as outras partes já estão concluídas: terminar esta fecha a trilha inteira */
+  othersDone: boolean;
+  /** a parte a abrir depois desta (a seguinte, ou a primeira que falta); a aula certa da matrícula dela. Sem ela, não há para onde ir. */
+  next?: { n: number; title: string; href: string; started: boolean };
 }
 
 /**
@@ -68,7 +87,11 @@ export interface PlatformContext {
   /** 'classic' só quando pedido explicitamente (?player=classic) */
   theme: 'immersive' | 'classic';
   branding: Partial<Branding>;
+  /** logo da marca do workspace (o mesmo do catálogo e da página do curso); sem ele, o cabeçalho mostra o nome do curso em texto */
+  brandMark?: BrandMark;
   courseTitle: string;
+  /** nome curto do curso, o mesmo do catálogo (`shortTitleFor`): centro do cabeçalho do player; sem ele, vale `courseTitle` */
+  courseShortTitle?: string;
   /** imagem parada do apresentador (fundo do palco sem vídeo) */
   posterUrl?: string;
   /**
@@ -87,8 +110,15 @@ export interface PlatformContext {
   courseGoals?: string[];
   /** frase do curso para o aluno (`learnerSummary`) */
   courseSummary?: string;
-  /** nome do selo de competência que o curso dá (o título curto do curso) */
-  credentialName?: string;
+  /** conquista do curso (só dentro da plataforma): "Curso concluído · <título curto>" */
+  achievement?: string;
+  /** trilha do curso e o caminho até o Selo DNA Work (o reconhecimento para o currículo) */
+  courseTrail?: { name: string; href: string; done: number; total: number; badge: boolean; /** este curso já conta como concluído na trilha (ao abrir a página) */ currentDone?: boolean; /** o que falta para o selo, numa frase (fim da última parte) */ sealNote?: string; /** a trilha é uma série: conta "partes" */ series?: boolean };
+  /**
+   * Este curso é uma parte de uma trilha em série (`TRAIL_SERIES`): "{trilha} · Parte N de 3" no cabeçalho e, no fim do curso,
+   * o caminho para a próxima parte. Só apresentação: o curso, a matrícula e o selo seguem como são.
+   */
+  series?: PlatformSeries;
   /** matrícula (LMS): habilita as respostas do curso inteiro no roteiro */
   enrollmentId?: string;
   /** encerramento com roteiro do curso (de qualquer aula) e os nós que ele cita */

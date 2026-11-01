@@ -11,6 +11,7 @@ import { requireEnrollmentReader } from '@/server/learner';
  * {
  *   answers: Record<nodeId, { lessonId, kind: 'choice'|'reflection'|'assessment', optionIds?, text?, passed?, answeredAt }>,
  *   nodes:   Record<nodeId, { title, type, options?: { id, label }[] }>   // só os nós citados em `answers`
+ *   missions: Record<nodeId, { lessonId, status: 'later'|'done', note: string|null, revision, updatedAt }>   // missões "Leve para a vida real"
  * }
  *
  * Uso no player: `resolveRecap(graph, endNode, state, { answers, lookupNode: (id) => nodes[id] })`
@@ -24,6 +25,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ enrollmentId: 
     const { enrollmentId } = await ctx.params;
     const enr = await requireEnrollmentReader(viewer, enrollmentId);
     const answers = await learning.courseAnswers(getDb(), { enrollmentId });
-    return { answers, nodes: learning.answeredNodeSummaries(enr.document, answers) };
+    const missions = await learning.missionRecords(getDb(), { enrollmentId });
+    return { answers, nodes: learning.answeredNodeSummaries(enr.document, answers), missions };
   });
 }

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import { assembleScaffold, scaffoldIssues, scaffoldPlaceholders, SCAFFOLD_MAX_OPTIONS, type ReflectionScaffold, type ScaffoldSlot } from '@lms/course-schema';
+import { assembleScaffold, scaffoldGroupLabel, scaffoldIssues, scaffoldPlaceholders, SCAFFOLD_MAX_OPTIONS, type ReflectionScaffold, type ScaffoldSlot } from '@lms/course-schema';
 import { Button } from '@/components/ui/button';
 import { Checkbox, Input, Textarea } from '@/components/ui/input';
 
@@ -15,9 +15,9 @@ const NEW_SCAFFOLD: ReflectionScaffold = {
 };
 
 /**
- * Edição simples da composição guiada de uma reflexão ("Monte sua frase"):
- * molde com `{lacuna}`, e para cada lacuna o nome, as opções (uma por linha,
- * de 2 a 5) e se aceita "Outro…". Mostra a frase de exemplo e os problemas que
+ * Edição simples da atividade "Na prática" (reflexão com molde): molde com `{lacuna}`, e para cada
+ * lacuna o nome, a pergunta do grupo (opcional; o aluno lê acima das opções), as opções (uma por
+ * linha, de 2 a 5) e se aceita "Prefiro escrever". Mostra a frase de exemplo e os problemas que
  * bloqueiam a publicação (o compilador repete a mesma verificação).
  */
 export function ScaffoldFields({
@@ -78,6 +78,21 @@ export function ScaffoldFields({
               </Button>
             </div>
             <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+              Pergunta do grupo (opcional, o que a pessoa lê acima das opções)
+              <Input
+                className="min-h-10 text-sm"
+                maxLength={100}
+                value={slot.question ?? ''}
+                placeholder={`Sem pergunta: “${scaffoldGroupLabel({ ...slot, question: undefined }, idx + 1)}”`}
+                onChange={(e) => {
+                  const q = e.target.value;
+                  const { question: _drop, ...rest } = slot;
+                  onChange({ ...scaffold, slots: scaffold.slots.map((s, i) => (i === idx ? (q.trim() ? { ...rest, question: q } : rest) : s)) }, `scaffold.question.${idPrefix}.${idx}`);
+                }}
+                data-testid={`scaffold-question-${idx}`}
+              />
+            </label>
+            <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
               Opções (uma por linha, de 2 a {SCAFFOLD_MAX_OPTIONS})
               <Textarea
                 rows={Math.min(SCAFFOLD_MAX_OPTIONS, Math.max(2, slot.options.length))}
@@ -88,7 +103,7 @@ export function ScaffoldFields({
             </label>
             <label className="inline-flex min-h-10 items-center gap-2 text-sm text-fg">
               <Checkbox checked={slot.allowCustom} onChange={(e) => setSlot(idx, { allowCustom: e.target.checked })} />
-              Permitir “Outro…” (a pessoa escreve uma parte curta)
+              Permitir “Prefiro escrever” (a pessoa escreve uma parte curta)
             </label>
           </li>
         ))}

@@ -1,17 +1,20 @@
 import { and, asc, desc, eq, gte, inArray, ne, sql } from 'drizzle-orm';
-import { allLessons, findLesson, migrateCourseDocument, scalarType, variableScope, type AnyNode, type CourseDocument, type LessonGraph, type Scalar } from '@lms/course-schema';
+import { MISSION_NOTE_MAX, allLessons, findLesson, migrateCourseDocument, requiredLessonIdsFor, scalarType, variableScope, type AnyNode, type CourseDocument, type LessonGraph, type Scalar } from '@lms/course-schema';
 import {
   applyIntent,
   carriedForGraph,
   computeProgress,
   createInitialState,
+  editMission,
   EngineError,
+  mergeLessonMission,
   navigateBack,
   summarizeObjectives,
   type NavigationTarget,
   type AttemptState,
   type CourseAnswer,
   type Intent,
+  type MissionRecord,
   type StepResult,
 } from '@lms/course-engine';
 import type { Database, DbOrTx } from '../client';
@@ -49,8 +52,12 @@ export async function listEnrollmentsForUser(db: DbOrTx, userId: string) {
       status: s.enrollments.status,
       createdAt: s.enrollments.createdAt,
       completedAt: s.enrollments.completedAt,
+      /** aulas acrescentadas depois da conclusão: "conteúdo novo", não obrigatório (ver enrollments.optionalLessonIds) */
+      optionalLessonIds: s.enrollments.optionalLessonIds,
       courseId: s.courses.id,
       courseTitle: s.courses.title,
+      /** chave estável do curso (o id muda entre ambientes): base das trilhas em série */
+      courseSlug: s.courses.slug,
       courseTrail: s.courses.trail,
       coursePosterAssetId: s.courses.posterAssetId,
       versionNumber: s.courseVersions.versionNumber,
@@ -255,11 +262,13 @@ export interface LearnerEventResult {
   progress: ReturnType<typeof computeProgress>;
   lessonCompleted: boolean;
   courseCompleted: boolean;
+  /** só na intenção `mission`: o que ficou VALENDO no registro (o servidor não rebaixa "Já experimentei" para "Vou fazer depois") */
+  mission?: { status: 'later' | 'done'; note: string | null };
 }
 
-function courseIsComplete(doc: CourseDocument, completedLessonIds: Set<string>): boolean {
-  const required = doc.completion.requiredLessonIds.length > 0 ? doc.completion.requiredLessonIds : allLessons(doc).map((l) => l.id);
-  return required.every((id) => completedLessonIds.has(id));
+/** `optionalLessonIds`: aulas acrescentadas depois de a pessoa concluir (não entram na conta; ver `enrollments.optionalLessonIds`). */
+export function courseIsComplete(doc: CourseDocument, completedLessonIds: Set<string>, optionalLessonIds: Iterable<string> = []): boolean {
+  return requiredLessonIdsFor(doc, optionalLessonIds).every((id) => completedLessonIds.has(id));
 }
 
 /**
@@ -315,6 +324,14 @@ export async function applyLearnerEvent(db: Database, input: LearnerEventInput):
       );
     }
 
+    // missão "Leve para a vida real": o registro do aluno vive na matrícula (pode ser mudado depois da aula) e
+    // NUNCA bloqueia nada. Gravado na mesma transação do evento (mesmo eventId = mesmo resultado, sem reaplicar).
+    let missionResult: LearnerEventResult['mission'];
+    if (input.intent.kind === 'mission') {
+      const rec = await recordMissionFromLesson(tx, { enrollmentId: attempt.enrollmentId, userId: enr.enrollment.userId, lessonId: attempt.lessonId, nodeId: input.nodeId, status: input.intent.status, note: input.intent.note ?? null, now });
+      missionResult = { status: rec.status, note: rec.note };
+    }
+
     let courseCompleted = false;
     if (lessonCompleted) {
       await tx.insert(s.outboxEvents).values({ id: newId('obx'), type: 'lesson.completed', version: 1, payload: { enrollmentId: attempt.enrollmentId, attemptId: attempt.id, lessonId: attempt.lessonId } });
@@ -323,9 +340,9 @@ export async function applyLearnerEvent(db: Database, input: LearnerEventInput):
         .from(s.lessonAttempts)
         .where(and(eq(s.lessonAttempts.enrollmentId, attempt.enrollmentId), eq(s.lessonAttempts.status, 'completed')));
       const done = new Set([...completedAttempts.map((a) => a.lessonId), attempt.lessonId]);
-      if (enr.enrollment.status === 'active' && courseIsComplete(enr.document, done)) {
+      if (enr.enrollment.status === 'active' && courseIsComplete(enr.document, done, enr.enrollment.optionalLessonIds)) {
         courseCompleted = true;
-        await tx.update(s.enrollments).set({ status: 'completed', completedAt: now }).where(eq(s.enrollments.id, attempt.enrollmentId));
+        await tx.update(s.enrollments).set({ status: 'completed', completedAt: now, completedVersionNumber: enr.version.versionNumber }).where(eq(s.enrollments.id, attempt.enrollmentId));
         await tx.insert(s.outboxEvents).values({ id: newId('obx'), type: 'course.completed', version: 1, payload: { enrollmentId: attempt.enrollmentId, courseId: enr.course.id, userId: enr.enrollment.userId } });
       }
     }
@@ -342,6 +359,7 @@ export async function applyLearnerEvent(db: Database, input: LearnerEventInput):
       progress: computeProgress(found.lesson.graph, step.state),
       lessonCompleted,
       courseCompleted,
+      ...(missionResult ? { mission: missionResult } : {}),
     };
     await tx.insert(s.learnerEvents).values({
       id: newId('evt'),
@@ -551,3 +569,114 @@ export async function learnerStats(db: DbOrTx, enrollmentIds: string[], days = 7
     .where(and(inArray(s.lessonAttempts.enrollmentId, enrollmentIds), gte(s.learnerEvents.createdAt, since)));
   return { choices: row?.choices ?? 0, activeDays: dayRows.map((r) => r.day).sort() };
 }
+
+
+/* ------------------------------------------------------------------------ */
+/* Missão "Leve para a vida real"                                            */
+/* ------------------------------------------------------------------------ */
+
+export type MissionResponse = typeof s.missionResponses.$inferSelect;
+
+const toRecord = (r: MissionResponse): MissionRecord => ({ lessonId: r.lessonId, status: r.status, note: r.note, revision: r.revision, updatedAt: r.updatedAt.toISOString() });
+
+/**
+ * Registro vindo da AULA (intenção `mission` do player). Cria na primeira vez; quando já existe, nunca rebaixa
+ * ("Vou fazer depois" não desfaz "Já experimentei"; ver `mergeLessonMission`). Só grava versão nova se algo mudou.
+ */
+export async function recordMissionFromLesson(
+  tx: DbOrTx,
+  input: { enrollmentId: string; userId: string; lessonId: string; nodeId: string; status: 'later' | 'done'; note: string | null; now?: Date },
+): Promise<MissionResponse> {
+  const now = input.now ?? new Date();
+  const [prev] = await tx.select().from(s.missionResponses).where(and(eq(s.missionResponses.enrollmentId, input.enrollmentId), eq(s.missionResponses.nodeId, input.nodeId))).for('update').limit(1);
+  const next = mergeLessonMission(prev ? { status: prev.status, note: prev.note } : null, { status: input.status, note: input.note });
+  if (!prev) {
+    const id = newId('mis');
+    const [row] = await tx
+      .insert(s.missionResponses)
+      .values({ id, enrollmentId: input.enrollmentId, userId: input.userId, lessonId: input.lessonId, nodeId: input.nodeId, status: next.status, note: next.note, revision: 1, createdAt: now, updatedAt: now, doneAt: next.status === 'done' ? now : null })
+      .returning();
+    await tx.insert(s.missionResponseEvents).values({ id: newId('mie'), responseId: id, revision: 1, status: next.status, note: next.note, source: 'lesson', createdAt: now });
+    return row!;
+  }
+  if (prev.status === next.status && prev.note === next.note) return prev;
+  const revision = prev.revision + 1;
+  const [row] = await tx
+    .update(s.missionResponses)
+    .set({ status: next.status, note: next.note, revision, updatedAt: now, doneAt: next.status === 'done' ? (prev.doneAt ?? now) : null })
+    .where(eq(s.missionResponses.id, prev.id))
+    .returning();
+  await tx.insert(s.missionResponseEvents).values({ id: newId('mie'), responseId: prev.id, revision, status: next.status, note: next.note, source: 'lesson', createdAt: now });
+  return row!;
+}
+
+/**
+ * Registro editado FORA da aula ("Meu roteiro", "Missões para depois"). Exige que o aluno já tenha chegado à missão
+ * (há registro), a revisão que ele viu (`expectedRevision`: outra aba pode ter mudado) e só avança: "Vou fazer depois" →
+ * "Já experimentei", ou editar o texto. A missão precisa existir na versão da matrícula. Não toca a tentativa da aula,
+ * a matrícula nem o selo.
+ */
+export async function saveMissionResponse(
+  db: Database,
+  input: { enrollmentId: string; nodeId: string; status: 'later' | 'done'; note?: string | null; expectedRevision: number },
+): Promise<MissionResponse> {
+  return db.transaction(async (tx) => {
+    const enr = await getEnrollmentWithVersion(tx, input.enrollmentId);
+    if (!enr) throw new DomainError('NOT_FOUND', 'Matrícula não encontrada');
+    const found = allLessons(enr.document).find((l) => l.graph.nodes.some((n) => n.id === input.nodeId && n.type === 'mission'));
+    if (!found) throw new DomainError('NOT_FOUND', 'Esta missão não existe na versão do seu curso');
+    const [prev] = await tx.select().from(s.missionResponses).where(and(eq(s.missionResponses.enrollmentId, input.enrollmentId), eq(s.missionResponses.nodeId, input.nodeId))).for('update').limit(1);
+    if (!prev) throw new DomainError('CONFLICT', 'Chegue a esta missão na aula antes de registrar como foi.');
+    if (prev.revision !== input.expectedRevision) throw new DomainError('CONFLICT', 'Este registro mudou em outra aba. Recarregue para ver a versão atual.', { currentRevision: prev.revision, status: prev.status, note: prev.note });
+    const edit = editMission({ status: prev.status, note: prev.note }, { status: input.status, note: input.note });
+    if (!edit.ok) throw new DomainError('VALIDATION', edit.problem === 'NOTE_TOO_LONG' ? `Use no máximo ${MISSION_NOTE_MAX} caracteres.` : 'Uma missão já experimentada não volta para "Vou fazer depois".');
+    if (prev.status === edit.next.status && prev.note === edit.next.note) return prev;
+    const now = new Date();
+    const revision = prev.revision + 1;
+    const [row] = await tx
+      .update(s.missionResponses)
+      .set({ status: edit.next.status, note: edit.next.note, revision, updatedAt: now, doneAt: edit.next.status === 'done' ? (prev.doneAt ?? now) : null })
+      .where(eq(s.missionResponses.id, prev.id))
+      .returning();
+    await tx.insert(s.missionResponseEvents).values({ id: newId('mie'), responseId: prev.id, revision, status: edit.next.status, note: edit.next.note, source: 'course', createdAt: now });
+    return row!;
+  });
+}
+
+/** Registros de missão da matrícula (por cena), só as missões que ainda existem na versão fixada. */
+export async function missionRecords(db: DbOrTx, input: { enrollmentId: string }): Promise<Record<string, MissionRecord>> {
+  const enr = await getEnrollmentWithVersion(db, input.enrollmentId);
+  if (!enr) throw new DomainError('NOT_FOUND', 'Matrícula não encontrada');
+  const alive = new Set(allLessons(enr.document).flatMap((l) => l.graph.nodes.filter((n) => n.type === 'mission').map((n) => n.id)));
+  const rows = await db.select().from(s.missionResponses).where(eq(s.missionResponses.enrollmentId, input.enrollmentId));
+  return Object.fromEntries(rows.filter((r) => alive.has(r.nodeId)).map((r) => [r.nodeId, toRecord(r)]));
+}
+
+export interface PendingMission {
+  nodeId: string;
+  lessonId: string;
+  lessonTitle: string;
+  lessonIndex: number;
+  title: string;
+  action: string;
+  alternative: string;
+  revision: number;
+  updatedAt: string;
+}
+
+/** "Missões para depois": as marcadas "Vou fazer depois" na matrícula, na ordem do curso. */
+export async function pendingMissions(db: DbOrTx, input: { enrollmentId: string }): Promise<PendingMission[]> {
+  const enr = await getEnrollmentWithVersion(db, input.enrollmentId);
+  if (!enr) throw new DomainError('NOT_FOUND', 'Matrícula não encontrada');
+  const later = await db.select().from(s.missionResponses).where(and(eq(s.missionResponses.enrollmentId, input.enrollmentId), eq(s.missionResponses.status, 'later')));
+  const byNode = new Map(later.map((r) => [r.nodeId, r]));
+  const out: PendingMission[] = [];
+  allLessons(enr.document).forEach((lesson, lessonIndex) => {
+    for (const n of lesson.graph.nodes) {
+      const r = n.type === 'mission' ? byNode.get(n.id) : undefined;
+      if (n.type === 'mission' && r) out.push({ nodeId: n.id, lessonId: lesson.id, lessonTitle: lesson.title, lessonIndex, title: n.title?.trim() || 'Missão', action: n.action, alternative: n.alternative, revision: r.revision, updatedAt: r.updatedAt.toISOString() });
+    }
+  });
+  return out;
+}
+

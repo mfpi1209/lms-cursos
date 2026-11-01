@@ -38,12 +38,16 @@ export function BrandBumper({
   const [muted, setMuted] = useState(!canSound);
   const [status, setStatus] = useState<'playing' | 'ended' | 'skipped' | 'failed'>('playing');
   const doneRef = useRef(false);
+  // `onDone` costuma chegar como função nova a cada render: guardada em ref, `finish` fica estável e o efeito de
+  // autoplay não reexecuta (reexecutar depois do fim recomeçava a vinheta já terminada)
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
   const finish = useCallback((how: 'ended' | 'skipped' | 'failed') => {
     setStatus(how);
     if (doneRef.current) return;
     doneRef.current = true;
-    onDone?.();
-  }, [onDone]);
+    onDoneRef.current?.();
+  }, []);
 
   useEffect(() => {
     setReduced(prefersReducedMotion());
@@ -65,7 +69,7 @@ export function BrandBumper({
       return;
     }
     const v = videoRef.current;
-    if (!v) return;
+    if (!v || doneRef.current) return;
     let cancelled = false;
     const tryPlay = async () => {
       v.muted = !canSound;

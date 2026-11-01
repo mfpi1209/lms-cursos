@@ -50,6 +50,13 @@ describe('scaffold: molde da composição guiada', () => {
     expect(assembleScaffold({ template: '{situacao}, eu {acao}.' }, { situacao: 'num trabalho em grupo', acao: '  dividi  as tarefas ' })).toBe('Num trabalho em grupo, eu dividi as tarefas.');
   });
 
+  it('a pontuação da frase vem do MOLDE: a parte perde só a pontuação final e o molde mantém "?" e "." (a missão copia esta mesma frase)', () => {
+    expect(assembleScaffold({ template: 'Oi, tudo bem? {pedido}?' }, { pedido: 'Pode me dar um retorno rápido?' })).toBe('Oi, tudo bem? Pode me dar um retorno rápido?');
+    expect(assembleScaffold({ template: 'Oi, tudo bem? Pode me dar {pedido}?' }, { pedido: 'um retorno rápido' })).toBe('Oi, tudo bem? Pode me dar um retorno rápido?');
+    // molde sem pontuação (dado de teste mal montado): nada é inventado, a frase sai sem pontuação
+    expect(assembleScaffold({ template: 'Oi, tudo {a} {b}' }, { a: 'bem?', b: 'Pode me dar um retorno rápido.' })).toBe('Oi, tudo bem Pode me dar um retorno rápido');
+  });
+
   it('compila sem erros um molde válido', () => {
     expect(codes(scaffold())).toEqual([]);
     expect(scaffoldIssues(scaffold())).toEqual([]);

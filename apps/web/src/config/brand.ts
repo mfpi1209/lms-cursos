@@ -103,6 +103,13 @@ export const LMS_BRAND: BrandPreset = {
   bumperDefaults: { style: 'reveal', variant: 'navy', durationSec: 4, tagline: 'Cursos práticos para o trabalho e o dia a dia.', audio: 'minimal' },
 };
 
+/** O que o logo precisa (serializável: vai do servidor para o player, que é componente de cliente). */
+export type BrandMark = Pick<BrandPreset, 'name' | 'wordmark' | 'logoLight' | 'logoDark' | 'logoRatio'>;
+
+export function brandMarkOf(brand: BrandPreset): BrandMark {
+  return { name: brand.name, wordmark: brand.wordmark, logoLight: brand.logoLight, logoDark: brand.logoDark, logoRatio: brand.logoRatio };
+}
+
 export const BRAND_PRESETS: Record<BrandPresetId, BrandPreset> = { dnawork: DNAWORK_BRAND, lms: LMS_BRAND };
 
 export function parseBrandPresetId(value: string | null | undefined): BrandPresetId | undefined {

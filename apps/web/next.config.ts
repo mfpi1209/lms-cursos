@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
   agentRules: false,
+  // dev: hosts extras que podem abrir o servidor de desenvolvimento (ex.: IP na rede local, para testar no celular)
+  ...(process.env.DEV_ALLOWED_ORIGINS ? { allowedDevOrigins: process.env.DEV_ALLOWED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean) } : {}),
 };
 
 export default nextConfig;

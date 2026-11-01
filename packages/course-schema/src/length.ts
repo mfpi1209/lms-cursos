@@ -57,6 +57,8 @@ export function nodeScreenWords(n: AnyNode): number {
     case 'reflection':
       // composição guiada: o molde e os blocos também ficam na tela
       return words(richTextToPlain(n.prompt)) + (n.scaffold ? words(n.scaffold.template.replace(/\{[^}]*\}/g, ' ')) + n.scaffold.slots.reduce((a, s) => a + s.options.reduce((b, o) => b + words(o), 0), 0) : 0);
+    case 'mission':
+      return words(n.intro) + words(n.action) + words(n.alternative) + words(n.tip ?? '') + words(n.example ?? '');
     case 'assessment':
       return words(richTextToPlain(n.prompt)) + n.options.reduce((a, o) => a + words(o.label) + words(richTextToPlain(o.feedback)), 0) + words(richTextToPlain(n.feedbackPassed)) + words(richTextToPlain(n.feedbackFailed));
     case 'end':

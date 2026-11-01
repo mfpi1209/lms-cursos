@@ -1,12 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Award, Check, FileText, ListChecks, ListVideo, Mic, MousePointerClick, Pause, Pencil, Play, RotateCcw, Target, Undo2 } from 'lucide-react';
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Award, BookOpen, Check, CircleCheck, Copy, FileText, Flag, Footprints, ListChecks, ListVideo, Maximize, Mic, Minimize, MousePointerClick, Pause, Pencil, Play, RotateCcw, Target, Undo2 } from 'lucide-react';
 import { resolveReview, type AttemptState, type ProgressSummary, type ReviewSummary } from '@lms/course-engine';
 import {
+  MISSION_LABELS,
+  MISSION_NOTE_MAX,
   NODE_TYPE_LABELS,
   callHostId,
+  questionVideoFollows,
+  questionVideoSkipped,
   richTextToPlain,
   type AnyNode,
   type AssessmentNode,
@@ -14,28 +18,36 @@ import {
   type ConsequenceNode,
   type EndNode,
   type Lesson,
+  type MissionNode,
   type ReflectionNode,
   type RichTextBlock,
   type RichTextDocument,
 } from '@lms/course-schema';
 import { cn } from '@/lib/utils';
 import { RichText } from '@/components/rich-text';
-import { RecapView } from '../recap-view';
-import type { PlatformContext, PlayerDriver } from '../types';
+import { RecapView, copyToClipboard } from '../recap-view';
+import type { PlatformContext, PlatformSeries, PlayerDriver } from '../types';
 import { findNode, prefersReducedMotion, type Carry, type PlayerIntent, type PlayerSession, type RetryInfo } from '../use-player-session';
 import { isVideoCapable, videoMediaOf } from '../video-scene';
+import { lessonAchievements, practiceChipLabel, realLifeChipLabel, type LessonAchievements } from './achievements';
 import { ControlBar } from './controls';
+import { ImmersiveFullscreenProvider, useImmersiveFullscreen, useImmersiveFullscreenState } from './fullscreen';
 import { OptionCards } from './option-cards';
 import { RecordAnswer, WriteAnswer, useMicAvailable, type OpenAnswerDraft } from './open-answer';
 import { RecapDrawer, useCourseRecap, type CourseRecap } from './recap-drawer';
+import { BRIDGE_BUTTON, BRIDGE_EYEBROW, BRIDGE_LINE, CLOSING_LABEL, LAST_PRACTICE_CHIP, closingCardTitle, closingNodeId as closingNodeIdOf, farewellAfter, isCourseEnd, isLastLessonOfCourse, isLastPractice, missionAckText, missionAfter, missionContinueLabel } from './scene-flow';
 import { chipFor, clock, headingSize, isTipScene, resolveBrand, splitPrompt, type ResolvedBrand } from './theme';
 import { ImButton, ImCard, ImLink, StatusChip } from './ui';
+import { seriesEndChip, seriesEndsTrail, seriesHeaderLabel, seriesNextButton } from './series';
+import { TrailSeal } from '@/components/trail-seal';
 import { ThemeSwitch } from '@/components/theme-switch';
+import { BrandLogo } from '@/components/brand-logo';
 import { useSceneVideo, type SceneVideo } from './use-scene-video';
 import { VideoPrefetch } from './video-prefetch';
 import { NarrationBlock, narrationHeading, narrationOf } from '../narration-block';
 import { ReviewSummaryView } from '../review-summary';
 import { ScaffoldComposer, type ComposedSentence } from '../scaffold-composer';
+import { saveButtonState } from '../compose-state';
 import { LessonMapDrawer, useLessonNav } from '../navigation';
 import { BrandBumper } from '../brand-bumper';
 import { bumperPlaysHere } from '../platform-context';
@@ -72,6 +84,9 @@ export function ImmersivePlayer({
 }) {
   const brand = useMemo(() => resolveBrand(platform), [platform]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  // tela cheia no raiz do player (não desmonta entre cenas, reações, decisões, missão e despedida): ela segue pela aula toda
+  const rootRef = useRef<HTMLDivElement>(null);
+  const fullscreen = useImmersiveFullscreen(rootRef, platform.enrollmentId ?? lesson.id);
   // mapa da aula + atalhos (← cena anterior; Enter/→ continuar)
   const nav = useLessonNav(player);
   const { session, loadError, begin, announce } = player;
@@ -82,7 +97,48 @@ export function ImmersivePlayer({
     player.carry?.kind === 'choice' && player.carry.reaction && state && player.carry.nodeId === state.currentNodeId && reactionDone !== player.carry ? player.carry : null;
   const node = state ? findNode(lesson, state.currentNodeId) : undefined;
   const completed = !!state && (state.status === 'completed' || node?.type === 'end');
-  const recap = useCourseRecap(platform, lesson, state, `${drawerOpen}:${state?.status ?? ''}`);
+  // vinheta da marca: uma vez por aula (sessão), na passagem entre "assistir" e "responder"
+  const outroKey = `lms.bumper.played:${lesson.id}`;
+  const [outroPlayed, setOutroPlayed] = useState(false);
+  useEffect(() => {
+    try {
+      if (window.sessionStorage.getItem(outroKey) === '1') setOutroPlayed(true);
+    } catch {}
+  }, [outroKey]);
+  const markOutro = useCallback(() => {
+    setOutroPlayed(true);
+    try {
+      window.sessionStorage.setItem(outroKey, '1');
+    } catch {}
+  }, [outroKey]);
+  // a vinheta fecha o ÚLTIMO vídeo longo da aula (a última cena narrada com vídeo, em geral a explicação): toca no
+  // palco inteiro logo que esse vídeo termina (visto até o fim), antes da última pergunta e da atividade. Não toca
+  // depois das reações curtas nem do vídeo próprio da pergunta. Quem pulou vê a vinheta no painel final.
+  const lastLongId = useMemo(() => lastLongVideoId(lesson), [lesson]);
+  const outroArmed = bumperPlaysHere(platform.bumper) && !outroPlayed && !!lastLongId;
+  const [outroNow, setOutroNow] = useState(false);
+  // a vinheta terminou e o avanço foi pedido: o palco SEGURA o último quadro dela até o motor trocar de cena. Soltar antes
+  // remontaria a cena do vídeo longo, e o autoplay de uma instância nova recomeçaria o vídeo durante o `advance`
+  const [outroDone, setOutroDone] = useState(false);
+  // cena cujo vídeo longo foi visto até o fim: enquanto o aluno estiver nela, nenhuma remontagem a faz tocar sozinha
+  const [seenLongId, setSeenLongId] = useState<string | null>(null);
+  const onLongVideoEnded = useCallback(() => {
+    setSeenLongId(lastLongId ?? null);
+    setOutroNow(true);
+  }, [lastLongId]);
+  const currentId = state?.currentNodeId;
+  useEffect(() => {
+    // solta o palco quando a cena troca, ou quando o envio terminou sem trocar (falha de rede, conflito): o aluno vê o erro/estado
+    if (outroDone && (currentId !== lastLongId || !player.pending)) {
+      setOutroNow(false);
+      setOutroDone(false);
+    }
+  }, [outroDone, currentId, lastLongId, player.pending]);
+  useEffect(() => {
+    if (seenLongId && currentId !== seenLongId) setSeenLongId(null);
+  }, [seenLongId, currentId]);
+  // o roteiro do curso recarrega ao abrir a gaveta, ao concluir a aula e quando uma missão é registrada
+  const recap = useCourseRecap(platform, lesson, state, `${drawerOpen}:${state?.status ?? ''}:${Object.values(player.missions).map((m) => m.status).join(',')}`);
   const homeHref = driver.mode === 'lms' ? '/aprender' : exitHref;
 
   const lessons = platform.lessons.some((l) => l.id === lesson.id)
@@ -90,14 +146,28 @@ export function ImmersivePlayer({
     : [{ id: lesson.id, title: lesson.title, status: completed ? ('completed' as const) : ('in_progress' as const), href: '' }];
   const lessonIndex = Math.max(0, lessons.findIndex((l) => l.id === lesson.id));
   const nextLesson = lessons[lessonIndex + 1];
+  // posição da aula no curso: a última tem o fechamento (despedida) e, ao acabar, a tela de CURSO concluído.
+  // Fora da lista do curso (prévia de uma aula só do estúdio), nada disso vale.
+  const inCourse = platform.lessons.some((l) => l.id === lesson.id);
+  const lastLesson = inCourse && isLastLessonOfCourse(lessons, lesson.id);
+  const courseEnd = inCourse && isCourseEnd(lessons, lesson.id);
+  const closingId = useMemo(() => closingNodeIdOf(lesson.graph, lastLesson), [lesson.graph, lastLesson]);
 
   const frame: FrameInfo = {
     lessonTitle: lesson.title,
+    courseTitle: platform.courseTitle,
+    lastLesson,
+    courseEnd,
+    ...(closingId ? { closingNodeId: closingId } : {}),
     lessons,
     lessonIndex,
     ...(platform.courseGoals?.length ? { courseGoals: platform.courseGoals } : {}),
-    ...(platform.credentialName ? { credentialName: platform.credentialName } : {}),
+    ...(platform.achievement ? { achievement: platform.achievement } : {}),
+    ...(platform.courseTrail ? { courseTrail: platform.courseTrail } : {}),
+    ...(platform.series ? { series: platform.series } : {}),
+    ...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {}),
     exitHref,
+    ...(driver.mode === 'lms' && lessons[0]?.href ? { courseRestartHref: `${lessons[0].href}?reiniciar=1` } : {}),
     shortLabel: shortLessonLabel(lesson),
     posterUrl: platform.posterUrl,
     presenterPlacement: platform.presenterPlacement ?? 'center',
@@ -117,13 +187,22 @@ export function ImmersivePlayer({
   };
 
   return (
+    <ImmersiveFullscreenProvider value={fullscreen}>
     <div
+      ref={rootRef}
       data-immersive-root
       data-testid="immersive-player"
+      data-fullscreen={fullscreen.active ? (fullscreen.pseudo ? 'pseudo' : 'native') : undefined}
       style={brand.style}
-      className="theme-platform flex min-h-dvh flex-col bg-bg text-fg"
+      className={cn(
+        'theme-platform flex min-h-dvh flex-col bg-bg text-fg',
+        // o raiz rola por dentro (a página atrás não rola); no iPhone ele mesmo é a camada que ocupa a tela, sob a área segura
+        fullscreen.active && 'overflow-y-auto overscroll-contain',
+        fullscreen.pseudo && 'fixed inset-x-0 top-0 z-[60] h-dvh pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]',
+      )}
     >
-      <PlatformHeader brand={brand} homeHref={homeHref} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} />
+      {/* tela cheia: só o palco (cabeçalho e rodapé saem; "Meu roteiro" e o tema voltam ao sair) */}
+      {!fullscreen.active && <PlatformHeader brand={brand} homeHref={homeHref} {...(platform.series ? { seriesLabel: seriesHeaderLabel(platform.series) } : {})} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} />}
 
       <p className="sr-only" role="status" aria-live="polite">
         {announce}
@@ -131,7 +210,7 @@ export function ImmersivePlayer({
       {/* próximos vídeos já baixando enquanto o atual toca (sem espera na troca) */}
       <VideoPrefetch lesson={lesson} currentNodeId={state?.currentNodeId} />
 
-      <div className="mx-auto flex w-full max-w-[1920px] flex-1 flex-col md:px-6">
+      <div className={cn('mx-auto flex w-full flex-1 flex-col', fullscreen.active ? 'max-w-none' : 'max-w-[1920px] md:px-6')}>
         {loadError ? (
           <StageShell frame={frame} percent={0} nodeId="load-error" nodeType="unknown" testId="player-load-error">
             <PanelHead chip={{ label: 'Aviso', tone: 'danger' }} title="Não foi possível abrir a aula." />
@@ -158,6 +237,22 @@ export function ImmersivePlayer({
             autoPlay={player.gesture}
             onDone={() => setReactionDone(pendingReaction)}
           />
+        ) : outroNow && !pendingReaction ? (
+          <OutroStage
+            key={`vinheta:${lesson.id}`}
+            frame={frame}
+            percent={session.progress.percent}
+            gesture={player.gesture}
+            onDone={() => {
+              markOutro();
+              // a cena do vídeo longo já foi vista: segue direto (a pergunta seguinte abre, como no avanço automático),
+              // com a vinheta ainda no palco até a cena trocar
+              if (session.state.currentNodeId === lastLongId) {
+                setOutroDone(true);
+                void player.send({ kind: 'advance' });
+              } else setOutroNow(false);
+            }}
+          />
         ) : (
           <Scene
             key={`${node?.id ?? state!.currentNodeId}:${session.attemptNumber}`}
@@ -172,17 +267,21 @@ export function ImmersivePlayer({
             nextLesson={completed && nextLesson && nextLesson.href ? nextLesson : undefined}
             recap={recap}
             onOpenRecap={() => setDrawerOpen(true)}
+            outroPlayed={outroPlayed}
+            onOutroDone={markOutro}
+            videoSeen={!!node && seenLongId === node.id}
+            {...(outroArmed && node?.id === lastLongId ? { onLongVideoEnded } : {})}
           />
         )}
       </div>
 
-      {brand.tagline ? (
+      {fullscreen.active ? null : brand.tagline ? (
         <footer className="px-4 py-4 text-center text-sm text-fg-muted md:py-[18px]">{brand.tagline}</footer>
       ) : (
         <div aria-hidden="true" className="h-6 md:h-14" />
       )}
 
-      <RecapDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} recap={recap} />
+      <RecapDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} recap={recap} {...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {})} />
       <LessonMapDrawer
         platform
         open={nav.mapOpen}
@@ -199,6 +298,7 @@ export function ImmersivePlayer({
         studioHref={platform.studioHref}
       />
     </div>
+    </ImmersiveFullscreenProvider>
   );
 }
 
@@ -206,23 +306,40 @@ export function ImmersivePlayer({
 /* Cabeçalho                                                                 */
 /* ------------------------------------------------------------------------ */
 
-function PlatformHeader({ brand, homeHref, onOpenRecap, drawerOpen }: { brand: ResolvedBrand; homeHref: string; onOpenRecap: () => void; drawerOpen: boolean }) {
+function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen }: { brand: ResolvedBrand; homeHref: string; /** curso que é parte de uma série: "{trilha} · Parte N de 3" no lugar do nome do curso */ seriesLabel?: string; onOpenRecap: () => void; drawerOpen: boolean }) {
   return (
     <header className="mx-auto flex h-16 w-full max-w-[1920px] items-center justify-between gap-3 px-4 md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:px-10">
-      <Link
-        href={homeHref}
-        className="inline-flex min-h-11 min-w-0 items-center rounded-lg text-[26px] font-semibold leading-none tracking-[-0.035em] text-fg lowercase md:text-[32px]"
-        aria-label={`${brand.wordmark}: início`}
-      >
-        <span className="truncate">{brand.wordmark}</span>
-        {/* o ponto laranja da marca só entra quando o título não termina em pontuação ("terminei. e agora?" sem "?.") */}
-        {!/[.!?…:]$/.test(brand.wordmark.trim()) && (
-          <span aria-hidden="true" className="text-[var(--im-accent-ink)]">
-            .
-          </span>
-        )}
-      </Link>
-      <p className="hidden truncate text-center text-[17px] text-fg/70 md:block">{brand.subtitle}</p>
+      {brand.mark ? (
+        // o mesmo logo do catálogo e da página do curso (`[data-testid=brand-logo]`); o nome acessível é o do curso
+        <Link href={homeHref} className="inline-flex min-h-11 min-w-0 shrink items-center rounded-lg" aria-label={`${brand.title}: início`} data-testid="player-brand">
+          <BrandLogo brand={brand.mark} height={28} className="max-sm:[--logo-h:22px]" alt={brand.title} />
+        </Link>
+      ) : (
+        <Link
+          href={homeHref}
+          className="inline-flex min-h-11 min-w-0 items-center rounded-lg text-[26px] font-semibold leading-none tracking-[-0.035em] text-fg lowercase md:text-[32px]"
+          aria-label={`${brand.title}: início`}
+          data-testid="player-brand"
+        >
+          <span className="truncate">{brand.title}</span>
+          {/* o ponto laranja da marca só entra quando o título não termina em pontuação ("terminei. e agora?" sem "?.") */}
+          {!/[.!?…:]$/.test(brand.title.trim()) && (
+            <span aria-hidden="true" className="text-[var(--im-accent-ink)]">
+              .
+            </span>
+          )}
+        </Link>
+      )}
+      {/* nome curto do curso (o do catálogo); com a marca em texto no lugar do logo, ele já está à esquerda. Oculto no celular: não empurra os botões */}
+      {seriesLabel ? (
+        <p className="hidden truncate text-center text-[17px] text-fg/70 md:block" data-testid="player-series-label" title={`${seriesLabel} · ${brand.title}`}>
+          {seriesLabel}
+        </p>
+      ) : brand.mark ? (
+        <p className="hidden truncate text-center text-[17px] text-fg/70 md:block" data-testid="player-course-name">{brand.title}</p>
+      ) : (
+        <span className="hidden md:block" aria-hidden="true" />
+      )}
       <div className="flex items-center justify-end gap-2 md:gap-3">
         <ThemeSwitch />
         <button
@@ -247,8 +364,18 @@ function PlatformHeader({ brand, homeHref, onOpenRecap, drawerOpen }: { brand: R
 
 interface FrameInfo {
   lessonTitle: string;
+  /** título do curso (o inteiro): "Você concluiu …" e o cartão do fechamento */
+  courseTitle: string;
+  /** esta é a última aula do curso */
+  lastLesson: boolean;
+  /** ao acabar esta aula, o CURSO acaba (última aula e as outras já concluídas) */
+  courseEnd: boolean;
+  /** a cena do fechamento do curso (despedida), quando esta aula tem uma */
+  closingNodeId?: string;
   lessons: PlatformContext['lessons'];
   lessonIndex: number;
+  /** recomeçar o curso do início (1ª aula, tentativa nova; o progresso das outras aulas fica) */
+  courseRestartHref?: string;
   exitHref: string;
   /** rótulo curto da aula ("Sua apresentação") */
   shortLabel: string;
@@ -264,17 +391,23 @@ interface FrameInfo {
   bumper?: PlatformContext['bumper'];
   /** abertura do curso: o que o aluno leva e o selo para o currículo */
   courseGoals?: string[];
-  credentialName?: string;
+  /** conquista do curso (dentro da plataforma) e a trilha até o Selo DNA Work */
+  achievement?: string;
+  courseTrail?: NonNullable<PlatformContext['courseTrail']>;
+  /** o curso é uma parte de uma trilha em série */
+  series?: PlatformSeries;
+  /** matrícula (LMS): habilita registrar a missão e o roteiro com as missões do curso */
+  enrollmentId?: string;
 }
 
-type StepKind = 'video' | 'choice' | 'mission' | 'review';
-const STEP_LABEL: Record<StepKind, string> = { video: 'Vídeo', choice: 'Decisão', mission: 'Missão', review: 'Revisão' };
+type StepKind = 'video' | 'choice' | 'mission' | 'real' | 'review' | 'closing';
+const STEP_LABEL: Record<StepKind, string> = { video: 'Vídeo', choice: 'Decisão', mission: 'Na prática', real: MISSION_LABELS.moment, review: 'Revisão', closing: CLOSING_LABEL };
 
 /** Etapas da aula na ordem do roteiro (avaliações seguidas viram uma só "Revisão"); o fim não conta. */
-function lessonSteps(lesson: Lesson): Array<{ kind: StepKind; nodeIds: string[] }> {
+export function lessonSteps(lesson: Lesson, closingNodeId?: string): Array<{ kind: StepKind; nodeIds: string[] }> {
   const out: Array<{ kind: StepKind; nodeIds: string[] }> = [];
   for (const n of lesson.graph.nodes) {
-    const kind: StepKind | null = n.type === 'scenario' || n.type === 'content' || n.type === 'consequence' ? 'video' : n.type === 'choice' ? 'choice' : n.type === 'reflection' ? 'mission' : n.type === 'assessment' ? 'review' : null;
+    const kind: StepKind | null = n.id === closingNodeId ? 'closing' : n.type === 'scenario' || n.type === 'content' || n.type === 'consequence' ? 'video' : n.type === 'choice' ? 'choice' : n.type === 'reflection' ? 'mission' : n.type === 'mission' ? 'real' : n.type === 'assessment' ? 'review' : null;
     if (!kind) continue;
     const last = out[out.length - 1];
     if (kind === 'review' && last?.kind === 'review') last.nodeIds.push(n.id);
@@ -283,14 +416,14 @@ function lessonSteps(lesson: Lesson): Array<{ kind: StepKind; nodeIds: string[] 
   return out;
 }
 
-const STEP_ICON: Record<StepKind, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>> = { video: Play, choice: MousePointerClick, mission: Target, review: ListChecks };
+const STEP_ICON: Record<StepKind, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>> = { video: Play, choice: MousePointerClick, mission: Target, real: Footprints, review: ListChecks, closing: Flag };
 
 /**
  * Trilha da aula (gamificação leve): uma marca por etapa — feita (laranja, com visto), atual (anel) e a fazer.
  * "3 de 7 etapas" para leitores de tela e ao lado no computador. Não muda regra nenhuma: só mostra o caminho.
  */
-function LessonStepsBar({ lesson, state, currentNodeId, completed }: { lesson: Lesson; state: AttemptState; currentNodeId?: string; completed: boolean }) {
-  const steps = useMemo(() => lessonSteps(lesson), [lesson]);
+function LessonStepsBar({ lesson, state, currentNodeId, completed, closingNodeId }: { lesson: Lesson; state: AttemptState; currentNodeId?: string; completed: boolean; /** a cena do fechamento do curso: etapa "Fechamento", com bandeira */ closingNodeId?: string }) {
+  const steps = useMemo(() => lessonSteps(lesson, closingNodeId), [lesson, closingNodeId]);
   if (steps.length < 2) return null;
   const done = new Set(state.completedNodeIds);
   const doneCount = completed ? steps.length : steps.filter((st) => st.nodeIds.every((id) => done.has(id))).length;
@@ -313,6 +446,7 @@ function LessonStepsBar({ lesson, state, currentNodeId, completed }: { lesson: L
         })}
       </ol>
       <span className="hidden text-[13px] font-medium tabular-nums text-fg/65 lg:inline" aria-hidden="true">
+        {!completed && closingNodeId && currentNodeId === closingNodeId ? `${CLOSING_LABEL} · ` : ''}
         {doneCount} de {steps.length} etapas
       </span>
     </div>
@@ -337,8 +471,9 @@ function StageShell({
   busy?: boolean;
   children: React.ReactNode;
 }) {
+  const fullscreen = useImmersiveFullscreenState().active;
   return (
-    <section data-testid={testId} data-node-id={nodeId} data-node-type={nodeType} aria-busy={busy || undefined} className={stageClass(false)}>
+    <section data-testid={testId} data-node-id={nodeId} data-node-type={nodeType} aria-busy={busy || undefined} className={stageClass(false, fullscreen)}>
       <StageTopNav frame={frame} percent={percent} />
       <StageMedia frame={frame} video={null} />
       <PanelArea hasControls={false}>{children}</PanelArea>
@@ -346,11 +481,14 @@ function StageShell({
   );
 }
 
-function stageClass(hasControls: boolean) {
+function stageClass(hasControls: boolean, fullscreen = false) {
   return cn(
-    'relative flex flex-col md:overflow-hidden md:rounded-[20px] md:border md:border-line md:bg-[var(--im-stage)]',
-    // palco = viewport menos cabeçalho (72) e rodapé (56); cresce se a cena pedir mais
-    'md:min-h-[max(560px,calc(100dvh-128px))]',
+    'relative flex flex-col md:overflow-hidden md:bg-[var(--im-stage)]',
+    // tela cheia: o palco é a tela inteira, de borda a borda (sem moldura, cantos nem margem); cresce se a cena pedir mais
+    fullscreen
+      ? 'md:min-h-dvh'
+      : // palco = viewport menos cabeçalho (72) e rodapé (56); cresce se a cena pedir mais
+        'md:min-h-[max(560px,calc(100dvh-128px))] md:rounded-[20px] md:border md:border-line',
     hasControls && 'md:pb-28',
   );
 }
@@ -381,9 +519,11 @@ const ROUND_BTN =
  * mouse parado, some junto com a barra de controles (`hidden`); volta ao mexer
  * o mouse, tocar, pausar ou ao focar pelo teclado.
  */
-function StageTopNav({ frame, percent, hidden = false, steps }: { frame: FrameInfo; percent: number; hidden?: boolean; /** trilha de etapas da aula (gamificação) */ steps?: React.ReactNode }) {
+function StageTopNav({ frame, percent, hidden = false, onVideo = false, steps }: { frame: FrameInfo; percent: number; hidden?: boolean; /** tela cheia com o vídeo tocando: o título fica sobre as faixas escuras do quadro */ onVideo?: boolean; /** trilha de etapas da aula (gamificação) */ steps?: React.ReactNode }) {
   // o cabeçalho da página já diz "Aula N de M": aqui fica só o nome da aula (no celular, onde o cabeçalho não mostra a posição, "Aula N")
   const label = frame.lessonTitle;
+  // tela cheia: sempre à mão aqui (a barra de controles só existe com o vídeo rodando e some nas perguntas)
+  const fs = useImmersiveFullscreenState();
   return (
     <div
       data-testid="stage-top-nav"
@@ -406,13 +546,13 @@ function StageTopNav({ frame, percent, hidden = false, steps }: { frame: FrameIn
         >
           <ArrowLeft className="size-5" aria-hidden="true" />
         </Link>
-        <h1 className="m-0 min-w-0 text-[15px]! font-semibold! leading-tight! tracking-normal! text-fg! md:text-base!">
+        <h1 className={cn('m-0 min-w-0 text-[15px]! font-semibold! leading-tight! tracking-normal! text-fg! md:text-base!', onVideo && 'md:text-white!')}>
           <span className="block truncate" title={label}>
             <span className="max-sm:hidden">{label}</span>
-            <span className="sm:hidden">Aula {frame.lessonIndex + 1}</span>
+            <span className="sm:hidden">{frame.series ? `Parte ${frame.series.part} de ${frame.series.total} · ` : ''}Aula {frame.lessonIndex + 1}</span>
           </span>
         </h1>
-        {steps && <div className="ml-auto hidden md:block">{steps}</div>}
+        {steps && <div className={cn('ml-auto hidden md:block', onVideo && '[&_span.tabular-nums]:text-white/80')}>{steps}</div>}
         {frame.nav && (
           <div className={cn('flex shrink-0 items-center gap-2', steps ? 'md:ml-4 max-md:ml-auto' : 'ml-auto')}>
             {frame.nav.canGoBack && (
@@ -420,25 +560,110 @@ function StageTopNav({ frame, percent, hidden = false, steps }: { frame: FrameIn
                 <Undo2 className="size-5" aria-hidden="true" />
               </RoundIconButton>
             )}
+            {fs.ready && (
+              <RoundIconButton label={fs.active ? 'Sair da tela cheia' : 'Tela cheia'} onClick={fs.toggle} testId="fullscreen-toggle">
+                {fs.active ? <Minimize className="size-5" aria-hidden="true" /> : <Maximize className="size-5" aria-hidden="true" />}
+              </RoundIconButton>
+            )}
             <RoundIconButton label="Capítulos" onClick={frame.nav.openMap} testId="open-chapters" aria-haspopup="dialog" aria-expanded={frame.nav.mapOpen}>
               <ListVideo className="size-5" aria-hidden="true" />
             </RoundIconButton>
-            {frame.nav.onRestart && (
-              <RoundIconButton
-                label="Reiniciar aula"
-                testId="restart-lesson"
-                disabled={frame.nav.pending}
-                onClick={() => {
-                  if (window.confirm('Reiniciar esta aula do começo? Suas respostas desta vez serão descartadas.')) frame.nav!.onRestart!();
-                }}
-              >
-                <RotateCcw className="size-5" aria-hidden="true" />
-              </RoundIconButton>
-            )}
+            {frame.nav.onRestart && <RestartLesson onRestart={frame.nav.onRestart} disabled={frame.nav.pending} {...(frame.courseRestartHref ? { courseRestartHref: frame.courseRestartHref } : {})} />}
           </div>
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * "Reiniciar aula" com confirmação da própria plataforma (não a janela nativa do navegador): um balão logo
+ * abaixo do botão, com "Reiniciar" e "Cancelar". Esc ou clique fora fecham; o foco vai para "Cancelar" (seguro) e,
+ * ao fechar com Esc ou "Cancelar", volta para o botão que abriu o balão (clique fora deixa o foco onde o aluno clicou).
+ */
+function RestartLesson({ onRestart, disabled, courseRestartHref }: { onRestart: () => void; disabled?: boolean; courseRestartHref?: string }) {
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  // fecha e devolve o foco ao botão "Reiniciar aula" (o balão desmonta com o foco dentro dele)
+  const closeToTrigger = useCallback(() => {
+    setOpen(false);
+    boxRef.current?.querySelector<HTMLElement>('[data-testid="restart-lesson"]')?.focus();
+  }, []);
+  useEffect(() => {
+    if (!open) return;
+    cancelRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && closeToTrigger();
+    const onDown = (e: PointerEvent) => !boxRef.current?.contains(e.target as Node) && setOpen(false);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [open, closeToTrigger]);
+  return (
+    <div ref={boxRef} className="relative">
+      <RoundIconButton label="Reiniciar aula" testId="restart-lesson" disabled={disabled} onClick={() => setOpen((v) => !v)} aria-haspopup="dialog" aria-expanded={open}>
+        <RotateCcw className="size-5" aria-hidden="true" />
+      </RoundIconButton>
+      {open && (
+        <div role="dialog" aria-labelledby={titleId} data-testid="restart-confirm" className="absolute right-0 top-full z-50 mt-2 w-[min(320px,calc(100vw-32px))] rounded-[16px] border border-line bg-surface p-4 text-left shadow-[0_18px_40px_-20px_rgba(15,16,48,0.55)]">
+          <p id={titleId} className="text-[16px] font-semibold leading-snug text-fg">Reiniciar a aula do começo?</p>
+          <p className="mt-1 text-[14px] leading-snug text-fg/70">As respostas que você deu nesta tentativa serão descartadas.</p>
+          <div className="mt-4 flex justify-end gap-2">
+            <button ref={cancelRef} type="button" data-testid="restart-confirm-cancel" onClick={closeToTrigger} className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-[15px] font-medium text-fg hover:bg-fg/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]">
+              Cancelar
+            </button>
+            <button type="button" data-testid="restart-confirm-ok" onClick={() => { setOpen(false); onRestart(); }} className="inline-flex min-h-11 items-center rounded-full bg-[var(--im-accent)] px-4 text-[15px] font-semibold text-[#1d1e4c] hover:brightness-105 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]">
+              Reiniciar aula
+            </button>
+          </div>
+          {courseRestartHref && (
+            <a href={courseRestartHref} data-testid="restart-course" className="mt-3 block rounded text-center text-[14px] font-medium text-fg underline decoration-fg/30 underline-offset-4 hover:decoration-fg focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]">
+              Recomeçar o curso desde as boas-vindas
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** A última cena narrada com vídeo da aula (sem outra cena com vídeo pela frente): onde a vinheta fecha. */
+function lastLongVideoId(lesson: Lesson): string | undefined {
+  const narrated = lesson.graph.nodes.filter((n) => (n.type === 'scenario' || n.type === 'content' || n.type === 'consequence') && (n as { media?: { kind?: string; assetId?: string } | null }).media?.kind === 'video' && !!(n as { media?: { assetId?: string } | null }).media?.assetId);
+  return narrated.filter((n) => !videoAhead(lesson, n.id)).at(-1)?.id;
+}
+
+/** Há vídeo de cena (não reação) alcançável a partir de `fromId` (sem contar ele)? Decide onde a vinheta toca. */
+function videoAhead(lesson: Lesson, fromId: string): boolean {
+  const seen = new Set<string>([fromId]);
+  const queue = lesson.graph.edges.filter((e) => e.from === fromId).map((e) => e.to);
+  while (queue.length) {
+    const id = queue.shift()!;
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const n = lesson.graph.nodes.find((x) => x.id === id) as { type: string; media?: { kind?: string; assetId?: string } | null } | undefined;
+    if (n && n.type !== 'choice' && n.media?.kind === 'video' && n.media.assetId) return true;
+    for (const e of lesson.graph.edges) if (e.from === id) queue.push(e.to);
+  }
+  return false;
+}
+
+/**
+ * Vinheta da marca no palco inteiro, entre o último vídeo da aula e a atividade (ou o fim): com som (o aluno
+ * acabou de interagir), com o botão de pular quando a vinheta permitir. Ao terminar, a atividade entra direto.
+ */
+function OutroStage({ frame, percent, gesture, onDone }: { frame: FrameInfo; percent: number; gesture: boolean; onDone: () => void }) {
+  const fullscreen = useImmersiveFullscreenState().active;
+  return (
+    <section data-testid="outro-stage" aria-label="Vinheta da marca" className={stageClass(false, fullscreen)}>
+      <StageTopNav frame={frame} percent={percent} hidden />
+      <StageMedia frame={frame} video={null} bumper={<BrandBumper key="outro" bumper={frame.bumper!} gesture={gesture} variant="stage" onDone={onDone} className="im-bumper-in" />} bumperFull />
+      <p className="sr-only" role="status">Vinheta da marca. Em seguida, a atividade.</p>
+    </section>
   );
 }
 
@@ -450,10 +675,13 @@ function StageMedia({ frame, video, bumper, bumperFull, children }: { frame: Fra
   const placed = !!video?.el && frame.presenterPlacement !== 'center';
   // tocando: o vídeo já vem dirigido (cartões, câmeras, marca d'água) — ocupa o palco inteiro, sem véu nem recorte
   const watching = !!video?.el && !!video.watching;
+  // tela cheia tocando: o vídeo aparece inteiro (`object-contain`) e as faixas dos lados são escuras, como no cinema
+  const letterbox = useImmersiveFullscreenState().active && watching;
   return (
     <div
       className={cn(
         'relative mx-4 aspect-video overflow-hidden rounded-[16px] border border-line bg-[var(--im-media-bg)] md:absolute md:inset-0 md:z-0 md:mx-0 md:aspect-auto md:rounded-none md:border-0',
+        letterbox && 'bg-[#050A14]',
         // celular sem vídeo nem imagem: não ocupa a tela com um quadro vazio
         !video?.el && !posterUrl && !bumper && 'max-md:hidden',
       )}
@@ -475,7 +703,7 @@ function StageMedia({ frame, video, bumper, bumperFull, children }: { frame: Fra
         {video?.el ??
           (posterUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={posterUrl} alt="" className="h-full w-full object-cover object-[center_30%]" data-testid="stage-poster" />
+            <img src={posterUrl} alt="" className="h-full w-full object-cover object-[50%_0%]" data-testid="stage-poster" />
           ) : (
             <div aria-hidden="true" className="h-full w-full bg-[image:var(--im-media-empty)]" />
           ))}
@@ -506,20 +734,45 @@ function StageMedia({ frame, video, bumper, bumperFull, children }: { frame: Fra
   );
 }
 
-function PanelArea({ hasControls, compact, light, center, side = 'left', children }: { hasControls: boolean; /** vídeo tocando: etiqueta pequena no canto, sem cobrir a cena */ compact?: boolean; /** abertura: texto direto sobre o cenário (sem o painel branco) */ light?: boolean; /** pergunta e missão: no centro do palco, mais largas, com o fundo escurecido (foco no que o aluno faz) */ center?: boolean; /** lado livre do palco (o oposto ao da apresentadora, quando o curso informa) */ side?: 'left' | 'right'; children: React.ReactNode }) {
+function PanelArea({ hasControls, compact, light, center, wide, side = 'left', children }: { hasControls: boolean; /** atividade "Na prática": duas colunas, com superfície própria (sem o painel do tema) */ wide?: boolean; /** vídeo tocando: etiqueta pequena no canto, sem cobrir a cena */ compact?: boolean; /** abertura: texto direto sobre o cenário (sem o painel branco) */ light?: boolean; /** pergunta e missão: no centro do palco, mais largas, com o fundo escurecido (foco no que o aluno faz) */ center?: boolean; /** lado livre do palco (o oposto ao da apresentadora, quando o curso informa) */ side?: 'left' | 'right'; children: React.ReactNode }) {
   return (
     <div
       className={cn(
         'relative z-10 flex-1 px-4 pt-7 md:flex md:px-16 md:py-6 min-[1600px]:py-10',
-        compact ? 'md:pointer-events-none md:items-end md:px-6 md:pb-28' : cn('md:items-center', hasControls ? 'md:pb-6' : 'md:pb-14'),
+        compact ? 'md:pointer-events-none md:items-end md:px-6 md:pb-28' : cn('md:items-center', hasControls || wide ? 'md:pb-6' : 'md:pb-14'),
         !compact && !center && side === 'right' && 'md:justify-end',
         !compact && center && 'md:justify-center',
       )}
     >
       {/* vídeo tocando: sem o painel branco do tema claro (no desktop não há nada visível aqui; o atalho fica na barra) */}
-      <div className={cn('w-full', compact ? 'md:pointer-events-auto md:max-w-[340px]' : light ? 'max-w-[560px] min-[1700px]:max-w-[620px]' : center ? 'im-panel max-w-[760px] md:shadow-[0_30px_80px_-30px_rgba(15,16,48,0.55)] min-[1700px]:max-w-[820px]' : 'im-panel max-w-[600px] min-[1700px]:max-w-[680px]')}>{children}</div>
+      <div className={cn('w-full', compact ? 'md:pointer-events-auto md:max-w-[340px]' : light ? 'max-w-[560px] min-[1700px]:max-w-[620px]' : wide ? 'max-w-[1120px] min-[1700px]:max-w-[1200px]' : center ? 'im-panel max-w-[760px] md:shadow-[0_30px_80px_-30px_rgba(15,16,48,0.55)] min-[1700px]:max-w-[820px]' : 'im-panel max-w-[600px] min-[1700px]:max-w-[680px]')}>{children}</div>
     </div>
   );
+}
+
+/**
+ * Estilo serviço de vídeo: tocando e sem toque/mouse/tecla por 2,5 s, topo e controles somem; mexer, tocar ou teclar
+ * traz de volta (no celular, um toque no palco). Pausar ou terminar mostra tudo de novo.
+ */
+function useIdleChrome(playing: boolean) {
+  const [idle, setIdle] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const arm = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current);
+    if (playing) timer.current = setTimeout(() => setIdle(true), 2500);
+  }, [playing]);
+  const wake = useCallback(() => {
+    setIdle(false);
+    arm();
+  }, [arm]);
+  useEffect(() => {
+    setIdle(false);
+    arm();
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
+  }, [arm]);
+  return { chromeHidden: playing && idle, wake };
 }
 
 /* ------------------------------------------------------------------------ */
@@ -546,13 +799,15 @@ function ReactionScene({
   reaction: { text: string; media: NonNullable<ReturnType<typeof videoMediaOf>> };
   optionLabel: string;
   autoPlay: boolean;
+  /** terminou de tocar, ou o aluno pulou / o vídeo não carregou */
   onDone: () => void;
 }) {
-  const stageRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingId = useId();
   const video = useSceneVideo(null, { ...reaction.media, transcript: reaction.media.transcript ?? reaction.text }, autoPlay);
   const playing = video.playing;
+  const fullscreen = useImmersiveFullscreenState().active;
+  const { chromeHidden, wake } = useIdleChrome(playing);
   const doneRef = useRef(false);
   const finish = () => {
     if (doneRef.current) return;
@@ -571,21 +826,20 @@ function ReactionScene({
     <video
       {...video.videoProps}
       aria-label="Reação da instrutora à sua resposta"
-      className={cn('h-full w-full object-cover', frame.presenterPlacement === 'right' && 'object-[70%_50%]', frame.presenterPlacement === 'left' && 'object-[30%_50%]')}
+      className={cn('h-full w-full object-cover object-[50%_0%]', frame.presenterPlacement === 'right' && 'object-[70%_0%]', frame.presenterPlacement === 'left' && 'object-[30%_0%]', fullscreen && playing && 'object-contain')}
       poster={frame.posterUrl}
     >
       {video.captionsSrc && <track kind="captions" srcLang={reaction.media.captions?.lang ?? 'pt-BR'} label="Português" src={video.captionsSrc} default />}
     </video>
   ) : null;
   return (
-    <section ref={stageRef} data-testid="reaction-scene" data-phase={video.phase} aria-labelledby={headingId} className={stageClass(true)}>
-      <StageTopNav frame={frame} percent={percent} hidden={playing} />
+    <section data-testid="reaction-scene" data-phase={video.phase} data-chrome={chromeHidden ? 'hidden' : undefined} aria-labelledby={headingId} onPointerMove={wake} onPointerDown={wake} onKeyDown={wake} className={cn(stageClass(true, fullscreen), chromeHidden && 'md:cursor-none')}>
+      <StageTopNav frame={frame} percent={percent} hidden={playing} onVideo={fullscreen && playing} />
       <StageMedia frame={frame} video={{ el: videoEl, playing, caption: video.caption, hasControls: true, watching: playing }} />
       <ControlBar
         video={video}
-        fullscreenTarget={stageRef}
-        skip={{ label: 'Pular', onClick: finish, testId: 'reaction-skip' }}
-        className="mx-4 mt-2 md:absolute md:inset-x-6 md:bottom-6 md:z-20 md:mx-0 md:mt-0"
+        skip={{ label: 'Pular', onClick: () => finish(), testId: 'reaction-skip' }}
+        className={cn('mx-4 mt-2 transition-opacity duration-300 motion-reduce:transition-none md:absolute md:inset-x-6 md:bottom-6 md:z-20 md:mx-0 md:mt-0', chromeHidden && 'pointer-events-none opacity-0 focus-within:pointer-events-auto focus-within:opacity-100')}
       />
       <PanelArea hasControls compact={playing}>
         <ImCard data-testid="reaction-card" className={cn(playing && 'md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none')}>
@@ -599,7 +853,7 @@ function ReactionScene({
                 <ImButton size="xl" data-testid="reaction-play" onClick={() => video.play()}>
                   <Play className="size-5 fill-current" aria-hidden="true" /> Assistir
                 </ImButton>
-                <ImButton size="xl" variant="outline" data-testid="reaction-continue" onClick={finish}>
+                <ImButton size="xl" variant="outline" data-testid="reaction-continue" onClick={() => finish()}>
                   Continuar
                 </ImButton>
               </ActionBar>
@@ -627,6 +881,10 @@ function Scene({
   nextLesson,
   recap,
   onOpenRecap,
+  outroPlayed,
+  onOutroDone,
+  onLongVideoEnded,
+  videoSeen,
 }: {
   lesson: Lesson;
   node: AnyNode | undefined;
@@ -639,28 +897,62 @@ function Scene({
   nextLesson?: { id: string; title: string; href: string };
   recap: CourseRecap | null;
   onOpenRecap: () => void;
+  /** a vinheta desta aula já tocou (sessão) */
+  outroPlayed: boolean;
+  onOutroDone: () => void;
+  /** esta cena é o último vídeo longo da aula e a vinheta ainda vai tocar: ao fim do vídeo, a vinheta (sem avanço automático) */
+  onLongVideoEnded?: () => void;
+  /** o vídeo desta cena já foi visto até o fim (e a vinheta tocou): remontar a cena não pode recomeçá-lo */
+  videoSeen?: boolean;
 }) {
-  const { pending, fieldError, stepError, inflight, retrySend, conflict, setConflict, carry, retry, gesture, send, restart } = player;
+  const { pending, fieldError, stepError, inflight, retrySend, conflict, setConflict, carry, retry, gesture, send, restart, saved, dismissSaved } = player;
+  // "Na prática" acabou de ser salva: o motor já está na cena seguinte, mas a confirmação fica até "Continuar aula"
+  const savedHere = saved && saved.toNodeId === state.currentNodeId ? saved : null;
+  const savedNode = savedHere ? findNode(lesson, savedHere.fromNodeId) : undefined;
+  const savedCompose = savedNode?.type === 'reflection' && savedNode.scaffold ? savedNode : null;
+  // missão "Leve para a vida real" recém-registrada: o motor já seguiu, mas a confirmação fica até "Continuar aula"
+  const savedMission = savedNode?.type === 'mission' && savedHere?.mission ? { node: savedNode, status: savedHere.mission, note: savedHere.text, requested: savedHere.requested } : null;
   const stageRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingId = useId();
-  const capable = node && !completed && isVideoCapable(node) ? node : null;
+  // a cena anterior já fala a situação e a pergunta ("… Agora, responda: …"): o vídeo próprio da pergunta repetiria
+  // tudo em seguida; a pergunta entra direto, com o instrutor parado no palco
+  // (regra única, também usada na duração do percurso: questionVideoSkipped)
+  const callSpoken = useMemo(() => (node?.type === 'choice' ? questionVideoSkipped(lesson.graph, node.id) : false), [node, lesson.graph]);
+  const capable = node && !completed && !callSpoken && isVideoCapable(node) ? node : null;
   const media = capable ? videoMediaOf(capable) : null;
   const carryHere = carry && carry.nodeId === state.currentNodeId ? carry : null;
   // logo depois de responder: a cena seguinte mostra primeiro "Sua escolha" + o retorno, e o vídeo espera o
   // "Assistir" (sem isso o vídeo tocava sozinho por cima e o retorno só aparecia no fim dele)
   // ...exceto quando a instrutora já reagiu em vídeo à escolha: aí o próximo vídeo segue direto (continuidade);
   // o retorno escrito aparece no painel quando o vídeo termina
-  const holdForCarry = !!carryHere && !!capable && capable.type !== 'choice' && !(carryHere.kind === 'choice' && carryHere.reaction);
-  const video = useSceneVideo(capable, media, gesture && !holdForCarry);
+  const holdForCarry = (!!carryHere && !!capable && capable.type !== 'choice' && !(carryHere.kind === 'choice' && carryHere.reaction)) || !!savedCompose || !!savedMission;
+  // fechamento do curso (a despedida, depois da última prática): rótulo próprio, cartão-título e legendas ligadas por padrão
+  const isClosing = !!node && !completed && node.id === frame.closingNodeId;
+  const video = useSceneVideo(capable, media, gesture && !holdForCarry && !videoSeen, { captionsDefault: isClosing });
+  // cartão "Fechamento do curso · …" sobre o começo do vídeo, por ~1,5 s, uma vez
+  const [closingCard, setClosingCard] = useState<'idle' | 'on' | 'done'>('idle');
+  useEffect(() => {
+    if (isClosing && closingCard === 'idle' && video.phase === 'playing') setClosingCard('on');
+  }, [isClosing, closingCard, video.phase]);
+  useEffect(() => {
+    if (closingCard !== 'on') return;
+    const t = window.setTimeout(() => setClosingCard('done'), 1500);
+    return () => window.clearTimeout(t);
+  }, [closingCard]);
+  // depois do vídeo desta cena vem a missão: o fim do vídeo mostra a PONTE para ela, não o cartão genérico
+  const bridgeMission = useMemo(() => (node && (node.type === 'content' || node.type === 'scenario' || node.type === 'consequence') ? missionAfter(lesson.graph, node.id) : null), [node, lesson.graph]);
   // antes do primeiro play, um só acionador (o da abertura): a barra de controles entra quando o vídeo começa
   const hasControls = video.active && video.phase !== 'idle';
   // abertura leve (sem o painel branco): cena com vídeo ainda não iniciado e sem retorno de escolha a mostrar antes
-  const opening = !!node && !completed && video.active && video.phase === 'idle' && !carryHere && (node.type === 'scenario' || node.type === 'content' || node.type === 'consequence');
+  const opening = !!node && !completed && !savedCompose && !savedMission && video.active && video.phase === 'idle' && !carryHere && (node.type === 'scenario' || node.type === 'content' || node.type === 'consequence');
   const firstSceneId = useMemo(() => lesson.graph.nodes.find((n) => n.type === 'scenario' || n.type === 'content')?.id, [lesson.graph.nodes]);
   // decisão sem vídeo próprio: o palco mostra o fim do vídeo que fez a chamada (o instrutor "pausado"), não um fundo vazio
   const stageFrame = useMemo(() => {
-    if (!node || (node.type !== 'choice' && node.type !== 'reflection') || media) return frame;
+    if (!node || media) return frame;
+    // fim sem retrato do curso (`avatarPreviewUrl` vazio, ex.: C01): o palco mostra o último vídeo visto, não um lado vazio
+    const endWithoutPortrait = node.type === 'end' && !frame.posterUrl;
+    if (node.type !== 'choice' && node.type !== 'reflection' && node.type !== 'mission' && !endWithoutPortrait) return frame;
     // decisão: o vídeo que fez a chamada; missão (ou decisão sem anfitrião): o último vídeo do caminho feito
     const videoOf = (id: string | undefined) => {
       const n = id ? lesson.graph.nodes.find((x) => x.id === id) : undefined;
@@ -673,40 +965,24 @@ function Scene({
     return assetId?.kind === 'video' && assetId.assetId ? { ...frame, posterUrl: `/api/assets/${assetId.assetId}/thumb?at=0.82` } : frame;
   }, [node, media, lesson.graph, frame, state.path]);
   const playing = video.playing;
+  const fullscreen = useImmersiveFullscreenState().active;
   // "Pular vídeo"/"Responder agora": o aluno pediu o painel inteiro (mesmo com o vídeo pausado no meio)
   const [expanded, setExpanded] = useState(false);
   // vídeo começado e pausado no meio (cena sem pergunta): continua compacto para não cobrir o que o vídeo mostra
   const watching = !completed && video.active && (playing || (video.phase === 'paused' && !expanded && node?.type !== 'choice'));
   const retryHere = retry && retry.nodeId === state.currentNodeId ? retry : null;
   // pergunta e missão abrem no centro, com o fundo escurecido (o que o aluno precisa fazer em evidência)
-  const centered = !!node && !completed && !watching && (node.type === 'choice' || node.type === 'reflection');
+  const composeHere = !!node && !completed && !watching && node.type === 'reflection' && !!node.scaffold;
+  const centered = (!!node && !completed && !watching && (node.type === 'choice' || node.type === 'reflection' || node.type === 'mission')) || !!savedCompose || !!savedMission;
+  // pergunta/atividade no centro: o vídeo já terminou e a barra ficaria embaixo do painel (fora da tela); some
+  const barShown = hasControls && !centered;
+  const wide = composeHere || !!savedCompose;
 
   const endNode = node?.type === 'end' ? node : null;
-  // vinheta da marca: fecha o ÚLTIMO vídeo da aula (toca no palco inteiro assim que ele termina, com som: o aluno
-  // acabou de apertar "Assistir"). Quem pulou o vídeo vê a vinheta no fim, junto com o painel de encerramento.
-  const outroNodeId = useMemo(() => {
-    const narrated = lesson.graph.nodes.filter((n) => n.type === 'scenario' || n.type === 'content' || n.type === 'consequence');
-    return narrated[narrated.length - 1]?.id;
-  }, [lesson.graph.nodes]);
-  const outroKey = `lms.bumper.played:${lesson.id}`;
-  // já tocou nesta sessão (lido depois de montar: o HTML do servidor não conhece o sessionStorage)
-  const [outroPlayed, setOutroPlayed] = useState(false);
-  useEffect(() => {
-    try {
-      if (window.sessionStorage.getItem(outroKey) === '1') setOutroPlayed(true);
-    } catch {}
-  }, [outroKey]);
-  const markOutro = useCallback(() => {
-    setOutroPlayed(true);
-    try {
-      window.sessionStorage.setItem(outroKey, '1');
-    } catch {}
-  }, [outroKey]);
-  const outroNow = !!frame.bumper && !completed && !!node && node.id === outroNodeId && video.active && video.phase === 'ended' && !outroPlayed;
-  const bumperEl = outroNow ? (
-    <BrandBumper key="outro" bumper={frame.bumper!} gesture={gesture} variant="stage" onDone={markOutro} />
-  ) : completed && frame.bumper && !outroPlayed ? (
-    <BrandBumper key="end" bumper={frame.bumper} gesture={gesture} variant="stage" onDone={markOutro} />
+  // vinheta: no palco inteiro antes da atividade/fim (OutroStage, na raiz). Quem pulou vídeos a vê aqui, no fim,
+  // junto com o painel de encerramento (não trava o fluxo)
+  const bumperEl = savedCompose || savedMission ? null : completed && frame.bumper && !outroPlayed ? (
+    <BrandBumper key="end" bumper={frame.bumper} gesture={gesture} variant="stage" onDone={onOutroDone} />
   ) : null;
   // "Resultado da simulação": decisões desta aula revisadas a partir das respostas da tentativa
   const review = useMemo<ReviewSummary | null>(
@@ -715,33 +991,34 @@ function Scene({
   );
 
   // Foco no título a cada cena (sem rolar a página); no celular, garante o palco à vista.
+  // Resposta "Na prática" recém-salva: a confirmação (perto do botão que o aluno tocou) fica à vista.
+  // "Continuar aula": volta ao fluxo normal (foco no título da cena seguinte, palco à vista).
+  const savedShown = !!savedCompose || !!savedMission;
+  const wasSaved = useRef(savedShown);
   useEffect(() => {
     const h = headingRef.current;
     if (h) h.focus({ preventScroll: true });
     const s = stageRef.current;
     if (!s) return;
+    if (savedShown) {
+      s.querySelector('[data-testid="compose-saved"], [data-testid="mission-saved"]')?.scrollIntoView({ behavior: 'auto', block: 'center' });
+      return;
+    }
     const r = s.getBoundingClientRect();
     if (r.top < -8) s.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (!wasSaved.current || savedShown) return;
+    wasSaved.current = false;
+    headingRef.current?.focus({ preventScroll: true });
+    const s = stageRef.current;
+    if (s && s.getBoundingClientRect().top < -8) s.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+  }, [savedShown]);
 
   // "Responder agora": pausa e leva o foco ao título da pergunta.
   // estilo serviço de vídeo: tocando e com o mouse parado por 2,5 s, topo e controles somem; mexer, tocar ou teclar traz de volta
-  const [idle, setIdle] = useState(false);
-  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const wake = () => {
-    setIdle(false);
-    if (idleTimer.current) clearTimeout(idleTimer.current);
-    if (playing) idleTimer.current = setTimeout(() => setIdle(true), 2500);
-  };
-  useEffect(() => {
-    if (idleTimer.current) clearTimeout(idleTimer.current);
-    setIdle(false);
-    if (playing) idleTimer.current = setTimeout(() => setIdle(true), 2500);
-    return () => {
-      if (idleTimer.current) clearTimeout(idleTimer.current);
-    };
-  }, [playing]);
-  const chromeHidden = playing && idle;
+  const { chromeHidden, wake } = useIdleChrome(playing);
 
   const answerNow = () => {
     setExpanded(true);
@@ -761,22 +1038,36 @@ function Scene({
     const outs = [...new Set(lesson.graph.edges.filter((e) => e.from === node.id).map((e) => e.to))];
     if (outs.length !== 1) return false;
     const next = lesson.graph.nodes.find((n) => n.id === outs[0]);
-    return next?.type === 'choice' && callHostId(lesson.graph, next.id) === node.id;
+    if (next?.type !== 'choice') return false;
+    if (callHostId(lesson.graph, next.id) === node.id) return true;
+    // a pergunta tem vídeo próprio, mas ele é pulado porque este vídeo já termina com a chamada (mesma regra do palco)
+    if (questionVideoSkipped(lesson.graph, next.id)) return true;
+    // a pergunta tem vídeo próprio e ele toca: este vídeo termina e o da pergunta segue direto, sem "Continuar"
+    return questionVideoFollows(lesson.graph, node.id);
   }, [node, lesson.graph]);
   const autoAdvanced = useRef(false);
+  // último vídeo longo visto até o fim: a vinheta entra antes (o avanço acontece depois dela)
+  const outroFired = useRef(false);
   useEffect(() => {
-    if (!leadsToChoice || video.phase !== 'ended' || outroNow || pending || autoAdvanced.current) return;
+    if (!onLongVideoEnded || video.phase !== 'ended' || outroFired.current) return;
+    outroFired.current = true;
+    autoAdvanced.current = true;
+    onLongVideoEnded();
+  }, [onLongVideoEnded, video.phase]);
+  useEffect(() => {
+    if (!leadsToChoice || video.phase !== 'ended' || pending || autoAdvanced.current || onLongVideoEnded) return;
     autoAdvanced.current = true;
     const t = window.setTimeout(() => send({ kind: 'advance' }), 700);
     return () => window.clearTimeout(t);
-  }, [leadsToChoice, video.phase, outroNow, pending, send]);
+  }, [leadsToChoice, video.phase, pending, send, onLongVideoEnded]);
 
   const videoEl = video.active ? (
     <video
       {...video.videoProps}
       aria-label={media?.alt ?? 'Vídeo da cena'}
       // posicionada: em palcos mais estreitos que 16:9, o recorte preserva o lado da apresentadora
-      className={cn('h-full w-full object-cover', frame.presenterPlacement === 'right' && 'object-[70%_50%]', frame.presenterPlacement === 'left' && 'object-[30%_50%]')}
+      // tela cheia tocando: o quadro inteiro, sem cortar a cabeça nem a composição (faixas escuras nos lados do palco mais largo que 16:9)
+      className={cn('h-full w-full object-cover object-[50%_0%]', frame.presenterPlacement === 'right' && 'object-[70%_0%]', frame.presenterPlacement === 'left' && 'object-[30%_0%]', fullscreen && watching && 'object-contain')}
       poster={frame.posterUrl}
     >
       {video.captionsSrc && <track kind="captions" srcLang={media?.captions?.lang ?? 'pt-BR'} label="Português" src={video.captionsSrc} default />}
@@ -784,6 +1075,13 @@ function Scene({
   ) : null;
 
   const percent = completed ? 100 : progress.percent;
+  // o que o servidor deixou valendo em cada missão (esta sessão manda; senão o registro do curso): o chip final e o roteiro leem o mesmo estado
+  const missionStatusMap = useMemo(() => {
+    const out: Record<string, string | undefined> = {};
+    for (const [id, r] of Object.entries(recap?.missions ?? {})) out[id] = r.status;
+    for (const [id, r] of Object.entries(player.missions)) out[id] = r.status;
+    return out;
+  }, [recap?.missions, player.missions]);
 
   let panel: React.ReactNode;
   if (!node) {
@@ -795,6 +1093,37 @@ function Scene({
           <ImLink href={frame.exitHref}>Voltar ao curso</ImLink>
         </div>
       </>
+    );
+  } else if (savedCompose && savedHere) {
+    panel = (
+      <ComposePanel
+        key={`salva:${savedCompose.id}`}
+        node={savedCompose}
+        carry={null}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={null}
+        onSend={send}
+        saved={savedHere.text}
+        onContinue={dismissSaved}
+      />
+    );
+  } else if (savedMission) {
+    panel = (
+      <MissionPanel
+        key={`salva:${savedMission.node.id}`}
+        node={savedMission.node}
+        carry={null}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={null}
+        onSend={send}
+        saved={{ status: savedMission.status, note: savedMission.note, ...(savedMission.requested ? { requested: savedMission.requested } : {}) }}
+        farewell={farewellAfter(lesson.graph, savedMission.node.id, frame.lastLesson)}
+        onContinue={dismissSaved}
+      />
     );
   } else if (completed) {
     panel = (
@@ -810,12 +1139,10 @@ function Scene({
         onRestart={() => void restart()}
         hasRecap={!!recap}
         onOpenRecap={onOpenRecap}
-        achievements={(() => {
-          const visited = new Set(state.path.map((p) => (p as { nodeId: string }).nodeId));
-          const of = (t: string) => lesson.graph.nodes.filter((n) => n.type === t && visited.has(n.id)).length;
-          return { choices: of('choice'), missions: of('reflection'), reviews: of('assessment') > 0 ? 1 : 0 };
-        })()}
-        {...(!nextLesson && frame.credentialName && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { credential: frame.credentialName } : {})}
+        achievements={lessonAchievements(lesson.graph.nodes, state, missionStatusMap)}
+        {...(frame.series ? { series: frame.series } : {})}
+        {...(frame.courseEnd ? { courseEnd: { course: seriesEndsTrail(frame.series) ? frame.series!.trail : frame.courseTitle, ...((endNode?.closingLine?.trim() || recap?.closingLine) ? { closingLine: (endNode?.closingLine?.trim() || recap?.closingLine)! } : {}) } } : {})}
+        {...(!nextLesson && frame.achievement && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { conquest: { name: frame.achievement, ...(frame.courseTrail ? { trail: frame.courseTrail } : {}) } } : {})}
       />
     );
   } else if (watching) {
@@ -824,7 +1151,7 @@ function Scene({
     panel = (
       <ImCard data-testid="video-watching" className="md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
         <h2 ref={headingRef} id={headingId} tabIndex={-1} className="rounded-md text-[17px] font-semibold leading-snug text-fg outline-none focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-[var(--im-accent-ink)] md:sr-only">
-          {node.title ?? NODE_TYPE_LABELS[node.type]}
+          {isClosing ? closingCardTitle(frame.courseTitle) : (node.title ?? NODE_TYPE_LABELS[node.type])}
         </h2>
         <div className="md:hidden">
           <p className="mt-1 text-[15px] leading-snug text-fg/75">
@@ -846,8 +1173,9 @@ function Scene({
       <OpeningPanel
         node={node}
         first={node.id === firstSceneId}
-        {...(node.id === firstSceneId && frame.lessonIndex === 0 && frame.courseGoals?.length ? { courseIntro: { goals: frame.courseGoals, ...(frame.credentialName ? { credential: frame.credentialName } : {}) } } : {})}
+        {...(node.id === firstSceneId && frame.lessonIndex === 0 && frame.courseGoals?.length ? { courseIntro: { goals: frame.courseGoals, ...(frame.courseTrail ? { trail: frame.courseTrail.name } : {}) } } : {})}
         lessonTitle={lesson.title}
+        {...(isClosing ? { closing: true } : {})}
         {...(lesson.description?.trim() ? { lessonDescription: lesson.description.trim() } : {})}
         video={video}
         narrationTitle={frame.narrationTitle}
@@ -856,6 +1184,47 @@ function Scene({
         pending={pending}
         fieldError={fieldError}
         onSend={send}
+      />
+    );
+  } else if (node.type === 'mission') {
+    // revisita: o que a pessoa já respondeu nesta tentativa ou o registro do curso (editável depois da aula)
+    const prevAnswer = state.answers[node.id];
+    const prevRec = recap?.missions?.[node.id];
+    // o registro do servidor manda (ele não rebaixa "Já experimentei"); a resposta da tentativa vale enquanto ele não chega
+    const previous = player.missions[node.id] ?? (prevRec ? { status: prevRec.status, note: prevRec.note } : prevAnswer?.missionStatus ? { status: prevAnswer.missionStatus, note: prevAnswer.text ?? null } : null);
+    const draftText = node.draftFromNodeId ? (state.answers[node.draftFromNodeId]?.text ?? (recap?.answers?.[node.draftFromNodeId]?.lessonId === lesson.id ? recap.answers[node.draftFromNodeId]!.text : undefined))?.trim() || null : null;
+    panel = (
+      <MissionPanel
+        node={node}
+        carry={carryHere}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={fieldError}
+        onSend={send}
+        previous={previous}
+        draftText={draftText}
+        saveError={stepError && inflight?.nodeId === node.id ? stepError : null}
+        onRetry={retrySend}
+        lastPractice={isLastPractice(lesson.graph, node.id, frame.lastLesson)}
+        farewell={farewellAfter(lesson.graph, node.id, frame.lastLesson)}
+      />
+    );
+  } else if (node.type === 'reflection' && node.scaffold) {
+    // revisita: a resposta desta tentativa (ao voltar a uma cena já respondida) ou a última salva no curso
+    const previousText = state.answers[node.id]?.text ?? (recap?.answers?.[node.id]?.lessonId === lesson.id ? recap.answers[node.id]!.text : undefined) ?? null;
+    panel = (
+      <ComposePanel
+        node={node}
+        carry={carryHere}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={fieldError}
+        onSend={send}
+        previousText={previousText}
+        saveError={stepError && inflight?.nodeId === node.id ? stepError : null}
+        onRetry={retrySend}
       />
     );
   } else {
@@ -870,6 +1239,7 @@ function Scene({
         fieldError={fieldError}
         onSend={send}
         video={video.active ? video : null}
+        bridge={bridgeMission}
         narrationTitle={frame.narrationTitle}
         review={review}
         sceneTitle={node.id === firstSceneId ? lesson.title : (node.title ?? lesson.title)}
@@ -895,14 +1265,14 @@ function Scene({
         onPointerMove={wake}
         onPointerDown={wake}
         onKeyDown={wake}
-        className={cn(stageClass(hasControls), chromeHidden && 'md:cursor-none')}
+        className={cn(stageClass(barShown, fullscreen), chromeHidden && 'md:cursor-none')}
       >
-        <StageTopNav frame={frame} percent={percent} hidden={chromeHidden} steps={<LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} />} />
+        <StageTopNav frame={frame} percent={percent} hidden={chromeHidden} onVideo={fullscreen && watching} steps={<LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} {...(frame.closingNodeId ? { closingNodeId: frame.closingNodeId } : {})} />} />
         {/* celular: a trilha de etapas logo abaixo do topo */}
         <div className="px-4 pb-3 md:hidden">
-          <LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} />
+          <LessonStepsBar lesson={lesson} state={state} {...(node ? { currentNodeId: node.id } : {})} completed={completed} {...(frame.closingNodeId ? { closingNodeId: frame.closingNodeId } : {})} />
         </div>
-        <StageMedia frame={stageFrame} video={{ el: videoEl, playing, caption: video.caption, hasControls, watching }} bumper={bumperEl} bumperFull={outroNow}>
+        <StageMedia frame={stageFrame} video={{ el: videoEl, playing, caption: video.caption, hasControls: barShown, watching }} bumper={bumperEl}>
           {/* decisão: aviso discreto de que é a vez do aluno (o vídeo não segue sozinho) */}
           {node?.type === 'choice' && !completed && !watching && (
             <p className="pointer-events-none absolute bottom-6 right-6 z-10 hidden items-center gap-2 rounded-full bg-[#0f1030]/80 px-4 py-2 text-[14px] font-medium text-white backdrop-blur md:flex" data-testid="stage-your-turn">
@@ -910,15 +1280,24 @@ function Scene({
               {(video.active && video.phase !== 'idle') || stageFrame !== frame ? 'Vídeo pausado para sua escolha' : 'Sua vez de escolher'}
             </p>
           )}
+          {closingCard === 'on' && (
+            <div data-testid="closing-card" aria-hidden="true" className="im-closing-card pointer-events-none absolute inset-0 z-20 grid place-items-center bg-[#050A14]/40 px-6">
+              <p className="flex max-w-[34ch] items-center gap-3 rounded-[16px] bg-[#0f1030]/90 px-5 py-3.5 text-center text-[18px] font-semibold leading-snug text-white md:text-[22px]">
+                <Flag className="size-5 shrink-0 text-[var(--im-accent)]" aria-hidden="true" />
+                {closingCardTitle(frame.courseTitle)}
+              </p>
+            </div>
+          )}
           {video.buffering && (
             <p role="status" className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#050A14]/80 px-4 py-2 text-sm text-white md:left-[62%]">
               Carregando vídeo…
             </p>
           )}
         </StageMedia>
-        {hasControls && <ControlBar video={video} fullscreenTarget={stageRef} skip={watching && node ? { label: node.type === 'choice' ? 'Responder agora' : 'Pular vídeo', onClick: answerNow, testId: node.type === 'choice' ? 'video-answer-now-bar' : 'video-skip-bar' } : undefined} className={cn('mx-4 mt-2 transition-opacity duration-300 motion-reduce:transition-none md:absolute md:inset-x-6 md:bottom-6 md:z-20 md:mx-0 md:mt-0', chromeHidden && 'pointer-events-none opacity-0 focus-within:pointer-events-auto focus-within:opacity-100')} />}
+        {barShown && <ControlBar video={video} skip={watching && node ? { label: node.type === 'choice' ? 'Responder agora' : 'Pular vídeo', onClick: answerNow, testId: node.type === 'choice' ? 'video-answer-now-bar' : 'video-skip-bar' } : undefined} className={cn('mx-4 mt-2 transition-opacity duration-300 motion-reduce:transition-none md:absolute md:inset-x-6 md:bottom-6 md:z-20 md:mx-0 md:mt-0', chromeHidden && 'pointer-events-none opacity-0 focus-within:pointer-events-auto focus-within:opacity-100')} />}
         {centered && <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] hidden bg-[#0f1030]/45 backdrop-blur-[2px] md:block" />}
-        <PanelArea hasControls={hasControls} compact={watching} light={opening} center={centered} side={frame.presenterPlacement === 'left' ? 'right' : 'left'}>
+        {completed && frame.courseEnd && !savedShown && <Celebration />}
+        <PanelArea hasControls={barShown} compact={watching} light={opening} center={centered} wide={wide} side={frame.presenterPlacement === 'left' ? 'right' : 'left'}>
           {conflict && (
             <ImCard role="status" data-testid="player-conflict" className="mb-6 flex items-start justify-between gap-3 py-3 text-sm text-fg/85 md:py-3">
               <span>Esta aula avançou em outra aba. Continuamos do ponto atual.</span>
@@ -927,7 +1306,7 @@ function Scene({
               </button>
             </ImCard>
           )}
-          {stepError && (
+          {stepError && !composeHere && node?.type !== 'mission' && (
             <ImCard role="alert" className="mb-6 border-danger/40 text-danger">
               <p className="font-semibold">Não foi possível enviar sua resposta.</p>
               <p className="mt-1 text-sm">{stepError}</p>
@@ -942,10 +1321,10 @@ function Scene({
         </PanelArea>
       </section>
 
-      {completed && endNode && recap && endNode.recap && endNode.recap.length > 0 && (
+      {completed && !savedCompose && !savedMission && endNode && recap && endNode.recap && endNode.recap.length > 0 && (
         <div className="mx-auto mt-8 w-full max-w-[880px] space-y-8 px-4 md:mt-12 md:px-0">
-          <RecapView items={recap.items} title={recap.title} variant="page" headingLevel={2} className="border-line bg-bg-2" />
-          {recap.closingLine && (
+          <RecapView items={recap.items} title={recap.title} variant="page" headingLevel={2} className="border-line bg-bg-2" {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})} />
+          {recap.closingLine && !frame.courseEnd && (
             <p data-testid="recap-closing-line" className="border-l-4 border-[var(--im-accent-line)] py-2 pl-5 text-[28px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[40px]">
               {recap.closingLine}
             </p>
@@ -1064,12 +1443,17 @@ function NodePanel({
   review,
   sceneTitle,
   questionPos,
+  bridge,
   ...p
-}: PanelProps & { node: AnyNode; carry: Carry | null; retry: RetryInfo | null; video: SceneVideo | null; narrationTitle: string; review: ReviewSummary | null; /** título de apresentação da cena (a 1ª cena da aula usa o nome da aula) */ sceneTitle?: string; questionPos?: { n: number; total: number } }) {
+}: PanelProps & { node: AnyNode; carry: Carry | null; retry: RetryInfo | null; video: SceneVideo | null; /** a missão que vem a seguir: o fim do vídeo mostra a ponte para ela */ bridge?: MissionNode | null; narrationTitle: string; review: ReviewSummary | null; /** título de apresentação da cena (a 1ª cena da aula usa o nome da aula) */ sceneTitle?: string; questionPos?: { n: number; total: number } }) {
   // Fala escrita: só quando não há vídeo (ou ele falhou), aberta ("O que a Marina diz"). Com vídeo, a fala
   // fica nas legendas do próprio vídeo, em tempo real, ligadas pelo aluno no botão "Legendas" da barra.
   const narration = narrationOf(node);
   const hasVideo = !!video?.active;
+  // o vídeo terminou e o próximo passo é a missão: ponte, no lugar de "A seguir · {título deste vídeo}" e de "Sua escolha"
+  if (bridge && video?.active && video.phase === 'ended' && (node.type === 'content' || node.type === 'scenario' || node.type === 'consequence')) {
+    return <MissionBridge mission={bridge} {...p} />;
+  }
   const spoken = narration && !hasVideo ? <NarrationBlock key={`${node.id}:none`} narration={narration} heading={narrationTitle} hasVideo={false} className="mt-6" /> : null;
   switch (node.type) {
     case 'choice':
@@ -1081,6 +1465,8 @@ function NodePanel({
       return <InfoPanel node={node} carry={carry} spoken={spoken} review={review} video={video} {...(sceneTitle ? { sceneTitle } : {})} {...p} />;
     case 'reflection':
       return node.scaffold ? <ComposePanel node={node} carry={carry} {...p} /> : <ReflectionPanel node={node} carry={carry} {...p} />;
+    case 'mission':
+      return <MissionPanel node={node} carry={carry} {...p} />;
     case 'assessment':
       return <AssessmentPanel node={node} carry={carry} retry={retry} {...p} />;
     default:
@@ -1133,6 +1519,34 @@ function CarryCard({ carry }: { carry: Carry }) {
       {carry.feedback && <RichText doc={carry.feedback} className="mt-2 text-base leading-relaxed text-fg/80" />}
     </ImCard>
   );
+}
+
+/**
+ * Ponte antes da missão ("Agora é com você"): nomeia a missão, diz que é uma prática fora da plataforma que pode ficar para
+ * depois e leva a "Ver a missão". Substitui o cartão genérico do fim do vídeo (que repetia o título do vídeo e "Sua escolha").
+ */
+export function MissionBridge({ mission, headingRef, headingId, pending, fieldError, onSend }: PanelProps & { mission: MissionNode }) {
+  const title = missionTitleOf(mission);
+  return (
+    <div data-testid="mission-bridge" className="im-bridge-in">
+      <PanelHead ref={headingRef} id={headingId} chip={{ label: 'Etapa', tone: 'accent' }} title={title} eyebrow={BRIDGE_EYEBROW} />
+      <p data-testid="mission-bridge-line" className="mt-4 max-w-[40ch] text-[18px] leading-relaxed text-fg/80">
+        {BRIDGE_LINE}
+      </p>
+      <FieldError message={fieldError} />
+      <ActionBar>
+        <ImButton size="xl" data-testid="player-continue" onClick={() => onSend({ kind: 'advance' })} disabled={pending} aria-busy={pending}>
+          {pending ? 'Enviando…' : BRIDGE_BUTTON}
+        </ImButton>
+      </ActionBar>
+    </div>
+  );
+}
+
+/** O título da missão para o aluno; sem um título próprio, o nome do momento ("Leve para a vida real"). */
+function missionTitleOf(node: MissionNode): string {
+  const t = node.title?.trim() ?? '';
+  return t || MISSION_LABELS.moment;
 }
 
 function ContinueAction({ pending, fieldError, onSend, video }: { pending: boolean; fieldError: string | null; onSend: (i: PlayerIntent) => void; video?: SceneVideo | null }) {
@@ -1192,7 +1606,8 @@ function OpeningPanel({
   fieldError,
   onSend,
   courseIntro,
-}: PanelProps & { node: Extract<AnyNode, { type: 'content' | 'scenario' | 'consequence' }>; first: boolean; lessonTitle: string; lessonDescription?: string; video: SceneVideo; narrationTitle: string; /** 1ª cena do curso: o que o aluno leva ao concluir e o selo */ courseIntro?: { goals: string[]; credential?: string } }) {
+  closing,
+}: PanelProps & { node: Extract<AnyNode, { type: 'content' | 'scenario' | 'consequence' }>; first: boolean; /** o fechamento do curso (despedida): rótulo "Fechamento do curso" */ closing?: boolean; lessonTitle: string; lessonDescription?: string; video: SceneVideo; narrationTitle: string; /** 1ª cena do curso: o que o aluno leva ao concluir e o selo */ courseIntro?: { goals: string[]; trail?: string } }) {
   const [reading, setReading] = useState(false);
   const narration = narrationOf(node) ?? ((node as { media?: { transcript?: string } }).media?.transcript?.trim() || null);
   const title = first ? lessonTitle : (node.title ?? lessonTitle);
@@ -1204,15 +1619,15 @@ function OpeningPanel({
   return (
     <div data-testid="opening-panel">
       <h2 ref={headingRef} id={headingId} tabIndex={-1} className="rounded-md text-[clamp(2rem,1.2rem+2.4vw,3.25rem)]! font-semibold! leading-[1.05]! tracking-[-0.025em]! text-fg outline-none! [text-wrap:balance]">
-        <Eyebrow>{first ? 'Antes de começar' : 'A seguir'}</Eyebrow>
+        <Eyebrow>{first ? 'Antes de começar' : closing ? 'Fechamento do curso' : 'A seguir'}</Eyebrow>
         {title}
       </h2>
       {orientation && !courseIntro && <p className="mt-3 max-w-[38ch] text-[18px] leading-snug text-fg/75 md:text-[20px]">{orientation}</p>}
-      {courseIntro && <CourseIntro goals={courseIntro.goals} {...(courseIntro.credential ? { credential: courseIntro.credential } : {})} />}
+      {courseIntro && <CourseIntro goals={courseIntro.goals} {...(courseIntro.trail ? { trail: courseIntro.trail } : {})} />}
       <FieldError message={fieldError} />
       <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
         <ImButton size="xl" data-testid="player-watch" onClick={() => video.play()} disabled={pending}>
-          <Play className="size-5 fill-current" aria-hidden="true" /> {first ? 'Começar aula' : 'Assistir'}
+          <Play className="size-5 fill-current" aria-hidden="true" /> {first ? 'Começar aula' : closing ? 'Assistir ao fechamento' : 'Assistir'}
         </ImButton>
         {video.duration > 0 && (
           <span className="text-[15px] tabular-nums text-fg/60">
@@ -1258,7 +1673,7 @@ function OpeningPanel({
 }
 
 /** "Ao concluir este curso, você…": os objetivos do curso + o selo de competência para o currículo. */
-function CourseIntro({ goals, credential }: { goals: string[]; credential?: string }) {
+function CourseIntro({ goals, trail }: { goals: string[]; trail?: string }) {
   return (
     <div className="mt-4 max-w-[46ch] space-y-3" data-testid="course-intro">
       <p className="text-[15px] font-semibold text-fg/80">Ao concluir este curso:</p>
@@ -1270,11 +1685,12 @@ function CourseIntro({ goals, credential }: { goals: string[]; credential?: stri
           </li>
         ))}
       </ul>
-      {credential && (
-        <p className="flex items-center gap-2.5 rounded-[12px] border border-[var(--im-accent-line)]/50 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] px-3 py-2 text-[15px] leading-snug text-fg">
+      {/* o Selo DNA Work é da trilha (curso sozinho dá conquista dentro da plataforma): sem trilha, nada sobre selo */}
+      {trail && (
+        <p className="flex items-center gap-2.5 rounded-[12px] border border-[var(--im-accent-line)]/50 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] px-3 py-2 text-[15px] leading-snug text-fg" data-testid="course-intro-trail">
           <Award className="size-5 shrink-0 text-[var(--im-accent-ink)]" aria-hidden="true" />
           <span>
-            E ganha o <strong>Selo de competência DNA Work · {credential}</strong> para colocar no seu currículo.
+            Este curso faz parte da trilha <strong>{trail}</strong>. Conclua a trilha para ganhar o <strong>Selo DNA Work</strong>.
           </span>
         </p>
       )}
@@ -1346,8 +1762,9 @@ function ChoicePanel({ node, carry, spoken, headingRef, headingId, pending, fiel
           )}
           {(() => {
             const call = node.bridge?.call?.trim();
-            // quando a chamada termina com a própria pergunta do título, não repete; sem chamada, nada (a orientação vem abaixo das alternativas)
-            const instruction = call && !callRepeatsTitle(call, title) ? <span data-testid="choice-call">{call}</span> : null;
+            // a chamada é o que a instrutora acabou de falar: com o quadro "A situação" na tela, ela só repetiria o caso e a
+            // pergunta; aparece apenas quando não há situação escrita e não repete o título
+            const instruction = call && !(leadDoc || context) && !callRepeatsTitle(call, title) ? <span data-testid="choice-call">{call}</span> : null;
             // ligação explícita com a pergunta: o aluno responde como ELE agiria (não "a resposta certa")
             return (
               <p className="flex items-start gap-2 text-[17px] font-medium leading-snug text-fg">
@@ -1638,56 +2055,399 @@ function ReflectionPanel({ node, carry, headingRef, headingId, pending, fieldErr
 
 /* ------------------------- Composição guiada ---------------------------- */
 
+/** Título da atividade: o da cena, sem o prefixo "Missão:"; sem título, "Monte sua resposta". */
+function composeTitle(node: ReflectionNode): string {
+  const t = node.title?.trim().replace(/^miss[aã]o\s*:\s*/i, '').trim();
+  return t ? t.charAt(0).toLocaleUpperCase('pt-BR') + t.slice(1) : 'Monte sua resposta';
+}
+
 /**
- * "Monte sua frase": blocos prontos para tocar (sem campo em branco). "Usar esta
- * frase" envia a frase montada pela intenção `reflect`; "Pular" quando opcional.
+ * "Na prática" (reflexão com molde): todos os grupos de opções à mostra e uma prévia única da
+ * resposta, numa superfície roxa só desta atividade (`.compose-surface`). "Salvar no meu roteiro"
+ * envia a resposta montada pela intenção `reflect` (o mesmo contrato de sempre); a confirmação
+ * ("Resposta salva no Meu roteiro" + "Continuar aula") aparece quando o envio termina (`saved`).
+ * "Fazer depois" só quando a cena é opcional (envia vazio, como o antigo "Pular": nada é salvo).
  */
-function ComposePanel({ node, carry, headingRef, headingId, pending, fieldError, onSend }: PanelProps & { node: ReflectionNode; carry: Carry | null }) {
-  const [sentence, setSentence] = useState<ComposedSentence>({ text: '', complete: false });
+function ComposePanel({
+  node,
+  carry,
+  headingRef,
+  headingId,
+  pending,
+  fieldError,
+  onSend,
+  previousText,
+  saveError,
+  onRetry,
+  saved,
+  onContinue,
+}: PanelProps & {
+  node: ReflectionNode;
+  carry: Carry | null;
+  /** resposta salva antes (revisita): as escolhas voltam marcadas */
+  previousText?: string | null;
+  /** falha de rede/servidor ao salvar (as escolhas ficam) */
+  saveError?: string | null;
+  onRetry?: () => void;
+  /** resposta já salva: confirmação + "Continuar aula" */
+  saved?: string;
+  onContinue?: () => void;
+}) {
+  const [sentence, setSentence] = useState<ComposedSentence>({ text: '', complete: false, missing: 1, total: 1 });
   const optional = node.minLength === 0;
   const lead = richTextToPlain(node.prompt).trim();
+  // o enunciado antigo ("Monte sua frase tocando nas partes… Outro… Pode pular") não descreve mais a tela
+  const showLead = !!lead && !/^monte sua frase/i.test(lead);
   const tooLong = sentence.text.length > node.maxLength;
-  const ready = sentence.complete && !tooLong && sentence.text.length >= node.minLength;
-  return (
-    <form
-      data-testid="compose-panel"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (ready) onSend({ kind: 'reflect', text: sentence.text });
-      }}
-    >
-      <PanelHead ref={headingRef} id={headingId} chip={chipFor(node, false)} eyebrow="Sua missão" compact title={(node.title?.trim() || 'Monte sua frase').replace(/^miss[aã]o\s*:\s*/i, '')} />
-      {carry && <CarryCard carry={carry} />}
-      {/* para que serve e como fazer: a frase é para usar no trabalho de verdade (fica no roteiro) */}
-      <div className="mt-4 rounded-[14px] border border-line bg-fg/[0.03] p-4" data-testid="mission-howto">
-        <p className="text-[16px] leading-relaxed text-fg/85">Monte a frase que você vai usar no trabalho. Ela fica salva no seu roteiro para quando você precisar.</p>
-        <ol className="mt-3 grid gap-2 text-[15px] text-fg/80 sm:grid-cols-3">
-          {['Toque em cada “escolha aqui”', 'Escolha a opção que combina com você', 'Confira a frase e salve'].map((t, i) => (
-            <li key={t} className="flex items-start gap-2">
-              <span aria-hidden="true" className="grid size-6 shrink-0 place-items-center rounded-full bg-[var(--im-accent)] text-[13px] font-semibold text-[var(--im-on-accent)]">{i + 1}</span>
-              <span>{t}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-      {lead && !/^monte sua frase/i.test(lead) && <p className="mt-4 text-[17px] leading-relaxed text-fg/80">{lead}</p>}
-      <ScaffoldComposer scaffold={node.scaffold!} disabled={pending} onChange={setSentence} className="mt-6" />
+  const tooShort = sentence.complete && sentence.text.length < node.minLength;
+  const isSaved = saved !== undefined;
+  const btn = saveButtonState({ missing: sentence.missing, tooLong, tooShort, pending, saved: isSaved });
+  const continueRef = useRef<HTMLButtonElement>(null);
+
+  const actions = isSaved ? (
+    <div className="space-y-3">
+      {/* anunciado pela região viva do player ("Resposta salva no Meu roteiro."): aqui só o visual */}
+      <p className="flex items-center gap-2.5 rounded-[12px] border border-[var(--t-accent-fill)] bg-[var(--cp-selected,var(--t-accent-soft))] px-4 py-2.5 text-[15px] font-semibold text-fg" data-testid="compose-saved">
+        <CircleCheck className="size-6 shrink-0" aria-hidden="true" />
+        Resposta salva no Meu roteiro.
+      </p>
+      <ImButton ref={continueRef} size="lg" className="w-full" data-testid="compose-continue" onClick={onContinue}>
+        Continuar aula
+      </ImButton>
+    </div>
+  ) : (
+    <div className="space-y-2">
+      {saveError && (
+        <div role="alert" className="rounded-[12px] border border-danger/50 bg-danger-soft px-4 py-3 text-[15px] text-fg" data-testid="compose-save-error">
+          <p className="font-semibold">Não foi possível salvar sua resposta.</p>
+          <p className="mt-0.5 text-fg-muted">Suas escolhas continuam aqui. Verifique a conexão e tente de novo.</p>
+          {onRetry && (
+            <ImButton variant="outline" size="sm" className="mt-3" onClick={onRetry} disabled={pending} data-testid="compose-retry">
+              Tentar de novo
+            </ImButton>
+          )}
+        </div>
+      )}
       {tooLong && (
-        <p role="alert" className="mt-3 text-sm text-danger">
-          A frase passou de {node.maxLength} caracteres. Encurte uma das partes.
+        <p role="alert" className="text-[15px] text-danger">
+          A resposta passou de {node.maxLength} caracteres. Escolha uma opção mais curta ou encurte o que escreveu.
         </p>
       )}
       <FieldError message={fieldError} />
-      <ActionBar>
-        <ImButton type="submit" size="xl" data-testid="player-submit" disabled={!ready || pending} aria-busy={pending}>
-          {pending ? 'Enviando…' : 'Salvar no meu roteiro'}
-        </ImButton>
+      <ImButton type="submit" size="lg" className="w-full whitespace-normal" data-testid="player-submit" disabled={btn.disabled} aria-busy={pending} aria-disabled={btn.disabled}>
+        {btn.label}
+      </ImButton>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <p className="flex items-center gap-1.5 text-[13px] text-fg-muted">
+          <BookOpen className="size-4 shrink-0" aria-hidden="true" />
+          Fica disponível no Meu roteiro.
+        </p>
         {optional && (
-          <ImButton variant="outline" size="xl" data-testid="player-skip" disabled={pending} onClick={() => onSend({ kind: 'reflect', text: '' })}>
-            Pular missão
-          </ImButton>
+          <button
+            type="button"
+            data-testid="player-skip"
+            disabled={pending}
+            onClick={() => onSend({ kind: 'reflect', text: '' })}
+            className="flex min-h-11 items-center justify-center rounded-[10px] px-2 text-[15px] font-semibold text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg disabled:opacity-50"
+          >
+            Fazer depois
+          </button>
         )}
-      </ActionBar>
+      </div>
+    </div>
+  );
+
+  return (
+    <form
+      data-testid="compose-panel"
+      data-state={isSaved ? 'saved' : sentence.missing === 0 ? 'complete' : sentence.missing === sentence.total ? 'empty' : 'partial'}
+      className="compose-surface rounded-[22px] border p-5 md:px-7 md:py-5"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!btn.disabled) onSend({ kind: 'reflect', text: sentence.text });
+      }}
+    >
+      {/* "Na prática" e o título na mesma linha (quando couber) */}
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <p className="flex items-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--cp-eyebrow,var(--t-accent))]">
+          <span aria-hidden="true" className="h-[2px] w-6 rounded-full bg-[var(--t-accent-fill)]" />
+          Na prática
+        </p>
+        <h2 ref={headingRef} id={headingId} tabIndex={-1} className="rounded-md text-[24px] font-bold leading-[1.12] tracking-[-0.015em] text-fg outline-none! md:text-[28px]">
+          {composeTitle(node)}
+        </h2>
+      </div>
+      {/* ponte e instrução numa linha só (quando couber) */}
+      <p className="mt-1.5 max-w-[80ch] text-[15px] leading-snug text-fg-muted md:text-[16px]">
+        {node.intro?.trim() && (
+          <span className="text-fg" data-testid="compose-intro">
+            {node.intro.trim()}{' '}
+          </span>
+        )}
+        Escolha uma opção em cada grupo para montar sua resposta.
+      </p>
+      {showLead && <p className="mt-1.5 text-[15px] leading-snug text-fg-muted">{lead}</p>}
+      {carry && <CarryCard carry={carry} />}
+      <ScaffoldComposer
+        scaffold={node.scaffold!}
+        disabled={pending}
+        readOnly={isSaved}
+        initialText={isSaved ? saved : previousText}
+        onChange={setSentence}
+        actions={actions}
+        stickyActions={!isSaved && sentence.complete}
+        className="mt-3"
+      />
+    </form>
+  );
+}
+
+/* ----------------- Missão "Leve para a vida real" ----------------------- */
+
+/**
+ * Terceiro momento da aula, depois de "Você decide": uma ação para fazer FORA da plataforma, com alternativa para quem
+ * ainda não trabalha. Nunca trava a aula: "Vou fazer depois" continua (e a missão fica em "Missões para depois" na página
+ * do curso e no Meu roteiro); "Já experimentei" abre o campo opcional "O que você percebeu?" (até 500 caracteres).
+ * Os dois caminhos usam a intenção `mission`; a confirmação ("Missão registrada…") só aparece depois que o servidor
+ * respondeu (`saved`). Se o envio falhar, o texto continua no campo e há "Tentar de novo".
+ */
+export function MissionPanel({
+  node,
+  carry,
+  headingRef,
+  headingId,
+  pending,
+  fieldError,
+  onSend,
+  previous,
+  draftText,
+  saveError,
+  onRetry,
+  saved,
+  onContinue,
+  lastPractice,
+  farewell,
+}: PanelProps & {
+  node: MissionNode;
+  carry: Carry | null;
+  /** é a última prática do curso (depois dela só há o fechamento): chip "Última prática do curso" */
+  lastPractice?: boolean;
+  /** depois desta missão vem o fechamento do curso: "Falta só o fechamento…" e o botão "Ver o fechamento" */
+  farewell?: boolean;
+  /** o que a pessoa já registrou (revisita da cena ou registro do curso) */
+  previous?: { status: 'later' | 'done'; note: string | null } | null;
+  /** a frase que ela montou antes na aula (`draftFromNodeId`), para copiar */
+  draftText?: string | null;
+  saveError?: string | null;
+  onRetry?: () => void;
+  /** registrada: confirmação + "Continuar aula" (`status` é o que o servidor deixou valendo; `requested`, o que a pessoa tocou) */
+  saved?: { status: 'later' | 'done'; note: string; requested?: 'later' | 'done' };
+  onContinue?: () => void;
+}) {
+  const [reporting, setReporting] = useState(previous?.status === 'done');
+  const [note, setNote] = useState(previous?.note ?? '');
+  const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
+  const noteId = useId();
+  const countId = useId();
+  const noteRef = useRef<HTMLTextAreaElement>(null);
+  const continueRef = useRef<HTMLButtonElement>(null);
+  const len = note.trim().length;
+  const tooLong = len > MISSION_NOTE_MAX;
+  const isSaved = saved !== undefined;
+  const title = node.title?.trim() ?? '';
+  const specific = !!title && title.toLocaleLowerCase('pt-BR') !== MISSION_LABELS.moment.toLocaleLowerCase('pt-BR');
+  const ack = saved ? missionAckText(saved.status, { farewell: !!farewell, ...(saved.requested ? { requested: saved.requested } : {}) }) : null;
+
+  // o campo só ganha foco (e rola até ele) quando a pessoa ACABOU de tocar em "Já experimentei"; na revisita ele já abre
+  // preenchido e a página fica no topo, no título da missão
+  const askedToReport = useRef(false);
+  useEffect(() => {
+    if (reporting && !isSaved && askedToReport.current) noteRef.current?.focus({ preventScroll: false });
+  }, [reporting, isSaved]);
+  useEffect(() => {
+    if (isSaved) continueRef.current?.focus({ preventScroll: true });
+  }, [isSaved]);
+  useEffect(() => {
+    if (copied === 'idle') return;
+    const t = window.setTimeout(() => setCopied('idle'), 2500);
+    return () => window.clearTimeout(t);
+  }, [copied]);
+
+  async function copy() {
+    if (!draftText) return;
+    try {
+      await copyToClipboard(draftText);
+      setCopied('done');
+    } catch {
+      setCopied('failed');
+    }
+  }
+
+  const card = 'rounded-[16px] border border-line bg-[var(--im-card)] p-4 md:p-5';
+  const label = 'text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--im-accent-ink)]';
+
+  return (
+    <form
+      data-testid="mission-panel"
+      className={cn(!isSaved && 'im-mission-in')}
+      data-state={isSaved ? 'saved' : reporting ? 'reporting' : previous ? previous.status : 'open'}
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (isSaved || pending || tooLong) return;
+        if (reporting) onSend({ kind: 'mission', status: 'done', ...(len > 0 ? { note: note.trim() } : {}) });
+      }}
+    >
+      <PanelHead ref={headingRef} id={headingId} chip={{ label: 'Sua vez', tone: 'accent' }} title={specific ? title : MISSION_LABELS.moment} {...(specific ? { eyebrow: MISSION_LABELS.moment } : {})} {...(lastPractice && !isSaved ? { aside: <LastPracticeChip /> } : {})} />
+      {carry && <CarryCard carry={carry} />}
+      {previous && !isSaved && (
+        <p data-testid="mission-previous" className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-full bg-fg/10 px-4 text-[15px] font-semibold text-fg">
+          {previous.status === 'done' ? <CircleCheck className="size-4" aria-hidden="true" /> : null}
+          Você marcou: {previous.status === 'done' ? MISSION_LABELS.done : MISSION_LABELS.later}
+        </p>
+      )}
+      {node.intro.trim() && !isSaved && (
+        <p className="mt-4 text-[18px] leading-relaxed text-fg/85" data-testid="mission-intro">
+          {node.intro.trim()}
+        </p>
+      )}
+      {/* registrada: o painel vira só o reconhecimento (a missão em si já foi lida) */}
+      {!isSaved && (
+      <div className="mt-5 space-y-3">
+        <div className={card} data-testid="mission-action">
+          <p className={label}>O que fazer</p>
+          <p className="mt-1.5 whitespace-pre-line text-[19px] font-medium leading-snug text-fg">{node.action}</p>
+        </div>
+        <div className={card} data-testid="mission-alternative">
+          <p className={label}>Se você ainda não trabalha</p>
+          <p className="mt-1.5 text-[17px] leading-snug text-fg/85">{node.alternative}</p>
+        </div>
+        {(node.tip?.trim() || node.example?.trim()) && (
+          <ul className="space-y-1.5 text-[16px] leading-snug text-fg/80">
+            {node.tip?.trim() && (
+              <li data-testid="mission-tip">
+                <span className="font-semibold text-fg">Dica: </span>
+                {node.tip.trim()}
+              </li>
+            )}
+            {node.example?.trim() && (
+              <li data-testid="mission-example">
+                <span className="font-semibold text-fg">Exemplo: </span>
+                {node.example.trim()}
+              </li>
+            )}
+          </ul>
+        )}
+        {draftText && (
+          <div className={card} data-testid="mission-draft">
+            <p className={label}>A frase que você montou</p>
+            <blockquote className="mt-1.5 text-[18px] font-medium leading-snug text-fg">{draftText}</blockquote>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <ImButton variant="outline" size="sm" onClick={() => void copy()} data-testid="mission-copy">
+                <Copy className="size-4" aria-hidden="true" />
+                Copiar frase
+              </ImButton>
+              <span role="status" aria-live="polite" className={cn('text-sm', copied === 'failed' ? 'text-danger' : 'text-fg/75')}>
+                {copied === 'done' ? 'Frase copiada.' : copied === 'failed' ? 'Não foi possível copiar. Selecione o texto e copie.' : ''}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+      )}
+
+      {isSaved && ack ? (
+        <div className="mt-6 space-y-4">
+          {/* a frase é anunciada pela região viva do player (mesmo texto); aqui é o retorno visual, no tom de quem acolhe */}
+          <div data-testid="mission-saved" className="rounded-[16px] border border-[var(--im-accent-line)] bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] px-5 py-4 text-fg">
+            <p data-testid="mission-saved-headline" className="flex items-start gap-3 text-[20px] font-semibold leading-snug md:text-[22px]">
+              <CircleCheck className="mt-0.5 size-6 shrink-0 text-[var(--im-accent-ink)]" aria-hidden="true" />
+              {ack.headline}
+            </p>
+            {ack.follow && (
+              <p data-testid="mission-saved-follow" className="mt-2 pl-9 text-[17px] font-medium leading-snug text-fg">
+                {ack.follow}
+              </p>
+            )}
+            {saved.status === 'done' && saved.note && <p className="mt-3 whitespace-pre-wrap pl-9 text-[15px] leading-snug text-fg/85">{saved.note}</p>}
+            <p className="mt-2 pl-9 text-[14px] text-fg/70">{ack.hint}</p>
+          </div>
+          <ImButton ref={continueRef} size="lg" className="w-full" data-testid="mission-continue" onClick={onContinue}>
+            {missionContinueLabel(!!farewell)}
+          </ImButton>
+        </div>
+      ) : (
+        <>
+          {reporting && (
+            <div className="mt-6" data-testid="mission-report">
+              <p className={label}>Como foi?</p>
+              <label htmlFor={noteId} className="mt-1.5 block text-[18px] font-semibold text-fg">
+                {MISSION_LABELS.note} <span className="font-normal text-fg/70">(opcional)</span>
+              </label>
+              <ImCard className="mt-2 p-0 md:p-0">
+                <textarea
+                  id={noteId}
+                  ref={noteRef}
+                  data-testid="mission-note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  rows={4}
+                  maxLength={MISSION_NOTE_MAX}
+                  disabled={pending}
+                  aria-describedby={countId}
+                  aria-invalid={!!fieldError || tooLong || undefined}
+                  placeholder="O que deu certo? O que foi difícil?"
+                  className="block min-h-28 w-full resize-none rounded-[16px] bg-transparent px-4 py-3 text-[18px] leading-relaxed text-fg outline-none! placeholder:text-fg-muted focus-visible:shadow-[inset_0_0_0_2px_var(--im-accent-ink)]"
+                />
+                <p id={countId} className="flex items-center justify-between gap-2 border-t border-fg/10 px-4 py-2 text-[13px] text-fg/70">
+                  <span>Só para você. Pode deixar em branco.</span>
+                  <span className={cn('tabular-nums', tooLong && 'text-danger')}>
+                    {len}/{MISSION_NOTE_MAX}
+                  </span>
+                </p>
+              </ImCard>
+            </div>
+          )}
+          {saveError && (
+            <div role="alert" className="mt-4 rounded-[12px] border border-danger/50 bg-danger-soft px-4 py-3 text-[15px] text-fg" data-testid="mission-save-error">
+              <p className="font-semibold">Não foi possível salvar.</p>
+              <p className="mt-0.5 text-fg-muted">{reporting ? 'O que você escreveu continua aqui. ' : ''}Verifique a conexão e tente de novo.</p>
+              {onRetry && (
+                <ImButton variant="outline" size="sm" className="mt-3" onClick={onRetry} disabled={pending} data-testid="mission-retry">
+                  Tentar de novo
+                </ImButton>
+              )}
+            </div>
+          )}
+          <FieldError message={fieldError} />
+          {/* antes dos botões: quem não pode fazer agora vê, na hora de escolher, que pode deixar para depois */}
+          {!reporting && (
+            <p data-testid="mission-later-note" className="mt-6 text-[15px] leading-snug text-fg/80 md:text-[16px]">
+              <span className="font-semibold text-fg">Pode deixar para depois.</span> Você termina a aula de qualquer jeito e a missão fica guardada no Meu roteiro.
+            </p>
+          )}
+          <ActionBar className={cn('md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] max-md:grid-cols-2', !reporting && 'mt-4 min-[1600px]:mt-6')}>
+            {reporting ? (
+              <Fragment key="registrando">
+                <ImButton key="salvar" type="submit" size="lg" className="whitespace-normal px-3 text-[16px] md:px-7 md:text-[17px]" data-testid="player-submit" disabled={pending || tooLong} aria-busy={pending}>
+                  {pending ? 'Salvando…' : 'Salvar e continuar'}
+                </ImButton>
+                <ImButton key="voltar" variant="outline" size="lg" className="whitespace-normal px-3 text-[16px] md:px-7 md:text-[17px]" data-testid="mission-back" disabled={pending} onClick={() => setReporting(false)}>
+                  Voltar
+                </ImButton>
+              </Fragment>
+            ) : (
+              <Fragment key="aberto">
+                <ImButton key="feita" size="lg" className="whitespace-normal px-3 text-[16px] md:px-7 md:text-[17px]" data-testid="mission-done" disabled={pending} onClick={() => { askedToReport.current = true; setReporting(true); }}>
+                  {MISSION_LABELS.done}
+                </ImButton>
+                <ImButton key="depois" variant="outline" size="lg" className="whitespace-normal px-3 text-[16px] md:px-7 md:text-[17px]" data-testid="mission-later" disabled={pending} aria-busy={pending} onClick={() => onSend({ kind: 'mission', status: 'later' })}>
+                  {pending ? 'Salvando…' : MISSION_LABELS.later}
+                </ImButton>
+              </Fragment>
+            )}
+          </ActionBar>
+        </>
+      )}
     </form>
   );
 }
@@ -1747,7 +2507,7 @@ function AssessmentPanel({ node, carry, retry, headingRef, headingId, pending, f
 
 /* ---------------------------- Encerramento ------------------------------ */
 
-function EndPanel({
+export function EndPanel({
   headingRef,
   headingId,
   node,
@@ -1760,12 +2520,18 @@ function EndPanel({
   hasRecap,
   onOpenRecap,
   achievements,
-  credential,
+  conquest,
+  courseEnd,
+  series,
 }: {
+  /** o curso é parte de uma trilha em série: chip "Parte N concluída", botão para a próxima parte e, na última, o fim da trilha */
+  series?: PlatformSeries;
+  /** o CURSO acaba aqui: título "Você concluiu …", chip "Curso concluído", a frase de fecho logo abaixo e o selo em destaque */
+  courseEnd?: { course: string; closingLine?: string };
   /** conquistas da aula (contadas do caminho feito) */
-  achievements?: { choices: number; missions: number; reviews: number };
-  /** curso inteiro concluído: o selo de competência para o currículo */
-  credential?: string;
+  achievements?: LessonAchievements;
+  /** curso inteiro concluído: a conquista (dentro da plataforma) e o caminho até o Selo DNA Work da trilha */
+  conquest?: { name: string; trail?: NonNullable<PlatformContext['courseTrail']> };
   headingRef: React.Ref<HTMLHeadingElement>;
   headingId: string;
   node: EndNode | null;
@@ -1779,38 +2545,89 @@ function EndPanel({
   onOpenRecap: () => void;
 }) {
   const ownRecap = !!node?.recap && node.recap.length > 0;
+  const trail = conquest?.trail;
+  const nextPart = seriesNextButton(series);
   return (
-    <div data-testid="player-completed">
-      <PanelHead ref={headingRef} id={headingId} chip={{ label: 'Fim', tone: 'accent' }} title={node?.title?.trim() || 'Você chegou ao fim desta aula.'} />
-      <div className="mt-5 flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--im-accent)] px-3 py-1 text-sm font-semibold text-[var(--im-on-accent)]">
-          <Check className="size-4" strokeWidth={3} aria-hidden="true" /> Aula concluída
-        </span>
-        {node?.outcomeLabel && node.outcomeLabel !== 'Aula concluída' && (
-          <span className="inline-flex items-center rounded-full border border-line-strong bg-fg/5 px-3 py-1 text-sm font-medium text-fg/85">{node.outcomeLabel}</span>
-        )}
-      </div>
-      {achievements && (achievements.choices > 0 || achievements.missions > 0 || achievements.reviews > 0) && (
+    <div data-testid="player-completed" data-course-end={courseEnd ? 'true' : undefined}>
+      {courseEnd ? (
+        <>
+          <p className="mb-5">
+            <span data-testid="end-chip" className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--im-accent)] px-4 text-[14px] font-semibold text-[var(--im-on-accent)]">
+              <Check className="size-4" strokeWidth={3} aria-hidden="true" /> {seriesEndChip(series)}
+            </span>
+          </p>
+          <h2
+            id={headingId}
+            ref={headingRef}
+            tabIndex={-1}
+            data-testid="end-title"
+            className={`rounded-md font-semibold! tracking-[-0.02em]! text-fg outline-none! ${headingSize(`Você concluiu ${courseEnd.course}`)} leading-[1.08]!`}
+          >
+            Você concluiu <span className="text-[var(--im-accent-ink)]">{courseEnd.course}</span>
+          </h2>
+          {courseEnd.closingLine && (
+            <p data-testid="end-closing-line" className="mt-4 max-w-[36ch] text-[22px] font-medium leading-snug tracking-[-0.01em] text-fg md:text-[26px]">
+              {courseEnd.closingLine}
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          <PanelHead ref={headingRef} id={headingId} chip={{ label: 'Fim', tone: 'accent' }} title={node?.title?.trim() || 'Você chegou ao fim desta aula.'} />
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--im-accent)] px-3 py-1 text-sm font-semibold text-[var(--im-on-accent)]">
+              <Check className="size-4" strokeWidth={3} aria-hidden="true" /> Aula concluída
+            </span>
+            {node?.outcomeLabel && node.outcomeLabel !== 'Aula concluída' && (
+              <span className="inline-flex items-center rounded-full border border-line-strong bg-fg/5 px-3 py-1 text-sm font-medium text-fg/85">{node.outcomeLabel}</span>
+            )}
+          </div>
+        </>
+      )}
+      {achievements && (achievements.choices > 0 || achievements.practices > 0 || achievements.skippedPractices > 0 || achievements.reviews > 0 || !!achievements.realLife) && (
         <ul className="mt-4 flex flex-wrap gap-2" aria-label="Conquistas desta aula" data-testid="lesson-achievements">
           {achievements.choices > 0 && <AchievementChip icon={MousePointerClick} label={`${achievements.choices} ${achievements.choices === 1 ? 'decisão tomada' : 'decisões tomadas'}`} />}
-          {achievements.missions > 0 && <AchievementChip icon={Target} label={achievements.missions === 1 ? 'Missão cumprida' : `${achievements.missions} missões cumpridas`} />}
+          {(() => {
+            const m = practiceChipLabel(achievements);
+            return m && <AchievementChip icon={Target} label={m.label} done={m.done} />;
+          })()}
+          {(() => {
+            const m = realLifeChipLabel(achievements);
+            return m && <AchievementChip icon={Footprints} label={m.label} done={m.done} />;
+          })()}
           {achievements.reviews > 0 && <AchievementChip icon={ListChecks} label="Revisão feita" />}
         </ul>
       )}
-      {credential && <CredentialCard name={credential} />}
+      {conquest && (courseEnd && seriesEndsTrail(series) && conquest.trail ? <TrailDoneCard trail={conquest.trail} /> : <ConquestCard name={conquest.name} highlight={!!courseEnd} {...(conquest.trail ? { trail: conquest.trail } : {})} />)}
       {carry && <CarryCard carry={carry} />}
       {node && <RichText doc={node.summary} className={cn(BODY, 'mt-5')} />}
-      {!ownRecap && node?.closingLine && <p className="mt-6 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[32px]">{node.closingLine}</p>}
+      {!ownRecap && !courseEnd && node?.closingLine && <p className="mt-6 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[32px]">{node.closingLine}</p>}
       {ownRecap && <p className="mt-5 text-base text-fg/75">Seu roteiro está logo abaixo: copie ou imprima quando quiser.</p>}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         {nextLesson ? (
           <ImLink href={nextLesson.href} data-testid="next-lesson-link">
             Próxima aula
           </ImLink>
+        ) : courseEnd && nextPart ? (
+          // parte 1 ou 2 de uma trilha em série: o caminho é a próxima parte (começa ou continua a matrícula dela)
+          <ImLink href={nextPart.href} data-testid="next-part-link">
+            {nextPart.label}
+          </ImLink>
+        ) : courseEnd && trail ? (
+          // curso concluído: o selo é o caminho principal; "Voltar ao curso" fica em segundo plano
+          <ImLink href={trail.href} data-testid="end-badge-link">
+            {trail.badge ? 'Ver meu selo' : 'Ver o caminho até o Selo'}
+          </ImLink>
         ) : (
           <ImLink href={exitHref}>Voltar ao curso</ImLink>
         )}
-        {nextLesson && (
+        {courseEnd && nextPart && trail && (
+          // o selo fica em segundo plano enquanto há outra parte a fazer
+          <ImLink href={trail.href} variant="outline" data-testid="end-badge-link">
+            {trail.badge ? 'Ver meu selo' : 'Ver o caminho até o Selo'}
+          </ImLink>
+        )}
+        {(nextLesson || (courseEnd && (trail || nextPart))) && (
           <ImLink href={exitHref} variant="outline">
             Voltar ao curso
           </ImLink>
@@ -1830,39 +2647,118 @@ function EndPanel({
   );
 }
 
-function AchievementChip({ icon: Icon, label }: { icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>; label: string }) {
+function AchievementChip({ icon: Icon, label, done = true }: { icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>; label: string; /** `false`: tom neutro (ex.: "Prática para depois") */ done?: boolean }) {
   return (
-    <li className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-sm font-medium text-fg">
-      <Icon className="size-4 text-[var(--im-accent-ink)]" aria-hidden="true" />
+    <li className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-sm font-medium text-fg" data-done={done ? 'true' : 'false'}>
+      <Icon className={cn('size-4', done ? 'text-[var(--im-accent-ink)]' : 'text-fg-muted')} aria-hidden="true" />
       {label}
     </li>
   );
 }
 
-/** Selo de competência do curso concluído, com a linha pronta para o currículo (copiar). */
-function CredentialCard({ name }: { name: string }) {
-  const [copied, setCopied] = useState(false);
-  const line = `Selo de competência DNA Work: ${name} (curso prático com decisões e missões)`;
+/**
+ * Conquista do curso concluído (só dentro da plataforma; o reconhecimento para o currículo é o Selo DNA Work da
+ * trilha). Com trilha: quantos cursos dela já foram concluídos (este conta, mesmo que a página tenha aberto antes
+ * da conclusão) e o link para o caminho até o Selo, ou para o selo já emitido.
+ */
+function ConquestCard({ name, trail, highlight }: { name: string; trail?: NonNullable<PlatformContext['courseTrail']>; /** curso concluído: o selo em destaque (o botão para ele fica nas ações do painel) */ highlight?: boolean }) {
+  const done = trail ? Math.min(trail.total, trail.done + (trail.currentDone ? 0 : 1)) : 0;
+  const unit = trail?.series ? (trail.total === 1 ? 'parte concluída' : 'partes concluídas') : trail?.total === 1 ? 'curso concluído' : 'cursos concluídos';
+  if (highlight) {
+    return (
+      <div className="im-badge-glow mt-6 flex items-center gap-4 rounded-[20px] border-2 border-[var(--im-accent)] bg-[color-mix(in_oklab,var(--im-accent)_14%,transparent)] p-4 md:p-5" data-testid="conquest-card" data-highlight="true">
+        <span aria-hidden="true" className="grid size-14 shrink-0 place-items-center rounded-full bg-[var(--im-accent)] text-[var(--im-on-accent)] md:size-16">
+          <Award className="size-7 md:size-8" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--im-accent-ink)]">Conquista</p>
+          <p className="mt-0.5 text-[19px] font-semibold leading-snug text-fg md:text-[21px]">{name}</p>
+          {trail && (
+            <p className="mt-1 text-[15px] leading-snug text-fg/80" data-testid="conquest-trail">
+              Parte da trilha {trail.name}: {done} de {trail.total} {unit}.
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
   return (
-    <div className="mt-5 rounded-[16px] border border-[var(--im-accent-line)]/60 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] p-4" data-testid="credential-card">
+    <div className="mt-5 rounded-[16px] border border-[var(--im-accent-line)]/60 bg-[color-mix(in_oklab,var(--im-accent)_10%,transparent)] p-4" data-testid="conquest-card">
       <p className="flex items-center gap-2 text-[15px] font-semibold text-fg">
-        <Award className="size-5 text-[var(--im-accent-ink)]" aria-hidden="true" /> Você conquistou o Selo de competência DNA Work
+        <Award className="size-5 text-[var(--im-accent-ink)]" aria-hidden="true" /> Conquista
       </p>
       <p className="mt-1 text-[17px] font-semibold text-fg">{name}</p>
-      <p className="mt-1 text-sm text-fg/75">Coloque no seu currículo, na parte de cursos e certificações.</p>
-      <button
-        type="button"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(line);
-            setCopied(true);
-          } catch {}
-        }}
-        className="mt-3 inline-flex min-h-11 items-center rounded-[10px] border border-line-strong bg-surface px-4 text-[15px] font-medium text-fg hover:bg-fg/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]"
-      >
-        {copied ? 'Copiado: cole no seu currículo' : 'Copiar para o currículo'}
-      </button>
-      <span role="status" className="sr-only">{copied ? 'Texto do selo copiado.' : ''}</span>
+      {trail && (
+        <>
+          <p className="mt-1 text-sm text-fg/75" data-testid="conquest-trail">
+            Parte da trilha {trail.name}: {done} de {trail.total} {unit}.
+          </p>
+          <Link
+            href={trail.href}
+            className="mt-3 inline-flex min-h-11 items-center rounded-[10px] border border-line-strong bg-surface px-4 text-[15px] font-medium text-fg hover:bg-fg/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--im-accent-ink)]"
+          >
+            {trail.badge ? 'Ver meu selo' : 'Ver o caminho até o Selo'}
+          </Link>
+        </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Fim da última parte de uma trilha em série: a trilha inteira concluída, com o selo da trilha. O botão para o selo
+ * fica nas ações do painel (`end-badge-link`); aqui só o selo e o que falta para ele (checagem final, atividades).
+ */
+function TrailDoneCard({ trail }: { trail: NonNullable<PlatformContext['courseTrail']> }) {
+  return (
+    <div className="im-badge-glow mt-6 flex items-center gap-4 rounded-[20px] border-2 border-[var(--im-accent)] bg-[color-mix(in_oklab,var(--im-accent)_14%,transparent)] p-4 md:p-5" data-testid="trail-done-card">
+      <TrailSeal trail={trail.name} size={84} tone="dark" className="shrink-0" />
+      <div className="min-w-0">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--im-accent-ink)]">{trail.badge ? 'Selo conquistado' : 'Selo DNA Work'}</p>
+        <p className="mt-0.5 text-[19px] font-semibold leading-snug text-fg md:text-[21px]">Selo DNA Work · {trail.name}</p>
+        {trail.sealNote && (
+          <p className="mt-1 text-[15px] leading-snug text-fg/80" data-testid="trail-seal-note">
+            {trail.sealNote}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Chip "Última prática do curso" na chegada da missão. */
+function LastPracticeChip() {
+  return (
+    <span data-testid="mission-last-practice" className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[var(--im-accent)] px-4 text-[13px] font-semibold text-[var(--im-on-accent)]">
+      <Flag className="size-4" aria-hidden="true" />
+      {LAST_PRACTICE_CHIP}
+    </span>
+  );
+}
+
+/** Quadradinhos que saem do alto do painel por ~1,5 s, uma vez só (CSS em globals.css; some com movimento reduzido). Sem biblioteca. */
+const CONFETTI = [
+  { x: -300, y: 190, r: -200, d: 0, c: 0 }, { x: -220, y: 260, r: 160, d: 60, c: 1 }, { x: -150, y: 150, r: -120, d: 20, c: 2 },
+  { x: -90, y: 300, r: 260, d: 100, c: 3 }, { x: -40, y: 210, r: -90, d: 40, c: 0 }, { x: 30, y: 320, r: 180, d: 0, c: 1 },
+  { x: 90, y: 170, r: -240, d: 80, c: 2 }, { x: 150, y: 280, r: 130, d: 30, c: 3 }, { x: 220, y: 200, r: -170, d: 120, c: 0 },
+  { x: 300, y: 300, r: 220, d: 50, c: 1 }, { x: 360, y: 170, r: -110, d: 90, c: 2 }, { x: -340, y: 310, r: 150, d: 140, c: 3 },
+  { x: 410, y: 260, r: -260, d: 10, c: 0 }, { x: -10, y: 120, r: 100, d: 70, c: 1 }, { x: 190, y: 360, r: -140, d: 110, c: 2 },
+  { x: -190, y: 350, r: 200, d: 130, c: 3 },
+] as const;
+const CONFETTI_COLORS = ['var(--im-accent)', '#ffffff', 'var(--im-accent-ink)', 'color-mix(in oklab, var(--im-accent) 55%, white)'];
+
+function Celebration() {
+  const [on, setOn] = useState(true);
+  useEffect(() => {
+    const t = window.setTimeout(() => setOn(false), 1700);
+    return () => window.clearTimeout(t);
+  }, []);
+  if (!on) return null;
+  return (
+    <div data-testid="celebration" aria-hidden="true" className="im-celebrate">
+      {CONFETTI.map((p, i) => (
+        <i key={i} style={{ ['--x' as string]: `${p.x}px`, ['--y' as string]: `${p.y}px`, ['--r' as string]: `${p.r}deg`, ['--d' as string]: `${p.d}ms`, ['--c' as string]: CONFETTI_COLORS[p.c] }} />
+      ))}
     </div>
   );
 }

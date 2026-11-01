@@ -1,4 +1,4 @@
-import type { BrandPreset } from '@/config/brand';
+import type { BrandMark } from '@/config/brand';
 import { cn } from '@/lib/utils';
 
 /**
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
  * - Sem logo (preset `lms`): a marca em texto, minúscula, com o ponto no acento.
  * Componente de servidor; sem estado.
  */
-export function BrandLogo({ brand, height = 28, className, alt = brand.name }: { brand: BrandPreset; height?: number; className?: string; alt?: string }) {
+export function BrandLogo({ brand, height = 28, className, alt = brand.name }: { brand: BrandMark; height?: number; className?: string; alt?: string }) {
   // alt vazio = decorativo (o link que envolve já tem o nome acessível)
   const a11y = alt ? { role: 'img', 'aria-label': alt } : { 'aria-hidden': true as const };
   if (!brand.logoLight || !brand.logoDark) {

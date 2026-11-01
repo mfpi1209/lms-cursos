@@ -1,7 +1,7 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { rasterizeSvg } from './raster';
 import { ffprobe, runFfmpeg, sec } from './ffmpeg';
 import { BRAND_CARD_PRESETS, loadSlideFonts, pngSize, type BrandCardTokens, type SlideVariant } from './slides';
 import { BUMPER_FPS, bumperLogoPath, bumperSpecHash, normalizeBumperSpec, type BumperAspect, type BumperAudio, type BumperAudioPreset, type BumperPlacement, type BumperRenderResult, type BumperSpec, type BumperStyle } from '../bumper-spec';
@@ -186,11 +186,10 @@ async function textLayer(text: string, o: { width: number; height: number; fontS
     },
   };
   const svg = await satori(tree as never, { width: o.width, height: o.height, fonts: loadSlideFonts() });
-  const img = new Resvg(svg, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render();
-  const png = img.asPng();
-  const { bbox, lines } = rgbaBounds(new Uint8Array(img.pixels), img.width, img.height);
+  const img = await rasterizeSvg(svg, { pixels: true });
+  const { bbox, lines } = rgbaBounds(img.pixels!, img.width, img.height);
   if (bbox.w === 0) return null;
-  return { dataUri: `data:image/png;base64,${Buffer.from(png).toString('base64')}`, width: img.width, height: img.height, bbox, lines };
+  return { dataUri: `data:image/png;base64,${Buffer.from(img.png).toString('base64')}`, width: img.width, height: img.height, bbox, lines };
 }
 
 /* ------------------------------------------------------------------ */
@@ -463,7 +462,7 @@ export async function renderBumper(input: BumperSpec, opts: RenderBumperOptions 
     const st = bumperStateAt(spec.style, ta, spec.durationSec);
     // deriva lenta das formas ao longo da vinheta (sempre em função do tempo do vídeo)
     const svg = bumperFrameSvg(L, st, easeOutCubic(t / spec.durationSec));
-    const png = new Resvg(svg, { fitTo: { mode: 'original' }, background: tokensBg(L) }).render().asPng();
+    const png = (await rasterizeSvg(svg, { background: tokensBg(L) })).png;
     await writeFile(path.join(framesDir, `f-${String(i).padStart(4, '0')}.png`), png);
     opts.onProgress?.(i + 1, frames);
   }
@@ -496,7 +495,7 @@ export async function renderBumperFrames(input: BumperSpec, atSeconds: number[],
   for (let i = 0; i < atSeconds.length; i++) {
     const t = Math.max(0, Math.min(spec.durationSec, atSeconds[i]!));
     const st = bumperStateAt(spec.style, bumperAnimationTime(spec.style, spec.placement, t, spec.durationSec), spec.durationSec);
-    const png = new Resvg(bumperFrameSvg(L, st, easeOutCubic(t / spec.durationSec)), { fitTo: { mode: 'original' }, background: L.tokens.bg }).render().asPng();
+    const png = (await rasterizeSvg(bumperFrameSvg(L, st, easeOutCubic(t / spec.durationSec)), { background: L.tokens.bg })).png;
     const file = path.join(outDir, `${prefix}-f${i + 1}.png`);
     await writeFile(file, png);
     out.push(file);

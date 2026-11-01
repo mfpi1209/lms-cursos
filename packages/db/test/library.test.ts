@@ -65,7 +65,7 @@ describe('biblioteca de modelos (banco)', () => {
     expect(k.studio.key).toBe('estudio-jovem-7');
     expect(k.presenter.data.name).toBe('Rafael');
     expect(k.voice?.data.voiceId).toBe('lvkgCBi6spByiTZMPJEK');
-    expect(k.knowledge.length).toBe(8);
+    expect(k.knowledge.length).toBe(9);
     expect(k.learners.length).toBe(5);
     // a Marina não está na biblioteca deste teste: kit dela não resolve
     await expect(resolveKit(db, seeded.workspaceId, 'estudio7-marina')).rejects.toMatchObject({ code: 'VALIDATION' });

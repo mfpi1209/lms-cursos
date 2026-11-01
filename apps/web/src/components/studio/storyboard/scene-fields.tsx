@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { CornerDownRight, GitMerge, Plus, Trash2 } from 'lucide-react';
-import type { AnyNode, AssessmentNode, ChoiceNode, ConsequenceNode, EndNode, LessonGraph, ReflectionNode } from '@lms/course-schema';
+import type { AnyNode, AssessmentNode, ChoiceNode, ConsequenceNode, EndNode, LessonGraph, MissionNode, ReflectionNode } from '@lms/course-schema';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Input, Textarea } from '@/components/ui/input';
 import { conditionalEdges, createNode, describeCondition, insertNodeAfter, newOptionId, primaryEdge, removeEdges, replaceNode, setNextEdge, setOptionEdge } from '@/components/studio/graph-ops';
 import { cn } from '@/lib/utils';
 import { ScaffoldFields } from '@/components/studio/scaffold-fields';
@@ -273,6 +273,10 @@ export function ReflectionFields({ node, changeGraph }: { node: ReflectionNode; 
           }}
         />
       </label>
+      <label className="flex basis-full flex-col gap-0.5 text-xs font-medium text-fg-muted">
+        Ponte para a atividade (aparece abaixo do título: o que a aula ensinou e o que o aluno monta agora)
+        <Input className="min-h-11 text-sm" maxLength={300} value={node.intro ?? ''} onChange={(e) => patch({ intro: e.target.value || undefined }, `node.intro.${node.id}`)} />
+      </label>
       <label className="flex min-w-[12rem] flex-1 flex-col gap-0.5 text-xs font-medium text-fg-muted">
         Dica dentro do campo de resposta
         <Input className="min-h-11 text-sm" maxLength={200} value={node.placeholder ?? ''} onChange={(e) => patch({ placeholder: e.target.value || undefined }, `node.ph.${node.id}`)} />
@@ -466,6 +470,70 @@ export function NextScene({
           </button>
         </div>
       </details>
+    </div>
+  );
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Missão "Leve para a vida real"                                       */
+/* ------------------------------------------------------------------ */
+
+const missionField = 'text-sm';
+
+/**
+ * Campos da missão: por que (intro), a ação concreta, a alternativa para quem ainda não trabalha, dica e exemplo
+ * opcionais e, se houver uma atividade "Na prática" nesta aula, a frase montada pelo aluno para ele copiar.
+ * O título da cena é o da missão. Publicar exige título, intro, ação e alternativa.
+ */
+export function MissionFields({ node, graph, changeGraph }: { node: MissionNode; graph: LessonGraph; changeGraph: GraphChange }) {
+  const patch = makePatch<MissionNode>(node.id, changeGraph);
+  const sources = graph.nodes.filter((n) => n.type === 'reflection' && !!n.scaffold);
+  const field = (key: 'intro' | 'action' | 'alternative', label: string, hint: string, max: number, optional = false) => (
+    <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+      {label}
+      <Textarea
+        className={cn(missionField, 'min-h-20')}
+        rows={2}
+        maxLength={max}
+        value={node[key]}
+        placeholder={hint}
+        data-testid={`mission-${key}`}
+        aria-required={!optional}
+        onChange={(e) => patch({ [key]: e.target.value } as Partial<MissionNode>, `node.${key}.${node.id}`)}
+      />
+      <span className="self-end font-normal text-fg-faint">{node[key].length}/{max}</span>
+    </label>
+  );
+  return (
+    <div className="space-y-3" data-testid={`mission-fields-${node.id}`}>
+      <p className="rounded-lg bg-accent-soft px-3 py-2 text-xs text-fg">
+        Terceiro momento da aula, depois de “Você decide”: algo para fazer <strong>fora da plataforma</strong>. A pessoa escolhe “Já experimentei” ou “Vou fazer depois” e pode contar o que percebeu. Nunca trava a aula, o curso nem o selo.
+      </p>
+      {field('intro', 'Por que vale a pena (1 a 2 frases)', 'Ex.: Ensaiar a frase na vida real é o que faz ela sair natural na hora certa.', 400)}
+      {field('action', 'O que fazer (uma ação concreta)', 'Ex.: Hoje, ofereça ajuda a um colega usando a frase que você montou.', 500)}
+      {field('alternative', 'Alternativa para quem ainda não trabalha', 'Ex.: Treine a frase com um colega de curso ou com alguém da família.', 500)}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+          Dica (opcional)
+          <Input className="min-h-11 text-sm" maxLength={300} value={node.tip ?? ''} data-testid="mission-tip" onChange={(e) => patch({ tip: e.target.value || undefined }, `node.tip.${node.id}`)} />
+        </label>
+        <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+          Exemplo (opcional)
+          <Input className="min-h-11 text-sm" maxLength={300} value={node.example ?? ''} data-testid="mission-example" onChange={(e) => patch({ example: e.target.value || undefined }, `node.example.${node.id}`)} />
+        </label>
+      </div>
+      <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+        Mostrar a frase que a pessoa montou antes (com botão Copiar)
+        <select className={selectClass} value={node.draftFromNodeId ?? ''} data-testid="mission-draft" onChange={(e) => patch({ draftFromNodeId: e.target.value || undefined })}>
+          <option value="">— nenhuma —</option>
+          {sources.map((n) => (
+            <option key={n.id} value={n.id}>{n.title?.trim() || n.id}</option>
+          ))}
+          {node.draftFromNodeId && !sources.some((n) => n.id === node.draftFromNodeId) && <option value={node.draftFromNodeId}>{node.draftFromNodeId} (não encontrada)</option>}
+        </select>
+        {sources.length === 0 && <span className="font-normal text-fg-faint">Esta aula não tem atividade “Na prática” com molde para trazer a frase.</span>}
+      </label>
     </div>
   );
 }

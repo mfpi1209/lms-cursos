@@ -23,6 +23,7 @@ interface EventResponse {
   progress: ProgressSummary;
   lessonCompleted: boolean;
   courseCompleted: boolean;
+  mission?: { status: 'later' | 'done'; note: string | null };
 }
 
 /**
@@ -33,6 +34,8 @@ interface EventResponse {
 export function createLmsDriver({ enrollmentId, lessonId, fresh = false }: { enrollmentId: string; lessonId: string; /** "Reiniciar": a primeira entrada já abre uma tentativa nova (abandona a aberta) */ fresh?: boolean }): PlayerDriver {
   let attemptId: string | null = null;
   let attemptNumber = 1;
+  /** entrada "fresh" em andamento; chamadas repetidas de `start()` esperam por ela */
+  let firstEntry: Promise<PlayerStart> | null = null;
 
   async function begin(forceNew: boolean, abandonOpen = false): Promise<PlayerStart> {
     const res = await api<AttemptResponse>(`/api/enrollments/${enrollmentId}/lessons/${lessonId}/attempts`, {
@@ -46,9 +49,21 @@ export function createLmsDriver({ enrollmentId, lessonId, fresh = false }: { enr
   return {
     mode: 'lms',
     start: () => {
-      const f = fresh;
-      fresh = false; // só a primeira entrada; recarregar a página depois volta a retomar
-      return f ? begin(true, true) : begin(false);
+      // Strict Mode (dev) roda o efeito duas vezes: uma retomada em paralelo ao pedido "fresh"
+      // pode vencer a corrida e mostrar a tentativa antiga concluída. Espera a entrada "fresh"
+      // terminar (com sucesso ou erro) e só então retoma, o que devolve a tentativa nova.
+      if (firstEntry) return firstEntry.then(noop, noop).then(() => begin(false));
+      if (fresh) {
+        fresh = false; // só a primeira entrada; recarregar a página depois volta a retomar
+        const entry = begin(true, true);
+        firstEntry = entry;
+        const clear = () => {
+          if (firstEntry === entry) firstEntry = null;
+        };
+        entry.then(clear, clear);
+        return entry;
+      }
+      return begin(false);
     },
     restart: () => begin(true),
     restartNow: () => begin(true, true),
@@ -72,10 +87,13 @@ export function createLmsDriver({ enrollmentId, lessonId, fresh = false }: { enr
         progress: res.progress,
         lessonCompleted: res.lessonCompleted,
         courseCompleted: res.courseCompleted,
+        ...(res.mission ? { mission: res.mission } : {}),
       };
     },
   };
 }
+
+const noop = () => undefined;
 
 function toResult(res: EventResponse): PlayerStepResult {
   return {

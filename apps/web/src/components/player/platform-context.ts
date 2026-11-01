@@ -1,4 +1,5 @@
 import { allLessons, type CourseDocument, type EndNode } from '@lms/course-schema';
+import type { BrandMark } from '@/config/brand';
 import type { LessonRunStatus, PlatformBumper, PlatformContext, RecapNodeRef } from './types';
 
 /** Vinheta padrão do workspace (asset com `metadata.bumper.default`) e a marca, resolvidas pelo servidor. */
@@ -61,6 +62,7 @@ export function buildPlatformContext({
   enrollmentId,
   forceClassic = false,
   defaultBumper,
+  brandMark,
 }: {
   document: CourseDocument;
   lessonId: string;
@@ -70,6 +72,8 @@ export function buildPlatformContext({
   forceClassic?: boolean;
   /** vinheta padrão do workspace (+ logos da marca), quando o curso não define a sua */
   defaultBumper?: DefaultBumperInput | null;
+  /** logo da marca do workspace para o canto esquerdo do cabeçalho */
+  brandMark?: BrandMark;
 }): PlatformContext {
   const lessons = allLessons(document);
   const bumper = resolveBumper(document, lessonId, defaultBumper);
@@ -87,7 +91,12 @@ export function buildPlatformContext({
     for (const l of lessons) {
       for (const n of l.graph.nodes) {
         if (!wanted.has(n.id)) continue;
-        nodes[n.id] = { title: n.title, type: n.type, options: n.type === 'choice' ? n.options.map((o) => ({ id: o.id, label: o.label })) : undefined };
+        nodes[n.id] = {
+          title: n.title,
+          type: n.type,
+          options: n.type === 'choice' ? n.options.map((o) => ({ id: o.id, label: o.label })) : undefined,
+          ...(n.type === 'mission' ? { mission: { intro: n.intro, action: n.action, alternative: n.alternative } } : {}),
+        };
       }
     }
     recap = { lessonId: chosen.lessonId, endNode: chosen.endNode, nodes };
@@ -96,6 +105,7 @@ export function buildPlatformContext({
   return {
     theme: forceClassic ? 'classic' : 'immersive',
     branding: { ...document.branding },
+    ...(brandMark ? { brandMark } : {}),
     courseTitle: document.title,
     posterUrl: document.presentation.avatarPreviewUrl || undefined,
     presenterPlacement: document.presentation.presenterPlacement ?? 'center',

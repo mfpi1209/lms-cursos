@@ -18,6 +18,7 @@ const OTHER = '__other';
 const KIND_LABEL: Record<RecapItem['kind'], string> = {
   reflection: 'Resposta de uma reflexão',
   choice: 'Opção escolhida numa decisão',
+  mission: 'Missão "Leve para a vida real" (estado e o que a pessoa percebeu)',
   checklist: 'Lista para marcar',
   text: 'Texto fixo',
 };
@@ -113,7 +114,7 @@ function RecapItemRow({
   onMove: (dir: -1 | 1) => void;
   onRemove: () => void;
 }) {
-  const needsSource = item.kind === 'reflection' || item.kind === 'choice';
+  const needsSource = item.kind === 'reflection' || item.kind === 'choice' || item.kind === 'mission';
   const candidates = model.all.filter((s) => s.node.type === item.kind);
   const isLocal = !!item.nodeId && model.byId.has(item.nodeId);
   const [other, setOther] = React.useState(() => !!item.nodeId && !model.byId.has(item.nodeId));
@@ -165,7 +166,7 @@ function RecapItemRow({
       <div className="mt-2 grid gap-2 sm:grid-cols-[1fr_minmax(0,14rem)] sm:pl-10">
         {needsSource && (
           <div className="flex flex-col gap-1 text-xs font-medium text-fg-muted">
-            <label htmlFor={`${uid}-source`}>{item.kind === 'reflection' ? 'Reflexão de origem' : 'Decisão de origem'}</label>
+            <label htmlFor={`${uid}-source`}>{item.kind === 'reflection' ? 'Reflexão de origem' : item.kind === 'mission' ? 'Missão de origem' : 'Decisão de origem'}</label>
             <select
               id={`${uid}-source`}
               className={selectClass}
@@ -187,7 +188,7 @@ function RecapItemRow({
               ))}
               <option value={OTHER}>Cena de outra aula (digitar id)…</option>
             </select>
-            {candidates.length === 0 && !other && <p className="font-normal text-fg-faint">Esta aula ainda não tem cena de {item.kind === 'reflection' ? 'reflexão' : 'decisão'}.</p>}
+            {candidates.length === 0 && !other && <p className="font-normal text-fg-faint">Esta aula ainda não tem cena de {item.kind === 'reflection' ? 'reflexão' : item.kind === 'mission' ? 'missão' : 'decisão'}.</p>}
             {!!item.nodeIds?.length && (
               <p className="font-normal text-fg-faint" data-testid={`${uid}-variants`}>
                 Também vale para as variantes: <span className="font-mono">{item.nodeIds.join(', ')}</span> (a resposta mais recente aparece).

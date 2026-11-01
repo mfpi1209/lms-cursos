@@ -212,7 +212,7 @@ export const DirectionTemplateDataSchema = z.object({
 });
 export type DirectionTemplateData = z.infer<typeof DirectionTemplateDataSchema>;
 
-export const KNOWLEDGE_AREAS = ['roteiro', 'fala', 'video', 'camera', 'cartoes', 'marca', 'custo', 'produto'] as const;
+export const KNOWLEDGE_AREAS = ['roteiro', 'fala', 'video', 'camera', 'cartoes', 'marca', 'custo', 'produto', 'producao'] as const;
 export type KnowledgeArea = (typeof KNOWLEDGE_AREAS)[number];
 export const KNOWLEDGE_AREA_LABELS: Record<KnowledgeArea, string> = {
   roteiro: 'Roteiro e aulas',
@@ -223,6 +223,7 @@ export const KNOWLEDGE_AREA_LABELS: Record<KnowledgeArea, string> = {
   marca: 'Marca',
   custo: 'Custo e aprovação',
   produto: 'Produto e público',
+  producao: 'Produção e publicação',
 };
 export const KnowledgeRuleSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]{2,60}$/),

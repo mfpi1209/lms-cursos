@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { resolveReview, type AttemptState, type Intent, type ReviewSummary } from '@lms/course-engine';
 import {
+  MISSION_LABELS,
+  MISSION_NOTE_MAX,
   NODE_TYPE_LABELS,
   type AnyNode,
   type AssessmentNode,
@@ -12,6 +14,7 @@ import {
   type EndNode,
   type Lesson,
   type MediaRef,
+  type MissionNode,
   type ReflectionNode,
   richTextToPlain,
 } from '@lms/course-schema';
@@ -31,6 +34,8 @@ import { BackSceneButton, LessonMapDrawer, useLessonNav } from './navigation';
 import { NarrationBlock, narrationHeading, narrationOf } from './narration-block';
 import { ReviewSummaryView } from './review-summary';
 import { ScaffoldComposer, type ComposedSentence } from './scaffold-composer';
+import { saveButtonState } from './compose-state';
+import { closingNodeId as closingNodeIdOf, isLastLessonOfCourse } from './immersive/scene-flow';
 
 /* ------------------------------------------------------------------------ */
 /* Player                                                                    */
@@ -50,7 +55,9 @@ import { ScaffoldComposer, type ComposedSentence } from './scaffold-composer';
  * escuro); a lógica de sessão/intenções é a mesma (`usePlayerSession`).
  */
 export function LessonPlayer({ lesson, driver, courseTitle, exitHref, platform }: LessonPlayerProps) {
-  const player = usePlayerSession(lesson, driver);
+  // fechamento do curso (despedida): só a última aula tem; o motor da sessão usa para anunciar "Falta só o fechamento"
+  const closingNodeId = useMemo(() => closingNodeIdOf(lesson.graph, !!platform && isLastLessonOfCourse(platform.lessons, lesson.id)), [lesson, platform]);
+  const player = usePlayerSession(lesson, driver, { closingNodeId });
   if (platform && platform.theme !== 'classic') {
     return <ImmersivePlayer lesson={lesson} driver={driver} exitHref={exitHref} platform={platform} player={player} />;
   }
@@ -430,6 +437,8 @@ function CardBody({
       );
     case 'reflection':
       return node.scaffold ? <ComposeView node={node} pending={pending} fieldError={fieldError} onSend={onSend} /> : <ReflectionView node={node} pending={pending} fieldError={fieldError} onSend={onSend} />;
+    case 'mission':
+      return <MissionView node={node} pending={pending} fieldError={fieldError} onSend={onSend} />;
     case 'assessment':
       return <AssessmentView node={node} pending={pending} fieldError={fieldError} retry={retry} onSend={onSend} />;
     case 'end':
@@ -617,36 +626,97 @@ function ReflectionView({ node, pending, fieldError, onSend }: { node: Reflectio
   );
 }
 
-/** "Monte sua frase" no visual clássico: mesma composição guiada do player da plataforma. */
+/** Missão "Leve para a vida real" no visual clássico: a mesma regra do player da plataforma (nunca trava a aula). */
+function MissionView({ node, pending, fieldError, onSend }: { node: MissionNode; pending: boolean; fieldError: string | null; onSend: (i: Intent) => void }) {
+  const [reporting, setReporting] = useState(false);
+  const [note, setNote] = useState('');
+  const noteId = useId();
+  const len = note.trim().length;
+  const tooLong = len > MISSION_NOTE_MAX;
+  return (
+    <form
+      data-testid="mission-panel"
+      className="space-y-5"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (reporting && !tooLong) onSend({ kind: 'mission', status: 'done', ...(len > 0 ? { note: note.trim() } : {}) });
+      }}
+    >
+      <p className="text-sm font-semibold uppercase tracking-wide text-accent">{MISSION_LABELS.moment}</p>
+      {node.intro.trim() && <p className={BODY}>{node.intro.trim()}</p>}
+      <div className="rounded-[var(--radius-card)] bg-surface-2 p-4">
+        <p className="text-sm font-semibold text-fg-muted">O que fazer</p>
+        <p className="mt-1 whitespace-pre-line text-lg text-fg">{node.action}</p>
+      </div>
+      <div className="rounded-[var(--radius-card)] bg-surface-2 p-4">
+        <p className="text-sm font-semibold text-fg-muted">Se você ainda não trabalha</p>
+        <p className="mt-1 text-base text-fg">{node.alternative}</p>
+      </div>
+      {node.tip?.trim() && <p className="text-sm text-fg-muted"><strong className="text-fg">Dica: </strong>{node.tip.trim()}</p>}
+      {node.example?.trim() && <p className="text-sm text-fg-muted"><strong className="text-fg">Exemplo: </strong>{node.example.trim()}</p>}
+      {reporting && (
+        <div>
+          <label htmlFor={noteId} className="block text-base font-semibold text-fg">{MISSION_LABELS.note} <span className="font-normal text-fg-muted">(opcional)</span></label>
+          <Textarea id={noteId} data-testid="mission-note" value={note} onChange={(e) => setNote(e.target.value)} rows={4} maxLength={MISSION_NOTE_MAX} disabled={pending} className="mt-2 min-h-28 rounded-[var(--radius-card)] p-4 text-lg" />
+          <p className={cn('mt-1 text-right text-xs tabular-nums', tooLong ? 'text-danger' : 'text-fg-muted')}>{len}/{MISSION_NOTE_MAX}</p>
+        </div>
+      )}
+      {fieldError && <p role="alert" className="text-sm text-danger">{fieldError}</p>}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        {reporting ? (
+          <Fragment key="registrando">
+            <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto" data-testid="player-submit" disabled={pending || tooLong} aria-busy={pending}>{pending ? 'Salvando…' : 'Salvar e continuar'}</Button>
+            <Button type="button" variant="secondary" size="lg" className="w-full rounded-full sm:w-auto" disabled={pending} onClick={() => setReporting(false)}>Voltar</Button>
+          </Fragment>
+        ) : (
+          <Fragment key="aberto">
+            <Button type="button" size="lg" className="w-full rounded-full sm:w-auto" data-testid="mission-done" disabled={pending} onClick={() => setReporting(true)}>{MISSION_LABELS.done}</Button>
+            <Button type="button" variant="secondary" size="lg" className="w-full rounded-full sm:w-auto" data-testid="mission-later" disabled={pending} onClick={() => onSend({ kind: 'mission', status: 'later' })}>{MISSION_LABELS.later}</Button>
+          </Fragment>
+        )}
+      </div>
+    </form>
+  );
+}
+
+/** "Na prática" no visual clássico: a mesma montagem por grupos do player da plataforma (prévia única ao lado). */
 function ComposeView({ node, pending, fieldError, onSend }: { node: ReflectionNode; pending: boolean; fieldError: string | null; onSend: (i: Intent) => void }) {
-  const [sentence, setSentence] = useState<ComposedSentence>({ text: '', complete: false });
+  const [sentence, setSentence] = useState<ComposedSentence>({ text: '', complete: false, missing: 1, total: 1 });
   const optional = node.minLength === 0;
   const lead = richTextToPlain(node.prompt).trim();
   const tooLong = sentence.text.length > node.maxLength;
-  const ready = sentence.complete && !tooLong && sentence.text.length >= node.minLength;
+  const btn = saveButtonState({ missing: sentence.missing, tooLong, tooShort: sentence.complete && sentence.text.length < node.minLength, pending, saved: false });
   return (
     <form
       data-testid="compose-panel"
       onSubmit={(e) => {
         e.preventDefault();
-        if (ready) onSend({ kind: 'reflect', text: sentence.text });
+        if (!btn.disabled) onSend({ kind: 'reflect', text: sentence.text });
       }}
       className="space-y-5"
     >
-      {lead && <p className="text-lg leading-relaxed text-fg">{lead}</p>}
-      <ScaffoldComposer scaffold={node.scaffold!} disabled={pending} onChange={setSentence} />
-      {tooLong && <p role="alert" className="text-sm text-danger">A frase passou de {node.maxLength} caracteres. Encurte uma das partes.</p>}
-      {fieldError && <p role="alert" className="text-sm text-danger">{fieldError}</p>}
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto" data-testid="player-submit" disabled={!ready || pending} aria-busy={pending}>
-          {pending ? 'Enviando…' : 'Usar esta frase'}
-        </Button>
-        {optional && (
-          <Button type="button" variant="secondary" size="lg" className="w-full rounded-full sm:w-auto" data-testid="player-skip" disabled={pending} onClick={() => onSend({ kind: 'reflect', text: '' })}>
-            Pular
-          </Button>
-        )}
-      </div>
+      {node.intro?.trim() && <p className="text-lg leading-snug text-fg" data-testid="compose-intro">{node.intro.trim()}</p>}
+      <p className="text-lg leading-relaxed text-fg">Escolha uma opção em cada grupo para montar sua resposta.</p>
+      {lead && !/^monte sua frase/i.test(lead) && <p className="leading-relaxed text-fg-muted">{lead}</p>}
+      <ScaffoldComposer
+        scaffold={node.scaffold!}
+        disabled={pending}
+        onChange={setSentence}
+        actions={
+          <div className="mt-5 space-y-3">
+            {tooLong && <p role="alert" className="text-sm text-danger">A resposta passou de {node.maxLength} caracteres. Escolha uma opção mais curta ou encurte o que escreveu.</p>}
+            {fieldError && <p role="alert" className="text-sm text-danger">{fieldError}</p>}
+            <Button type="submit" size="lg" className="w-full rounded-full" data-testid="player-submit" disabled={btn.disabled} aria-busy={pending}>
+              {btn.label}
+            </Button>
+            {optional && (
+              <Button type="button" variant="ghost" size="lg" className="w-full rounded-full" data-testid="player-skip" disabled={pending} onClick={() => onSend({ kind: 'reflect', text: '' })}>
+                Fazer depois
+              </Button>
+            )}
+          </div>
+        }
+      />
     </form>
   );
 }

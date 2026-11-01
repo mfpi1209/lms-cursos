@@ -1,4 +1,5 @@
 import {
+  MISSION_NOTE_MAX,
   applyEffects,
   evaluateCondition,
   isExecutableNodeType,
@@ -99,6 +100,16 @@ export function applyIntent(graph: LessonGraph, state: AttemptState, intent: Int
       if (text.length > node.maxLength) throw new EngineError('TEXT_TOO_LONG', `Use no máximo ${node.maxLength} caracteres`);
       next.answers[node.id] = { text, answeredAt: at };
       for (const oid of node.objectiveIds) evidence.push({ objectiveId: oid, nodeId: node.id, kind: 'reflection', value: { length: text.length } });
+      break;
+    }
+    case 'mission': {
+      // nunca bloqueia: "Vou fazer depois" e "Já experimentei" avançam; o registro vive também em mission_responses (db)
+      if (intent.kind !== 'mission') throw new EngineError('INTENT_MISMATCH', 'Este bloco espera "Já experimentei" ou "Vou fazer depois"');
+      const note = (intent.note ?? '').trim();
+      if (intent.status !== 'later' && intent.status !== 'done') throw new EngineError('INVALID_MISSION', 'Escolha "Já experimentei" ou "Vou fazer depois"');
+      if (intent.status === 'later' && note) throw new EngineError('INVALID_MISSION', 'O registro do que você percebeu vem com "Já experimentei"');
+      if (note.length > MISSION_NOTE_MAX) throw new EngineError('TEXT_TOO_LONG', `Use no máximo ${MISSION_NOTE_MAX} caracteres`);
+      next.answers[node.id] = { missionStatus: intent.status, ...(note ? { text: note } : {}), answeredAt: at };
       break;
     }
     case 'assessment': {

@@ -14,6 +14,8 @@ export const auth = betterAuth({
   }),
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL ?? 'http://localhost:3000',
+  // origens extras aceitas no login (ex.: o IP da máquina na rede local, para testar no celular); lista separada por vírgula
+  ...(process.env.BETTER_AUTH_TRUSTED_ORIGINS ? { trustedOrigins: process.env.BETTER_AUTH_TRUSTED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean) } : {}),
   // cadastro público desligado: contas são criadas por administradores/seed (evita pré-registro de e-mails da equipe)
   emailAndPassword: { enabled: true, minPasswordLength: 8, disableSignUp: true },
   session: { expiresIn: 60 * 60 * 24 * 14, updateAge: 60 * 60 * 24 },

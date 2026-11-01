@@ -22,3 +22,15 @@ docs/qa/**/*.jpg
 docs/qa/**/*.mp4
 docs/qa/**/*.webm
 *.tsbuildinfo
+/videos-publicados/
+
+# worktrees de agentes e rascunhos locais (nunca vão para o Git)
+.claude/worktrees/
+packages/db/.tmp/
+
+# QA gerado: rodadas brutas do robô e raio-X (grande, dá para gerar de novo)
+docs/qa/lancamento/robo/rodadas/
+docs/qa/raio-x/raio-x.json
+docs/qa/raio-x/raio-x-completo.html
+docs/qa/raio-x/asr-cache.json
+docs/qa/expansao-analise/*/raiox/

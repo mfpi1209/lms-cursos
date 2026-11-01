@@ -6,3 +6,4 @@ export * as media from './media';
 export * as sources from './sources';
 export * as agent from './agent';
 export * as library from './library';
+export * as recognition from './recognition';

@@ -112,3 +112,15 @@ describe('alunos de teste: opinião', () => {
     expect(o.liked.map((l) => l.code)).toContain('FEEDBACK');
   });
 });
+
+describe('alunos de teste: texto lido na decisão', () => {
+  it('conta só o retorno da opção escolhida, não os três', async () => {
+    const { seenScreenWords, nodeScreenWords } = await import('../src');
+    const g = linearGraph();
+    const q = g.nodes.find((n) => n.type === 'choice')!;
+    if (q.type === 'choice') q.options = q.options.map((o) => ({ ...o, feedback: p(Array.from({ length: 30 }, () => 'retorno').join(' ')) }));
+    const all = nodeScreenWords(q);
+    const seen = seenScreenWords(q, q.type === 'choice' ? q.options[0]!.id : undefined);
+    expect(all - seen).toBe(30);
+  });
+});

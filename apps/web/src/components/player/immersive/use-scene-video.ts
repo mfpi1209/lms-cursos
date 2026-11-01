@@ -16,7 +16,8 @@ import { readCaptionsPref, segmentAt, segmentText, writeCaptionsPref, type Media
  */
 export type VideoPhase = 'idle' | 'playing' | 'paused' | 'ended';
 
-export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCaptions | null, autoPlay: boolean) {
+export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCaptions | null, autoPlay: boolean, opts: { /** legendas ligadas neste vídeo mesmo sem a preferência salva (o fechamento do curso); o botão continua mandando */ captionsDefault?: boolean } = {}) {
+  const captionsDefault = !!opts.captionsDefault;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [phase, setPhase] = useState<VideoPhase>('idle');
   const [failed, setFailed] = useState(false);
@@ -28,6 +29,25 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
   const [volume, setVolumeState] = useState(1);
   const [captionsOn, setCaptionsOn] = useState(false);
   const [cue, setCue] = useState<string | null>(null);
+  // rampa de volume no começo (≈100 ms): o vídeo entra sem estalo; enquanto sobe, o volume do aluno não muda
+  const rampRef = useRef<number | null>(null);
+  const fadeInAudio = useCallback((v: HTMLVideoElement) => {
+    if (v.currentTime > 0.25 || v.muted) return;
+    if (rampRef.current !== null) cancelAnimationFrame(rampRef.current);
+    const target = v.volume > 0 ? v.volume : 1;
+    const t0 = performance.now();
+    v.volume = 0;
+    const step = () => {
+      const k = Math.min(1, (performance.now() - t0) / 100);
+      v.volume = target * k;
+      if (k < 1) rampRef.current = requestAnimationFrame(step);
+      else rampRef.current = null;
+    };
+    rampRef.current = requestAnimationFrame(step);
+  }, []);
+  useEffect(() => () => {
+    if (rampRef.current !== null) cancelAnimationFrame(rampRef.current);
+  }, []);
 
   const active = !!media && !failed;
   const src = media ? `/api/assets/${encodeURIComponent(media.assetId)}` : null;
@@ -42,7 +62,7 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
   const segments = useMemo(() => segmentText(fallbackText), [fallbackText]);
   const hasCaptions = !!captionsSrc || segments.length > 0;
 
-  useEffect(() => setCaptionsOn(readCaptionsPref()), []);
+  useEffect(() => setCaptionsOn(captionsDefault || readCaptionsPref()), [captionsDefault]);
 
   const toggleCaptions = useCallback(() => {
     setCaptionsOn((on) => {
@@ -115,6 +135,9 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
   // Toca sozinho ao entrar na cena depois de um clique do aluno.
   useEffect(() => {
     if (!autoPlay || !active) return;
+    // o autoplay só COMEÇA um vídeo; nunca recomeça um que já terminou (ao avançar para a cena seguinte o
+    // autoPlay oscila e o vídeo voltava ao início por meio segundo: o "corte" no fim de cada vídeo)
+    if (videoRef.current?.ended) return;
     play();
   }, [autoPlay, active, play]);
 
@@ -126,9 +149,12 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
     preload: 'metadata',
     playsInline: true,
     controls: false,
-    onPlay: () => {
+    // entra com fade de imagem (globals.css; sem animação com movimento reduzido)
+    ...({ 'data-im-video': '' } as Record<string, string>),
+    onPlay: (e) => {
       setPhase('playing');
       setBlocked(false);
+      fadeInAudio(e.currentTarget);
     },
     onPlaying: () => setBuffering(false),
     onCanPlay: () => setBuffering(false),
@@ -146,7 +172,7 @@ export function useSceneVideo(node: VideoCapableNode | null, media: MediaWithCap
     onDurationChange: (e) => setDuration(e.currentTarget.duration),
     onVolumeChange: (e) => {
       setMuted(e.currentTarget.muted);
-      setVolumeState(e.currentTarget.volume);
+      if (rampRef.current === null) setVolumeState(e.currentTarget.volume);
     },
     onError: () => {
       setFailed(true);

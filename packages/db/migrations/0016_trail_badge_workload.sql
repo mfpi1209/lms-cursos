@@ -1,0 +1,1 @@
+ALTER TABLE "trail_badges" ADD COLUMN "workload_minutes" integer;

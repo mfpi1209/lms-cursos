@@ -50,6 +50,8 @@ export const HR_JARGON = ['fit cultural', 'soft skills', 'hard skills', 'stakeho
 export interface SimulatedChoice {
   lessonId: string;
   nodeId: string;
+  /** opção escolhida (o aluno só lê o retorno DELA) */
+  optionId: string;
   question: string;
   answer: string;
   quality?: 'strong' | 'ok' | 'weak';
@@ -92,6 +94,7 @@ function nodeText(n: AnyNode): string {
   if ('narration' in n && typeof n.narration === 'string') parts.push(n.narration);
   if (n.type === 'scenario' || n.type === 'content' || n.type === 'consequence') parts.push(richTextToPlain(n.body));
   if (n.type === 'choice' || n.type === 'reflection' || n.type === 'assessment') parts.push(richTextToPlain(n.prompt));
+  if (n.type === 'mission') parts.push(n.intro, n.action, n.alternative);
   if (n.type === 'choice' || n.type === 'assessment') for (const o of n.options) parts.push(o.label, richTextToPlain(o.feedback));
   return parts.join(' ').toLowerCase();
 }
@@ -123,6 +126,18 @@ function nextEdge(edges: readonly Edge[], from: string, optionId?: string): Edge
   return ranked.find((e) => !e.condition) ?? ranked.find((e) => e.isDefault) ?? ranked[0];
 }
 
+const countWords = (t: string) => t.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
+
+/**
+ * Palavras que o aluno LÊ numa cena: na decisão, o enunciado, as opções e só o
+ * retorno da opção escolhida (os outros retornos nunca aparecem para ele).
+ */
+export function seenScreenWords(n: AnyNode, chosenOptionId?: string): number {
+  if (n.type !== 'choice') return nodeScreenWords(n);
+  const chosen = n.options.find((o) => o.id === chosenOptionId);
+  return countWords(richTextToPlain(n.prompt)) + n.options.reduce((a, o) => a + countWords(o.label), 0) + (chosen ? countWords(richTextToPlain(chosen.feedback)) : 0);
+}
+
 interface LessonWalk {
   lesson: Lesson;
   nodes: AnyNode[];
@@ -142,15 +157,19 @@ export function walkLesson(lesson: Lesson, style: AnswerStyle, decisionOffset = 
   while (cur && !seen.has(cur.id) && nodes.length < 200) {
     seen.add(cur.id);
     nodes.push(cur);
-    screen += nodeScreenWords(cur);
     spoken += nodeSpokenWords(cur);
-    if (cur.type === 'end') break;
+    if (cur.type === 'end') {
+      screen += nodeScreenWords(cur);
+      break;
+    }
     let optionId: string | undefined;
+    if (cur.type !== 'choice') screen += nodeScreenWords(cur);
     if (cur.type === 'choice') {
       const opt = pickOption(cur, style, decisionOffset + choices.length);
       optionId = opt.id;
+      screen += seenScreenWords(cur, opt.id);
       const fb = plain(opt.feedback);
-      choices.push({ lessonId: lesson.id, nodeId: cur.id, question: decisionQuestion(cur), answer: opt.label.replace(/^["'“”«»\s]+|["'“”«»\s]+$/g, ''), ...(opt.quality ? { quality: opt.quality } : {}), helpfulFeedback: /^voc[eê](?![a-zà-ú])/i.test(fb) || /fa[cç]a assim|melhor:/i.test(fb) });
+      choices.push({ lessonId: lesson.id, nodeId: cur.id, optionId: opt.id, question: decisionQuestion(cur), answer: opt.label.replace(/^["'“”«»\s]+|["'“”«»\s]+$/g, ''), ...(opt.quality ? { quality: opt.quality } : {}), helpfulFeedback: /^voc[eê](?![a-zà-ú])/i.test(fb) || /fa[cç]a assim|melhor:/i.test(fb) });
     }
     const e = nextEdge(lesson.graph.edges, cur.id, optionId);
     cur = e ? byId.get(e.to) : undefined;
@@ -201,7 +220,7 @@ export function simulateLearner(doc: CourseDocument, profileKey: string, profile
     const lessonDecisions = w.choices.length;
     if (!lessonDecisions && w.nodes.length > 1) add({ kind: 'issue', code: 'NO_DECISION', lessonId: w.lesson.id, text: `Na aula "${w.lesson.title}" eu só assisti; não precisei decidir nada.` });
     for (const n of w.nodes) {
-      const screen = nodeScreenWords(n);
+      const screen = seenScreenWords(n, w.choices.find((c) => c.nodeId === n.id)?.optionId);
       const title = n.title ?? n.id;
       if (screen > p.readingTolerance && n.type !== 'end') add({ kind: 'issue', code: 'TOO_MUCH_TEXT', lessonId: w.lesson.id, nodeId: n.id, text: `A cena "${title}" tem ${screen} palavras para ler${p.device === 'celular' ? ' no celular' : ''}; eu me cansei.` });
       const spoken = nodeSpokenWords(n);

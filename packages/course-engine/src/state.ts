@@ -1,4 +1,4 @@
-import { scalarType, variableScope, type LessonGraph, type RichTextDocument, type Scalar, type VariableValues } from '@lms/course-schema';
+import { scalarType, variableScope, type LessonGraph, type MissionStatus, type RichTextDocument, type Scalar, type VariableValues } from '@lms/course-schema';
 
 export const STATE_VERSION = 1 as const;
 
@@ -8,6 +8,8 @@ export interface AnswerRecord {
   passed?: boolean;
   correctCount?: number;
   attempts?: number;
+  /** missão "Leve para a vida real": `later` (Vou fazer depois) ou `done` (Já experimentei); `text` guarda "O que você percebeu?" */
+  missionStatus?: MissionStatus;
   answeredAt: string;
 }
 
@@ -49,6 +51,8 @@ export type Intent =
   | { kind: 'advance' }
   | { kind: 'choose'; optionId: string }
   | { kind: 'reflect'; text: string }
+  /** missão: sempre avança ("Vou fazer depois" também conclui a cena); `note` só com `done`, até MISSION_NOTE_MAX */
+  | { kind: 'mission'; status: MissionStatus; note?: string }
   | { kind: 'assess'; optionIds: string[] };
 
 export interface Evidence {
@@ -89,6 +93,7 @@ export class EngineError extends Error {
       | 'INVALID_OPTION'
       | 'TEXT_TOO_SHORT'
       | 'TEXT_TOO_LONG'
+      | 'INVALID_MISSION'
       | 'NO_TRANSITION'
       | 'NOT_EXECUTABLE'
       | 'BACK_NOT_ALLOWED'

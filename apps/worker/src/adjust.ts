@@ -13,8 +13,8 @@ import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { authoring, getDb, media, newId, schema } from '@lms/db';
 import { SceneDirectionSchema, type CourseDocument, type SceneDirection } from '@lms/course-schema';
-import { ADJUST_PROVIDER, adjustOptions, deriveAdjustState, isAdjustJobInput, keptWordRange, mergeAdjust, reactionOpener, validateAdjust, type AdjustJobInput, type AdjustRequest, type AdjustState, type TimedWord } from '@lms/media';
-import { ffprobe, normalizeLoudnessInPlace, runFfmpeg, wordsFromAlignment, type CharAlignment } from '@lms/media/compose';
+import { ADJUST_PROVIDER, adjustOptions, carryAdjust, deriveAdjustState, isAdjustJobInput, keptSegments, keptWords, mergeAdjust, reactionOpener, segmentTimes, soloShotWords, validateAdjust, verifySkips, fillSkipText, type AdjustJobInput, type AdjustRequest, type AdjustState, type TimedWord } from '@lms/media';
+import { ffprobe, normalizeLoudnessInPlace, quietestPoint, runFfmpeg, wordsFromAlignment, type CharAlignment } from '@lms/media/compose';
 import { fail, readAsset, storeGeneratedAsset } from './media';
 import { renderDirectedScene, sceneCaptions, type DirectedInput } from './compose-scene';
 import { packWords, storeCaptions, unpackWords, type PackedWords } from './narration';
@@ -76,6 +76,22 @@ export async function loadSceneAdjust(courseId: string, lessonId: string, nodeId
   return { draft, node, job, input, base, wordsByUnit, current };
 }
 
+/**
+ * O plano `i` da montagem vem logo depois de algo tirado? (plano inteiro entre ele e o anterior, última frase do
+ * anterior cortada, ou primeira frase/começo dele cortado). Função pura (testada).
+ */
+export function joinsAfterRemoval(baseShots: ReadonlyArray<{ id: string }>, kept: ReadonlyArray<{ id: string }>, i: number, state: Pick<AdjustState, 'drop' | 'cut'>): boolean {
+  const cur = kept[i];
+  const prev = kept[i - 1];
+  if (!cur || !prev) return false;
+  const bi = baseShots.findIndex((s) => s.id === cur.id);
+  const bp = baseShots.findIndex((s) => s.id === prev.id);
+  if (bi - bp > 1) return true;
+  const c = state.cut[cur.id];
+  const p = state.cut[prev.id];
+  return !!(c?.first || c?.lead || p?.last);
+}
+
 /** O que a tela pode oferecer agora (planos, cortes possíveis, cartão atual). */
 export async function sceneAdjustOptions(courseId: string, lessonId: string, nodeId: string) {
   const c = await loadSceneAdjust(courseId, lessonId, nodeId);
@@ -91,19 +107,39 @@ export async function sceneAdjustOptions(courseId: string, lessonId: string, nod
  * Monta a cena com o pedido somado ao estado atual. `out` = só a prévia (nada anexado); senão guarda o
  * vídeo, refaz as legendas e grava no rascunho a mídia nova (com `media.adjust`) e a direção montada.
  */
-export async function adjustScene(opts: { courseId: string; lessonId: string; nodeId: string; request: AdjustRequest; out?: string; renew?: () => Promise<unknown> }) {
-  const { courseId, lessonId, nodeId, request } = opts;
+export async function adjustScene(opts: {
+  courseId: string;
+  lessonId: string;
+  nodeId: string;
+  request: AdjustRequest;
+  out?: string;
+  renew?: () => Promise<unknown>;
+  /** remontagem (lote de acabamento): parte deste estado em vez do guardado e aceita pedido vazio */
+  remount?: { state?: (current: AdjustState) => AdjustState };
+}) {
+  const { courseId, lessonId, nodeId } = opts;
   const db = getDb();
   const c = await loadSceneAdjust(courseId, lessonId, nodeId);
-  const { job, input, base, wordsByUnit, current } = c;
-  const err = validateAdjust(base.shots, input.units!, wordsByUnit, current, request);
+  const { job, input, base, wordsByUnit } = c;
+  // `skip` é por índice de palavra: confere o texto guardado com as palavras desta gravação; o que não bate não é aplicado
+  const shotWords = soloShotWords(input.units!, wordsByUnit);
+  const checked = verifySkips(opts.request, shotWords);
+  for (const w of checked.warnings) console.warn(`[ajuste] ${courseId} ${lessonId}/${nodeId}: ${w}`);
+  const request = checked.request;
+  const current = opts.remount?.state ? opts.remount.state(c.current) : c.current;
+  const empty = !request.drop?.length && !request.cut?.length && !request.trimLead?.length && !request.skip?.length && request.teaser === undefined;
+  const err = opts.remount && empty ? null : validateAdjust(base.shots, input.units!, wordsByUnit, current, request);
   if (err) throw new AdjustError(err);
-  const next = mergeAdjust(current, request);
+  // guarda o texto das palavras puladas (para conferir numa regravação futura)
+  const next = fillSkipText(mergeAdjust(current, request), shotWords);
   const drop = new Set(next.drop);
   const direction: SceneDirection = { ...base, shots: base.shots.filter((s) => !drop.has(s.id)) };
   input.units = input.units!.filter((u) => !u.shotIds.every((id) => drop.has(id)));
   // o primeiro plano que sobra entra com corte seco (sem transição de entrada)
   if (drop.has(base.shots[0]!.id)) direction.shots[0] = { ...direction.shots[0]!, transitionIn: 'cut' };
+  // onde algo foi tirado (plano inteiro, frase do fim do anterior, frase/começo deste), a emenda entra em fusão
+  // em vez de corte seco: o salto de fala e de imagem fica suave
+  direction.shots = direction.shots.map((sh, i) => (i > 0 && sh.transitionIn !== 'crossfade' && joinsAfterRemoval(base.shots, direction.shots, i, next) ? { ...sh, transitionIn: 'crossfade' } : sh));
   if (next.teaser === null) delete input.nextQuestion;
   else if (typeof next.teaser === 'string') input.nextQuestion = next.teaser;
   if (c.draft.document.branding?.videoPalette) input.videoPalette = c.draft.document.branding.videoPalette;
@@ -113,28 +149,78 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
     const clipFiles = new Map<string, string>();
     const lines = new Map<string, string>();
     for (const [shotId, cut] of Object.entries(next.cut)) {
-      if (drop.has(shotId) || (!cut.first && !cut.last && !cut.lead)) continue;
+      if (drop.has(shotId) || (!cut.first && !cut.last && !cut.lead && !cut.skip?.length)) continue;
       const u = input.units.find((x) => x.shotIds.length === 1 && x.shotIds[0] === shotId && x.kind === 'clip');
       const st = u ? input.shots![u.id] : undefined;
       const words = u ? wordsByUnit.get(u.id) : undefined;
       if (!u || !st?.clipAssetId || !words?.length) throw new AdjustError(`O plano ${shotId} não tem clipe sozinho com palavras guardadas`);
-      const range = keptWordRange(words, cut.first, cut.last, cut.lead ?? 0);
-      if (!range) throw new AdjustError(`O plano ${shotId} ficaria sem fala`);
+      const segs = keptSegments(words, cut);
+      if (!segs.length) throw new AdjustError(`O plano ${shotId} ficaria sem fala`);
       const clip = await media.getAsset(db, st.clipAssetId);
       if (!clip) throw new AdjustError(`Clipe do plano ${shotId} não encontrado`);
       const src = path.join(dir, `src-${u.id}.mp4`);
       await writeFile(src, await readAsset(clip.storageKey));
       const total = (await ffprobe(src)).durationSeconds;
-      const [a, b] = range;
-      const t0 = cut.first || cut.lead ? Math.max(0, words[a]!.start - 0.12) : 0;
-      const t1 = cut.last ? Math.min(total, words[b]!.end + 0.3) : total;
+      // tempo de cada trecho que fica: começo/fim do plano como antes; nas emendas, a respiração nunca invade a palavra
+      // vizinha tirada (nem quando o alinhamento é contíguo): ver segmentTimes
+      const times = segmentTimes(words, segs, total);
+      // ajuste fino pelo SOM: nas emendas ao lado de palavras tiradas, o corte cai no ponto de menor volume entre as
+      // duas palavras (o tempo marcado da palavra costuma errar dezenas de ms: sobrava o "-bém" de "Também")
+      for (let i = 0; i < segs.length; i++) {
+        const [a, b] = segs[i]!;
+        if (a > 0) times[i]![0] = await quietestPoint(src, Math.max(0, words[a - 1]!.end - 0.03), Math.min(total, words[a]!.start + 0.06), times[i]![0]);
+        if (b < words.length - 1) times[i]![1] = await quietestPoint(src, Math.max(0, words[b]!.end - 0.02), Math.min(total, words[b + 1]!.start + 0.05), times[i]![1]);
+      }
       const trimmed = path.join(dir, `cut-${u.id}.mp4`);
-      await runFfmpeg(['-ss', t0.toFixed(3), '-to', t1.toFixed(3), '-i', src, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', trimmed]);
+      // fusão das emendas no meio do plano (imagem e som juntos, a boca segue sincronizada)
+      const XF = 0.18;
+      const offsets: number[] = [];
+      if (times.length === 1) {
+        await runFfmpeg(['-ss', times[0]![0].toFixed(3), '-to', times[0]![1].toFixed(3), '-i', src, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', trimmed]);
+        offsets.push(0);
+      } else {
+        // corte no meio: cada trecho em arquivo próprio e emenda com fusão curta (imagem e som), a boca segue sincronizada
+        const parts: string[] = [];
+        const durs: number[] = [];
+        for (let i = 0; i < times.length; i++) {
+          const part = path.join(dir, `seg-${u.id}-${i}.mp4`);
+          await runFfmpeg(['-ss', times[i]![0].toFixed(3), '-to', times[i]![1].toFixed(3), '-i', src, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16', '-r', '25', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', part]);
+          parts.push(part);
+          durs.push((await ffprobe(part)).durationSeconds);
+        }
+        let acc = 0;
+        const fv: string[] = [];
+        const fa: string[] = [];
+        let lv = '[0:v]';
+        let la = '[0:a]';
+        for (let i = 0; i < parts.length; i++) {
+          offsets.push(i === 0 ? 0 : acc - XF);
+          if (i > 0) {
+            const off = acc - XF;
+            // imagem: troca no MEIO da fusão numa rampa de ~2 quadros (sem "braços fantasma" quando a pose muda);
+            // o som faz a fusão inteira (acrossfade), e os dois lados seguem sincronizados
+            const k = (XF / 0.08).toFixed(3);
+            const w = `clip((P-0.5)*${k}+0.5,0,1)`;
+            fv.push(`${lv}[${i}:v]xfade=transition=custom:expr='A*${w}+B*(1-${w})':duration=${XF}:offset=${off.toFixed(3)}[v${i}]`);
+            fa.push(`${la}[${i}:a]acrossfade=d=${XF}[a${i}]`);
+            lv = `[v${i}]`;
+            la = `[a${i}]`;
+            acc = off + durs[i]!;
+          } else acc = durs[0]!;
+        }
+        await runFfmpeg([...parts.flatMap((p) => ['-i', p]), '-filter_complex', [...fv, ...fa].join(';'), '-map', lv, '-map', la, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '16', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', trimmed]);
+      }
       clipFiles.set(u.id, trimmed);
-      const kept = words.slice(a, b + 1).map((w) => ({ ...w }));
-      // oração de abertura aparada: a fala segue com maiúscula ("o caminho é…" → "O caminho é…")
-      if (cut.lead && kept[0]) kept[0].text = kept[0].text.charAt(0).toLocaleUpperCase('pt-BR') + kept[0].text.slice(1);
-      st.words = packWords(kept, t0) as never;
+      // palavras que ficam, no tempo do clipe montado (legenda) e com o texto acertado (maiúscula/pontuação nas emendas)
+      const kept = keptWords(words, cut);
+      let k = 0;
+      segs.forEach(([a, b], i) => {
+        for (let w = a; w <= b; w++, k++) {
+          const shift = offsets[i]! - times[i]![0];
+          kept[k] = { ...kept[k]!, start: Math.max(0, words[w]!.start + shift), end: Math.max(0, words[w]!.end + shift) };
+        }
+      });
+      st.words = packWords(kept, 0) as never;
       lines.set(shotId, kept.map((w) => w.text).join(' '));
     }
     if (lines.size) direction.shots = direction.shots.map((sh) => (lines.has(sh.id) ? { ...sh, line: lines.get(sh.id)! } : sh));
@@ -144,11 +230,11 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
     const transcript = direction.shots.map((s) => s.line.trim()).join(' ');
     if (opts.out) {
       await copyFile(scene.output, opts.out);
-      return { assetId: null, durationSeconds: scene.durationSeconds, state: next, transcript, loudness: scene.loudness };
+      return { assetId: null, durationSeconds: scene.durationSeconds, state: next, transcript, loudness: scene.loudness, timeline: scene.timeline, joins: scene.joins };
     }
     const captions = await sceneCaptions(job, direction, scene.timeline, scene.wordSources);
     const asset = await storeGeneratedAsset({ workspaceId: job.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(scene.output)), durationSeconds: scene.durationSeconds, transcript, createdBy: job.createdBy, ...(scene.loudness ? { metadata: { loudness: scene.loudness } } : {}) });
-    const summary = [...next.drop.map((x) => `sem ${x}`), ...Object.entries(next.cut).filter(([, v]) => v.first || v.last || v.lead).map(([k, v]) => `${k} −${v.first}/−${v.last} frase(s)${v.lead ? ` −${v.lead} palavra(s) no começo` : ''}`), ...(request.teaser !== undefined ? ['cartão'] : [])].join(', ');
+    const summary = [...next.drop.map((x) => `sem ${x}`), ...Object.entries(next.cut).filter(([, v]) => v.first || v.last || v.lead || v.skip?.length).map(([k, v]) => `${k} −${v.first}/−${v.last} frase(s)${v.lead ? ` −${v.lead} palavra(s) no começo` : ''}${v.skip?.length ? ` −${v.skip.length} trecho(s) no meio` : ''}`), ...(request.teaser !== undefined ? ['cartão'] : [])].join(', ');
     await saveWithRetry(courseId, `ajuste fino ${lessonId}/${nodeId}: ${summary}`, (doc) => {
       const n = findNode(doc, lessonId, nodeId);
       if (!n) return false;
@@ -158,13 +244,78 @@ export async function adjustScene(opts: { courseId: string; lessonId: string; no
         ...(n.media ?? {}),
         assetId: asset.id, kind: 'video', transcript: transcript.slice(0, 20000), stale: false,
         ...(captions?.assetId ? { captions: { assetId: captions.assetId, lang: captions.lang ?? 'pt-BR', format: 'vtt', ...(captions.approx ? { approx: true } : {}) } } : {}),
-        adjust: next,
+        // falas da gravação ajustada: ao regravar, os cortes só voltam onde a fala não mudou (carryAdjust)
+        adjust: { ...next, baseLines: Object.fromEntries(base.shots.map((s) => [s.id, s.line.slice(0, 2000)])) },
       };
       return true;
     });
-    return { assetId: asset.id, durationSeconds: scene.durationSeconds, state: next, transcript, loudness: scene.loudness };
+    return { assetId: asset.id, durationSeconds: scene.durationSeconds, state: next, transcript, loudness: scene.loudness, timeline: scene.timeline, joins: scene.joins };
   } finally {
     await rm(dir, { recursive: true, force: true });
+  }
+}
+
+/** Ajuste fino da mídia ATUAL de uma cena e as falas da gravação ajustada (para levar à regravação). */
+export interface PreviousAdjust {
+  adjust: AdjustState;
+  oldLines: Record<string, string> | null;
+}
+
+/**
+ * Antes de trocar o vídeo de uma cena pelo regravado: o ajuste da mídia atual (se houver) e as falas da
+ * gravação que ele cortou (`adjust.baseLines`, senão a direção do job de origem). Melhor esforço: null
+ * quando não há ajuste ou algo falha.
+ */
+export async function previousSceneAdjust(courseId: string, lessonId: string, nodeId: string): Promise<PreviousAdjust | null> {
+  try {
+    const db = getDb();
+    const draft = await authoring.getDraft(db, courseId);
+    const node = draft ? findNode(draft.document as CourseDocument, lessonId, nodeId) : undefined;
+    const stored = node?.media?.adjust;
+    if (!stored) return null;
+    const adjust: AdjustState = { drop: stored.drop ?? [], cut: stored.cut ?? {}, ...(stored.teaser !== undefined ? { teaser: stored.teaser } : {}) };
+    let oldLines: Record<string, string> | null = stored.baseLines ?? null;
+    const sourceJobId = node?.media?.generatedFrom?.jobId;
+    if (!oldLines && sourceJobId) {
+      const src = await media.getJob(db, sourceJobId);
+      const dir = (src?.input as { direction?: unknown } | undefined)?.direction;
+      const parsed = dir ? SceneDirectionSchema.safeParse(dir) : null;
+      if (parsed?.success) oldLines = Object.fromEntries(parsed.data.shots.map((s) => [s.id, s.line]));
+    }
+    return { adjust, oldLines };
+  } catch (e) {
+    console.warn(`[ajuste] ${courseId} ${lessonId}/${nodeId}: ajuste anterior não lido (${e instanceof Error ? e.message : String(e)})`);
+    return null;
+  }
+}
+
+/**
+ * Depois de uma regravação (F2): reaplica o ajuste fino que a cena tinha (grátis, montagem local), pela regra
+ * de `carryAdjust`: cartão sempre; cortes só nos planos cuja fala não mudou. Se o pedido completo não couber
+ * na gravação nova, tenta só o cartão. Nunca lança: na falha, a cena fica com o vídeo novo sem ajuste e um aviso no log.
+ */
+export async function reapplyAdjustAfterRecording(job: Pick<media.MediaJobRow, 'id' | 'courseId' | 'lessonId' | 'nodeId' | 'input'>, prev: PreviousAdjust | null): Promise<void> {
+  if (!prev) return;
+  const where = `[ajuste] job ${job.id} ${job.lessonId}/${job.nodeId}`;
+  try {
+    const dir = (job.input as { direction?: unknown }).direction;
+    const parsed = dir ? SceneDirectionSchema.safeParse(dir) : null;
+    if (!parsed?.success) return;
+    const { request, skipped } = carryAdjust(prev.adjust, prev.oldLines, parsed.data.shots);
+    if (skipped.length) console.log(`${where}: fica de fora: ${skipped.join('; ')}`);
+    if (!request) return;
+    const target = { courseId: job.courseId, lessonId: job.lessonId, nodeId: job.nodeId };
+    try {
+      const r = await adjustScene({ ...target, request });
+      console.log(`${where}: ajuste reaplicado depois da regravação (${r.durationSeconds.toFixed(1)} s)`);
+    } catch (e) {
+      if (request.teaser === undefined || (!request.drop && !request.cut && !request.trimLead && !request.skip)) throw e;
+      console.warn(`${where}: cortes não couberam na gravação nova (${e instanceof Error ? e.message : String(e)}); reaplicando só o cartão`);
+      await adjustScene({ ...target, request: { teaser: request.teaser } });
+      console.log(`${where}: cartão reaplicado depois da regravação`);
+    }
+  } catch (e) {
+    console.warn(`${where}: ajuste não reaplicado; a cena fica com o vídeo novo sem ajuste (${e instanceof Error ? e.message : String(e)})`);
   }
 }
 
@@ -200,7 +351,9 @@ export async function trimReactionOpener(opts: { courseId: string; lessonId: str
   if (!al?.characters?.length || !script.startsWith(opener)) throw new AdjustError('Esta reação não tem o tempo de cada palavra guardado; não dá para cortar sem regravar');
   let idx = opener.length;
   while (idx < al.characters.length && /\s/.test(al.characters[idx]!)) idx++;
-  const t0 = Math.max(al.endTimes[opener.length - 1] ?? 0, (al.startTimes[idx] ?? 0) - 0.12);
+  // começo do que fica: colado no início da 1ª palavra mantida (o fim marcado da palavra tirada costuma vir antes do
+  // som acabar; com 0,12 s de folga sobrava o "-bém" de "Também")
+  const t0 = Math.max((al.endTimes[opener.length - 1] ?? 0) + 0.02, (al.startTimes[idx] ?? 0) - 0.04);
   const rest = r.text.slice(opener.length).trim();
   if (opts.dryRun) return { opener, cutAt: t0, text: rest, assetId: null as string | null };
   const asset = await media.getAsset(db, r.media.assetId);
@@ -211,7 +364,9 @@ export async function trimReactionOpener(opts: { courseId: string; lessonId: str
     const out = path.join(dir, 'out.mp4');
     await writeFile(src, await readAsset(asset.storageKey));
     await runFfmpeg(['-ss', t0.toFixed(3), '-i', src, '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '17', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-movflags', '+faststart', out]);
-    const loudness = await normalizeLoudnessInPlace(out);
+    // a reação já limpa (lote de acabamento) não passa pela limpeza de novo
+    const cleaned = !!((asset.metadata ?? {}) as { loudness?: { voiceClean?: string } }).loudness?.voiceClean;
+    const loudness = await normalizeLoudnessInPlace(out, undefined, { clean: !cleaned });
     const seconds = (await ffprobe(out)).durationSeconds;
     const createdBy = asset.createdBy ?? draft.updatedBy;
     const stored = await storeGeneratedAsset({ workspaceId: asset.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(out)), durationSeconds: seconds, transcript: rest, createdBy, metadata: { loudness: { ...loudness, from: asset.id } } });

@@ -18,6 +18,14 @@ export const enrollments = pgTable(
     createdBy: text('created_by').notNull().references(() => user.id),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     completedAt: timestamp('completed_at', { withTimezone: true }),
+    /**
+     * Aulas acrescentadas DEPOIS de a pessoa concluir o curso (`publicar-e-matricular`, regra `onlyAppendedLessons`):
+     * conteúdo novo disponível, NÃO obrigatório para esta matrícula. A conclusão, a data e o selo continuam valendo;
+     * a aula toca e conclui normalmente, sem reabrir o curso. Vazio para quem estava em andamento (aula nova é obrigatória).
+     */
+    optionalLessonIds: jsonb('optional_lesson_ids').$type<string[]>().notNull().default([]),
+    /** número da versão em que o curso foi concluído (a declaração de conclusão cita esta, não a versão atual da matrícula) */
+    completedVersionNumber: integer('completed_version_number'),
   },
   (t) => [unique('enrollments_course_user_uq').on(t.courseId, t.userId), index('enrollments_user_idx').on(t.userId)],
 );
@@ -75,4 +83,47 @@ export const objectiveEvidence = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('objective_evidence_enrollment_idx').on(t.enrollmentId)],
+);
+
+export const missionStatusEnum = pgEnum('mission_status', ['later', 'done']);
+
+/**
+ * Missão "Leve para a vida real" (nó `mission`): o registro do aluno na matrícula, SEPARADO da tentativa da aula para
+ * poder ser mudado depois (marcar "Já experimentei", contar "O que você percebeu?") sem reabrir a aula. Nunca bloqueia
+ * a aula, o curso nem o selo. Um por matrícula e missão; `revision` dá concorrência otimista (duas abas) e cada versão
+ * fica em `mission_response_events`. Pertence ao aluno da matrícula (`userId`): as consultas sempre passam pela matrícula.
+ */
+export const missionResponses = pgTable(
+  'mission_responses',
+  {
+    id: text('id').primaryKey(),
+    enrollmentId: text('enrollment_id').notNull().references(() => enrollments.id, { onDelete: 'cascade' }),
+    userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+    lessonId: text('lesson_id').notNull(),
+    nodeId: text('node_id').notNull(),
+    status: missionStatusEnum('status').notNull(),
+    /** "O que você percebeu?" (até 500 caracteres); só com `done` */
+    note: text('note'),
+    revision: integer('revision').notNull().default(1),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+    doneAt: timestamp('done_at', { withTimezone: true }),
+  },
+  (t) => [unique('mission_responses_enrollment_node_uq').on(t.enrollmentId, t.nodeId), index('mission_responses_user_idx').on(t.userId)],
+);
+
+/** Histórico (só inclusão) de cada versão de uma missão. */
+export const missionResponseEvents = pgTable(
+  'mission_response_events',
+  {
+    id: text('id').primaryKey(),
+    responseId: text('response_id').notNull().references(() => missionResponses.id, { onDelete: 'cascade' }),
+    revision: integer('revision').notNull(),
+    status: missionStatusEnum('status').notNull(),
+    note: text('note'),
+    /** de onde veio a mudança: a aula (player) ou a página do curso / "Meu roteiro" */
+    source: text('source').notNull().default('lesson'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('mission_response_events_response_idx').on(t.responseId)],
 );

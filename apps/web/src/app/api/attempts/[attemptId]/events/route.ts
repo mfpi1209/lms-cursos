@@ -8,6 +8,7 @@ const IntentSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('advance') }),
   z.object({ kind: z.literal('choose'), optionId: z.string().min(1).max(64) }),
   z.object({ kind: z.literal('reflect'), text: z.string().max(5000) }),
+  z.object({ kind: z.literal('mission'), status: z.enum(['later', 'done']), note: z.string().max(5000).optional() }),
   z.object({ kind: z.literal('assess'), optionIds: z.array(z.string().min(1).max(64)).max(8) }),
 ]);
 

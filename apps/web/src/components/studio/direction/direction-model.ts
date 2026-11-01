@@ -1,6 +1,7 @@
 import type { CinematicAction } from '@lms/course-schema';
 import {
   directionNarration,
+  syncNarrationFromShots,
   type Camera,
   type CAMERA_MOVES,
   type FRAMINGS,
@@ -12,7 +13,7 @@ import {
   type TRANSITIONS,
 } from '@lms/course-schema';
 import { markMediaStale, replaceNode, shortId } from '@/components/studio/graph-ops';
-import { isSpokenNode, type SpokenNode } from '@/components/studio/storyboard/narration-fields';
+import { isSpokenNode, spokenScript, type SpokenNode } from '@/components/studio/storyboard/narration-fields';
 import type { GraphChange } from '@/components/studio/storyboard/scene-fields';
 
 /**
@@ -286,6 +287,11 @@ export function insertShotAfter(d: SceneDirection, afterId: string | null, shot:
  * Altera a direção (e, opcionalmente, a fala) de uma cena numa única
  * alteração do rascunho. Qualquer edição manual marca a direção como do
  * autor e deixa desatualizado o vídeo gerado a partir da versão anterior.
+ * Se a fala da cena batia com os planos antes da edição e a alteração não
+ * traz fala própria, a fala acompanha os planos
+ * novos: editar planos nunca deixa a cena "desatualizada". Quando o autor
+ * mudou a FALA (planos já diferentes), nada muda aqui: a reconciliação
+ * continua pelo aviso do painel.
  */
 export function patchDirection(
   changeGraph: GraphChange,
@@ -298,12 +304,14 @@ export function patchDirection(
     if (!cur || !isSpokenNode(cur)) return g;
     const r = fn(cur.direction, cur);
     if (!r) return g;
-    const next: SpokenNode = { ...cur };
+    const inSync = !!cur.direction && directionMatches(cur.direction, spokenScript(cur));
+    let next: SpokenNode = { ...cur };
     if ('direction' in r) {
       if (r.direction) next.direction = { ...r.direction, source: 'author' };
       else delete next.direction;
     }
     if ('narration' in r) next.narration = r.narration ? r.narration : undefined;
+    else if (r.direction && inSync) next = syncNarrationFromShots(next);
     return replaceNode(g, markMediaStale(next));
   }, coalesce);
 }

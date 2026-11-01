@@ -6,3 +6,4 @@ export * from './ops';
 export * from './media';
 export * from './agent';
 export * from './library';
+export * from './recognition';

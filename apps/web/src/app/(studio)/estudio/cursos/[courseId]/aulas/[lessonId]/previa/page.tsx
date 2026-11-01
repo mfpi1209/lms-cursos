@@ -6,6 +6,7 @@ import { requireCourseInWorkspace } from '@/server/courses';
 import { buildPlatformContext } from '@/components/player/platform-context';
 import { platformDefaultBumper } from '@/server/bumper';
 import { shortTitleFor } from '@/app/(lms)/aprender/_lib/short-titles';
+import { brandMarkOf, getBrand } from '@/config/brand';
 import { PreviewClient } from './preview-client';
 import { parseTestParams } from '@/components/studio/test-mode/test-model';
 
@@ -35,10 +36,12 @@ export default async function LessonPreviewPage({
     hrefFor: (id) => `/estudio/cursos/${courseId}/aulas/${id}/previa`,
     forceClassic: player === 'classic',
     defaultBumper: await platformDefaultBumper(viewer.workspace.id, draft.document.branding.bumper?.assetId),
+    brandMark: brandMarkOf(getBrand(viewer.workspace.id)),
   });
-  platform.credentialName = shortTitleFor(courseId, draft.document.title);
-  // topo do player com o título curto da capa, igual ao do aluno
-  if (shortTitleFor(courseId, '')) platform.branding = { ...platform.branding, wordmark: shortTitleFor(courseId, '') };
+  // prévia: a conquista do curso (o selo é da trilha; ver a página da trilha do aluno)
+  platform.achievement = `Curso concluído · ${shortTitleFor(courseId, draft.document.title)}`;
+  // topo do player com o nome curto do catálogo, igual ao do aluno
+  platform.courseShortTitle = shortTitleFor(courseId, draft.document.title);
   // Modo de teste: ?cena=<nó>&v.<variável>=<valor> começa nessa cena com esses valores (prévia, nada é salvo)
   const test = parseTestParams(found.lesson.graph, sp);
   return (

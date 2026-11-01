@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { rasterizeSvg } from './raster';
 
 /**
  * Renderizador de slides e letreiros (satori -> SVG -> resvg -> PNG).
@@ -301,8 +301,7 @@ function slideTree(slide: SlideSpec, o: Required<Pick<RenderSlideOptions, 'width
 
 async function toPng(tree: Node, width: number, height: number): Promise<Uint8Array> {
   const svg = await satori(tree as never, { width, height, fonts: loadSlideFonts() });
-  const png = new Resvg(svg, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng();
-  return new Uint8Array(png);
+  return (await rasterizeSvg(svg)).png;
 }
 
 /** Renderiza um slide em PNG (padrão 1920×1080; use 960×1080 para layouts divididos). */

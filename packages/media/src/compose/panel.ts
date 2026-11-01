@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import satori from 'satori';
-import { Resvg } from '@resvg/resvg-js';
+import { rasterizeSvg } from './raster';
 import { cardBoldSegments, clampText, loadSlideFonts, type SlideSpec } from './slides';
 
 /**
@@ -133,7 +133,7 @@ export function panelTree(spec: PanelSpec, o: { width: number; height: number; l
 
 async function toPng(tree: Node, width: number, height: number): Promise<Uint8Array> {
   const svg = await satori(tree as never, { width, height, fonts: loadSlideFonts() });
-  return new Uint8Array(new Resvg(svg, { fitTo: { mode: 'original' }, background: 'rgba(0,0,0,0)' }).render().asPng());
+  return (await rasterizeSvg(svg)).png;
 }
 
 export async function renderPanelPng(spec: PanelSpec, o: { width?: number; height?: number; lit: number }): Promise<Uint8Array> {

@@ -11,6 +11,7 @@ import {
   type CaptionWord, type CharAlignment, type ChipsGraphics, type LoudnessResult, type ShotClip, type ShotTiming, type TimelineShotWords,
 } from '@lms/media/compose';
 import { attachToNode, downloadVideo, fail, readAsset, simWorkerRealJobMessage, storeGeneratedAsset } from './media';
+import { previousSceneAdjust, reapplyAdjustAfterRecording } from './adjust';
 import { backgroundKeyTag, gradeFromParams, imageBackground, placeStoredClip, presentationBackground, type PlacementParams } from './placement';
 import { JobNotRunningError, PaidButNotStoredError, packWords, storeCaptions, storeWithRetry, synthesizeOnce, unpackWords, type CaptionsRef, type PackedWords } from './narration';
 import { CameraNotReadyError, cinematicKey, composeShotsFor, cinematicPlanProblems, estimateLineSeconds, itemKey, placementKeyTag, planRenderUnits, resolveCamera, resolveUnitPlacement, shotRanges, unitOffsets, type RenderUnit, type ShotState, type UnitPlacement } from './compose-plan';
@@ -1141,7 +1142,7 @@ export async function renderDirectedScene(
     /** prévia local (script): arquivo de vídeo a usar no lugar do clipe guardado de um item `clip` (nunca pago) */
     clipFiles?: Map<string, string>;
   } = {},
-): Promise<{ output: string; durationSeconds: number; timeline: Array<{ id: string; start: number; duration: number; audioDelay: number }>; wordSources: Map<string, { words?: CaptionWord[]; sourceStart: number }>; adjustedShots: string[]; loudness?: LoudnessResult }> {
+): Promise<{ output: string; durationSeconds: number; timeline: Array<{ id: string; start: number; duration: number; audioDelay: number }>; wordSources: Map<string, { words?: CaptionWord[]; sourceStart: number }>; adjustedShots: string[]; loudness?: LoudnessResult; joins: Array<{ id: string; headTrim: number; tailTrim: number; source: string; punch: number }> }> {
   const db = getDb();
   const renew = opts.renew ?? (async () => undefined);
   const clips = new Map<string, ShotClip>();
@@ -1184,7 +1185,7 @@ export async function renderDirectedScene(
     const zone = unitZone(input, u);
     for (const [shotId, r] of shotRanges(u, direction.shots, s.offsets, clipSeconds)) {
       // posicionada: enquadramentos e tela dividida seguem a pessoa (centro dela no quadro montado)
-      clips.set(shotId, { videoPath: file, cameraNativeFraming: nativeFraming, ...r, ...(s.focusX !== undefined ? { focusX: s.focusX } : {}), ...(zone ? { zone } : {}) });
+      clips.set(shotId, { videoPath: file, cameraNativeFraming: nativeFraming, ...r, ...(s.focusX !== undefined ? { focusX: s.focusX } : {}), ...(zone ? { zone } : {}), ...(itemWords?.length ? { words: itemWords.map((w) => ({ start: w.start, end: w.end })) } : {}) });
       wordSources.set(shotId, { words: itemWords, sourceStart: r.startSeconds });
     }
   }
@@ -1238,8 +1239,13 @@ export async function renderDirectedScene(
     ...(watermark ? { watermark: { brand: watermark.brand, position: watermark.position, opacity: watermark.opacity, accent: input.directionStyle?.slideAccent ?? '#1a66d1' } } : {}),
   });
   await renew();
+  // emendas apertadas: o plano começa no clipe um pouco depois do 0 (o respiro antes da fala saiu); as legendas seguem esse começo
+  for (const t of result.timeline) {
+    const src = wordSources.get(t.id);
+    if (src && t.clipStart !== undefined) src.sourceStart = t.clipStart;
+  }
   if (result.loudness?.low) console.warn(`[media] voz baixa mesmo depois de normalizar (${result.loudness.outputI} LUFS)`);
-  return { output, durationSeconds: result.durationSeconds, timeline: result.timeline, wordSources, adjustedShots: adjusted, loudness: result.loudness };
+  return { output, durationSeconds: result.durationSeconds, timeline: result.timeline, wordSources, adjustedShots: adjusted, loudness: result.loudness, joins: result.joins };
 }
 
 /** "Aula N · título" da aula do job no rascunho (linha de cima do painel); vazio quando não acha. */
@@ -1352,6 +1358,8 @@ export async function sceneCaptions(
 async function finish(jobId: string, assetId: string, simulated: boolean) {
   const db = getDb();
   const { job, input } = await load(jobId);
+  // ajuste fino da gravação anterior (lido ANTES de trocar o vídeo): volta depois do sucesso (F2)
+  const prevAdjust = await previousSceneAdjust(job.courseId, job.lessonId, job.nodeId);
   try {
     await attachToNode(job, assetId, simulated, directionNarration(parseDirection(input)));
   } catch (e) {
@@ -1367,6 +1375,7 @@ async function finish(jobId: string, assetId: string, simulated: boolean) {
   if (!ok) return;
   await db.insert(schema.outboxEvents).values({ id: newId('obx'), type: 'media_job.succeeded', version: 1, payload: { jobId, assetId, directed: true, simulated } });
   console.log(`[media] job ${jobId} (dirigido) concluído: asset ${assetId}${simulated ? ' [SIMULADO]' : ''}`);
+  await reapplyAdjustAfterRecording(job, prevAdjust);
 }
 
 /** Passo idempotente completo (início, retry e reconciliação). */

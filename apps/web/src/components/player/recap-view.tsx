@@ -5,6 +5,7 @@ import { Copy, Printer } from 'lucide-react';
 import { recapToPlainText, type ResolvedRecapItem } from '@lms/course-engine';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { MissionLogger } from './mission-logger';
 
 export interface RecapViewProps {
   /** itens já resolvidos (ver `useRecap` / `resolveRecap`) */
@@ -19,6 +20,8 @@ export interface RecapViewProps {
   autoFocus?: boolean;
   /** nível do título (h2 numa gaveta própria, h3 dentro da página de conclusão) */
   headingLevel?: 2 | 3;
+  /** matrícula (LMS): habilita marcar "Já experimentei" e escrever o que percebeu nas missões do roteiro */
+  enrollmentId?: string;
   className?: string;
 }
 
@@ -32,7 +35,7 @@ export interface RecapViewProps {
  * Impressão: `[data-print-target]` + `html[data-print="recap"]` (globals.css)
  * esconde todo o resto da página enquanto a caixa de impressão está aberta.
  */
-export function RecapView({ items, title, closingLine, variant = 'page', onCopy, autoFocus = false, headingLevel = 3, className }: RecapViewProps) {
+export function RecapView({ items, title, closingLine, variant = 'page', onCopy, autoFocus = false, headingLevel = 3, enrollmentId, className }: RecapViewProps) {
   const headingId = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [copied, setCopied] = useState<'idle' | 'done' | 'failed'>('idle');
@@ -92,7 +95,7 @@ export function RecapView({ items, title, closingLine, variant = 'page', onCopy,
       ) : (
         <ol className="mt-6 space-y-5" aria-label={title}>
           {items.map((it, idx) => (
-            <RecapBlock key={it.id} item={it} index={idx + 1} />
+            <RecapBlock key={it.id} item={it} index={idx + 1} {...(enrollmentId ? { enrollmentId } : {})} />
           ))}
         </ol>
       )}
@@ -118,8 +121,8 @@ export function RecapView({ items, title, closingLine, variant = 'page', onCopy,
   );
 }
 
-function RecapBlock({ item, index }: { item: ResolvedRecapItem; index: number }) {
-  const empty = item.value === null;
+function RecapBlock({ item, index, enrollmentId }: { item: ResolvedRecapItem; index: number; enrollmentId?: string }) {
+  const empty = item.value === null && !item.mission;
   return (
     <li data-testid={`recap-item-${item.id}`} data-empty={empty || undefined} className="grid grid-cols-[2rem_1fr] gap-x-3">
       <span aria-hidden="true" className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-soft text-sm font-semibold text-accent">
@@ -129,7 +132,9 @@ function RecapBlock({ item, index }: { item: ResolvedRecapItem; index: number })
         <h4 className="text-base font-semibold leading-snug text-fg">{item.label}</h4>
         {item.source && <p className="mt-0.5 text-xs text-fg-faint">De: {item.source.title}</p>}
         <div className="mt-2">
-          {empty ? (
+          {item.mission ? (
+            <MissionItem item={item} {...(enrollmentId ? { enrollmentId } : {})} />
+          ) : empty ? (
             <p className="rounded-xl border border-dashed border-line-strong px-3 py-2 text-base italic text-fg-faint">{item.emptyText}</p>
           ) : Array.isArray(item.value) ? (
             <Checklist id={item.id} items={item.value} />
@@ -139,6 +144,30 @@ function RecapBlock({ item, index }: { item: ResolvedRecapItem; index: number })
         </div>
       </div>
     </li>
+  );
+}
+
+/** Missão "Leve para a vida real" no roteiro: a ação, o estado e (no LMS) como voltar e marcar "Já experimentei". */
+function MissionItem({ item, enrollmentId }: { item: ResolvedRecapItem; enrollmentId?: string }) {
+  const m = item.mission!;
+  return (
+    <div className="space-y-3" data-testid={`recap-mission-${m.nodeId}`} data-status={m.status}>
+      {m.action && <p className="whitespace-pre-line text-base leading-relaxed text-fg">{m.action}</p>}
+      {m.alternative && (
+        <details className="text-sm text-fg-muted">
+          <summary className="min-h-8 cursor-pointer select-none font-medium text-fg">Se você ainda não trabalha</summary>
+          <p className="mt-1 leading-relaxed">{m.alternative}</p>
+        </details>
+      )}
+      {enrollmentId ? (
+        <MissionLogger enrollmentId={enrollmentId} nodeId={m.nodeId} initial={{ status: m.status, note: m.note, ...(m.revision !== undefined ? { revision: m.revision } : {}) }} />
+      ) : (
+        <p className="text-sm font-medium text-fg" data-testid={`mission-static-${m.nodeId}`}>
+          {m.status === 'done' ? 'Já experimentei' : m.status === 'later' ? 'Vou fazer depois' : item.emptyText}
+          {m.status === 'done' && m.note ? `: ${m.note}` : ''}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -172,7 +201,7 @@ function Checklist({ id, items }: { id: string; items: string[] }) {
 /* Ações                                                                     */
 /* ------------------------------------------------------------------------ */
 
-async function copyToClipboard(text: string): Promise<void> {
+export async function copyToClipboard(text: string): Promise<void> {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
     return;

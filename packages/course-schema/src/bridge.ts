@@ -1,5 +1,5 @@
 import { richTextToPlain } from './richtext';
-import { spokenWords, type Camera, type SceneDirection, type Shot } from './direction';
+import { directionNarration, spokenWords, type Camera, type SceneDirection, type Shot } from './direction';
 import type { LessonGraph } from './graph';
 import type { AnyNode, ChoiceNode } from './nodes';
 
@@ -21,10 +21,19 @@ import type { AnyNode, ChoiceNode } from './nodes';
  * para a lente: o worker reaproveita os planos já pagos (mesma chave) e grava
  * só o trecho novo. Sem direção, a fala do vídeo ganha a frase no fim (o vídeo
  * inteiro é regravado).
+ *
+ * Trocar a chamada SUBSTITUI a anterior (nunca acumula): o plano de chamada
+ * existente recebe a fala nova (planos `chamada_N` duplicados de versões
+ * antigas são removidos); sem direção, a chamada anterior no fim da fala é
+ * trocada pela nova.
  */
 
 /** Id do plano da chamada (fim do vídeo). */
 export const CALL_SHOT_ID = 'chamada';
+/** Plano de chamada: `chamada` ou um duplicado legado `chamada_N`. */
+export function isCallShotId(id: string): boolean {
+  return id === CALL_SHOT_ID || /^chamada_\d+$/.test(id);
+}
 /** Gesto do plano da chamada (SAFE_GESTURES `tilt_head_inviting`). */
 export const CALL_SHOT_GESTURE = 'tilts the head slightly, inviting';
 /** Chamada usada quando o roteiro não traz uma e o enunciado não dá para montar outra. */
@@ -150,39 +159,91 @@ export function callShot(call: string, cameraId: string | undefined, framing: Sh
 }
 
 /**
- * Anfitrião com a chamada no fim da fala. Não altera o que já termina com a
- * chamada. Com direção: novo plano final (ou, no limite de 12 planos, a frase
- * no fim do último). Mídia existente fica marcada como desatualizada (precisa
- * gravar o trecho novo). `cameras` = kit do curso (para escolher o plano).
+ * Posição (em caracteres) onde começam as últimas `tail` palavras de `text`, quando `text` termina com
+ * elas (comparação por palavras, como `endsWithWords`); null quando não termina.
  */
-export function withCall<T extends HostNode>(host: T, call: string, cameras: readonly Pick<Camera, 'id' | 'angle' | 'status' | 'lookId' | 'nativeFraming'>[] = []): T {
+function tailStart(text: string, tail: string): number | null {
+  if (!endsWithWords(text, tail)) return null;
+  const n = spokenWords(tail).length;
+  const starts = [...text.matchAll(/[\p{L}\p{N}]+/gu)].map((m) => m.index ?? 0);
+  return starts[starts.length - n] ?? null;
+}
+
+/** Frase final da fala que soa como chamada ("Agora é com você: …", "Agora, responda: …"), quando houver. */
+const CALL_SENTENCE_RE = /(?:^|[.!?…]["”»)]?\s+)((?:Agora é com você|Agora,? responda)(?=[\s:,.!?])[^]*)$/u;
+
+/**
+ * Fala sem a chamada antiga no fim: a anterior conhecida (`previous`), senão a frase final com cara de
+ * chamada. Devolve a fala inteira quando não acha nenhuma.
+ */
+function withoutOldCall(text: string, previous?: string): string {
+  const t = text.trim();
+  const p = previous?.trim();
+  if (p) {
+    const at = tailStart(t, p);
+    if (at !== null) return t.slice(0, at).trim();
+  }
+  const m = t.match(CALL_SENTENCE_RE);
+  return m ? t.slice(0, t.length - m[1]!.length).trim() : t;
+}
+
+/**
+ * Anfitrião com a chamada no fim da fala, SUBSTITUINDO a anterior. Não altera
+ * o que já termina com a chamada (e não tem planos de chamada duplicados).
+ * Com direção: o plano de chamada existente (`chamada`) recebe a fala nova e
+ * duplicados `chamada_N` saem; sem plano de chamada, entra um plano final novo
+ * (ou, no limite de 12 planos, a frase no fim do último, trocando a anterior).
+ * A narração passa a ser a soma dos planos. Sem direção: a chamada anterior no
+ * fim da fala (`previous`, ou a frase final "Agora é com você…/Agora,
+ * responda…") é trocada pela nova. Mídia existente fica desatualizada só
+ * quando algo mudou. `cameras` = kit do curso (para escolher o plano).
+ */
+export function withCall<T extends HostNode>(host: T, call: string, cameras: readonly Pick<Camera, 'id' | 'angle' | 'status' | 'lookId' | 'nativeFraming'>[] = [], previous?: string): T {
   const c = call.trim();
-  if (!c || hostSaysCall(host, c)) return host;
-  const before = spokenTextOf(host);
-  const narration = before ? `${before} ${c}` : c;
-  let direction: SceneDirection | undefined = 'direction' in host ? host.direction : undefined;
+  if (!c) return host;
+  const stale = () => ('media' in host && host.media ? { media: { ...host.media, stale: true } } : {});
+  const direction: SceneDirection | undefined = 'direction' in host ? host.direction : undefined;
   if (direction?.shots.length) {
     const shots = direction.shots;
-    if (shots.length < 12) {
-      const cam = callShotCamera(shots, cameras);
-      const framing = cameras.find((k) => k.id === cam)?.nativeFraming ?? 'medium';
-      let id = CALL_SHOT_ID;
-      for (let k = 2; shots.some((s) => s.id === id); k++) id = `${CALL_SHOT_ID}_${k}`;
-      direction = { ...direction, shots: [...shots, callShot(c, cam, framing, id)] };
+    const callShots = shots.filter((s) => isCallShotId(s.id));
+    let next: Shot[];
+    if (callShots.length) {
+      // troca a fala do plano de chamada e tira os duplicados (`chamada_2`… de versões antigas)
+      const keep = callShots.find((s) => s.id === CALL_SHOT_ID) ?? callShots[0]!;
+      if (callShots.length === 1 && keep.line.trim() === c) return host;
+      next = shots.filter((s) => !isCallShotId(s.id) || s === keep).map((s) => (s === keep ? { ...s, line: c } : s));
     } else {
-      const last = shots[shots.length - 1]!;
-      direction = { ...direction, shots: [...shots.slice(0, -1), { ...last, line: `${last.line.trim()} ${c}` }] };
+      if (hostSaysCall(host, c)) return host;
+      if (shots.length < 12) {
+        const cam = callShotCamera(shots, cameras);
+        const framing = cameras.find((k) => k.id === cam)?.nativeFraming ?? 'medium';
+        next = [...shots, callShot(c, cam, framing)];
+      } else {
+        const last = shots[shots.length - 1]!;
+        const base = withoutOldCall(last.line, previous);
+        next = [...shots.slice(0, -1), { ...last, line: base ? `${base} ${c}` : c }];
+      }
     }
+    const d: SceneDirection = { ...direction, shots: next };
+    return { ...host, narration: directionNarration(d), direction: d, ...stale() };
   }
-  const media = 'media' in host && host.media ? { ...host.media, stale: true } : undefined;
-  return { ...host, narration, ...(direction ? { direction } : {}), ...(media ? { media } : {}) };
+  if (hostSaysCall(host, c)) return host;
+  const before = withoutOldCall(spokenTextOf(host), previous);
+  const narration = before ? `${before} ${c}` : c;
+  return { ...host, narration, ...stale() };
 }
 
 /**
  * Aplica a chamada de cada decisão (`bridge.call`) ao anfitrião dela, na aula
- * inteira. Devolve o grafo novo e os ids dos anfitriões alterados.
+ * inteira, substituindo a anterior. Devolve o grafo novo e os ids dos
+ * anfitriões alterados. Idempotente.
  */
-export function applyCallsToGraph<G extends Pick<LessonGraph, 'nodes' | 'edges'>>(graph: G, cameras: readonly Pick<Camera, 'id' | 'angle' | 'status' | 'lookId' | 'nativeFraming'>[] = []): { graph: G; changed: string[] } {
+export function applyCallsToGraph<G extends Pick<LessonGraph, 'nodes' | 'edges'>>(
+  graph: G,
+  cameras: readonly Pick<Camera, 'id' | 'angle' | 'status' | 'lookId' | 'nativeFraming'>[] = [],
+  /** chamada anterior de cada decisão (id → frase), quando conhecida: é ela que sai do fim da fala */
+  previousCalls?: ReadonlyMap<string, string>,
+): { graph: G; changed: string[] } {
   const byId = new Map(graph.nodes.map((n) => [n.id, n] as const));
   const changed: string[] = [];
   for (const choice of graph.nodes) {
@@ -191,7 +252,7 @@ export function applyCallsToGraph<G extends Pick<LessonGraph, 'nodes' | 'edges'>
     if (!hostId) continue;
     const host = byId.get(hostId)!;
     if (!HOST_TYPES.has(host.type) && host.type !== 'choice') continue;
-    const next = withCall(host as HostNode, choice.bridge.call, cameras);
+    const next = withCall(host as HostNode, choice.bridge.call, cameras, previousCalls?.get(choice.id));
     if (next !== host) {
       byId.set(hostId, next);
       changed.push(hostId);
