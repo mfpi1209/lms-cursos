@@ -15,9 +15,8 @@ const Body = z.object({
   /** troca a senha de quem já tem acesso; a nova senha volta na resposta */
   resetPassword: z.boolean().optional(),
   /**
-   * Trilhas para matricular agora (nome ou chave, ex.: "primeiro-emprego").
-   * "*" matricula em todos os cursos publicados. Sem este campo, só cria o acesso:
-   * a pessoa se inscreve na vitrine.
+   * Trilhas para matricular agora (nome ou chave). Sem este campo, ou com "*",
+   * a pessoa entra em todos os cursos publicados.
    */
   trails: z.array(z.string().trim().min(1).max(80)).max(20).optional(),
 });
@@ -65,9 +64,9 @@ export async function POST(req: Request) {
     const requested = body.trails ?? [];
     const unknown = requested.filter((r) => r !== '*' && !published.some((c) => c.trail && trailSlug(c.trail) === trailSlug(r)));
     if (unknown.length) throw new DomainError('VALIDATION', 'Trilha desconhecida.', { trails: unknown });
-    const chosen = requested.length === 0
-      ? []
-      : published.filter((c) => c.trail && (requested.includes('*') || requested.some((r) => trailSlug(r) === trailSlug(c.trail!))));
+    const chosen = requested.length === 0 || requested.includes('*')
+      ? published
+      : published.filter((c) => c.trail && requested.some((r) => trailSlug(r) === trailSlug(c.trail!)));
 
     const [existing] = await db.select().from(schema.user).where(eq(schema.user.email, email)).limit(1);
     let userId = existing?.id;
