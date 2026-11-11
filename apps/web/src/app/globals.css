@@ -865,8 +865,10 @@ video[data-im-video] { animation: im-video-in 320ms ease-out both; }
 .dna-card__title { font-size: 16px; line-height: 21px; font-weight: 700; color: #fff !important; letter-spacing: -0.005em; overflow-wrap: anywhere; text-wrap: balance; }
 @media (min-width: 768px) { .dna-card--landscape .dna-card__title { font-size: 18px; line-height: 23px; } }
 .dna-card--portrait .dna-card__title { min-height: 63px; display: flex; align-items: flex-end; }
-.dna-card--portrait .dna-card__title > a { display: block; }
+.dna-card--portrait .dna-card__title > a,
+.dna-card--portrait .dna-card__title > button { display: block; }
 .dna-card__link { color: inherit; text-decoration: none; }
+button.dna-card__link { font: inherit; text-align: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 .dna-card__link::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
 .dna-card__link:focus-visible { outline: none; }
 .dna-card__by { margin-top: 8px; font-size: 12px; line-height: 17px; color: #e6e4fa; }
