@@ -21,6 +21,7 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
   - `NEXT_PUBLIC_APP_URL` = mesma URL pública
   - `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_PRIMARY` (opcionais)
   - `AI_PROVIDER=fake` (até a fase B)
+  - `LMS_ACCESS_TOKEN` (segredo do `POST /api/integracao/acessos`, usado pelo sistema de recrutamento; sem ele a rota responde 503)
 - Réplicas: 1 (sessões ficam no banco, então pode escalar horizontalmente depois).
 
 ## 3. Serviço `worker` (App → Dockerfile)
