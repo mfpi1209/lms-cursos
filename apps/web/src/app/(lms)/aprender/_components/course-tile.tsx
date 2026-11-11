@@ -46,6 +46,8 @@ export interface CourseTileData {
   nextLessonIndex?: number;
   status: 'new' | 'in_progress' | 'completed';
   cta: string;
+  /** Curso publicado ainda sem matrícula: o clique inscreve a pessoa e abre o curso. */
+  enrollCourseId?: string;
   trail?: string;
   /**
    * Conteúdo novo disponível: aula(s) acrescentada(s) depois de o aluno concluir o curso. NÃO é pendência (o curso segue
@@ -171,18 +173,53 @@ function DetailsMedia({ c, className }: { c: CourseTileData; className?: string 
   );
 }
 
-/** Ações principais da ficha: começar/continuar/rever (estado real) e Capítulos. */
+function useEnroll(courseId: string | undefined) {
+  const [pending, setPending] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  async function enroll() {
+    if (!courseId || pending) return;
+    setPending(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/me/enrollments', { method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ courseId }) });
+      const data = (await res.json().catch(() => ({}))) as { href?: string; error?: { message?: string } };
+      if (!res.ok || !data.href) {
+        setError(data.error?.message ?? 'Não foi possível inscrever.');
+        setPending(false);
+        return;
+      }
+      window.location.assign(data.href);
+    } catch {
+      setError('Não foi possível inscrever.');
+      setPending(false);
+    }
+  }
+  return { pending, error, enroll };
+}
+
+/** Ações principais da ficha: começar/continuar/rever (estado real) e Capítulos. Curso aberto: só inscrever. */
 function DetailsActions({ c, first }: { c: CourseTileData; first?: React.Ref<HTMLAnchorElement> }) {
+  const { pending, error, enroll } = useEnroll(c.enrollCourseId);
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {c.enrollCourseId ? (
+        <button type="button" onClick={enroll} disabled={pending} className="inline-flex min-h-11 items-center gap-2 rounded-[10px] bg-accent-fill px-4 text-[15px] font-semibold text-accent-fill-fg hover:brightness-105 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60">
+          <Play className="size-4 fill-current" aria-hidden="true" />
+          {pending ? 'Inscrevendo…' : c.cta}
+        </button>
+      ) : (
       <Link ref={first} href={c.href} className="inline-flex min-h-11 items-center gap-2 rounded-[10px] bg-accent-fill px-4 text-[15px] font-semibold text-accent-fill-fg hover:brightness-105 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <Play className="size-4 fill-current" aria-hidden="true" />
         {c.cta}
       </Link>
+      )}
+      {error && <p role="alert" className="basis-full text-sm text-danger">{error}</p>}
+      {!c.enrollCourseId && (
       <Link href={c.chaptersHref} className="inline-flex min-h-11 items-center gap-2 rounded-[10px] border border-line-strong px-4 text-[15px] font-medium text-fg hover:bg-fg/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent">
         <ListVideo className="size-4" aria-hidden="true" />
         Capítulos
       </Link>
+      )}
     </div>
   );
 }
@@ -217,7 +254,7 @@ function DetailsBody({ c, headingId }: { c: CourseTileData; headingId: string })
           <span className="block h-full rounded-full bg-accent-fill" style={{ width: `${c.status === 'new' ? 0 : pct}%` }} />
         </div>
         <p className="text-sm text-fg-muted">
-          {c.status === 'completed' ? 'Curso concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas concluídas` : 'Você ainda não começou'}
+          {c.enrollCourseId ? 'Disponível para inscrição' : c.status === 'completed' ? 'Curso concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.lessons} aulas concluídas` : 'Você ainda não começou'}
         </p>
         {c.news && (
           <p data-testid="new-content-note" className="text-sm text-fg">
@@ -312,6 +349,7 @@ export type TileVariant = 'landscape' | 'portrait';
 export function CourseTile({ c, testId, variant = 'landscape', priority = false }: { c: CourseTileData; testId?: string; variant?: TileVariant; priority?: boolean }) {
   const [open, setOpen] = React.useState(false);
   const infoRef = React.useRef<HTMLButtonElement>(null);
+  const { pending, error, enroll } = useEnroll(c.enrollCourseId);
   const headingId = `tile-${c.id}`;
   const done = c.status === 'completed';
   const inProgress = c.status === 'in_progress';
@@ -352,13 +390,23 @@ export function CourseTile({ c, testId, variant = 'landscape', priority = false 
           )}
           <div className="dna-card__text">
             <h3 className="dna-card__title">
+              {c.enrollCourseId ? (
+                <button type="button" onClick={enroll} disabled={pending} data-testid={testId} className="dna-card__link">
+                  {c.title}
+                  <span className="sr-only">
+                    . Disponível para inscrição. {pending ? 'Inscrevendo.' : c.cta}.
+                  </span>
+                </button>
+              ) : (
               <Link href={c.href} data-testid={testId} className="dna-card__link">
                 {c.title}
                 <span className="sr-only">
                   . {status}. {c.cta}.
                 </span>
               </Link>
+              )}
             </h3>
+            {error && <p role="alert" className="text-sm font-medium text-white">{error}</p>}
             {c.presenter && <p className="dna-card__by">com {c.presenter}</p>}
             <CardMeta c={c} />
           </div>

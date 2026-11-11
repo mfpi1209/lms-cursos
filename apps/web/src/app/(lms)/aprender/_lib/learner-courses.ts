@@ -1,5 +1,5 @@
 import { getDb, learning, publishing } from '@lms/db';
-import { allLessons, ownImageUrl, sortTrails } from '@lms/course-schema';
+import { allLessons, migrateCourseDocument, ownImageUrl, sortTrails } from '@lms/course-schema';
 import { lessonThumbUrl } from '../_components/learner-ui';
 import type { CourseTileData, CourseVideo } from '../_components/course-tile';
 import { courseArtFor, type CoverArt } from './course-art';
@@ -168,4 +168,73 @@ export async function loadLearnerCourses(userId: string) {
   // trilhas na ordem de aprendizado (TRAIL_ORDER), não alfabética
   const trails = sortTrails([...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))]);
   return { enrollments, courses, trails };
+}
+
+/** Curso publicado em que a pessoa ainda não está matriculada: a vitrine oferece inscrição. */
+export interface OpenCourse {
+  courseId: string;
+  slug: string;
+  trail?: string;
+  tile: CourseTileData;
+}
+
+export async function loadOpenCourses(workspaceId: string, userId: string): Promise<OpenCourse[]> {
+  const db = getDb();
+  const rows = await learning.listOpenPublishedCourses(db, workspaceId, userId);
+  const docs = rows.map((r) => migrateCourseDocument(r.document));
+  const runtimes = await versionsRuntime(rows.map((r, i) => ({ id: r.versionId, lessons: allLessons(docs[i]!) })));
+  return rows.map((row, i) => {
+    const doc = docs[i]!;
+    const lessons = allLessons(doc);
+    const presenterImg = ownImageUrl(doc.presentation.avatarPreviewUrl);
+    const nodes = lessons.flatMap((l) => l.graph.nodes as unknown as MediaNode[]);
+    const reaction = firstReaction(nodes);
+    const thumb = (lessons[0] && lessonThumbUrl(lessons[0], 0.15)) || presenterImg;
+    const posterArt = row.posterAssetId ? `/api/assets/${row.posterAssetId}` : undefined;
+    const portrait = reaction ? `/api/assets/${reaction}/thumb?at=0.5` : thumb;
+    const posterThumb = posterArt ?? portrait;
+    const presenter = doc.branding.presenterName?.trim() || doc.presentation.avatarName?.trim() || undefined;
+    const tagline = doc.learnerSummary?.trim() || doc.branding.tagline?.trim() || doc.description?.trim() || undefined;
+    const rt = runtimes.get(row.versionId);
+    const video: CourseVideo = rt ? { minS: rt.course.minS, maxS: rt.course.maxS, ...(rt.course.missing.length ? { unavailable: true } : {}) } : { minS: 0, maxS: 0 };
+    const openingVideo = firstVideo(lessons[0]);
+    const wideFrame = thumb;
+    const wide: CourseTileData['wide'] | undefined = (HERO_BANNER_COURSE_IDS as readonly string[]).includes(row.id)
+      ? { src: `/destaque/${row.id}.webp`, kind: 'banner', ...(wideFrame ? { fallback: wideFrame } : {}) }
+      : presenterImg
+        ? { src: presenterImg, kind: 'portrait', ...(wideFrame ? { fallback: wideFrame } : {}) }
+        : wideFrame
+          ? { src: wideFrame, kind: 'frame' }
+          : undefined;
+    const art = courseArtFor(row.slug);
+    const shortTitle = shortTitleFor(row.id, row.title);
+    const trail = row.trail ?? undefined;
+    const tile: CourseTileData = {
+      id: `open-${row.id}`,
+      href: '/aprender',
+      chaptersHref: '/aprender',
+      enrollCourseId: row.id,
+      title: shortTitle,
+      fullTitle: row.title,
+      ...(tagline ? { summary: tagline } : {}),
+      ...(thumb ? { thumb } : {}),
+      ...(posterThumb ? { posterThumb } : {}),
+      ...(posterArt ? { posterArt } : {}),
+      ...(wide ? { wide } : {}),
+      ...(art ? { art } : {}),
+      ...(openingVideo ? { previewSrc: `/api/assets/${openingVideo}` } : {}),
+      ...(presenter ? { presenter } : {}),
+      lessons: lessons.length,
+      lessonsTotal: lessons.length,
+      completed: 0,
+      video,
+      decisions: nodes.filter((n) => n.type === 'choice').length,
+      lessonTitles: lessons.map((l) => l.title),
+      lessonDone: lessons.map(() => false),
+      status: 'new',
+      cta: 'Inscrever-se',
+      ...(trail ? { trail } : {}),
+    };
+    return { courseId: row.id, slug: row.slug, ...(trail ? { trail } : {}), tile };
+  });
 }
