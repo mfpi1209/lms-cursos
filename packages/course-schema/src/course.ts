@@ -78,6 +78,13 @@ export const CourseBriefSchema = z.object({
    */
   targetMinutes: z.number().int().min(5).max(600).default(DEFAULT_TARGET_MINUTES),
   sourcesNote: z.string().max(2000).default(''),
+  /**
+   * Formato do curso, que define os limites editoriais de extensão (ver
+   * `LENGTH_PROFILES` em length.ts): `micro` (aulas de poucos minutos; vale
+   * quando ausente) ou `ead` (cursos de 4 a 8 h, aulas de até 30 min).
+   * Opcional e sem valor padrão, para não mudar documentos já salvos.
+   */
+  format: z.enum(['micro', 'ead']).optional(),
   /* ---- campos guiados do briefing (aditivos; viram texto para a IA via `briefProfileText`) ---- */
   /** momento de carreira do público (chips do briefing) */
   audienceProfile: z.enum(AUDIENCE_PROFILES).optional(),
@@ -364,6 +371,12 @@ export const CourseDocumentSchema = z.object({
    */
   learnerSummary: z.string().max(400).optional(),
   brief: CourseBriefSchema.prefault({}),
+  /**
+   * Certificado de conclusão (preparação; nada é emitido ainda). Ausente = sem
+   * certificado. `workloadMinutes` ausente = soma do `estimatedMinutes` das aulas
+   * (ver `courseWorkloadMinutes` em length.ts).
+   */
+  certificate: z.object({ enabled: z.boolean().default(false), workloadMinutes: z.number().int().min(1).max(100000).optional() }).optional(),
   objectives: z.array(ObjectiveSchema).max(50).default([]),
   modules: z.array(ModuleSchema).max(30).default([]),
   /** critério de conclusão do curso: todas as aulas obrigatórias concluídas */

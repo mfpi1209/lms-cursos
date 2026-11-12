@@ -381,6 +381,7 @@ export function compileCourse(doc: CourseDocument, copts: CompileCourseOptions =
   if (!doc.title.trim()) errors.push({ code: 'COURSE_NO_TITLE', message: 'O curso precisa de título' });
   if (!doc.brief.finalSkill.trim()) warnings.push({ code: 'BRIEF_NO_FINAL_SKILL', message: 'Briefing sem habilidade final observável' });
   if (!doc.brief.audience.trim()) warnings.push({ code: 'BRIEF_NO_AUDIENCE', message: 'Briefing sem público definido' });
+  if (doc.certificate?.enabled && doc.certificate.workloadMinutes === undefined) warnings.push({ code: 'CERTIFICATE_NO_WORKLOAD', message: 'Certificado ligado sem carga horária: vale a soma dos minutos estimados das aulas. Informe "Carga horária" para fixar o valor.' });
   // privacidade do aluno: retrato do apresentador em endereço de fora (HeyGen etc.) entrega IP e navegador a um terceiro e vence em dias
   const outside = externalImageRefs(doc.presentation);
   if (outside.length) {

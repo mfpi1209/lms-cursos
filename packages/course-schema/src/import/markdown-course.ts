@@ -4,7 +4,8 @@ import type { AnyNode, ChoiceQuality, RecapItem } from '../nodes';
 import type { RichTextDocument } from '../richtext';
 import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, nextChipsCamera, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, zoneTalkCamera, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
 import { compileCourse, type CompileIssue, type CourseCompileResult } from '../compile';
-import { courseLengthReport } from '../length';
+import { courseLengthReport, lengthProfile, type CourseFormat } from '../length';
+import { parseDurationMinutes } from '../duration';
 import { applyCallsToGraph, callFromSituation } from '../bridge';
 import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
 
@@ -14,6 +15,15 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  * Formato do roteiro (ver docs/roteiros/curso-primeira-vaga.md):
  *  - cabeçalho: `# Título` + linhas `Ideia:`, `Público:`, `Objetivo final:`,
  *    `Duração-alvo:`, `Personagens de exemplo (fictícios):`;
+ *  - cabeçalho, linhas opcionais (ausentes = comportamento de sempre):
+ *    `Formato: EaD | micro` (sem acento nem caixa; padrão micro) escolhe os limites
+ *    de extensão (`LENGTH_PROFILES`): EaD aceita aulas de até 30 min e 40 cenas, falas
+ *    de 40 a 300 palavras e compara o curso com a meta sem folga; micro mantém aulas
+ *    de até 6 min e 9 cenas, falas de 60 a 120 palavras e folga de 1,5×;
+ *    `Duração-alvo:` aceita só a duração (`6 h`, `6h30`, `360 min`) além do texto livre;
+ *    `Certificado: sim | não` e `Carga horária: 8 h | 8h30 | 480 min` guardam
+ *    `certificate` no curso (nada é emitido ainda); `Certificado: sim` sem carga
+ *    horária gera o aviso CERTIFICATE_NO_WORKLOAD e vale a soma das aulas;
  *  - `## Módulo N — título` + `Descrição:`; `### Aula N — título` + `Objetivo:`;
  *  - cenas `### CÓDIGO — título` (códigos únicos no curso inteiro):
  *    - `V..` vídeo: `**Fala para gravação**` + fala entre aspas, `Texto na tela:`
@@ -58,6 +68,12 @@ export interface ParsedHeader {
   finalGoal: string;
   targetDuration: string;
   characters: string;
+  /** `Formato:` (texto como escrito; vazio = ausente) */
+  format: string;
+  /** `Certificado:` (texto como escrito; vazio = ausente) */
+  certificate: string;
+  /** `Carga horária:` (texto como escrito; vazio = ausente) */
+  workload: string;
 }
 
 export interface ParsedCard {
@@ -233,6 +249,9 @@ function parseHeader(lines: string[]): { title: string; header: ParsedHeader } {
       finalGoal: pickField(fields, 'Objetivo final', 'Objetivo'),
       targetDuration: pickField(fields, 'Duracao-alvo', 'Duracao', 'Duração'),
       characters: pickField(fields, 'Personagens'),
+      format: pickField(fields, 'Formato'),
+      certificate: pickField(fields, 'Certificado'),
+      workload: pickField(fields, 'Carga horaria', 'Carga horária'),
     },
   };
 }
@@ -760,6 +779,8 @@ export interface MarkdownCourseOptions {
   lessonMinutes?: number;
   /** duração total alvo; padrão: lida de "Duração-alvo" */
   targetMinutes?: number;
+  /** formato do curso (limites de extensão); padrão: lido de "Formato" ou `micro` */
+  format?: CourseFormat;
   audienceProfile?: CourseDocument['brief']['audienceProfile'];
   level?: CourseDocument['brief']['level'];
   traits?: CourseDocument['brief']['traits'];
@@ -784,8 +805,19 @@ export interface MarkdownImportReport {
   warnings: CompileIssue[];
 }
 
+/** `Formato:` → `ead` | `micro` (sem acento nem caixa); `undefined` se vazio ou desconhecido. */
+export function parseCourseFormat(text: string): CourseFormat | undefined {
+  const t = foldKey(text).replace(/[.\s]+/g, ' ').trim();
+  if (/^(ead|e a d|ensino a distancia|educacao a distancia)$/.test(t)) return 'ead';
+  if (/^(micro|microlearning|micro aulas?|curto)$/.test(t)) return 'micro';
+  return undefined;
+}
+
 /** "12 aulas de 5 a 7 minutos (cerca de 1h15 no total)" → { lessonMinutes, targetMinutes }. */
 export function parseTargetDuration(text: string, lessons: number): { lessonMinutes?: number; targetMinutes?: number } {
+  // só a duração ("6 h", "6h30", "360 min"): é a meta total
+  const only = parseDurationMinutes(text);
+  if (only !== undefined) return { targetMinutes: only };
   const range = /de\s+(\d+)\s+a\s+(\d+)\s+min/i.exec(text);
   const single = /(\d+)\s+min\w*\s+por\s+aula/i.exec(text);
   const lessonMinutes = range ? Math.ceil((Number(range[1]) + Number(range[2])) / 2) : single ? Number(single[1]) : undefined;
@@ -926,8 +958,9 @@ function buildLesson(
           const talkId = zoneTalkCamera(opts.zones.set, videoIndex - 1);
           direction = buildTalkDirection(scene.narration, { cameraId: talkId, framing: opts.zones.framing(talkId) });
         }
-        if (wc(scene.narration) > 120) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo 120)` });
-        if (wc(scene.narration) < 60) warn({ code: 'NARRATION_SHORT', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (alvo 60–120)` });
+        const speech = lengthProfile(opts.format);
+        if (wc(scene.narration) > speech.narrationMaxWords) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo ${speech.narrationMaxWords})` });
+        if (wc(scene.narration) < speech.narrationMinWords) warn({ code: 'NARRATION_SHORT', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (alvo ${speech.narrationMinWords}–${speech.narrationMaxWords})` });
         if (wc(scene.screenText) > 25) warn({ code: 'SCREEN_TEXT_WITH_NARRATION', lessonId, nodeId: id, message: `${scene.code}: ${wc(scene.screenText)} palavras na tela numa cena com fala (recomendado até 25)` });
         const gestureId = videoIndex % 2 === 1 ? 'smile_welcoming' : 'open_palms_honest';
         nodes.push({
@@ -1170,8 +1203,17 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const warn = (i: CompileIssue) => warnings.push(i);
   const lessonsTotal = parsed.modules.reduce((a, m) => a + m.lessons.length, 0);
   const duration = parseTargetDuration(parsed.header.targetDuration, lessonsTotal);
-  const lessonMinutes = opts.lessonMinutes ?? duration.lessonMinutes ?? 6;
+  const headerFormat = parseCourseFormat(parsed.header.format);
+  if (parsed.header.format.trim() && !headerFormat) warn({ code: 'FORMAT_UNKNOWN', message: `Formato "${parsed.header.format}" não reconhecido; vale o formato micro (use "EaD" ou "micro")` });
+  const format: CourseFormat | undefined = opts.format ?? headerFormat;
+  // EaD: sem minutos por aula declarados, reparte a meta entre as aulas (a carga horária cai na soma delas)
+  const givenTarget = opts.targetMinutes ?? duration.targetMinutes;
+  const eadLessonMinutes = format === 'ead' && !opts.lessonMinutes && !duration.lessonMinutes && lessonsTotal && givenTarget ? Math.min(600, Math.max(1, Math.round(givenTarget / lessonsTotal))) : undefined;
+  const lessonMinutes = opts.lessonMinutes ?? duration.lessonMinutes ?? eadLessonMinutes ?? 6;
   const targetMinutes = opts.targetMinutes ?? duration.targetMinutes ?? Math.max(5, lessonMinutes * lessonsTotal);
+  const certificateOn = parsed.header.certificate.trim() ? yes(parsed.header.certificate) : undefined;
+  const workloadMinutes = parsed.header.workload.trim() ? parseDurationMinutes(parsed.header.workload) : undefined;
+  if (parsed.header.workload.trim() && workloadMinutes === undefined) warn({ code: 'WORKLOAD_UNREADABLE', message: `Carga horária "${parsed.header.workload}" não reconhecida (use "8 h", "8h30" ou "480 min")` });
 
   const allCodes = new Map<string, string>();
   for (const m of parsed.modules) for (const l of m.lessons) for (const s of l.scenes) if (s.kind !== 'end') allCodes.set(s.code, `aula ${l.number}`);
@@ -1189,7 +1231,7 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const mainCam = mainCameraId ? opts.presentation?.cameras?.find((c) => c.id === mainCameraId) : undefined;
   const mainCameraFullFrameNative = mainCam && resolveCameraPlacement(opts.presentation ?? null, mainCam).placement === 'full_frame' ? (mainCam.nativeFraming ?? 'medium') : undefined;
   const zones = importZonesFrom(opts.presentation);
-  const lessonOpts: MarkdownCourseOptions = { ...opts, lessonMinutes, ...(mainCameraId ? { mainCameraId } : {}), ...(mainCameraFullFrameNative ? { mainCameraFullFrameNative } : {}), ...(zones ? { zones } : {}) };
+  const lessonOpts: MarkdownCourseOptions = { ...opts, lessonMinutes, ...(format ? { format } : {}), ...(mainCameraId ? { mainCameraId } : {}), ...(mainCameraFullFrameNative ? { mainCameraFullFrameNative } : {}), ...(zones ? { zones } : {}) };
 
   const objectives: Objective[] = [];
   const modules: Module[] = [];
@@ -1246,12 +1288,14 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
       tone: clipChars(opts.tone ?? 'brasileiro, acolhedor, direto; apresentadora em conversa com o aluno; sem julgar', 200),
       narrativeVoice: opts.narrativeVoice ?? 'second_person',
       targetMinutes: Math.min(600, Math.max(5, Math.round(targetMinutes))),
+      ...(format ? { format } : {}),
       sourcesNote: clipChars(opts.sourcesNote ?? `Roteiro autoral em Markdown ("${parsed.title}"), importado sem IA. Personagens fictícios.`, 2000),
       ...(opts.audienceProfile ? { audienceProfile: opts.audienceProfile } : {}),
       ...(opts.level ? { level: opts.level } : {}),
       traits: opts.traits ?? [],
       interaction: { guidedChoices: true, voiceTraining: true, noWriting: true },
     },
+    ...(certificateOn !== undefined || workloadMinutes !== undefined ? { certificate: { enabled: certificateOn ?? false, ...(workloadMinutes !== undefined ? { workloadMinutes } : {}) } } : {}),
     objectives,
     modules,
     completion: { requiredLessonIds: lessonIds },
