@@ -1,6 +1,6 @@
 import type { LessonGraph, Edge } from './graph';
 import type { CourseDocument } from './course';
-import { isExecutableNodeType, nodeRequiresAnswer, NODE_TYPE_LABELS, type AnyNode } from './nodes';
+import { isExecutableNodeType, nodeRequiresAnswer, NODE_TYPE_LABELS, taskInstructionOf, type AnyNode } from './nodes';
 import { checkConditionTypes, checkEffectTypes, variableScope, type VariableScope, type VariableType } from './dsl';
 import { isRichTextEmpty } from './richtext';
 import { courseLengthReport } from './length';
@@ -216,6 +216,20 @@ export function compileLesson(graph: LessonGraph, opts: CompileLessonOptions = {
         if (!src) err({ code: 'MISSION_DRAFT_SOURCE', message: `A missão "${label}" usa a frase de "${n.draftFromNodeId}", que não existe nesta aula`, nodeId: n.id });
         else if (src.type !== 'reflection') err({ code: 'MISSION_DRAFT_SOURCE', message: `A missão "${label}" usa a frase de "${src.title ?? src.id}", que não é uma atividade "Na prática"`, nodeId: n.id });
       }
+    }
+    if (n.type === 'task') {
+      // Tarefa com entrega: sem instrução ou sem critérios não publica; com correção automática os critérios não são conferidos por ninguém.
+      const label = n.title?.trim() || n.id;
+      if (!n.title?.trim()) err({ code: 'TASK_TITLE', message: `A tarefa "${n.id}" precisa de um título`, nodeId: n.id });
+      if (!taskInstructionOf(n)) err({ code: 'TASK_INSTRUCTION', message: `A tarefa "${label}" precisa de uma instrução: o que fazer e o que enviar`, nodeId: n.id });
+      if (n.criteria.length === 0) err({ code: 'TASK_CRITERIA', message: `A tarefa "${label}" precisa de 1 a 10 critérios de sim ou não`, nodeId: n.id });
+      const critIds = new Set<string>();
+      for (const c of n.criteria) {
+        if (critIds.has(c.id)) err({ code: 'TASK_CRITERION_DUPLICATE', message: `A tarefa "${label}" repete o critério "${c.id}"`, nodeId: n.id });
+        critIds.add(c.id);
+      }
+      if (n.review === 'auto' && n.criteria.length > 0) warn({ code: 'TASK_AUTO_CRITERIA', message: `A tarefa "${label}" aprova ao enviar: os critérios aparecem para o aluno, mas ninguém os confere`, nodeId: n.id });
+      if (n.deliverable === 'text' || n.deliverable === 'file') warn({ code: 'TASK_LEGACY_DELIVERABLE', message: `A tarefa "${label}" usa a entrega antiga "${n.deliverable}": vale como "${n.deliverable === 'file' ? 'link e arquivo' : 'link'}"`, nodeId: n.id });
     }
     if (n.type === 'reflection' && n.scaffold) {
       for (const i of scaffoldIssues(n.scaffold, n.maxLength)) (i.level === 'error' ? err : warn)({ code: i.code, message: `"${n.title ?? n.id}": ${i.message}`, nodeId: n.id });
