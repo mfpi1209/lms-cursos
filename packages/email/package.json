@@ -13,7 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "nodemailer": "10.5.0"
+    "nodemailer": "10.2.1"
   },
   "devDependencies": {
     "@types/node": "26.6.5",
