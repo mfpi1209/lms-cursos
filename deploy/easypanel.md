@@ -19,6 +19,13 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
   - `BETTER_AUTH_URL` = URL pública (ex.: `https://cursos.exemplo.com.br`)
   - `TRUSTED_PROXIES` = IP/CIDR do Traefik na rede do EasyPanel (necessário para gravar o IP real no registro de acesso do Marco Civil; sem isso, um `X-Forwarded-For` com mais de um valor fica sem IP e o log avisa). Atrás do Cloudflare, `CLIENT_IP_HEADERS=cf-connecting-ip,x-forwarded-for`. Ver `.env.example`.
   - `NEXT_PUBLIC_APP_URL` = mesma URL pública
+  - E-mail (link de acesso e "Esqueci minha senha"; sem isso nenhum e-mail é entregue, só vai para o log):
+    - `EMAIL_TRANSPORT` = `smtp` ou `resend` (padrão `log`, que não entrega nada);
+    - `EMAIL_FROM` = remetente, de um domínio verificado (ex.: `DNA Work <nao-responda@seudominio.com.br>`);
+    - com `smtp`: `SMTP_URL` (ex.: `smtps://usuario:senha@smtp.exemplo.com:465`); com `resend`: `RESEND_API_KEY`;
+    - `MAGIC_LINK_TTL_HOURS` (opcional, padrão 72). A recuperação de senha vale por 1 hora.
+    - Em produção o link inteiro nunca vai para o log. `EMAIL_LOG_FULL_LINKS` é só de desenvolvimento.
+  - Limites de login: ficam no código (`apps/web/src/lib/auth-access.ts`) e valem em memória com 1 réplica do web. Um laboratório atrás de um mesmo IP comporta 30 logins por minuto; cada conta aceita 10 senhas a cada 5 minutos. Para o IP certo, `TRUSTED_PROXIES` precisa estar correto.
   - `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_PRIMARY` (opcionais)
   - `AI_PROVIDER=fake` (até a fase B)
 - Réplicas: 1 (sessões ficam no banco, então pode escalar horizontalmente depois).
