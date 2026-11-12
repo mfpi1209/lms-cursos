@@ -10,12 +10,41 @@ import type { CompileIssue } from './compile';
  * Avisos editoriais: nunca bloqueiam a publicação.
  */
 
-/** Minutos por aula a partir dos quais a aula é considerada longa demais. */
-export const LESSON_MAX_EST_MINUTES = 6;
-/** Cenas (sem contar o encerramento) a partir das quais a aula é longa demais. */
-export const LESSON_MAX_SCENES = 9;
-/** Fator sobre a duração alvo a partir do qual o curso é longo demais. */
-export const COURSE_LENGTH_TOLERANCE = 1.5;
+export type CourseFormat = 'micro' | 'ead';
+
+export interface LengthProfile {
+  /** minutos estimados por aula a partir dos quais a aula é longa demais */
+  lessonMaxMinutes: number;
+  /** cenas (sem contar o encerramento) a partir das quais a aula é longa demais */
+  lessonMaxScenes: number;
+  /** fator sobre a duração alvo a partir do qual o curso é longo demais */
+  courseTolerance: number;
+  /** palavras de fala por cena de vídeo: acima disso, `NARRATION_TOO_LONG` */
+  narrationMaxWords: number;
+  /** palavras de fala por cena de vídeo: abaixo disso, `NARRATION_SHORT` */
+  narrationMinWords: number;
+}
+
+/**
+ * Limites editoriais por formato de curso (`brief.format`). É a única tabela:
+ * ajuste os números aqui. `micro` (padrão, aulas de poucos minutos) reproduz
+ * os avisos de sempre; `ead` serve cursos de 4 a 8 h, aulas de até 30 min.
+ */
+export const LENGTH_PROFILES: Record<CourseFormat, LengthProfile> = {
+  micro: { lessonMaxMinutes: 6, lessonMaxScenes: 9, courseTolerance: 1.5, narrationMaxWords: 120, narrationMinWords: 60 },
+  ead: { lessonMaxMinutes: 30, lessonMaxScenes: 40, courseTolerance: 1, narrationMaxWords: 300, narrationMinWords: 40 },
+};
+
+export function lengthProfile(format?: CourseFormat): LengthProfile {
+  return LENGTH_PROFILES[format ?? 'micro'];
+}
+
+/** Minutos por aula a partir dos quais a aula é considerada longa demais (perfil `micro`). */
+export const LESSON_MAX_EST_MINUTES = LENGTH_PROFILES.micro.lessonMaxMinutes;
+/** Cenas (sem contar o encerramento) a partir das quais a aula é longa demais (perfil `micro`). */
+export const LESSON_MAX_SCENES = LENGTH_PROFILES.micro.lessonMaxScenes;
+/** Fator sobre a duração alvo a partir do qual o curso é longo demais (perfil `micro`). */
+export const COURSE_LENGTH_TOLERANCE = LENGTH_PROFILES.micro.courseTolerance;
 /** Palavras lidas por minuto (texto da tela). */
 export const READING_WPM = 200;
 /** Palavras faladas por segundo em português. */
@@ -92,8 +121,8 @@ const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1).repla
 
 /**
  * Relatório de extensão do curso: por aula e totais, com avisos
- * `LESSON_TOO_LONG` (cenas > 9 ou estimativa > 6 min) e `COURSE_TOO_LONG`
- * (total estimado > 1,5 × duração alvo).
+ * `LESSON_TOO_LONG` (cenas ou estimativa acima do perfil do formato: micro 9 cenas
+ * e 6 min, ead 40 e 30) e `COURSE_TOO_LONG` (total estimado > tolerância × duração alvo).
  */
 export function courseLengthReport(doc: CourseDocument): CourseLengthReport {
   const lessons = doc.modules.flatMap((m) => m.lessons).map(lessonLengthReport);
@@ -103,18 +132,30 @@ export function courseLengthReport(doc: CourseDocument): CourseLengthReport {
   );
   totals.estMinutes = Math.round(totals.estMinutes * 10) / 10;
   const targetMinutes = doc.brief.targetMinutes;
+  const profile = lengthProfile(doc.brief.format);
   const warnings: CompileIssue[] = [];
   for (const l of lessons) {
     const reasons: string[] = [];
-    if (l.scenes > LESSON_MAX_SCENES) reasons.push(`${l.scenes} cenas (recomendado até ${LESSON_MAX_SCENES})`);
-    if (l.estMinutes > LESSON_MAX_EST_MINUTES) reasons.push(`cerca de ${fmt(l.estMinutes)} min (recomendado até ${LESSON_MAX_EST_MINUTES})`);
+    if (l.scenes > profile.lessonMaxScenes) reasons.push(`${l.scenes} cenas (recomendado até ${profile.lessonMaxScenes})`);
+    if (l.estMinutes > profile.lessonMaxMinutes) reasons.push(`cerca de ${fmt(l.estMinutes)} min (recomendado até ${profile.lessonMaxMinutes})`);
     if (reasons.length) {
-      warnings.push({ code: 'LESSON_TOO_LONG', lessonId: l.lessonId, message: `A aula "${l.title}" está longa: ${reasons.join('; ')}. Encurte para uma situação, uma decisão com três opções, as consequências e uma dica.` });
+      const advice = doc.brief.format === 'ead' ? 'Divida a aula em duas ou encurte as cenas.' : 'Encurte para uma situação, uma decisão com três opções, as consequências e uma dica.';
+      warnings.push({ code: 'LESSON_TOO_LONG', lessonId: l.lessonId, message: `A aula "${l.title}" está longa: ${reasons.join('; ')}. ${advice}` });
     }
   }
-  const limit = targetMinutes * COURSE_LENGTH_TOLERANCE;
+  const limit = targetMinutes * profile.courseTolerance;
   if (lessons.length && totals.estMinutes > limit) {
     warnings.push({ code: 'COURSE_TOO_LONG', message: `O curso está longo: cerca de ${fmt(totals.estMinutes)} min estimados para uma meta de ${targetMinutes} min (limite ${fmt(limit)}). Encurte as aulas mais longas ou ajuste a duração alvo.` });
   }
   return { lessons, totals, targetMinutes, warnings };
+}
+
+/**
+ * Carga horária do curso em minutos: a declarada em `certificate.workloadMinutes`
+ * ou, sem ela, a soma do `estimatedMinutes` das aulas.
+ */
+export function courseWorkloadMinutes(doc: CourseDocument): number {
+  const declared = doc.certificate?.workloadMinutes;
+  if (declared !== undefined) return declared;
+  return doc.modules.reduce((t, m) => t + m.lessons.reduce((a, l) => a + (Number.isFinite(l.estimatedMinutes) ? Math.max(0, l.estimatedMinutes) : 0), 0), 0);
 }

@@ -8,6 +8,7 @@ export * from './course';
 export * from './compile';
 export * from './presentation-fingerprint';
 export * from './length';
+export * from './duration';
 export * from './migrate';
 export * from './examples';
 export * from './import/markdown-course';
