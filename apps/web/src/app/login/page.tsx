@@ -16,7 +16,8 @@ const legalLink = 'rounded-sm font-medium text-fg underline underline-offset-4 d
  * Entrada da plataforma no visual da marca do workspace (preset de config/brand.ts:
  * logo, frase e cores), claro ou escuro pela preferência. Só o visual mudou: o formulário é o mesmo.
  */
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ erro?: string }> }) {
+  const { erro } = await searchParams;
   const viewer = await getViewer();
   if (viewer) redirect(homeFor(viewer.role));
   const brand = getBrand();
@@ -40,7 +41,7 @@ export default async function LoginPage() {
           <h1 className="mt-10 sm:mt-12">Entre para continuar.</h1>
           <p className="mt-4 text-lg leading-relaxed text-fg-muted">Seus cursos, suas montagens e suas turmas ficam onde você deixou.</p>
           <div className="mt-8 rounded-[20px] border border-line bg-surface/80 p-5 backdrop-blur-md sm:mt-10 sm:p-8">
-            <LoginForm />
+            <LoginForm linkProblem={erro === 'link'} />
           </div>
           {/* aceite dos termos e caminho para os textos legais (sem faixa etária até a classificação indicativa ser definida) */}
           <p className="mt-5 text-sm leading-relaxed text-fg-muted" data-testid="login-legal">

@@ -8,7 +8,7 @@ export const RESET_PASSWORD_PAGE = '/redefinir-senha';
 export const RESET_TOKEN_TTL_SECONDS = 60 * 60;
 
 /** Validade do link mágico em horas (`MAGIC_LINK_TTL_HOURS`, padrão 72 h: quem chega pelo WhatsApp pode abrir dias depois). */
-export function magicLinkTtlHours(env: NodeJS.ProcessEnv = process.env): number {
+export function magicLinkTtlHours(env: Record<string, string | undefined> = process.env): number {
   const n = Number(env.MAGIC_LINK_TTL_HOURS);
   return Number.isFinite(n) && n > 0 && n <= 24 * 30 ? n : 72;
 }

@@ -3,7 +3,7 @@ import type { EmailConfig, EmailTransportName } from './types';
 const DEFAULT_FROM = 'DNA Work <nao-responda@localhost>';
 
 /** Lê a configuração do ambiente. Transporte desconhecido cai em `log` (nunca derruba o app por causa de e-mail). */
-export function emailConfigFromEnv(env: NodeJS.ProcessEnv = process.env): EmailConfig {
+export function emailConfigFromEnv(env: Record<string, string | undefined> = process.env): EmailConfig {
   const raw = (env.EMAIL_TRANSPORT ?? 'log').trim().toLowerCase();
   const transport: EmailTransportName = raw === 'smtp' || raw === 'resend' ? raw : 'log';
   const production = env.NODE_ENV === 'production';
