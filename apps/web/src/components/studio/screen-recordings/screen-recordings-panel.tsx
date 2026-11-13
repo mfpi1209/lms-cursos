@@ -9,10 +9,12 @@ import { useDraft } from '@/components/studio/draft-provider';
 import { cn } from '@/lib/utils';
 import {
   RECORDING_STATE_LABEL,
+  describeMock,
   formatLimit,
   isPendingRecording,
   listScreenRecordings,
   prepareBatch,
+  previewMockSteps,
   recordingState,
   summarizeScreenRecordings,
   type BatchItem,
@@ -21,7 +23,7 @@ import {
 } from '@/lib/screen-recordings';
 import { uploadScreenRecording } from './upload';
 
-const STATE_TONE: Record<RecordingState, BadgeTone> = { missing: 'warning', uploaded: 'success', short: 'danger', trimmed: 'warning' };
+const STATE_TONE: Record<RecordingState, BadgeTone> = { missing: 'warning', uploaded: 'success', short: 'danger', trimmed: 'warning', mock_pending: 'brand', mock_ready: 'success' };
 
 const ITEM_LABEL: Record<BatchItem<File>['status'], string> = {
   waiting: 'Na fila',
@@ -39,7 +41,7 @@ function formatSize(bytes: number): string {
 
 /**
  * Tela "Gravações de tela": as cenas do curso com vídeo próprio (MP4 em tela cheia), o estado de cada arquivo e o
- * envio em lote, em que cada arquivo é ligado pelo NOME à gravação correspondente. Nada é gerado nem montado aqui.
+ * envio em lote, em que cada arquivo é ligado pelo NOME à gravação correspondente. Nada é gerado nem montado aqui (as telas simuladas são geradas pela plataforma).
  */
 export function ScreenRecordingsPanel({ courseId, canEdit, maxBytes }: { courseId: string; canEdit: boolean; maxBytes: number }) {
   const { document: doc, status, saveNow, reload } = useDraft();
@@ -149,8 +151,19 @@ export function ScreenRecordingsPanel({ courseId, canEdit, maxBytes }: { courseI
         <>
           <div className="space-y-1">
             <p role="status" aria-live="polite" className="text-base font-medium text-fg" data-testid="recordings-summary">
-              <span className="tabular-nums">{summary.uploaded}</span> de <span className="tabular-nums">{summary.total}</span> {summary.total === 1 ? 'arquivo enviado' : 'arquivos enviados'}
+              {summary.total > 0 || summary.simulated === 0 ? (
+                <>
+                  <span className="tabular-nums">{summary.uploaded}</span> de <span className="tabular-nums">{summary.total}</span> {summary.total === 1 ? 'arquivo enviado' : 'arquivos enviados'}
+                </>
+              ) : (
+                'Nenhum arquivo para enviar'
+              )}
             </p>
+            {summary.simulated > 0 && (
+              <p className="text-sm text-fg-muted" data-testid="recordings-simulated-summary">
+                <span className="tabular-nums">{summary.simulated}</span> {summary.simulated === 1 ? 'tela simulada' : 'telas simuladas'}: <span className="tabular-nums">{summary.simulatedReady}</span> {summary.simulatedReady === 1 ? 'gerada' : 'geradas'}, <span className="tabular-nums">{summary.simulatedPending}</span> {summary.simulatedPending === 1 ? 'será gerada' : 'serão geradas'} pela plataforma. Enviar um MP4 com o mesmo nome substitui a tela simulada.
+              </p>
+            )}
             <p className="text-sm text-fg-muted" data-testid="recordings-scenes-summary">
               {summary.scenesReady} de {summary.scenes} {summary.scenes === 1 ? 'cena pronta' : 'cenas prontas'} para montar
               {summary.attention > 0 && ` · ${summary.attention} ${summary.attention === 1 ? 'pede' : 'pedem'} atenção depois da montagem`}
@@ -219,7 +232,7 @@ export function ScreenRecordingsPanel({ courseId, canEdit, maxBytes }: { courseI
               </label>
             </div>
             {lessons.length === 0 ? (
-              <p className="text-sm text-fg-muted" data-testid="recordings-none-pending">Nada pendente: todos os arquivos estão enviados.</p>
+              <p className="text-sm text-fg-muted" data-testid="recordings-none-pending">Nada pendente: todos os arquivos estão enviados ou gerados.</p>
             ) : (
               lessons.map((lesson) => (
                 <div key={lesson.lessonId} className="space-y-2">
@@ -240,6 +253,24 @@ export function ScreenRecordingsPanel({ courseId, canEdit, maxBytes }: { courseI
                               <li key={`${r.index}-${r.fileName}`} className="flex flex-wrap items-center justify-between gap-2 text-sm" data-testid="recording-row" data-state={st}>
                                 <span className="min-w-0 break-all">{r.fileName}</span>
                                 <Badge tone={STATE_TONE[st]}>{RECORDING_STATE_LABEL[st]}</Badge>
+                                {r.mock && (
+                                  <div className="basis-full text-xs text-fg-muted" data-testid="recording-mock">
+                                    <p>{describeMock(r.mock)}</p>
+                                    <ul className="mt-1 list-disc pl-5">
+                                      {(() => {
+                                        const pv = previewMockSteps(r.mock);
+                                        return (
+                                          <>
+                                            {pv.lines.map((l, i) => (
+                                              <li key={i}>{l}</li>
+                                            ))}
+                                            {pv.more > 0 && <li>… e mais {pv.more} {pv.more === 1 ? 'passo' : 'passos'}</li>}
+                                          </>
+                                        );
+                                      })()}
+                                    </ul>
+                                  </div>
+                                )}
                               </li>
                             );
                           })}

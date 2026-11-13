@@ -1,4 +1,4 @@
-import { sceneUsesScreenRecording, type CourseDocument, type ScreenRecording } from '@lms/course-schema';
+import { sceneUsesScreenRecording, type CourseDocument, type ScreenMock, type ScreenRecording } from '@lms/course-schema';
 
 /**
  * Gravações de tela do curso (MP4 próprio em tela cheia): lista, estado, casamento de arquivos por NOME e
@@ -36,6 +36,9 @@ export interface ScreenRecordingRow {
   assetId?: string | undefined;
   fit?: ScreenRecording['fit'] | undefined;
   durationSec?: number | undefined;
+  /** tela simulada (a plataforma gera o MP4); ver `ScreenMock` */
+  mock?: ScreenMock | undefined;
+  source?: ScreenRecording['source'] | undefined;
 }
 
 /** Todas as gravações de tela do rascunho, na ordem aula → cena → posição na cena. */
@@ -58,6 +61,8 @@ export function listScreenRecordings(doc: CourseDocument): ScreenRecordingRow[] 
             assetId: rec.assetId,
             fit: rec.fit,
             durationSec: rec.durationSec,
+            mock: rec.mock,
+            source: rec.source,
           });
         });
       }
@@ -66,13 +71,20 @@ export function listScreenRecordings(doc: CourseDocument): ScreenRecordingRow[] 
   return rows;
 }
 
-export type RecordingState = 'missing' | 'uploaded' | 'short' | 'trimmed';
+export type RecordingState = 'missing' | 'uploaded' | 'short' | 'trimmed' | 'mock_pending' | 'mock_ready';
 
-/** Estado mostrado ao lado do arquivo. `fit` só vale com mídia anexada (a montagem preenche depois). */
-export function recordingState(rec: { assetId?: string | undefined; fit?: ScreenRecording['fit'] | undefined }): RecordingState {
-  if (!rec.assetId) return 'missing';
+type RecordingStateInput = { assetId?: string | undefined; fit?: ScreenRecording['fit'] | undefined; mock?: ScreenMock | undefined; source?: ScreenRecording['source'] | undefined };
+
+/**
+ * Estado mostrado ao lado do arquivo. `fit` só vale com mídia anexada (a montagem preenche depois).
+ * Tela simulada: sem mídia = "será gerada"; com mídia gerada dela (`source: 'mock'`) = "gerada". Mídia enviada
+ * à mão (`source: 'upload'`) substitui a tela simulada e conta como enviada.
+ */
+export function recordingState(rec: RecordingStateInput): RecordingState {
+  if (!rec.assetId) return rec.mock ? 'mock_pending' : 'missing';
   if (rec.fit === 'short') return 'short';
   if (rec.fit === 'trimmed') return 'trimmed';
+  if (rec.mock && rec.source === 'mock') return 'mock_ready';
   return 'uploaded';
 }
 
@@ -81,14 +93,60 @@ export const RECORDING_STATE_LABEL: Record<RecordingState, string> = {
   uploaded: 'Enviado',
   short: 'Mídia curta — regravar',
   trimmed: 'Mídia cortada — conferir',
+  mock_pending: 'Tela simulada — será gerada',
+  mock_ready: 'Tela simulada — gerada',
 };
 
-/** "Pendente" = falta mídia ou a montagem pediu atenção (curta/cortada). */
-export function isPendingRecording(rec: { assetId?: string | undefined; fit?: ScreenRecording['fit'] | undefined }): boolean {
-  return recordingState(rec) !== 'uploaded';
+/** Tela simulada ainda no rascunho como tal (a gerar ou já gerada), sem envio manual por cima. */
+export function isSimulatedRecording(rec: RecordingStateInput): boolean {
+  const st = recordingState(rec);
+  return st === 'mock_pending' || st === 'mock_ready';
+}
+
+/** "Pendente" = falta mídia, vai ser gerada, ou a montagem pediu atenção (curta/cortada). */
+export function isPendingRecording(rec: RecordingStateInput): boolean {
+  const st = recordingState(rec);
+  return st !== 'uploaded' && st !== 'mock_ready';
+}
+
+const STEP_LABEL: Record<string, string> = { type: 'digita', show: 'mostra', toggle: 'liga', tap: 'toca', cell: 'célula', event: 'evento', highlight: 'destaca' };
+const FROM_LABEL = { user: 'usuário', ai: 'ia', other: 'outro' } as const;
+
+/** "chat · Assistente de IA" (modelo e app da tela simulada). */
+export function describeMock(mock: ScreenMock): string {
+  return `${mock.model} · ${mock.app}`;
+}
+
+function clip(t: string, n = 60): string {
+  const one = t.replace(/\s+/g, ' ').trim();
+  return one.length > n ? `${one.slice(0, n - 1).trimEnd()}…` : one;
+}
+
+/** Prévia em texto dos passos (lista curta): `max` primeiros; `more` = quantos ficaram de fora. */
+export function previewMockSteps(mock: ScreenMock, max = 4): { lines: string[]; more: number } {
+  const lines = mock.steps.slice(0, max).map((st) => {
+    switch (st.kind) {
+      case 'message':
+        return `${FROM_LABEL[st.from]}: ${clip(st.text)}`;
+      case 'show':
+        return `mostra: ${clip([st.title, ...st.lines].filter(Boolean).join(' | '))}`;
+      case 'toggle':
+        return `${st.on ? 'liga' : 'desliga'}: ${clip(st.label)}`;
+      case 'tap':
+        return `toca: ${clip(st.label)}`;
+      case 'cell':
+        return `célula: ${st.ref} = ${clip(st.value, 40)}`;
+      case 'event':
+        return `evento: ${clip(st.title, 40)} | ${st.day} | ${st.time}`;
+      default:
+        return `${STEP_LABEL[st.kind]}: ${clip(st.text)}`;
+    }
+  });
+  return { lines, more: Math.max(0, mock.steps.length - lines.length) };
 }
 
 export interface ScreenRecordingSummary {
+  /** arquivos de verdade (sem as telas simuladas) */
   total: number;
   uploaded: number;
   missing: number;
@@ -97,26 +155,42 @@ export interface ScreenRecordingSummary {
   /** cenas com gravação / cenas com todas as gravações enviadas ("prontas para montar") */
   scenes: number;
   scenesReady: number;
+  /** telas simuladas, contadas à parte: total, a gerar e já geradas */
+  simulated: number;
+  simulatedPending: number;
+  simulatedReady: number;
 }
 
 export function summarizeScreenRecordings(rows: readonly ScreenRecordingRow[]): ScreenRecordingSummary {
   const sceneKeys = new Map<string, boolean>();
+  let total = 0;
   let uploaded = 0;
   let attention = 0;
+  let simulatedPending = 0;
+  let simulatedReady = 0;
   for (const r of rows) {
     const key = `${r.lessonId}/${r.nodeId}`;
     const ok = !!r.assetId;
-    if (ok) uploaded++;
-    if (ok && (r.fit === 'short' || r.fit === 'trimmed')) attention++;
+    const st = recordingState(r);
+    if (st === 'mock_pending') simulatedPending++;
+    else if (st === 'mock_ready') simulatedReady++;
+    else {
+      total++;
+      if (ok) uploaded++;
+      if (ok && (r.fit === 'short' || r.fit === 'trimmed')) attention++;
+    }
     sceneKeys.set(key, (sceneKeys.get(key) ?? true) && ok);
   }
   return {
-    total: rows.length,
+    total,
     uploaded,
-    missing: rows.length - uploaded,
+    missing: total - uploaded,
     attention,
     scenes: sceneKeys.size,
     scenesReady: Array.from(sceneKeys.values()).filter(Boolean).length,
+    simulated: simulatedPending + simulatedReady,
+    simulatedPending,
+    simulatedReady,
   };
 }
 
@@ -164,7 +238,8 @@ export function matchFilesToRecordings<F extends { name: string }>(files: readon
 
 /**
  * Liga o `assetId` a TODA gravação do curso cujo nome casa com `fileName`, zerando `fit` e `durationSec`
- * (é um arquivo novo; a montagem mede de novo). Não mexe em mais nada. `linked` = quantas gravações mudaram;
+ * (é um arquivo novo; a montagem mede de novo) e marcando `source: 'upload'` (o envio substitui a tela simulada, que fica
+ * guardada na gravação). Não mexe em mais nada. `linked` = quantas gravações mudaram;
  * 0 devolve o mesmo documento.
  */
 export function applyRecordingAsset(doc: CourseDocument, fileName: string, assetId: string): { document: CourseDocument; linked: number } {
@@ -182,7 +257,7 @@ export function applyRecordingAsset(doc: CourseDocument, fileName: string, asset
           nodeTouched = true;
           linked++;
           const { fit: _fit, durationSec: _duration, ...rest } = rec;
-          return { ...rest, assetId };
+          return { ...rest, assetId, source: 'upload' as const };
         });
         if (!nodeTouched) return node;
         touched = true;

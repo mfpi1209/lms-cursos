@@ -20,7 +20,11 @@
  *     [--closing-line "…"] [--cameras cam_principal,cam_cenario_34] [--source-course crs_…] [--no-direction]
  *     [--zone-cameras cam_estudio_esq,cam_estudio_dir,cam_estudio_34]
  *     [--voice <voice_id ElevenLabs>] [--voice-name "…"] [--avatar-name "…"] [--presenter-pronoun she|he|they] [--watermark]
- *     [--kit estudio7-marina] [--workspace wsp_…]
+ *     [--kit estudio7-marina] [--workspace wsp_…] [--telas <arquivo.telas.md>] [--sem-telas]
+ *
+ * Telas simuladas: se existir `telas/<nome-do-roteiro>.telas.md` ao lado do roteiro (pasta `telas/` irmã), ele é
+ * carregado sozinho e as gravações de tela viram telas geradas pela plataforma (ver o cabeçalho do importador em
+ * course-schema); `--telas` troca o arquivo, `--sem-telas` desliga.
  *
  * `--kit` (biblioteca de modelos, ver `biblioteca-modelos.ts`): em vez de copiar
  * a apresentação de outro curso, monta tudo a partir de um KIT da biblioteca do
@@ -37,11 +41,11 @@
  * conversão dirige TODOS os vídeos no modo de zonas (fala na câmera da cena,
  * pílulas numa câmera lateral alternando o lado). Nenhum provedor é chamado.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { and, eq, inArray } from 'drizzle-orm';
-import { applyKitToDocument, brandingFromKit, emptyCourseDocument, importMarkdownCourse, KitError, presentationFromKit, type ResolvedKit, type Camera, type CameraZone, type CompileIssue, type CourseDocument, type MarkdownCourseOptions, type Presentation } from '@lms/course-schema';
+import { applyKitToDocument, brandingFromKit, emptyCourseDocument, importMarkdownCourse, KitError, parseScreenMocksMarkdown, type ScreenMock, type ScreenMockIssue, presentationFromKit, type ResolvedKit, type Camera, type CameraZone, type ScreenRecording, type CompileIssue, type CourseDocument, type MarkdownCourseOptions, type Presentation } from '@lms/course-schema';
 import { createDb, type Database } from '../client';
 import * as s from '../schema';
 import { createCourse, getDraft, saveDraft } from '../repositories/authoring';
@@ -82,6 +86,10 @@ export interface CliArgs {
   kit?: string;
   /** workspace do kit (padrão: o único workspace) */
   workspace?: string;
+  /** arquivo de telas simuladas (padrão: `telas/<roteiro>.telas.md` ao lado do roteiro) */
+  telas?: string;
+  /** `--sem-telas`: não carrega o arquivo de telas (nem o irmão) */
+  semTelas: boolean;
 }
 
 export function parseArgs(argv: readonly string[]): CliArgs {
@@ -133,7 +141,36 @@ export function parseArgs(argv: readonly string[]): CliArgs {
     watermark: flags.has('watermark'),
     ...(kit ? { kit } : {}),
     ...(str('workspace') ? { workspace: str('workspace') } : {}),
+    ...(str('telas') ? { telas: str('telas') } : {}),
+    semTelas: flags.has('sem-telas'),
   };
+}
+
+/** Caminho do arquivo de telas irmão do roteiro: `<pasta do roteiro>/telas/<nome-do-roteiro>.telas.md`. */
+export function siblingScreensPath(roteiro: string): string {
+  return path.join(path.dirname(roteiro), 'telas', `${path.basename(roteiro).replace(/\.md$/i, '')}.telas.md`);
+}
+
+export interface LoadedScreenMocks {
+  /** arquivo lido */
+  file: string;
+  mocks: Map<string, ScreenMock>;
+  issues: ScreenMockIssue[];
+}
+
+/**
+ * Acha e lê o arquivo de telas simuladas: `--sem-telas` desliga; `--telas <arquivo>` (obrigatório existir);
+ * senão o irmão `telas/<roteiro>.telas.md` se existir. Sem arquivo: `undefined` (importação como sempre).
+ */
+export function loadScreenMocks(args: Pick<CliArgs, 'file' | 'telas' | 'semTelas'>, read: (f: string) => string = (f) => readFileSync(f, 'utf8'), exists: (f: string) => boolean = existsSync): LoadedScreenMocks | undefined {
+  if (args.semTelas) return undefined;
+  const file = args.telas ?? siblingScreensPath(args.file);
+  if (!exists(file)) {
+    if (args.telas) throw new Error(`arquivo de telas não encontrado: ${args.telas}`);
+    return undefined;
+  }
+  const { mocks, issues } = parseScreenMocksMarkdown(read(file));
+  return { file, mocks, issues };
 }
 
 /** Sobrescreve voz e nome do apresentador herdados do curso de origem (`--voice`, `--voice-name`, `--avatar-name`). */
@@ -263,14 +300,40 @@ export function stableJson(v: unknown): string {
 const json = stableJson;
 
 /**
+ * Gravações de tela na reimportação (mesma cena, mesmo arquivo): quem tem mídia (`assetId`) a mantém, com `fit`,
+ * `durationSec` e `source`, se a tela simulada é a mesma (ou não há tela nos dois lados); se a tela simulada mudou,
+ * a mídia gerada perde `assetId`/`fit`/`durationSec` (precisa regerar). Mídia gerada de uma tela que saiu do roteiro
+ * também não vale mais; envio manual (`source: 'upload'`) sem tela nova é mantido.
+ */
+function carryScreenRecordings(prev: ScreenRecording[], next: ScreenRecording[], key: string, kept: string[], reset: string[]): ScreenRecording[] {
+  const fold = (f: string) => f.replace(/\.mp4$/i, '').trim().toLowerCase();
+  const byName = new Map(prev.map((r) => [fold(r.fileName), r]));
+  return next.map((rec) => {
+    const old = byName.get(fold(rec.fileName));
+    if (!old?.assetId) return rec;
+    const sameMock = json(old.mock ?? null) === json(rec.mock ?? null);
+    const generated = old.source === 'mock';
+    const keep = rec.mock ? sameMock : !generated;
+    if (!keep) {
+      reset.push(`${key}:${rec.fileName}`);
+      return rec;
+    }
+    kept.push(`${key}:${rec.fileName}`);
+    return { ...rec, assetId: old.assetId, ...(old.fit ? { fit: old.fit } : {}), ...(old.durationSec !== undefined ? { durationSec: old.durationSec } : {}), ...(old.source ? { source: old.source } : {}) };
+  });
+}
+
+/**
  * Reimportar não pode jogar fora vídeos já gerados (e pagos): cada cena do roteiro novo que tem o
  * mesmo id (na mesma aula) de uma cena com mídia no rascunho atual herda essa mídia. Se a fala, o
  * corpo ou a direção mudaram, a mídia fica marcada como desatualizada (`stale`), como o estúdio faz
  * ao editar o texto; o vídeo não é apagado e nada é gerado aqui.
  */
-export function carryOverMedia(prev: CourseDocument, next: CourseDocument): { document: CourseDocument; kept: string[]; stale: string[] } {
+export function carryOverMedia(prev: CourseDocument, next: CourseDocument): { document: CourseDocument; kept: string[]; stale: string[]; screensKept: string[]; screensReset: string[] } {
   const kept: string[] = [];
   const stale: string[] = [];
+  const screensKept: string[] = [];
+  const screensReset: string[] = [];
   const prevNodes = new Map<string, Record<string, unknown>>();
   for (const m of prev.modules) for (const l of m.lessons) for (const n of l.graph.nodes) prevNodes.set(`${l.id}/${n.id}`, n as unknown as Record<string, unknown>);
   const spoken = (n: Record<string, unknown>) => json({ narration: n.narration ?? null, body: n.body ?? null, direction: n.direction ?? null });
@@ -280,6 +343,10 @@ export function carryOverMedia(prev: CourseDocument, next: CourseDocument): { do
       l.graph.nodes = l.graph.nodes.map((node) => {
         const n = node as unknown as Record<string, unknown>;
         const old = prevNodes.get(`${l.id}/${node.id}`);
+        if (Array.isArray(n.screenRecordings) && Array.isArray(old?.screenRecordings)) {
+          const carried = carryScreenRecordings(old.screenRecordings as ScreenRecording[], n.screenRecordings as ScreenRecording[], `${l.id}/${node.id}`, screensKept, screensReset);
+          return { ...n, screenRecordings: carried } as unknown as typeof node;
+        }
         const media = old?.media as { stale?: boolean } | undefined;
         if (!old || !media || n.media) return node;
         const changed = spoken(old) !== spoken(n);
@@ -289,7 +356,7 @@ export function carryOverMedia(prev: CourseDocument, next: CourseDocument): { do
       });
     }
   }
-  return { document, kept, stale };
+  return { document, kept, stale, screensKept, screensReset };
 }
 
 function printIssues(tag: string, issues: readonly CompileIssue[]) {
@@ -331,6 +398,11 @@ export async function run(db: Database, args: CliArgs) {
   if (!userId) throw new Error(`nenhum autor no workspace ${workspaceId}`);
 
   const presentation = options.presentation as Presentation;
+  const screens = loadScreenMocks(args);
+  if (screens) {
+    options = { ...options, screenMocks: screens.mocks, screenMockIssues: screens.issues };
+    console.log(`${tag} telas simuladas: ${screens.mocks.size} carregadas (${path.basename(screens.file)})${screens.issues.length ? `, ${screens.issues.length} problema(s) no arquivo` : ''}`);
+  }
   const r = importMarkdownCourse(md, options);
   let doc = r.document;
   // o kit também acerta o elenco (o instrutor) e o pronome; idempotente sobre o que o importador já gravou
@@ -373,6 +445,7 @@ export async function run(db: Database, args: CliArgs) {
     // vídeos já gerados continuam nas cenas (desatualizados quando a fala/direção mudou)
     const carried = carryOverMedia(draft.document, doc);
     doc = carried.document;
+    if (carried.screensKept.length || carried.screensReset.length) console.log(`${tag} gravações de tela: ${carried.screensKept.length} mantida(s), ${carried.screensReset.length} a regerar (tela simulada mudou ou saiu do roteiro)${carried.screensReset.length ? ` (${carried.screensReset.join(', ')})` : ''}`);
     if (carried.kept.length || carried.stale.length) console.log(`${tag} mídia preservada: ${carried.kept.length} cena(s) em dia${carried.kept.length ? ` (${carried.kept.join(', ')})` : ''}, ${carried.stale.length} desatualizada(s)${carried.stale.length ? ` (${carried.stale.join(', ')})` : ''}`);
     if (json(draft.document) === json(doc)) console.log(`${tag} curso ${courseId} já está na revisão ${revision} com este roteiro; nada gravado`);
     else {
