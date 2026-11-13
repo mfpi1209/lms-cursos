@@ -1,3 +1,4 @@
+import { ScreenMockSchema } from './screen-mock';
 import { z } from 'zod';
 import { RichTextDocumentSchema, richTextToPlain } from './richtext';
 import { EffectSchema, ConditionSchema } from './dsl';
@@ -95,6 +96,10 @@ export const ScreenRecordingSchema = z.object({
   assetId: z.string().min(1).max(128).optional(),
   durationSec: z.number().positive().max(36000).optional(),
   fit: z.enum(['ok', 'short', 'trimmed']).optional(),
+  /** tela simulada: a plataforma gera o MP4 a partir desta descrição (sem gravação humana); ver screen-mock.ts */
+  mock: ScreenMockSchema.optional(),
+  /** origem do asset: enviado pela equipe (`upload`) ou gerado da tela simulada (`mock`) */
+  source: z.enum(['upload', 'mock']).optional(),
 });
 export type ScreenRecording = z.infer<typeof ScreenRecordingSchema>;
 

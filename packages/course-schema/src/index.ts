@@ -22,3 +22,4 @@ export * from './trails';
 export * from './video-runtime';
 export * from './trail-credentials';
 export * from './own-origin';
+export * from './screen-mock';
