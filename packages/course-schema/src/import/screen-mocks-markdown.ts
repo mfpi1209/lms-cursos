@@ -13,6 +13,7 @@ import { ScreenMockSchema, type ScreenMock } from '../screen-mock';
  *   a repetição gera SCREEN_MOCK_DUPLICATE ("seção duplicada") com a linha;
  * - rótulos aceitam com e sem acento e em qualquer caixa (`Usuário:`, `usuario:`, `CÉLULA:`);
  * - `Aparelho:` celular → phone, computador → desktop (padrão phone);
+ * - sufixo ` (na fala: "trecho")` (com ou sem ` (peso N)`) vira `cue` do passo;
  * - texto livre antes da primeira seção `##` é ignorado.
  */
 
@@ -40,6 +41,7 @@ const MODEL_ALIASES: Record<string, string> = {
 };
 const DEVICE_ALIASES: Record<string, 'phone' | 'desktop'> = { celular: 'phone', phone: 'phone', telefone: 'phone', computador: 'desktop', desktop: 'desktop', pc: 'desktop', notebook: 'desktop' };
 const WEIGHT_RE = /\s*\(\s*peso\s+(\d+(?:[.,]\d+)?)\s*\)\s*$/i;
+const CUE_RE = /\s*\(\s*na\s+fala\s*:\s*["“”']([^"“”]+?)["“”']\s*\)\s*$/i;
 const SECTION_RE = /^##\s+(.+?)\s*$/;
 const META_RE = /^(modelo|aparelho|app)\s*:\s*(.*)$/i;
 const STEP_RE = /^-\s+([^:]+?)\s*:\s*(.*)$/;
@@ -53,12 +55,24 @@ type RawStep = { obj: Record<string, unknown>; line: number };
 function parseStep(label: string, rawValue: string, line: number, issue: (message: string, l?: number) => void): RawStep | undefined {
   let value = rawValue.trim();
   let weight: number | undefined;
-  const w = WEIGHT_RE.exec(value);
-  if (w) {
-    weight = Number(w[1]!.replace(',', '.'));
-    value = value.slice(0, w.index).trim();
+  let cue: string | undefined;
+  // sufixos `(peso N)` e `(na fala: "trecho")`, em qualquer ordem
+  for (let k = 0; k < 2; k++) {
+    const c = CUE_RE.exec(value);
+    if (c && cue === undefined) {
+      cue = c[1]!.trim();
+      value = value.slice(0, c.index).trim();
+      continue;
+    }
+    const w = WEIGHT_RE.exec(value);
+    if (w && weight === undefined) {
+      weight = Number(w[1]!.replace(',', '.'));
+      value = value.slice(0, w.index).trim();
+      continue;
+    }
+    break;
   }
-  const wt = weight !== undefined ? { weight } : {};
+  const wt = { ...(weight !== undefined ? { weight } : {}), ...(cue ? { cue } : {}) };
   const parts = () => value.split('|').map((p) => p.trim());
   const need = (what: string): boolean => {
     if (value) return true;

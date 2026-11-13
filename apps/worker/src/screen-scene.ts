@@ -4,7 +4,7 @@ import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { getDb, media, newId, schema } from '@lms/db';
 import { estimateNarrationSeconds, mediaConfigFromEnv, type ElevenLabsAlignment, type WatermarkSpec } from '@lms/media';
-import { approxWords, composeScreenScene, ffprobe, generateToneMp3, renderScreenMock, splitMockDurations, type MockInput, normalizeLoudnessInPlace, syntheticAlignment, wordsFromAlignment, type ScreenFit } from '@lms/media/compose';
+import { approxWords, composeScreenScene, ffprobe, matchStepCues, startsFromCues, generateToneMp3, renderScreenMock, splitMockDurations, type MockInput, normalizeLoudnessInPlace, syntheticAlignment, wordsFromAlignment, type ScreenFit } from '@lms/media/compose';
 import { PreflightError, attachToNode, fail, findPaidNarration, isRetryableError, readAsset, storeGeneratedAsset } from './media';
 import { JobNotRunningError, patchJobInput, storeCaptions, storeWithRetry, synthesizeOnce, type CaptionsRef } from './narration';
 import { burnWatermarkFile } from './watermark-clip';
@@ -28,7 +28,7 @@ export interface ScreenJobRecording {
   assetId?: string;
   /** `mock` = tela simulada gerada aqui (depois da narração); `upload` ou ausente = MP4 enviado */
   source?: 'upload' | 'mock';
-  mock?: MockInput & { steps: Array<{ weight?: number }> };
+  mock?: MockInput & { steps: Array<{ weight?: number; cue?: string }> };
 }
 
 /** A gravação é uma tela simulada a gerar (tem `mock` e nunca teve MP4 enviado)? */
@@ -135,7 +135,21 @@ export async function processScreenJob(jobId: string) {
       files[i] = f;
       uploadSec.set(i, (await ffprobe(f)).durationSeconds);
     }
-    const durations = splitMockDurations(recs.map((r, i) => (isGeneratedRecording(r) ? { mockWeight: mockTotalWeight(r.mock!) } : { uploadSec: uploadSec.get(i)! })), narrationSec);
+    // passos no ritmo da fala: acha na fala (mesmo alinhamento da legenda) onde cada passo começa; sem alinhamento exato = proporcional
+    const exactWords = alignment?.characters?.length ? wordsFromAlignment(alignment) : [];
+    const cues = new Map<number, Array<number | undefined>>();
+    let cueFrom = 0;
+    for (const [i, r] of recs.entries()) {
+      if (!isGeneratedRecording(r) || !exactWords.length) continue;
+      const m = matchStepCues(r.mock!.steps, exactWords, cueFrom);
+      cues.set(i, m.times);
+      cueFrom = m.nextIndex;
+    }
+    const durations = splitMockDurations(recs.map((r, i) => (isGeneratedRecording(r) ? { mockWeight: mockTotalWeight(r.mock!), cueSec: cues.get(i)?.find((t) => t !== undefined) } : { uploadSec: uploadSec.get(i)! })), narrationSec);
+    // se alguma tela gerada não achou nenhum passo na fala, a divisão foi proporcional: os passos seguem proporcionais também
+    if (recs.some((r, i) => isGeneratedRecording(r) && !cues.get(i)?.some((t) => t !== undefined))) cues.clear();
+    const recStart: number[] = [];
+    durations.reduce((acc, d, i) => (recStart[i] = acc) + d, 0);
     const generated: Record<string, { assetId: string; durationSec: number }> = { ...input.mockAssets };
     for (const [i, r] of recs.entries()) {
       if (!isGeneratedRecording(r)) continue;
@@ -146,7 +160,9 @@ export async function processScreenJob(jobId: string) {
         await writeFile(f, await readAsset(asset.storageKey));
       } else {
         const dur = durations[i]!;
-        await renderScreenMock(r.mock!, { outPath: f, durationSec: dur, workDir: path.join(dir, `mock-${i}`) });
+        const ct = cues.get(i);
+        const stepStarts = ct ? startsFromCues(ct.map((t) => (t === undefined ? undefined : t - recStart[i]!)), r.mock!.steps.map((x) => x.weight), dur) : undefined;
+        await renderScreenMock(r.mock!, { outPath: f, durationSec: dur, workDir: path.join(dir, `mock-${i}`), ...(stepStarts ? { stepStarts } : {}) });
         const a = await storeGeneratedAsset({ workspaceId: job.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(f)), durationSeconds: dur, createdBy: job.createdBy });
         generated[r.fileName] = { assetId: a.id, durationSec: dur };
         // guardado antes da montagem: um retry não gera de novo
@@ -165,7 +181,7 @@ export async function processScreenJob(jobId: string) {
     const asset = await storeGeneratedAsset({ workspaceId: job.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(output)), durationSeconds, transcript: input.script, createdBy: job.createdBy, metadata: { loudness } });
 
     // ---- legenda da narração (como nas outras cenas) ----
-    const exact = alignment?.characters?.length ? wordsFromAlignment(alignment) : undefined;
+    const exact = exactWords.length ? exactWords : undefined;
     const words = exact?.length ? exact : approxWords(input.script, 0, composed.durationSec);
     let captions = input.captions;
     if (!captions?.assetId) {

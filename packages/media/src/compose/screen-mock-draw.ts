@@ -10,14 +10,14 @@ import { ellipsize, textWidth, wrapText, type MockWeight, type WrappedLine } fro
 /* ---------------- contrato (espelha `ScreenMock` de @lms/course-schema, sem depender do pacote) ---------------- */
 
 export type MockStep =
-  | { kind: 'type'; text: string; weight?: number }
-  | { kind: 'message'; from: 'user' | 'ai' | 'other'; text: string; weight?: number }
-  | { kind: 'show'; title?: string; lines?: string[]; weight?: number }
-  | { kind: 'toggle'; label: string; on: boolean; weight?: number }
-  | { kind: 'tap'; label: string; weight?: number }
-  | { kind: 'cell'; ref: string; value: string; weight?: number }
-  | { kind: 'event'; title: string; day: string; time: string; color?: string; weight?: number }
-  | { kind: 'highlight'; text: string; weight?: number };
+  | { kind: 'type'; text: string; weight?: number; cue?: string }
+  | { kind: 'message'; from: 'user' | 'ai' | 'other'; text: string; weight?: number; cue?: string }
+  | { kind: 'show'; title?: string; lines?: string[]; weight?: number; cue?: string }
+  | { kind: 'toggle'; label: string; on: boolean; weight?: number; cue?: string }
+  | { kind: 'tap'; label: string; weight?: number; cue?: string }
+  | { kind: 'cell'; ref: string; value: string; weight?: number; cue?: string }
+  | { kind: 'event'; title: string; day: string; time: string; color?: string; weight?: number; cue?: string }
+  | { kind: 'highlight'; text: string; weight?: number; cue?: string };
 
 export interface MockInput {
   model: 'chat' | 'browser' | 'form' | 'settings' | 'calendar' | 'sheet' | 'notes';

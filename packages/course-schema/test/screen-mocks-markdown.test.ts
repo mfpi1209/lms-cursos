@@ -120,3 +120,17 @@ App: X
     expect(parseScreenMocksMarkdown('só um texto\n- digita: solto')).toEqual({ mocks: new Map(), issues: [] });
   });
 });
+
+describe('sufixo (na fala: "trecho") -> cue', () => {
+  it('lê o cue, sozinho ou junto do peso (qualquer ordem), e não altera mocks sem cue', () => {
+    const r = one('- digita: me indique três livros (na fala: "Eu peço")\n- ia: Claro! (peso 2) (na fala: “olha a resposta”)\n- toca: Enviar (na fala: "enviar") (peso 3)\n- destaca: sem cue (peso 2)');
+    expect(r.issues).toEqual([]);
+    const steps = r.mocks.get('gravacao_x')!.steps as Array<{ text?: string; label?: string; weight?: number; cue?: string }>;
+    expect(steps[0]).toMatchObject({ kind: 'type', text: 'me indique três livros', cue: 'Eu peço' });
+    expect(steps[0]!.weight).toBeUndefined();
+    expect(steps[1]).toMatchObject({ kind: 'message', text: 'Claro!', weight: 2, cue: 'olha a resposta' });
+    expect(steps[2]).toMatchObject({ kind: 'tap', label: 'Enviar', weight: 3, cue: 'enviar' });
+    expect(steps[3]).toMatchObject({ kind: 'highlight', text: 'sem cue', weight: 2 });
+    expect('cue' in steps[3]!).toBe(false);
+  });
+});

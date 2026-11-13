@@ -5,7 +5,7 @@ import path from 'node:path';
 import { runFfmpeg } from './ffmpeg';
 import { rasterizeSvg } from './raster';
 import { buildFrameSvg, MOCK_H, MOCK_W, type MockInput } from './screen-mock-draw';
-import { scheduleSteps } from './screen-mock-schedule';
+import { scheduleFromStarts, scheduleSteps } from './screen-mock-schedule';
 import { writeMockFonts } from './screen-mock-text';
 
 export type { MockInput, MockStep } from './screen-mock-draw';
@@ -28,6 +28,8 @@ export interface RenderScreenMockOptions {
   durationSec: number;
   /** pasta de trabalho (fontes, PNG, lista do ffmpeg); padrão: pasta temporária removida ao final */
   workDir?: string;
+  /** início (s) de cada passo (ver `scheduleStepsWithCues`); ausente = distribuição proporcional ao peso */
+  stepStarts?: number[];
 }
 
 export interface RenderScreenMockResult {
@@ -44,10 +46,8 @@ export async function renderScreenMock(mock: MockInput, opts: RenderScreenMockOp
   await mkdir(work, { recursive: true });
   try {
     const fontFiles = await writeMockFonts(path.join(work, 'fonts'));
-    const sch = scheduleSteps(
-      mock.steps.map((s) => s.weight),
-      opts.durationSec,
-    );
+    const weights = mock.steps.map((s) => s.weight);
+    const sch = opts.stepStarts && opts.stepStarts.length === mock.steps.length ? scheduleFromStarts(opts.stepStarts, weights, opts.durationSec) : scheduleSteps(weights, opts.durationSec);
     const total = Math.max(1, Math.round(opts.durationSec * SCREEN_MOCK_FPS));
     // quadros únicos, em ordem de exibição, com quantos quadros de vídeo cada um dura
     const runs: Array<{ key: string; frames: number }> = [];

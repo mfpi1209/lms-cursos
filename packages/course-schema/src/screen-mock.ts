@@ -4,8 +4,8 @@ import { z } from 'zod';
  * Tela simulada: a plataforma desenha a tela de demonstração (conversa com a IA, site, perfil, ajustes do celular,
  * agenda, planilha, anotações) a partir desta descrição e gera o MP4 sozinha, sem gravação humana e sem provedor pago.
  * O MP4 gerado entra no mesmo lugar de uma gravação de tela (`ScreenRecording.assetId`) e passa pela mesma montagem
- * (tela cheia + narração + legenda). A duração acompanha a narração da cena: os passos se distribuem no tempo da fala
- * (proporcional ao `peso`, padrão 1).
+ * (tela cheia + narração + legenda). A duração acompanha a narração da cena: cada passo começa quando a fala chega nele
+ * (alinhamento por palavra); sem alinhamento, os passos se distribuem proporcionalmente ao `peso` (padrão 1).
  *
  * Sintaxe no roteiro de telas (`docs/roteiros/telas/<roteiro>.telas.md`), uma seção por arquivo:
  *
@@ -27,6 +27,8 @@ import { z } from 'zod';
  *   evento: <título> | <dia> | <hora> | <cor opcional>  → evento de agenda
  *   destaca: <texto>                       → realce de um trecho já na tela (ou nota em destaque)
  * Sufixo opcional ` (peso 2)` no fim da linha dá mais tempo ao passo.
+ * Sufixo opcional ` (na fala: "trecho")` força o início do passo naquele trecho da narração (sem ele, a plataforma
+ * procura na fala as palavras do próprio passo; a tela fica vazia até o primeiro passo encontrado).
  *
  * Regras de conteúdo: telas genéricas, SEM logotipo nem identidade visual de marca real (o nome do serviço pode
  * aparecer como texto quando a aula ensina aquele serviço). Nada de dado pessoal real.
@@ -37,16 +39,18 @@ export type ScreenMockModel = (typeof SCREEN_MOCK_MODELS)[number];
 
 const text = (max: number) => z.string().trim().min(1).max(max);
 const weight = z.number().positive().max(10).optional();
+/** trecho da fala em que o passo começa (opcional; sem ele a plataforma acha o trecho sozinha) */
+const cue = z.string().trim().min(1).max(200).optional();
 
 export const ScreenMockStepSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('type'), text: text(600), weight }),
-  z.object({ kind: z.literal('message'), from: z.enum(['user', 'ai', 'other']), text: text(1500), weight }),
-  z.object({ kind: z.literal('show'), title: text(160).optional(), lines: z.array(text(400)).max(12).default([]), weight }),
-  z.object({ kind: z.literal('toggle'), label: text(120), on: z.boolean(), weight }),
-  z.object({ kind: z.literal('tap'), label: text(120), weight }),
-  z.object({ kind: z.literal('cell'), ref: z.string().regex(/^[A-Z]{1,2}[1-9]\d{0,2}$/, 'célula no formato B2'), value: text(200), weight }),
-  z.object({ kind: z.literal('event'), title: text(120), day: text(40), time: text(20), color: text(30).optional(), weight }),
-  z.object({ kind: z.literal('highlight'), text: text(300), weight }),
+  z.object({ kind: z.literal('type'), text: text(600), weight, cue }),
+  z.object({ kind: z.literal('message'), from: z.enum(['user', 'ai', 'other']), text: text(1500), weight, cue }),
+  z.object({ kind: z.literal('show'), title: text(160).optional(), lines: z.array(text(400)).max(12).default([]), weight, cue }),
+  z.object({ kind: z.literal('toggle'), label: text(120), on: z.boolean(), weight, cue }),
+  z.object({ kind: z.literal('tap'), label: text(120), weight, cue }),
+  z.object({ kind: z.literal('cell'), ref: z.string().regex(/^[A-Z]{1,2}[1-9]\d{0,2}$/, 'célula no formato B2'), value: text(200), weight, cue }),
+  z.object({ kind: z.literal('event'), title: text(120), day: text(40), time: text(20), color: text(30).optional(), weight, cue }),
+  z.object({ kind: z.literal('highlight'), text: text(300), weight, cue }),
 ]);
 export type ScreenMockStep = z.infer<typeof ScreenMockStepSchema>;
 
