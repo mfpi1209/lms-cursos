@@ -71,6 +71,7 @@ export async function rodarAula(o) {
   const perguntas = [];
   let atividade = null;
   let missao = null;
+  let tarefa = null;
   let fim = null;
   const capturas = [];
   const t0 = Date.now();
@@ -152,7 +153,7 @@ export async function rodarAula(o) {
     }
     if (tl.tipo === 'erro-carregar') { await travou(`erro ao abrir a aula: ${tl.titulo}`); break; }
 
-    if (tl.tipo === 'fim' && !acoes.some((a) => a.acao === 'player-watch' || a.acao.startsWith('opcao-'))) {
+    if (tl.tipo === 'fim' && !acoes.some((a) => a.acao === 'player-watch' || a.acao.startsWith('opcao-') || a.acao === 'task-submit' || a.acao === 'task-keep')) {
       // "?reiniciar=1" devia abrir uma tentativa nova; a tela mostra o fim de uma tentativa concluída
       if (!avisos.has('reiniciar')) {
         avisos.add('reiniciar');
@@ -393,6 +394,75 @@ export async function rodarAula(o) {
       continue;
     }
 
+    // tarefa com entrega: envia um link https (nos caminhos 1 e 3, também um PDF pequeno quando a tarefa aceita arquivo),
+    // confere que a confirmação só vem do servidor e segue. Entrega que já existe (em correção ou aprovada): "Continuar".
+    // Antes do envio certo, o caminho 2 tenta um link sem https e confere que a tela recusa sem sair da tarefa.
+    if (tl.tipo === 'tarefa-carregando') {
+      if (parado > 20000) { await travou('a tarefa não carregou a entrega em 20 s'); break; }
+      continue;
+    }
+    if (tl.tipo === 'tarefa') {
+      if (feitas.has('t:' + tl.node)) {
+        if (parado > 30000) { await travou('a tarefa não confirmou o envio em 30 s'); break; }
+        continue;
+      }
+      feitas.add('t:' + tl.node);
+      await sleep(500);
+      const antes = await page.evaluate(() => window.__robo.tarefa());
+      if (!antes || !antes.campoLink) { feitas.delete('t:' + tl.node); continue; }
+      const fotoTarefa = (await fotoEstavel(tl.node)) || (await foto('tarefa'));
+      let recusouSemHttps = null;
+      if (caminho === 2) {
+        await page.locator('[data-testid=task-link]').fill('http://exemplo.com/sem-https', { timeout: 4000 }).catch(() => null);
+        await clicar('task-submit', 'Enviar entrega');
+        await sleep(600);
+        const ruim = await page.evaluate(() => window.__robo.tarefa());
+        recusouSemHttps = !!ruim && ruim.estado !== 'saved' && !!ruim.erroLink;
+        if (!recusouSemHttps) achados.push({ tipo: 'tarefa-aceitou-sem-https', gravidade: 'bloqueante', t: e.t, etapa: `tarefa:${tl.node}`, texto: 'a tarefa não recusou um link sem https', evidencia: await foto('tarefa-sem-https') });
+      }
+      const link = `https://example.com/entrega-robo-caminho-${caminho}`;
+      await page.locator('[data-testid=task-link]').fill(link, { timeout: 4000 }).catch(() => null);
+      let arquivo = null;
+      if (antes.campoArquivo && /pdf/.test(antes.aceita || '') && (caminho === 1 || caminho === 3)) {
+        arquivo = 'entrega-robo.pdf';
+        const pdf = Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n');
+        await page.locator('[data-testid=task-file]').setInputFiles({ name: arquivo, mimeType: 'application/pdf', buffer: pdf }, { timeout: 4000 }).catch(() => { arquivo = null; });
+      }
+      const ts = Date.now();
+      await clicar('task-submit', 'Enviar entrega');
+      let confirmadoMs = null;
+      try {
+        await page.locator('[data-testid=task-saved]').waitFor({ state: 'visible', timeout: 20000 });
+        confirmadoMs = Date.now() - ts;
+      } catch {}
+      const confirmacao = await page.evaluate(() => window.__robo.tarefa());
+      const fotoEnviada = await foto('tarefa-enviada');
+      if (confirmadoMs == null) achados.push({ tipo: 'tarefa-sem-confirmacao', gravidade: 'bloqueante', t: e.t, etapa: `tarefa:${tl.node}`, texto: `a entrega foi enviada mas a confirmação não apareceu em 20 s${confirmacao?.erroLink ? ` (link: ${confirmacao.erroLink})` : ''}${confirmacao?.erroArquivo ? ` (arquivo: ${confirmacao.erroArquivo})` : ''}`, evidencia: fotoEnviada });
+      else await clicar('task-continue', 'Continuar aula');
+      if ((antes.rolagemHorizontal || 0) > 0) achados.push({ tipo: 'tarefa-rolagem-horizontal', gravidade: 'importante', t: e.t, etapa: `tarefa:${tl.node}`, texto: `a tarefa ficou ${antes.rolagemHorizontal}px mais larga que a tela`, evidencia: fotoTarefa });
+      if (!antes.criterios.length) achados.push({ tipo: 'tarefa-sem-criterios', gravidade: 'importante', t: e.t, etapa: `tarefa:${tl.node}`, texto: 'a tarefa não mostra o que o avaliador confere', evidencia: fotoTarefa });
+      tarefa = { node: tl.node, link, arquivo, reenvio: antes.estado === 'returned', recusouSemHttps, antes, confirmacao, situacao: confirmacao?.situacao ?? null, confirmadoMs, fotos: { antes: fotoTarefa, enviada: fotoEnviada } };
+      continue;
+    }
+
+    if (tl.tipo === 'tarefa-existente') {
+      if (!feitas.has('tk:' + tl.node)) {
+        feitas.add('tk:' + tl.node);
+        const antes = await page.evaluate(() => window.__robo.tarefa());
+        const fotoTarefa = await foto('tarefa-existente');
+        tarefa = tarefa ?? { node: tl.node, link: null, arquivo: null, mantida: true, antes, situacao: antes?.situacao ?? null, fotos: { antes: fotoTarefa } };
+        await clicar('task-keep', 'Continuar');
+      } else if (parado > 4000) await clicar('task-keep', 'Continuar');
+      if (parado > 20000) { await travou('a tarefa com entrega já enviada não seguiu'); break; }
+      continue;
+    }
+
+    if (tl.tipo === 'tarefa-enviada') {
+      if (parado > 2000) await clicar('task-continue', 'Continuar aula');
+      if (parado > 20000) { await travou('entrega enviada sem seguir'); break; }
+      continue;
+    }
+
     if (tl.tipo === 'missao-salva') {
       if (parado > 2000) await clicar('mission-continue', 'Continuar aula');
       if (parado > 20000) { await travou('missão registrada sem seguir'); break; }
@@ -412,7 +482,7 @@ export async function rodarAula(o) {
   await sleep(300);
   const R = await page.evaluate(() => ({ videos: window.__robo.videos.map(({ _w, _p, ...v }) => v), telas: window.__robo.telas, cabecalhos: window.__robo.cabecalhos })).catch(() => ({ videos: [], telas: [], cabecalhos: [] }));
   await ctx.close().catch(() => null);
-  return { url, caminho, concluiu, motivoParada, recarregou, tentativas: tentativas.map(({ _rq, ...x }) => x), duracaoS: Math.round((Date.now() - t0) / 1000), acoes, achados, obs, perguntas, atividade, missao, fim, erros, capturas, ...R };
+  return { url, caminho, concluiu, motivoParada, recarregou, tentativas: tentativas.map(({ _rq, ...x }) => x), duracaoS: Math.round((Date.now() - t0) / 1000), acoes, achados, obs, perguntas, atividade, missao, tarefa, fim, erros, capturas, ...R };
 }
 
 async function provaNoCelular({ browser, cookies, url, k, img, prefixo }) {

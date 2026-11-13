@@ -3,7 +3,7 @@ import { versionRuntime } from '@/server/lesson-runtime';
 import { LESSON_RANGE_MIN_DIFF_S, formatCourseVideo, formatLessonVideo, seriesPartOf, spokenClock } from '@lms/course-schema';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, Play, RotateCcw, Sparkles } from 'lucide-react';
-import { getDb, learning, recognition, DomainError } from '@lms/db';
+import { getDb, learning, recognition, submissions, DomainError } from '@lms/db';
 import { allLessons, ownImageUrl, type Lesson } from '@lms/course-schema';
 import { computeProgress } from '@lms/course-engine';
 import { requireViewer, HttpError } from '@/server/viewer';
@@ -15,6 +15,7 @@ import { ChapterCard, CourseArt, ctaOutline, ctaPrimary, lessonThumbUrl, Segment
 import { CourseMenu } from '../_components/course-menu';
 import { CourseTrailCard } from '../_components/course-trail-card';
 import { PendingMissions } from '../_components/pending-missions';
+import { TaskDeliveries } from '../_components/task-deliveries';
 import { shortTitleFor } from '../_lib/short-titles';
 import { cn, formatDate } from '@/lib/utils';
 
@@ -100,6 +101,8 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
   const summary = document.learnerSummary?.trim() || document.description;
   // trilha do curso: conquista deste curso e o caminho até o Selo DNA Work da trilha
   const pendingMissions = await learning.pendingMissions(db, { enrollmentId });
+  // tarefas com entrega do curso e a situação de cada uma (a correção chega depois da aula)
+  const taskDeliveries = await submissions.learnerTasks(db, { enrollmentId });
   const seriesPart = seriesPartOf(course.slug, course.trail);
   const trailStatus = course.trail ? await recognition.trailStatus(db, { workspaceId: course.workspaceId, userId: viewer.user.id, trail: course.trail }) : null;
 
@@ -179,6 +182,8 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
           )}
         </div>
       </header>
+
+      {taskDeliveries.length > 0 && <TaskDeliveries enrollmentId={enrollmentId} items={taskDeliveries} />}
 
       {pendingMissions.length > 0 && <PendingMissions enrollmentId={enrollmentId} items={pendingMissions} />}
 

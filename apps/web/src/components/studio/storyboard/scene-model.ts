@@ -20,11 +20,12 @@ export const SCENE_TYPES: Record<ExecutableNodeType, SceneTypeInfo> = {
   consequence: { label: 'O que acontece', description: 'O resultado de uma escolha, com o que levar disso.', dot: 'bg-fg-muted' },
   reflection: { label: 'Reflexão', description: 'Uma pergunta aberta; a pessoa escreve a própria resposta.', dot: 'bg-fg-muted' },
   mission: { label: 'Leve para a vida real', description: 'Uma ação para fazer fora da plataforma, com alternativa para quem ainda não trabalha. Nunca trava a aula.', dot: 'bg-accent' },
+  task: { label: 'Tarefa com entrega', description: 'A pessoa envia um link (e um arquivo, se você pedir) e um avaliador confere por critérios. A aula segue depois do envio.', dot: 'bg-accent' },
   assessment: { label: 'Verificação', description: 'Pergunta com alternativas certas e erradas para checar o aprendizado.', dot: 'bg-accent' },
   end: { label: 'Encerramento', description: 'Fecha a aula com um resumo do que ficou.', dot: 'bg-fg-faint' },
 };
 
-export const SCENE_TYPE_ORDER: ExecutableNodeType[] = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'assessment', 'end'];
+export const SCENE_TYPE_ORDER: ExecutableNodeType[] = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'task', 'assessment', 'end'];
 
 export function sceneTypeLabel(type: NodeType): string {
   return (SCENE_TYPES as Partial<Record<NodeType, SceneTypeInfo>>)[type]?.label ?? 'Cena (em breve)';

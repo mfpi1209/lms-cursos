@@ -218,6 +218,36 @@ Feito no código (nada disso está em produção, então **nenhum marcador `[PEN
 
 **O que a subida precisa configurar** (web): `TRUSTED_PROXIES` (IP ou CIDR do Traefik na rede do EasyPanel; sem isso uma cadeia `X-Forwarded-For` com mais de um valor resulta em IP vazio e um aviso no log), `CLIENT_IP_HEADERS` (padrão `x-forwarded-for`; atrás do Cloudflare, `cf-connecting-ip,x-forwarded-for`), opcional `CLIENT_PORT_HEADER`. Worker: `RETENTION_*` (todos opcionais). Rodar `pnpm --filter @lms/db migrate` (migração 0019). Medir o IP gravado em `access_logs` com um login real em produção antes de remover o marcador.
 
+## 12. Entrega de tarefa ("Missão com entrega"), acrescentada em 12/11/2026
+
+Feito no código, fora do ar: o aluno envia um link e, quando a tarefa pede, um arquivo; um avaliador da equipe aprova ou devolve com comentário. Linha 17 do `registro-de-operacoes.md`. Migração `0020_entregas` (tabelas `task_submissions` e `task_submission_events`).
+
+**Dados pessoais novos**
+
+- **Link enviado pelo aluno.** O endereço fica guardado; o conteúdo (em geral um vídeo do próprio aluno) fica em serviço de fora, escolhido por ele. A plataforma não baixa nem copia esse conteúdo.
+- **Arquivo enviado pelo aluno** (PDF, PNG ou JPEG de até 10 MB), com o nome original do arquivo. Pode conter imagem, voz, letra ou dados do aluno e de terceiros.
+- **Comentário do avaliador** sobre a entrega, e os critérios marcados como atendidos ou não. É uma avaliação sobre a pessoa.
+- **Quem corrigiu e quando** (dado da equipe).
+
+**Para o advogado decidir** (todos `A CONFIRMAR`)
+
+1. **Retenção do arquivo. A CONFIRMAR.** Proposta: apagar o arquivo 12 meses depois da aprovação (ou da última movimentação, se a entrega nunca foi aprovada) e manter a linha da entrega (link, situação, comentário) pelo prazo do percurso. Motivo: depois de aprovada, a entrega só serve para provar que o certificado foi bem emitido, e para isso bastam a situação, a data e quem aprovou. Alternativa mais curta: 6 meses.
+2. **Retenção do link, do comentário e do histórico. A CONFIRMAR.** Proposta: o mesmo prazo do percurso (conta ativa + 12 meses). Se o certificado do curso tiver prazo próprio (plano, item 1.1), alinhar com ele.
+3. **Arquivo enviado e nunca usado. A CONFIRMAR.** O envio do arquivo acontece antes de o aluno confirmar a entrega; se ele desiste, o arquivo fica sem entrega. Proposta: apagar em 30 dias.
+4. **Base legal. A CONFIRMAR.** Proposta: execução de contrato para a entrega que o curso pede. O arquivo é opcional na tela; confirmar se isso muda a base.
+5. **Menores de idade e imagem. A CONFIRMAR.** A tarefa de exemplo pede um vídeo do aluno se apresentando. O vídeo fica fora da plataforma, mas a equipe o assiste. Avaliar se o texto da política e dos termos precisa dizer isso, e se a instrução deve orientar a não mostrar outras pessoas. A tela já avisa: "A equipe que corrige vê seu nome, seu link e seu arquivo. Não envie documentos pessoais nem dados de outras pessoas."
+6. **Política de privacidade e termos.** Incluir a entrega de tarefa (o que é guardado, quem vê, por quanto tempo) antes de a função ir ao ar. Os textos públicos não foram alterados nesta rodada.
+7. **Direito de revisão.** A aprovação e a devolução são decisões de uma pessoa (ou automáticas, quando o curso escolhe "aprova ao enviar", que não avalia nada). Confirmar se o texto público precisa explicar como contestar uma devolução.
+
+**Para o código** (não feito nesta rodada)
+
+- **Rotina de retenção dos arquivos.** Não existe. Os prazos dos itens 1 e 3 precisam de um passo novo no job diário do worker (`apps/worker/src/retention.ts`), desligado por padrão até a decisão, como os outros.
+- **Apagar o objeto no storage.** `dados:apagar` apaga a entrega, o histórico e o registro do arquivo, e imprime a chave de cada arquivo no storage para ser apagado à mão (o pacote do banco não acessa o storage). A rotina que apaga contas encerradas (`RETENTION_CLOSED_ACCOUNTS_ENABLED`, desligada) faz o mesmo e deixa as chaves na auditoria (`user.delete`, campo `arquivosDeEntregaNoStorage`), mas **não apaga o objeto**. Antes de ligar essa rotina, fazer o worker apagar os objetos.
+- **Antivírus.** Fora do plano. O servidor confere só o tipo do arquivo pelos primeiros bytes. Mitigações em vigor: PDF sempre baixado (nunca aberto dentro da plataforma), resposta com `nosniff` e `sandbox`, leitura só pela equipe e pelo dono.
+- **Apagar uma entrega a pedido, sem apagar a conta.** Não há botão nem script próprio (a nota da missão tem). Hoje só por `dados:apagar`, que apaga a conta inteira, ou por acesso direto ao banco.
+- **`dados:exportar`** já inclui as entregas, o histórico e os dados de cada arquivo (nome, tipo, tamanho, data). O conteúdo do arquivo não vai no JSON: o aluno já o baixa pela própria tela; se o pedido exigir, copiar do storage.
+- **Auditoria.** Ações novas: `task.review` (quem aprovou ou devolveu, sem o texto do comentário) e `task.view` (quem abriu a entrega). O prazo é o da auditoria (2 anos, a confirmar).
+
 ## Fontes
 
 - LGPD, Lei 13.709/2018: planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm (arts. 6, 7, 9, 10, 11, 14, 18, 19, 37, 38, 41, 46, 48 conferidos em 01/11/2026).

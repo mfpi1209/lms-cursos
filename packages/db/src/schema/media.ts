@@ -58,10 +58,20 @@ export interface LoudnessMetadata {
   from?: string;
 }
 
+/**
+ * Arquivo enviado por um ALUNO numa tarefa com entrega (asset `document`): de qual matrícula e tarefa. Só a equipe do
+ * workspace e o próprio aluno (`assets.createdBy`) leem; ver `submissions.taskFileReadableBy`.
+ */
+export interface TaskUploadMetadata {
+  enrollmentId: string;
+  nodeId: string;
+}
+
 export interface AssetMetadata {
   scenery?: SceneryMetadata;
   bumper?: BumperMetadata;
   loudness?: LoudnessMetadata;
+  taskUpload?: TaskUploadMetadata;
 }
 
 /** Arquivos de mídia sob nosso controle (storage local em dev, S3 em produção). */
@@ -85,7 +95,12 @@ export const assets = pgTable(
     createdBy: text('created_by').references(() => user.id),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index('assets_workspace_idx').on(t.workspaceId), index('assets_sha256_idx').on(t.sha256)],
+  (t) => [
+    index('assets_workspace_idx').on(t.workspaceId),
+    index('assets_sha256_idx').on(t.sha256),
+    // arquivos de entrega por aluno (limite de envios e exclusão da conta)
+    index('assets_task_upload_idx').on(t.createdBy, t.createdAt).where(sql`${t.metadata} ? 'taskUpload'`),
+  ],
 );
 
 export const mediaJobKindEnum = pgEnum('media_job_kind', ['video', 'voice']);

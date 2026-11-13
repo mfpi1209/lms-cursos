@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { identity } from '@lms/db';
+import { getDb, identity, submissions } from '@lms/db';
 import { getViewer } from '@/server/viewer';
 import { SignOutButton } from '@/components/sign-out-button';
 import { ThemeSwitch } from '@/components/theme-switch';
@@ -23,6 +23,8 @@ export default async function StudioLayout({ children }: { children: React.React
   const brand = getBrand(viewer.workspace.id);
   const initial = (viewer.user.name?.trim()?.[0] ?? '?').toUpperCase();
   const role = ROLE_LABEL[viewer.role] ?? viewer.role;
+  // entregas de tarefa esperando correção (o número aparece ao lado de "Entregas"); uma falha aqui não derruba o estúdio
+  const pendingDeliveries = await submissions.pendingSubmissionCounts(getDb(), viewer.workspace.id).then((c) => c.total, () => 0);
 
   return (
     <div className="theme-studio flex min-h-dvh flex-col text-fg">
@@ -42,6 +44,15 @@ export default async function StudioLayout({ children }: { children: React.React
               {/* em telas muito estreitas o acesso fica na lista de cursos (ao lado de "Novo curso") */}
               <Link href="/estudio/modelos" className={`${navLink} max-[440px]:hidden`}>
                 Modelos
+              </Link>
+              <Link href="/estudio/entregas" className={navLink} data-testid="nav-entregas">
+                Entregas
+                {pendingDeliveries > 0 && (
+                  <span className="ml-1.5 rounded-full bg-accent-fill px-1.5 py-0.5 text-[11px] font-bold leading-none text-accent-fill-fg">
+                    {pendingDeliveries > 99 ? '99+' : pendingDeliveries}
+                    <span className="sr-only"> para corrigir</span>
+                  </span>
+                )}
               </Link>
               <Link href="/aprender" className={navLink}>
                 <span className="sm:hidden">Como aluno</span>

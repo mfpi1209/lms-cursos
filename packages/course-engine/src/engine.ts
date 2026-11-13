@@ -1,6 +1,8 @@
 import {
   MISSION_NOTE_MAX,
   applyEffects,
+  checkTaskLink,
+  taskDeliverableOf,
   evaluateCondition,
   isExecutableNodeType,
   type AnyNode,
@@ -110,6 +112,23 @@ export function applyIntent(graph: LessonGraph, state: AttemptState, intent: Int
       if (intent.status === 'later' && note) throw new EngineError('INVALID_MISSION', 'O registro do que você percebeu vem com "Já experimentei"');
       if (note.length > MISSION_NOTE_MAX) throw new EngineError('TEXT_TOO_LONG', `Use no máximo ${MISSION_NOTE_MAX} caracteres`);
       next.answers[node.id] = { missionStatus: intent.status, ...(note ? { text: note } : {}), answeredAt: at };
+      break;
+    }
+    case 'task': {
+      // a aula segue depois de um envio válido; a correção é assíncrona e o registro vive em task_submissions (db)
+      if (intent.kind !== 'submit') throw new EngineError('INTENT_MISMATCH', 'Este bloco espera o envio da entrega');
+      if (intent.keep) {
+        if (intent.link || intent.fileAssetId) throw new EngineError('INVALID_SUBMISSION', 'Para seguir com a entrega que já existe, não envie outro link nem arquivo');
+        next.answers[node.id] = { submission: 'kept', answeredAt: at };
+        break;
+      }
+      const link = checkTaskLink(intent.link);
+      if (!link.ok) throw new EngineError('INVALID_SUBMISSION', link.message);
+      if (intent.fileAssetId !== undefined) {
+        if (taskDeliverableOf(node) !== 'link_file') throw new EngineError('INVALID_SUBMISSION', 'Esta tarefa recebe só o link');
+        if (typeof intent.fileAssetId !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(intent.fileAssetId)) throw new EngineError('INVALID_SUBMISSION', 'Arquivo inválido. Envie o arquivo de novo.');
+      }
+      next.answers[node.id] = { submission: 'sent', answeredAt: at };
       break;
     }
     case 'assessment': {

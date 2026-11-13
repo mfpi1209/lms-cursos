@@ -1,6 +1,6 @@
 import { CourseDocumentSchema, type Branding, type CastMember, type CourseDocument, type Lesson, type Module, type Presentation } from '../course';
 import type { Edge, LessonGraph, Objective } from '../graph';
-import type { AnyNode, ChoiceQuality, RecapItem } from '../nodes';
+import { TASK_CRITERIA_MAX, type AnyNode, type ChoiceQuality, type RecapItem, type TaskDeliverable, type TaskFileKind, type TaskReview } from '../nodes';
 import type { RichTextDocument } from '../richtext';
 import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, nextChipsCamera, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, zoneTalkCamera, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
 import { compileCourse, type CompileIssue, type CourseCompileResult } from '../compile';
@@ -40,6 +40,11 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  *    - `AV..` avaliação: `Tentativas: N`, `Aprovação: X de Y`, perguntas
  *      numeradas com alternativas (a correta marcada `(correta)`) e `Explicação:`;
  *    - `A..` anotação opcional: `Pergunta:`, `Pular: sim`, `Destino:`;
+ *    - `T..` tarefa com entrega (o aluno envia e um avaliador confere): `Entrega: link | link e arquivo`
+ *      (sem a linha, `link`), `Arquivos: PDF · imagem` (opcional; sem a linha, os dois, até 10 MB),
+ *      `Instrução:` (o que fazer e o que enviar), `Critérios: a · b · c` (1 a 10 itens de sim ou não),
+ *      `Correção: avaliador | automática` (sem a linha, `avaliador`), `Obrigatória: sim | não` (opcional; sem a
+ *      linha, `sim`: conta para o certificado) e `Destino:`. Exemplo em docs/roteiros/exemplos/exemplo-cruzeiro-tarefa.md;
  *    - `### FIM — O que você levou`: tópicos, `Meu roteiro:` (itens separados
  *      por `;`) e `Checklist: Título: a · b · c` opcional. `Destino: FIM` é o
  *      encerramento da própria aula.
@@ -51,7 +56,8 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  * fraca 0 na variável `pontos` da aula); composição → `reflection` com
  * `scaffold`; avaliação → uma cena `assessment` por pergunta encadeadas, com a
  * variável `acertos` e dois encerramentos (aprovado / revisar) para o critério
- * "X de Y"; anotação → `reflection` livre com `minLength: 0`; FIM → `end` com
+ * "X de Y"; anotação → `reflection` livre com `minLength: 0`; tarefa → `task`
+ * (a aula segue depois do envio; a correção é feita depois, no estúdio); FIM → `end` com
  * o roteiro ("Meu roteiro"): frases montadas, anotação, checklist e os tópicos
  * de "O que você levou".
  */
@@ -147,6 +153,23 @@ export interface ParsedNote {
   destination: string;
 }
 
+export interface ParsedTask {
+  kind: 'task';
+  code: string;
+  title: string;
+  /** `Entrega: link | link e arquivo` */
+  deliverable: TaskDeliverable;
+  /** `Arquivos: PDF · imagem` (só vale com `link e arquivo`) */
+  fileKinds: TaskFileKind[];
+  instruction: string;
+  criteria: string[];
+  /** `Correção: avaliador | automática` */
+  review: TaskReview;
+  /** `Obrigatória: sim | não` (conta para o certificado) */
+  required: boolean;
+  destination: string;
+}
+
 export interface ParsedEnd {
   kind: 'end';
   code: 'FIM';
@@ -157,7 +180,7 @@ export interface ParsedEnd {
   checklist?: { title: string; items: string[] };
 }
 
-export type ParsedScene = ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedEnd;
+export type ParsedScene = ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedTask | ParsedEnd;
 
 export interface ParsedLesson {
   number: number;
@@ -188,7 +211,7 @@ const H1_RE = /^#\s+(.+?)\s*$/;
 const H2_RE = /^##\s+/;
 const MODULE_RE = new RegExp(`^##\\s+M[óo]dulo\\s+(\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
 const LESSON_RE = new RegExp(`^###\\s+Aula\\s+(\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
-const SCENE_RE = new RegExp(`^###\\s+(FIM|AV\\d+|V\\d+|Q\\d+|M\\d+|A\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
+const SCENE_RE = new RegExp(`^###\\s+(FIM|AV\\d+|V\\d+|Q\\d+|M\\d+|A\\d+|T\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
 const H3_RE = /^###\s+/;
 const KEY_RE = /^([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9 ()/-]{0,40}?):\s*(.*)$/;
 const BULLET_RE = /^-\s+(.+?)\s*$/;
@@ -432,6 +455,82 @@ function parseNote(b: Block): ParsedNote {
   return { kind: 'note', code: b.code, title: b.title, text: text || free, skippable, destination };
 }
 
+const TASK_DELIVERABLE: Record<string, TaskDeliverable> = { link: 'link', 'link e arquivo': 'link_file', 'link + arquivo': 'link_file', 'link ou arquivo': 'link_file', link_file: 'link_file' };
+const TASK_REVIEW: Record<string, TaskReview> = { avaliador: 'manual', manual: 'manual', automatica: 'auto', auto: 'auto' };
+const TASK_FILE_KIND: Record<string, TaskFileKind> = { pdf: 'pdf', imagem: 'image', imagens: 'image', image: 'image', foto: 'image', fotos: 'image' };
+
+/**
+ * Tarefa com entrega (`T..`). A instrução pode continuar nas linhas seguintes (até a próxima chave conhecida).
+ * Erros de formato param o roteiro: entrega ou correção desconhecida, sem instrução, sem critérios, mais de 10 critérios, sem destino.
+ */
+function parseTask(b: Block): ParsedTask {
+  let deliverable: TaskDeliverable = 'link';
+  let fileKinds: TaskFileKind[] = ['pdf', 'image'];
+  let review: TaskReview = 'manual';
+  let required = true;
+  let destination = '';
+  let criteria: string[] = [];
+  const instruction: string[] = [];
+  let inInstruction = false;
+  for (const raw of b.body) {
+    const line = raw.trim();
+    if (!line) continue;
+    const kv = keyLine(line);
+    switch (kv?.key) {
+      case 'entrega': {
+        const d = TASK_DELIVERABLE[foldKey(kv.value)];
+        if (!d) throw new MarkdownCourseError(`tarefa ${b.code}: entrega "${kv.value}" desconhecida (use "link" ou "link e arquivo")`, b.line);
+        deliverable = d;
+        inInstruction = false;
+        continue;
+      }
+      case 'arquivos':
+      case 'arquivo': {
+        const kinds = kv.value.split(/\s+·\s+|\s+•\s+|\s*,\s*|\s+e\s+/).map((x) => x.trim()).filter(Boolean).map((x) => ({ raw: x, kind: TASK_FILE_KIND[foldKey(x)] }));
+        const bad = kinds.find((k) => !k.kind);
+        if (bad || !kinds.length) throw new MarkdownCourseError(`tarefa ${b.code}: tipo de arquivo "${bad?.raw ?? kv.value}" desconhecido (use "PDF" e/ou "imagem")`, b.line);
+        fileKinds = [...new Set(kinds.map((k) => k.kind!))];
+        inInstruction = false;
+        continue;
+      }
+      case 'instrucao':
+      case 'instrucoes':
+        instruction.push(stripQuotes(kv.value));
+        inInstruction = true;
+        continue;
+      case 'criterios':
+      case 'criterio':
+        criteria = [...criteria, ...splitDots(kv.value)];
+        inInstruction = false;
+        continue;
+      case 'correcao': {
+        const r = TASK_REVIEW[foldKey(kv.value)];
+        if (!r) throw new MarkdownCourseError(`tarefa ${b.code}: correção "${kv.value}" desconhecida (use "avaliador" ou "automática")`, b.line);
+        review = r;
+        inInstruction = false;
+        continue;
+      }
+      case 'obrigatoria':
+      case 'obrigatorio':
+        required = yes(kv.value);
+        inInstruction = false;
+        continue;
+      case 'destino':
+        destination = kv.value;
+        inInstruction = false;
+        continue;
+    }
+    // linha solta (ou com dois-pontos no meio do texto): continua a instrução
+    if (inInstruction) instruction.push(line);
+  }
+  const text = smartQuotes(instruction.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim());
+  if (!text) throw new MarkdownCourseError(`tarefa ${b.code} sem "Instrução:"`, b.line);
+  if (!criteria.length) throw new MarkdownCourseError(`tarefa ${b.code} sem "Critérios:" (de 1 a ${TASK_CRITERIA_MAX} itens de sim ou não, separados por " · ")`, b.line);
+  if (criteria.length > TASK_CRITERIA_MAX) throw new MarkdownCourseError(`tarefa ${b.code}: ${criteria.length} critérios (máximo ${TASK_CRITERIA_MAX})`, b.line);
+  if (!destination) throw new MarkdownCourseError(`tarefa ${b.code} sem "Destino:"`, b.line);
+  return { kind: 'task', code: b.code, title: b.title, deliverable, fileKinds, instruction: text, criteria, review, required, destination };
+}
+
 function parseEnd(b: Block): ParsedEnd {
   const takeaways: string[] = [];
   const myScript: string[] = [];
@@ -462,6 +561,7 @@ function parseScene(b: Block): ParsedScene {
   if (b.code.startsWith('Q')) return parseDecision(b);
   if (b.code.startsWith('M')) return parseScaffold(b);
   if (b.code.startsWith('A')) return parseNote(b);
+  if (b.code.startsWith('T')) return parseTask(b);
   throw new MarkdownCourseError(`código de cena desconhecido "${b.code}"`, b.line);
 }
 
@@ -1045,6 +1145,26 @@ function buildLesson(
         rows.push([id]);
         break;
       }
+      case 'task': {
+        if (scene.instruction.length > 2000) warn({ code: 'TASK_INSTRUCTION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: instrução com ${scene.instruction.length} caracteres (cortada em 2.000)` });
+        for (const c of scene.criteria) if (c.length > 200) warn({ code: 'TASK_CRITERION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: critério "${clipWords(c, 6)}…" com ${c.length} caracteres (cortado em 200)` });
+        if (scene.deliverable === 'link' && scene.fileKinds.length < 2) warn({ code: 'TASK_FILES_WITHOUT_FILE', lessonId, nodeId: id, message: `${scene.code}: "Arquivos:" só vale com "Entrega: link e arquivo"` });
+        nodes.push({
+          id,
+          type: 'task',
+          title: clipChars(scene.title, 120),
+          objectiveIds: [],
+          required: scene.required,
+          instruction: clipChars(scene.instruction, 2000),
+          deliverable: scene.deliverable,
+          fileKinds: scene.fileKinds,
+          criteria: scene.criteria.map((c, ci) => ({ id: `c${ci + 1}`, label: clipChars(c, 200) })),
+          review: scene.review,
+        });
+        edges.push(go(`e_${id}`, id, resolve(scene.destination, scene.code)));
+        rows.push([id]);
+        break;
+      }
       case 'assessment': {
         const total = scene.questions.length;
         if (total > 3) warn({ code: 'ASSESSMENT_COUNT', lessonId, message: `${scene.code}: ${total} perguntas (recomendadas até 3)` });
@@ -1164,6 +1284,8 @@ function buildLesson(
   if (decisionCodes.length) criterionParts.push(`escolhe respostas fortes em ${decisionCodes.join(', ')}`);
   if (composeCodes.length) criterionParts.push(`monta a frase de ${composeCodes.join(', ')}`);
   if (hasAssessment) criterionParts.push(`passa na revisão ${assessments.map((a) => a.code).join(', ')}`);
+  const taskCodes = scenes.filter((s) => s.kind === 'task').map((s) => s.code);
+  if (taskCodes.length) criterionParts.push(`envia a entrega de ${taskCodes.join(', ')}`);
   const objectiveTitle = parsed.objective.replace(/^Ao final,?\s*/i, '').trim();
   const objective: Objective = {
     id: objectiveId,

@@ -1,0 +1,148 @@
+{
+ "quando": "2026-11-13T00:17:24.703Z",
+ "base": "http://localhost:3023",
+ "curso": "crs_qo2eralk5enhupek",
+ "matricula": "enr_otd3k23355p7c2nd",
+ "passos": [
+  {
+   "nome": "autor publica o roteiro de exemplo com as duas tarefas",
+   "ok": true,
+   "detalhe": "Versão v2 publicada."
+  },
+  {
+   "nome": "admin matricula aluna@demo.local",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "a aula chega ao painel da tarefa",
+   "ok": true,
+   "detalhe": "estado open"
+  },
+  {
+   "nome": "o painel mostra a instrução e \"O que o avaliador confere\" com 3 critérios",
+   "ok": true,
+   "detalhe": "O QUE O AVALIADOR CONFERE"
+  },
+  {
+   "nome": "sem rolagem horizontal no celular (390 px)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "link sem https é recusado com mensagem",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "arquivo disfarçado de PDF é recusado pelo servidor",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "depois do envio: \"Entrega enviada. Em correção.\" com o link e o arquivo",
+   "ok": true,
+   "detalhe": "Situação da entrega: Em correção.\nEntrega enviada. Em correção."
+  },
+  {
+   "nome": "a aula conclui logo depois do envio (a tarefa não trava a aula)",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "a página do curso mostra \"Suas entregas\" com a situação",
+   "ok": true,
+   "detalhe": "submitted"
+  },
+  {
+   "nome": "a aluna lê o próprio arquivo (PDF como download)",
+   "ok": true,
+   "detalhe": "200 attachment; filename=\"entrega-ast_5rxini15i8b5omm9.pdf\""
+  },
+  {
+   "nome": "outra conta de aluno recebe 404 no arquivo da aluna",
+   "ok": true,
+   "detalhe": "404"
+  },
+  {
+   "nome": "outra conta de aluno não lê as entregas da matrícula da aluna",
+   "ok": true,
+   "detalhe": "404"
+  },
+  {
+   "nome": "aluno não abre a fila de correção do estúdio",
+   "ok": true,
+   "detalhe": "307"
+  },
+  {
+   "nome": "sem sessão: 401 no arquivo",
+   "ok": true,
+   "detalhe": "401"
+  },
+  {
+   "nome": "a entrega da aluna está na fila \"Para corrigir\"",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "o link do aluno abre em outra aba com rel=\"noopener noreferrer\"",
+   "ok": true,
+   "detalhe": "https://example.com/minha-apresentacao"
+  },
+  {
+   "nome": "o avaliador vê o arquivo enviado",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "sem marcar os critérios, não dá para aprovar nem devolver",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "com um critério \"não\", aprovar fica desligado",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "o revisor devolve com comentário",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "a aluna vê \"devolvida\" com o comentário do avaliador",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "a aluna reenvia (link e PDF novos) e a entrega volta para \"Em correção\"",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "o revisor aprova",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "o histórico mostra enviada, devolvida, reenviada e aprovada",
+   "ok": true,
+   "detalhe": "4 linhas"
+  },
+  {
+   "nome": "a aluna vê \"Entrega aprovada\" na página do curso",
+   "ok": true,
+   "detalhe": ""
+  },
+  {
+   "nome": "aula refeita: a tarefa aparece como aprovada, com \"Continuar\" (sem enviar de novo)",
+   "ok": true,
+   "detalhe": "estado approved"
+  },
+  {
+   "nome": "\"Continuar\" segue e a aula conclui de novo",
+   "ok": true,
+   "detalhe": ""
+  }
+ ]
+}

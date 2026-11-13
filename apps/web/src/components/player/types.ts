@@ -1,6 +1,7 @@
 import type { Branding, BumperPlayOn, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
 import type { BrandMark } from '@/config/brand';
 import type { AttemptState, Intent, NavigationTarget, ProgressSummary, AssessmentOutcome } from '@lms/course-engine';
+import type { TaskRecordView } from './task-delivery';
 
 /** Resultado de um passo do motor, igual para LMS (persistido) e prévia (sem persistência). */
 export interface PlayerStepResult {
@@ -16,6 +17,8 @@ export interface PlayerStepResult {
   courseCompleted: boolean;
   /** só na missão "Leve para a vida real": o que o servidor deixou valendo (não rebaixa "Já experimentei") */
   mission?: { status: 'later' | 'done'; note: string | null };
+  /** só na tarefa com entrega: a entrega que ficou valendo no servidor (ausente na prévia, que não grava nada) */
+  task?: { outcome: 'created' | 'resubmitted' | 'kept'; record: TaskRecordView };
 }
 
 export interface PlayerStart {

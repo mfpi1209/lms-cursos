@@ -113,8 +113,12 @@
     let tipo;
     const cp = q('[data-testid=compose-panel]', s);
     const mp = q('[data-testid=mission-panel]', s);
+    // tarefa com entrega: aberta ou devolvida (formulário), recém-enviada (confirmação) ou já existente (em correção/aprovada)
+    const tp = q('[data-testid=task-panel]', s);
+    const ts = tp ? tp.dataset.state : null;
     if (cp) tipo = cp.dataset.state === 'saved' ? 'atividade-salva' : 'atividade';
     else if (mp) tipo = mp.dataset.state === 'saved' ? 'missao-salva' : 'missao';
+    else if (tp) tipo = ts === 'saved' ? 'tarefa-enviada' : ts === 'loading' ? 'tarefa-carregando' : ts === 'open' || ts === 'returned' ? 'tarefa' : 'tarefa-existente';
     else if (q('[data-testid=player-completed]', s)) tipo = 'fim';
     else if (q('[data-testid=choice-panel]', s)) tipo = 'pergunta';
     else if (q('[data-testid=opening-panel]', s)) tipo = 'abertura';
@@ -237,6 +241,38 @@
       depois: bt('mission-later'),
       salvar: bt('player-submit'),
       confirmacao: txt(q('[data-testid=mission-saved]')),
+      painel: { topo: Math.round(r.top + scrollY), base: Math.round(r.bottom + scrollY), alturaTela: innerHeight, larguraTela: innerWidth },
+      rolagemHorizontal: Math.max(0, se.scrollWidth - innerWidth),
+    };
+  };
+  // tarefa com entrega: o que a tela mostra (instrução, critérios, campos, situação) e se cabe no celular
+  R.tarefa = () => {
+    const p = q('[data-testid=task-panel]');
+    if (!p) return null;
+    const r = p.getBoundingClientRect();
+    const bt = (id) => {
+      const b = q(`[data-testid=${id}]`, p);
+      if (!b) return null;
+      const rb = b.getBoundingClientRect();
+      return { texto: txt(b), ativo: !b.disabled, visivel: rb.top >= 0 && rb.bottom <= innerHeight, largura: Math.round(rb.width), altura: Math.round(rb.height) };
+    };
+    const st = q('[data-testid=task-status]', p);
+    const se = document.scrollingElement;
+    return {
+      estado: p.dataset.state,
+      titulo: txt(q('h2', p)),
+      instrucao: txt(q('[data-testid=task-instruction]', p)),
+      criterios: qa('[data-testid=task-criteria] li', p).map(txt),
+      campoLink: !!q('[data-testid=task-link]', p),
+      campoArquivo: !!q('[data-testid=task-file]', p),
+      aceita: q('[data-testid=task-file]', p)?.getAttribute('accept') || null,
+      erroLink: txt(q('[data-testid=task-link-error]', p)),
+      erroArquivo: txt(q('[data-testid=task-file-error]', p)),
+      situacao: st ? st.dataset.status : null,
+      situacaoTexto: txt(st),
+      comentario: txt(q('[data-testid=task-comment]', p)),
+      enviar: bt('task-submit'),
+      continuar: bt('task-continue') || bt('task-keep'),
       painel: { topo: Math.round(r.top + scrollY), base: Math.round(r.bottom + scrollY), alturaTela: innerHeight, larguraTela: innerWidth },
       rolagemHorizontal: Math.max(0, se.scrollWidth - innerWidth),
     };
