@@ -12,7 +12,7 @@ async function main() {
   try {
     const draft = (await getDraft(db, courseId))!;
     const doc = structuredClone(draft.document) as typeof draft.document & { presentation: Record<string, unknown> };
-    doc.presentation = { ...doc.presentation, avatarEngine: engine, expressiveness: expr, handsStill: still === 'sim' };
+    doc.presentation = { ...doc.presentation, avatarEngine: engine as 'avatar_iii' | 'avatar_iv', expressiveness: expr as 'low' | 'medium' | 'high', handsStill: still === 'sim' };
     const r = await saveDraft(db, { courseId, document: doc as never, expectedRevision: draft.revision, userId: draft.updatedBy, origin: 'script', note: `avatar: ${engine}, ${expr}, mãos paradas ${still}` });
     console.log(`[avatar] ${courseId} revisão ${draft.revision} → ${r.revision}: ${engine}, ${expr}, mãos paradas ${still}`);
   } finally { await close(); }
