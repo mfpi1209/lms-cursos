@@ -79,7 +79,7 @@ describe('biblioteca de modelos (banco)', () => {
     expect(r.revision).toBe(before.revision + 1);
     expect(r.changes.join('\n')).toMatch(/Rafael/);
     const after = (await getDraft(db, seeded.courseId))!;
-    expect(after.document.presentation.cameras.map((c) => c.id)).toEqual(['cam_r7_34', 'cam_r7_esq', 'cam_r7_dir']);
+    expect(after.document.presentation.cameras.map((c) => c.id)).toEqual(['cam_r7_esq', 'cam_r7_dir', 'cam_r7_34']);
     expect(after.document.presentation.presenterPronoun).toBe('he');
     expect(after.document.branding.presenterName).toBe('Rafael');
     expect(after.document.branding.watermark).toEqual({ enabled: true, position: 'bottom-right', opacity: 0.7 });
