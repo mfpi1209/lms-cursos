@@ -1,5 +1,5 @@
 import { Readable } from 'node:stream';
-import { getDb, media, identity } from '@lms/db';
+import { getDb, media, identity, submissions } from '@lms/db';
 import { getStorage } from '@lms/media';
 import { handleError } from '@/server/http';
 import { HttpError, requireViewer } from '@/server/viewer';
@@ -11,6 +11,10 @@ export const runtime = 'nodejs';
  * arquivo inteiro (é assim que `<track>` busca legendas .vtt). Qualquer
  * membro autenticado do workspace do asset pode ler (alunos precisam ver as
  * cenas); o arquivo nunca é servido por URL pública sem sessão.
+ *
+ * Documentos (`document`) são só da equipe, com duas exceções: legendas (texto que acompanha o vídeo) e o arquivo de
+ * uma ENTREGA de tarefa, que o aluno que o enviou também lê (`submissions.isOwnTaskFile`: enviado por ele, pela rota de
+ * entrega). Outro aluno recebe 404, como se o arquivo não existisse.
  */
 export async function GET(req: Request, ctx: { params: Promise<{ assetId: string }> }) {
   try {
@@ -20,7 +24,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ assetId: string
     if (!asset || asset.workspaceId !== viewer.workspace.id) throw new HttpError(404, 'Mídia não encontrada');
     // Legendas (WebVTT) são texto pequeno que o aluno precisa ler junto do vídeo; outros documentos só para a equipe.
     const isCaptions = /^text\/vtt\b/i.test(asset.mimeType);
-    if (asset.kind === 'document' && !isCaptions && !identity.isStaff(viewer.role)) throw new HttpError(404, 'Mídia não encontrada');
+    const taskFile = !!asset.metadata?.taskUpload;
+    if (asset.kind === 'document' && !isCaptions && !identity.isStaff(viewer.role) && !submissions.isOwnTaskFile(asset, viewer.user.id)) throw new HttpError(404, 'Mídia não encontrada');
     const storage = await getStorage();
     if (storage.provider !== asset.storageProvider) throw new HttpError(500, 'Storage do asset indisponível neste ambiente');
     const info = await storage.head(asset.storageKey);
@@ -29,10 +34,12 @@ export async function GET(req: Request, ctx: { params: Promise<{ assetId: string
     const headers = new Headers({
       'content-type': isCaptions ? 'text/vtt; charset=utf-8' : asset.mimeType,
       'accept-ranges': 'bytes',
-      'cache-control': 'private, max-age=3600',
+      // arquivo de entrega (enviado por aluno): sem cache; PDF sempre como download (nunca aberto dentro da plataforma)
+      'cache-control': taskFile ? 'private, no-store' : 'private, max-age=3600',
       'x-content-type-options': 'nosniff',
-      'content-disposition': `inline; filename="${asset.id}"`,
+      'content-disposition': taskFile && asset.mimeType === 'application/pdf' ? `attachment; filename="entrega-${asset.id}.pdf"` : `inline; filename="${asset.id}"`,
     });
+    if (taskFile) headers.set('content-security-policy', "default-src 'none'; sandbox");
     const rangeHeader = req.headers.get('range');
     const m = rangeHeader && /^bytes=(\d*)-(\d*)$/.exec(rangeHeader);
     if (m) {
