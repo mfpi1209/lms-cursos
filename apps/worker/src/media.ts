@@ -163,7 +163,7 @@ async function ensureCaptions(job: media.MediaJobRow, assetId: string, captions?
   }
 }
 
-export async function attachToNode(job: media.MediaJobRow, assetId: string | null, simulated: boolean, transcript?: string, captions?: CaptionsRef, screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number }> }) {
+export async function attachToNode(job: media.MediaJobRow, assetId: string | null, simulated: boolean, transcript?: string, captions?: CaptionsRef, screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number; assetId?: string; source?: 'upload' | 'mock' }> }) {
   if (!assetId) return;
   const input = job.input as { script: string; captions?: CaptionsRef; presentationFingerprint?: unknown };
   const cap = await ensureCaptions(job, assetId, captions);

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { getDb, media, newId, schema } from '@lms/db';
 import { estimateNarrationSeconds, mediaConfigFromEnv, type ElevenLabsAlignment, type WatermarkSpec } from '@lms/media';
-import { approxWords, composeScreenScene, ffprobe, generateToneMp3, normalizeLoudnessInPlace, syntheticAlignment, wordsFromAlignment, type ScreenFit } from '@lms/media/compose';
+import { approxWords, composeScreenScene, ffprobe, generateToneMp3, renderScreenMock, splitMockDurations, type MockInput, normalizeLoudnessInPlace, syntheticAlignment, wordsFromAlignment, type ScreenFit } from '@lms/media/compose';
 import { PreflightError, attachToNode, fail, findPaidNarration, isRetryableError, readAsset, storeGeneratedAsset } from './media';
 import { JobNotRunningError, patchJobInput, storeCaptions, storeWithRetry, synthesizeOnce, type CaptionsRef } from './narration';
 import { burnWatermarkFile } from './watermark-clip';
@@ -23,17 +23,33 @@ export const SCREEN_JOB_NOTE_SIM = 'SIMULADO: narração sintética (nenhum prov
 export const SCREEN_STALE_MS = 10 * 60 * 1000;
 const MAX_ATTEMPTS = 3;
 
+export interface ScreenJobRecording {
+  fileName: string;
+  assetId?: string;
+  /** `mock` = tela simulada gerada aqui (depois da narração); `upload` ou ausente = MP4 enviado */
+  source?: 'upload' | 'mock';
+  mock?: MockInput & { steps: Array<{ weight?: number }> };
+}
+
+/** A gravação é uma tela simulada a gerar (tem `mock` e nunca teve MP4 enviado)? */
+export const isGeneratedRecording = (r: Pick<ScreenJobRecording, 'assetId' | 'source' | 'mock'>): boolean => !!r.mock && (r.source === 'mock' || !r.assetId);
+
+/** Peso total dos passos da tela (passo sem peso = 1): a parte dela no tempo da narração. */
+export const mockTotalWeight = (m: { steps: Array<{ weight?: number }> }): number => m.steps.reduce((a, s) => a + (s.weight ?? 1), 0);
+
 export interface ScreenJobInput {
   kind: 'screen';
   script: string;
   voiceProvider: 'elevenlabs' | 'heygen';
   voiceId: string | null;
   params?: { elevenLabsModelId?: string; elevenLabsStability?: number };
-  screen: { recordings: Array<{ fileName: string; assetId?: string }> };
+  screen: { recordings: ScreenJobRecording[] };
   watermark?: WatermarkSpec;
   voiceAssetId?: string;
   alignment?: ElevenLabsAlignment;
   captions?: CaptionsRef;
+  /** telas geradas neste job (por arquivo), guardadas antes da montagem */
+  mockAssets?: Record<string, { assetId: string; durationSec: number }>;
 }
 
 export function isScreenJob(job: Pick<media.MediaJobRow, 'input'>): boolean {
@@ -42,8 +58,8 @@ export function isScreenJob(job: Pick<media.MediaJobRow, 'input'>): boolean {
 }
 
 /** Primeira gravação sem arquivo: mensagem "falta mídia: <arquivo>" (nunca monta parcial). */
-export function firstMissingScreenMedia(recordings: ReadonlyArray<{ fileName: string; assetId?: string | null }>): string | null {
-  const m = recordings.find((r) => !r.assetId);
+export function firstMissingScreenMedia(recordings: ReadonlyArray<{ fileName: string; assetId?: string | null; source?: string; mock?: unknown }>): string | null {
+  const m = recordings.find((r) => !r.assetId && !r.mock);
   return m ? `falta mídia: ${m.fileName}` : null;
 }
 
@@ -52,6 +68,7 @@ async function missingMedia(job: Pick<media.MediaJobRow, 'workspaceId'>, recordi
   const first = firstMissingScreenMedia(recordings);
   if (first) return first;
   for (const r of recordings) {
+    if (isGeneratedRecording(r)) continue;
     const a = await media.getAsset(getDb(), r.assetId!);
     if (!a || a.workspaceId !== job.workspaceId || a.kind !== 'video') return `falta mídia: ${r.fileName}`;
   }
@@ -105,14 +122,39 @@ export async function processScreenJob(jobId: string) {
     await media.updateJob(db, jobId, { phase: 'composing' });
     const narrationFile = path.join(dir, 'narration.mp3');
     await writeFile(narrationFile, await readAsset(voice.storageKey));
-    const files: string[] = [];
-    for (const [i, r] of input.screen.recordings.entries()) {
+    const narrationSec = (await ffprobe(narrationFile)).audioDurationSeconds ?? 0;
+    const recs = input.screen.recordings;
+    // enviadas: baixa e mede; geradas: duração = fatia da narração (splitMockDurations) e MP4 gerado AQUI, já no tempo certo
+    const uploadSec = new Map<number, number>();
+    const files: string[] = new Array(recs.length);
+    for (const [i, r] of recs.entries()) {
+      if (isGeneratedRecording(r)) continue;
       const a = (await media.getAsset(db, r.assetId!))!;
       const f = path.join(dir, `rec-${i}.mp4`);
       await writeFile(f, await readAsset(a.storageKey));
-      files.push(f);
+      files[i] = f;
+      uploadSec.set(i, (await ffprobe(f)).durationSeconds);
     }
-    const composed = await composeScreenScene({ recordings: files, narrationFile, output: path.join(dir, 'scene.mp4') });
+    const durations = splitMockDurations(recs.map((r, i) => (isGeneratedRecording(r) ? { mockWeight: mockTotalWeight(r.mock!) } : { uploadSec: uploadSec.get(i)! })), narrationSec);
+    const generated: Record<string, { assetId: string; durationSec: number }> = { ...input.mockAssets };
+    for (const [i, r] of recs.entries()) {
+      if (!isGeneratedRecording(r)) continue;
+      const f = path.join(dir, `rec-${i}.mp4`);
+      const done = generated[r.fileName];
+      const asset = done ? await media.getAsset(db, done.assetId) : null;
+      if (asset) {
+        await writeFile(f, await readAsset(asset.storageKey));
+      } else {
+        const dur = durations[i]!;
+        await renderScreenMock(r.mock!, { outPath: f, durationSec: dur, workDir: path.join(dir, `mock-${i}`) });
+        const a = await storeGeneratedAsset({ workspaceId: job.workspaceId, kind: 'video', mime: 'video/mp4', bytes: new Uint8Array(await readFile(f)), durationSeconds: dur, createdBy: job.createdBy });
+        generated[r.fileName] = { assetId: a.id, durationSec: dur };
+        // guardado antes da montagem: um retry não gera de novo
+        await patchJobInput(jobId, { mockAssets: generated });
+      }
+      files[i] = f;
+    }
+    const composed = await composeScreenScene({ recordings: files, narrationFile, output: path.join(dir, 'scene.mp4'), generated: recs.map((r) => isGeneratedRecording(r)) });
     let output = composed.output;
     if (input.watermark) {
       const marked = path.join(dir, 'scene-wm.mp4');
@@ -132,7 +174,7 @@ export async function processScreenJob(jobId: string) {
     }
 
     // ---- resultado: fit + duração de cada gravação ----
-    const screenResult = { fit: composed.plan.fit as ScreenFit, freezeSec: round3(composed.plan.freezeSec), trimmedSec: round3(composed.plan.trimmedSec), speedup: round3(composed.plan.speedup), narrationSec: round3(composed.durationSec), recordings: input.screen.recordings.map((r, i) => ({ fileName: r.fileName, durationSec: round3(composed.recordingDurations[i]!) })) };
+    const screenResult = { fit: composed.plan.fit as ScreenFit, freezeSec: round3(composed.plan.freezeSec), trimmedSec: round3(composed.plan.trimmedSec), speedup: round3(composed.plan.speedup), narrationSec: round3(composed.durationSec), recordings: input.screen.recordings.map((r, i) => ({ fileName: r.fileName, durationSec: round3(composed.recordingDurations[i]!), ...(isGeneratedRecording(r) ? { assetId: generated[r.fileName]!.assetId, source: 'mock' as const } : {}) })) };
     await patchJobInput(jobId, { screenResult });
     await media.updateJob(db, jobId, { outputAssetId: asset.id, phase: 'attaching' });
     const fresh = (await media.getJob(db, jobId))!;

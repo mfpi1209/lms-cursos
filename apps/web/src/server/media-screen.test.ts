@@ -65,6 +65,22 @@ describe('plano de geração: cena com gravação de tela', () => {
     expect(() => plan(docWith([{ fileName: 'a.mp4', assetId: 'x1' }, { fileName: 'passo-2.mp4' }]))).toThrow('falta mídia: passo-2.mp4');
   });
 
+  it('tela simulada (mock) conta como pronta; o hash muda com o mock e não com o asset gerado', () => {
+    const mock = (text: string) => ({ model: 'chat' as const, device: 'phone' as const, app: 'App', steps: [{ kind: 'type' as const, text }] });
+    const a = plan(docWith([{ fileName: 'g.mp4', mock: mock('oi') } as never]));
+    const input = a.jobInput as { screen: { recordings: Array<Record<string, unknown>> } };
+    expect(input.screen.recordings[0]).toMatchObject({ fileName: 'g.mp4', source: 'mock' });
+    expect(input.screen.recordings[0]).not.toHaveProperty('assetId');
+    expect(plan(docWith([{ fileName: 'g.mp4', mock: mock('oi') } as never])).sceneHash).toBe(a.sceneHash);
+    expect(plan(docWith([{ fileName: 'g.mp4', mock: mock('tchau') } as never])).sceneHash).not.toBe(a.sceneHash);
+    // já gerada (assetId + source mock): mesmo hash, continua gerável
+    expect(plan(docWith([{ fileName: 'g.mp4', mock: mock('oi'), assetId: 'gerado', source: 'mock' } as never])).sceneHash).toBe(a.sceneHash);
+    // mistura upload + mock; custo continua só voz
+    const m = plan(docWith([{ fileName: 'u.mp4', assetId: 'x1' }, { fileName: 'g.mp4', mock: mock('oi') } as never]));
+    expect(m.estimate.cinematicShots).toBe(0);
+    expect(JSON.stringify(m.jobInput)).not.toMatch(/heygen/i);
+  });
+
   it('exige a voz do ElevenLabs', () => {
     expect(() => plan(docWith([{ fileName: 'a.mp4', assetId: 'x1' }], 'heygen'))).toThrow(/ElevenLabs/);
   });

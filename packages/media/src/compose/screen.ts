@@ -180,6 +180,24 @@ export async function detectStillRanges(file: string, duration: number): Promise
   return parseFreezeDetect(stderr, duration);
 }
 
+/** tempo mínimo de uma tela gerada quando a narração já está toda ocupada por gravações enviadas */
+export const MOCK_MIN_SEC = 2;
+
+/**
+ * Divide o tempo da narração entre as TELAS GERADAS da cena. Gravações enviadas entram com a duração delas
+ * (`uploadSec`); as telas geradas repartem o que sobra da narração (N - soma dos enviados) PROPORCIONALMENTE ao
+ * total de `weight` dos passos de cada uma (passo sem peso = 1), com mínimo de MOCK_MIN_SEC cada. Se o mínimo
+ * estourar a narração, a regra de duração normal (corte do fim) vale para a soma. Função pura.
+ * Devolve a duração de cada item (enviado: a dele; gerado: a calculada), na ordem.
+ */
+export function splitMockDurations(items: Array<{ uploadSec: number } | { mockWeight: number }>, narrationSec: number): number[] {
+  const uploaded = items.reduce((a, i) => a + ('uploadSec' in i ? i.uploadSec : 0), 0);
+  const weights = items.map((i) => ('mockWeight' in i ? Math.max(i.mockWeight, 0.0001) : 0));
+  const totalW = weights.reduce((a, b) => a + b, 0);
+  const rest = Math.max(0, narrationSec - uploaded);
+  return items.map((i, k) => ('uploadSec' in i ? i.uploadSec : Math.max(MOCK_MIN_SEC, (rest * weights[k]!) / totalW)));
+}
+
 export class ScreenMediaError extends Error {
   constructor(message: string) {
     super(message);
@@ -197,7 +215,7 @@ export interface ScreenComposeResult {
 }
 
 /** Monta a cena de gravação de tela: `recordings` (arquivos MP4 na ordem) + `narrationFile` (áudio) -> `output`. */
-export async function composeScreenScene(opts: { recordings: string[]; narrationFile: string; output: string }): Promise<ScreenComposeResult> {
+export async function composeScreenScene(opts: { recordings: string[]; narrationFile: string; output: string; /** telas geradas (já na duração certa): não passam pelo freezedetect nem são aceleradas */ generated?: boolean[] }): Promise<ScreenComposeResult> {
   if (!opts.recordings.length) throw new ScreenMediaError('a cena não tem gravações de tela');
   const durations: number[] = [];
   for (const f of opts.recordings) {
@@ -211,7 +229,7 @@ export async function composeScreenScene(opts: { recordings: string[]; narration
   // só procura trechos parados quando sobra mídia (é o único caso em que acelerar importa)
   const R = durations.reduce((a, b) => a + b, 0);
   const stills: StillRange[][] = [];
-  for (let i = 0; i < opts.recordings.length; i++) stills.push(R > N ? await detectStillRanges(opts.recordings[i]!, durations[i]!) : []);
+  for (let i = 0; i < opts.recordings.length; i++) stills.push(R > N && !opts.generated?.[i] ? await detectStillRanges(opts.recordings[i]!, durations[i]!) : []);
   const plan = planScreenTiming({ recordings: durations.map((d, i) => ({ durationSec: d, stills: stills[i] })), narrationSec: N });
   const filter = buildScreenFilter(plan, opts.recordings.length, opts.recordings.length, N);
   const args: string[] = [];

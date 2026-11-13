@@ -1,5 +1,5 @@
 import { DomainError } from '@lms/db';
-import { sceneUsesScreenRecording, type ScreenRecording } from '@lms/course-schema';
+import { sceneUsesScreenRecording, type ScreenMock, type ScreenRecording } from '@lms/course-schema';
 import { ELEVENLABS_ADAPTER_VERSION, estimateMediaCostUsd, estimateNarrationSeconds, resolveWatermark, sceneHashSync, type MediaProviderConfig } from '@lms/media';
 import type { ResolvedScene, SceneEstimate, SceneProductionRequest } from './media';
 
@@ -10,10 +10,22 @@ export const SCREEN_PIPELINE_VERSION = 'screen-1';
  * Gravações da cena prontas para produzir: todas precisam de arquivo enviado (`assetId`), senão a cena não é
  * montável ("falta mídia: <arquivo>") — nunca monta parcial.
  */
-export function screenRecordingsReady(recordings: readonly ScreenRecording[]): Array<{ fileName: string; assetId: string }> {
-  const missing = recordings.find((r) => !r.assetId);
+export interface ReadyRecording { fileName: string; assetId?: string; source?: 'upload' | 'mock'; mock?: ScreenMock }
+
+/** Tela simulada a gerar no worker: tem `mock` e (nunca foi gerada, ou a origem do asset é o próprio mock). */
+export const mockToGenerate = (r: Pick<ScreenRecording, 'mock' | 'assetId' | 'source'>): boolean => !!r.mock && (!r.assetId || r.source === 'mock');
+
+/** JSON estável (chaves ordenadas): o hash da cena não muda por ordem de propriedades. */
+export function stableJson(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(stableJson).join(',')}]`;
+  if (v && typeof v === 'object') return `{${Object.keys(v as object).sort().filter((k) => (v as Record<string, unknown>)[k] !== undefined).map((k) => `${JSON.stringify(k)}:${stableJson((v as Record<string, unknown>)[k])}`).join(',')}}`;
+  return JSON.stringify(v);
+}
+
+export function screenRecordingsReady(recordings: readonly ScreenRecording[]): ReadyRecording[] {
+  const missing = recordings.find((r) => !r.assetId && !r.mock);
   if (missing) throw new DomainError('VALIDATION', `falta mídia: ${missing.fileName}`);
-  return recordings.map((r) => ({ fileName: r.fileName, assetId: r.assetId! }));
+  return recordings.map((r) => (mockToGenerate(r) ? { fileName: r.fileName, source: 'mock' as const, mock: r.mock } : { fileName: r.fileName, assetId: r.assetId!, ...(r.mock ? { source: 'upload' as const, mock: r.mock } : {}) }));
 }
 
 /**
@@ -35,7 +47,7 @@ export function resolveScreenScene(
   const params = { elevenLabsModelId: cfg.elevenLabsModelId, elevenLabsStability: cfg.elevenLabsStability };
   const sceneHash = sceneHashSync({
     script, avatarId: '', voiceProvider: cfg.simulation ? 'simulated' : body.voiceProvider, voiceId: body.voiceId,
-    params: { ...params, screen: recordings, ...(watermark ? { watermark } : {}) }, adapterVersion,
+    params: { ...params, screen: JSON.parse(stableJson(recordings.map((r) => (r.source === 'mock' ? { fileName: r.fileName, mock: r.mock } : { fileName: r.fileName, assetId: r.assetId })))), ...(watermark ? { watermark } : {}) }, adapterVersion,
   });
   const narrationSeconds = estimateNarrationSeconds(script);
   const estimate: SceneEstimate = {

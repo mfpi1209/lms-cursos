@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { composeScreenScene, ffprobe, ffprobeJson, parseFreezeDetect, planScreenTiming, runFfmpeg } from '../src/compose';
+import { composeScreenScene, splitMockDurations, ffprobe, ffprobeJson, parseFreezeDetect, planScreenTiming, runFfmpeg } from '../src/compose';
 
 const outSec = (p: ReturnType<typeof planScreenTiming>) => p.segments.reduce((a, s) => a + (s.end - s.start) / s.speed, 0) + p.freezeSec;
 
@@ -83,6 +83,17 @@ describe('planScreenTiming (função pura)', () => {
   it('lê a saída do freezedetect (inclusive parado até o fim)', () => {
     const log = ['[freezedetect @ 0x1] lavfi.freezedetect.freeze_start: 2.0', '[freezedetect @ 0x1] lavfi.freezedetect.freeze_duration: 1.5', '[freezedetect @ 0x1] lavfi.freezedetect.freeze_end: 3.5', '[freezedetect @ 0x1] lavfi.freezedetect.freeze_start: 7.25'].join('\n');
     expect(parseFreezeDetect(log, 9)).toEqual([{ start: 2, end: 3.5 }, { start: 7.25, end: 9 }]);
+  });
+});
+
+describe('splitMockDurations (telas geradas)', () => {
+  it('divide a narração proporcionalmente ao peso dos passos; enviadas entram com a duração delas', () => {
+    expect(splitMockDurations([{ mockWeight: 1 }, { mockWeight: 3 }], 20)).toEqual([5, 15]);
+    expect(splitMockDurations([{ uploadSec: 6 }, { mockWeight: 1 }, { mockWeight: 1 }], 20)).toEqual([6, 7, 7]);
+  });
+  it('mínimo de 2 s por tela quando a narração já está ocupada', () => {
+    expect(splitMockDurations([{ uploadSec: 19 }, { mockWeight: 2 }], 20)).toEqual([19, 2]);
+    expect(splitMockDurations([{ uploadSec: 25 }, { mockWeight: 2 }], 20)).toEqual([25, 2]);
   });
 });
 

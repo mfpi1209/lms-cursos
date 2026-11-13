@@ -142,7 +142,7 @@ export async function setNodeMedia(
      * gravação (casa por posição + nome do arquivo; se a lista mudou desde o pedido, o item é ignorado) e o `fit`
      * da cena em todos os itens (`ok` | `short` | `trimmed`).
      */
-    screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number }> };
+    screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number; /** tela gerada: asset do MP4 gerado */ assetId?: string; source?: 'upload' | 'mock' }> };
   },
 ) {
   for (let attempt = 0; attempt < 5; attempt++) {
@@ -175,6 +175,8 @@ export async function setNodeMedia(
           if (!r || rec.fileName !== r.fileName) return;
           rec.durationSec = Math.round(r.durationSec * 1000) / 1000;
           rec.fit = input.screenResult!.fit;
+          if (r.assetId) rec.assetId = r.assetId;
+          if (r.source) rec.source = r.source;
         });
       }
       touched = true;
