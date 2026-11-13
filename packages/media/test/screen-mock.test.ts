@@ -157,3 +157,30 @@ describe('regressão: chat longo com muita rolagem (resvg geom.rs unwrap)', () =
     }
   }, 240_000);
 });
+
+describe('faixa de destaque: o conteúdo rola para cima dela', () => {
+  const lines = ['Para: Mercadinho Exemplo Ltda', 'Instituição: Banco Exemplo', 'Valor: R$ 150,00', 'Chave: e-mail cadastrado'];
+  const base = (model: 'browser' | 'settings' | 'notes' | 'chat') => ({
+    model,
+    device: 'phone' as const,
+    app: 'Banco',
+    steps: [
+      { kind: 'show' as const, title: 'Confirme os dados', lines },
+      { kind: 'show' as const, title: 'Confirme os dados', lines },
+      { kind: 'show' as const, title: 'Confirme os dados', lines },
+      { kind: 'highlight' as const, text: 'Se o nome não bate com quem você espera, pare e confirme por outro canal' },
+    ],
+  });
+  it.each(['browser', 'settings', 'notes', 'chat'] as const)('%s: a área rolável termina acima da faixa no último quadro', (model) => {
+    const mock = base(model);
+    const sch = scheduleSteps(mock.steps.map(() => 1), 10);
+    const svg = buildFrameSvg(mock, sch, 9.9);
+    const band = /<rect x="[\d.]+" y="([\d.-]+)" width="[\d.]+" height="[\d.]+" rx="26" fill="#FFF6CC"/.exec(svg);
+    expect(band).not.toBeNull();
+    const bandTop = Number(band![1]);
+    // todo clipPath de rolagem (cvN) termina acima da faixa
+    const clips = [...svg.matchAll(/<clipPath id="cv\d+"><rect x="[\d.]+" y="([\d.-]+)" width="[\d.]+" height="([\d.]+)"/g)];
+    expect(clips.length).toBeGreaterThan(0);
+    for (const c of clips) expect(Number(c[1]) + Number(c[2])).toBeLessThanOrEqual(bandTop - 15);
+  });
+});

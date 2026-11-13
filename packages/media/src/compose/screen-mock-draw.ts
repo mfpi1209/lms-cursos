@@ -106,6 +106,8 @@ interface F {
   pad: number;
   /** altura fixa embaixo (barra de digitação, botões) que as faixas não podem cobrir */
   inset: number;
+  /** espaço (px) embaixo da área rolável ocupado pela faixa de destaque visível */
+  reserve: number;
   col: { x: number; w: number };
 }
 
@@ -205,7 +207,8 @@ interface Item {
   draw: (y: number) => string;
 }
 
-function flow(f: F, items: Item[], view: Rect, o: { padTop?: number; padBottom?: number; fade?: string } = {}): string {
+function flow(f: F, items: Item[], view0: Rect, o: { padTop?: number; padBottom?: number; fade?: string } = {}): string {
+  const view = { ...view0, h: Math.max(80, view0.h - f.reserve) };
   const padTop = o.padTop ?? 16;
   const padBottom = o.padBottom ?? 24;
   const placed: Array<{ it: Item; y: number; e: number }> = [];
@@ -651,7 +654,7 @@ interface Banner {
   p: number;
 }
 
-function banner(f: F, ch: Chrome, b: Banner): string {
+function banner(f: F, ch: Chrome, b: Banner): { svg: string; h: number } {
   const w = f.phone ? ch.body.w - 2 * f.pad : Math.min(1100, ch.body.w - 2 * f.pad);
   const x = ch.body.x + (ch.body.w - w) / 2;
   const inner = w - 56;
@@ -671,7 +674,7 @@ function banner(f: F, ch: Chrome, b: Banner): string {
     cy += S.lh;
   });
   out.push('</g>');
-  return out.join('');
+  return { svg: out.join(''), h };
 }
 
 function drawCalendar(f: F, ch: Chrome): string {
@@ -700,7 +703,7 @@ function drawCalendar(f: F, ch: Chrome): string {
   const hours1 = 23;
   const rh = f.phone ? 110 : 118;
   const headH = f.phone ? 150 : 104;
-  const gridView = { x: ch.body.x, y: ch.body.y + headH, w: ch.body.w, h: ch.body.h - headH };
+  const gridView = { x: ch.body.x, y: ch.body.y + headH, w: ch.body.w, h: Math.max(200, ch.body.h - headH - f.reserve) };
   const labelW = f.phone ? 96 : 110;
   const focus = first ? first.start : 9;
   const total = (hours1 - hours0 + 1) * rh;
@@ -864,7 +867,7 @@ function drawSheet(f: F, ch: Chrome): string {
     cs.push({ ref: st.ref, col: Math.min(NC - 1, colIndex(m[1]!)), row: Number(m[2]) - 1, raw: st.value, s, e });
   });
   const maxRow = cs.reduce((m, c) => Math.max(m, c.row), 0);
-  const view = { x: ch.body.x, y: ch.body.y + fbH + hdrH, w: ch.body.w, h: ch.body.h - fbH - hdrH };
+  const view = { x: ch.body.x, y: ch.body.y + fbH + hdrH, w: ch.body.w, h: Math.max(200, ch.body.h - fbH - hdrH - f.reserve) };
   const nRows = Math.max(maxRow + 4, Math.ceil(view.h / rowH) + 1, 12);
   const gridW = view.w - rhW;
   // estado atual: células confirmadas (valor em tela) e a selecionada
@@ -1069,7 +1072,14 @@ function drawTap(f: F, ch: Chrome, stepIdx: number, st: Extract<MockStep, { kind
   return out.join('');
 }
 
+/** Quadro completo. Se há faixa de destaque, redesenha reservando o espaço dela: o conteúdo rola para cima da faixa. */
 export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): string {
+  const first = buildFrame(mock, sch, t, 0);
+  if (first.bannerH <= 0) return first.svg;
+  return buildFrame(mock, sch, t, (first.bannerH + 26 + 16) * ez(first.bannerP)).svg;
+}
+
+function buildFrame(mock: MockInput, sch: StepSchedule, t: number, reserve: number): { svg: string; bannerH: number; bannerP: number } {
   const phone = (mock.device ?? 'phone') === 'phone';
   const steps = mock.steps;
   const f: F = {
@@ -1083,6 +1093,7 @@ export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): st
     defs: [],
     pad: phone ? 22 : 56,
     inset: mock.model === "chat" ? (phone ? 112 : 124) : mock.model === "form" && mock.steps.some((s) => s.kind === "tap") ? (phone ? 150 : 140) : 0,
+    reserve,
     col: { x: 0, w: 0 },
   };
   // realces ativos
@@ -1120,7 +1131,12 @@ export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): st
     if (!latest || h.step > latest.i) latest = { i: h.step, b: { lines: [st.text], p: prog(t, sch.windows[h.step]!.start, sch.windows[h.step]!.start + 0.35) } };
   }
   const fresh = latest as { i: number; b: Banner } | undefined;
-  if (fresh) over.push(banner(f, ch, fresh.b));
+  let bannerH = 0;
+  if (fresh) {
+    const bn = banner(f, ch, fresh.b);
+    over.push(bn.svg);
+    bannerH = bn.h;
+  }
   steps.forEach((st, i) => {
     if (st.kind === 'tap' && t >= sch.windows[i]!.start) over.push(drawTap(f, ch, i, st));
   });
@@ -1129,7 +1145,8 @@ export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): st
   const bg = phone
     ? `<defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EDF3"/><stop offset="1" stop-color="#C9D2DF"/></linearGradient></defs><rect width="${MOCK_W}" height="${MOCK_H}" fill="url(#bgg)"/>`
     : `<defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EDF3"/><stop offset="1" stop-color="#C9D2DF"/></linearGradient></defs><rect width="${MOCK_W}" height="${MOCK_H}" fill="url(#bgg)"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${MOCK_W}" height="${MOCK_H}" viewBox="0 0 ${MOCK_W} ${MOCK_H}" font-family="Inter">${bg}<defs><clipPath id="${clipId}">${clipRect}</clipPath>${f.defs.join('')}</defs>${ch.svg}<g clip-path="url(#${clipId})">${content}${over.join('')}</g></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${MOCK_W}" height="${MOCK_H}" viewBox="0 0 ${MOCK_W} ${MOCK_H}" font-family="Inter">${bg}<defs><clipPath id="${clipId}">${clipRect}</clipPath>${f.defs.join('')}</defs>${ch.svg}<g clip-path="url(#${clipId})">${content}${over.join('')}</g></svg>`;
+  return { svg, bannerH, bannerP: fresh ? fresh.b.p : 0 };
 }
 
 export { scheduleSteps };
