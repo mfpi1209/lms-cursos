@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { DomainError, media } from '@lms/db';
-import { mediaSceneOf, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection } from '@lms/course-schema';
+import { mediaSceneOf, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection } from '@lms/course-schema';
+import { resolveScreenScene } from './media-screen';
 import { COMPOSE_PIPELINE_VERSION, ELEVENLABS_ADAPTER_VERSION, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, describeMediaMode, directionLinesMatchSpoken, estimateMediaCostUsd, estimateNarrationSeconds, mediaConfigFromEnv, platformBrandName, resolveWatermark, sceneHashSync, singleShotAlphaKey, type MediaProviderConfig } from '@lms/media';
 
 let modeLogged = false;
@@ -223,6 +224,12 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
   }
   // com direção, a fala é a soma dos planos (o áudio é cortado nesses trechos); o roteiro enviado é ignorado
   const script = (direction ? directionNarration(direction) : (body.script ?? spoken)).trim();
+  // gravação de tela própria: tela cheia + narração em voz, SEM avatar (plano próprio; ver media-screen.ts)
+  if (sceneUsesScreenRecording(node as never)) {
+    if (!script) throw new DomainError('VALIDATION', 'O bloco não tem texto para narrar');
+    if (script.length > SCRIPT_MAX_CHARS) throw new DomainError('VALIDATION', `Roteiro acima de ${SCRIPT_MAX_CHARS.toLocaleString('pt-BR')} caracteres; divida a cena`);
+    return resolveScreenScene(node as never, { lessonId: body.lessonId, lessonTitle: found.lesson.title, body, script, cfg, env, watermarkBranding: doc.branding?.watermark });
+  }
   const pres = doc.presentation;
   const isPhoto = (pres.avatarType ?? 'photo_avatar') === 'photo_avatar';
   if (!script) throw new DomainError('VALIDATION', 'O bloco não tem texto para narrar');
@@ -443,7 +450,7 @@ export function reusedMediaFor(job: media.MediaJobRow, sceneHash: string, script
 }
 
 export function publicJob(j: media.MediaJobRow) {
-  const input = j.input as { avatarId?: unknown; voiceProvider?: unknown; voiceId?: unknown; script?: unknown; estimate?: unknown; recomposeOf?: unknown };
+  const input = j.input as { avatarId?: unknown; voiceProvider?: unknown; voiceId?: unknown; script?: unknown; estimate?: unknown; recomposeOf?: unknown; screenResult?: unknown };
   return {
     id: j.id,
     lessonId: j.lessonId,
@@ -463,7 +470,7 @@ export function publicJob(j: media.MediaJobRow) {
     quoteId: j.quoteId,
     approvedBy: j.approvedBy,
     approvedAt: j.approvedAt,
-    input: { avatarId: input.avatarId, voiceProvider: input.voiceProvider, voiceId: input.voiceId, scriptChars: String(input.script ?? '').length, estimate: input.estimate, ...(typeof input.recomposeOf === 'string' ? { recomposeOf: input.recomposeOf } : {}) },
+    input: { avatarId: input.avatarId, voiceProvider: input.voiceProvider, voiceId: input.voiceId, scriptChars: String(input.script ?? '').length, estimate: input.estimate, ...(typeof input.recomposeOf === 'string' ? { recomposeOf: input.recomposeOf } : {}), ...(input.screenResult ? { screenResult: input.screenResult } : {}) },
     createdAt: j.createdAt,
     startedAt: j.startedAt,
     finishedAt: j.finishedAt,

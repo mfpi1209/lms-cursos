@@ -135,7 +135,15 @@ export async function duplicateCourse(db: Database, input: { courseId: string; u
  */
 export async function setNodeMedia(
   db: Database,
-  input: { courseId: string; lessonId: string; nodeId: string; media: Record<string, unknown> | null; userId: string; note?: string },
+  input: {
+    courseId: string; lessonId: string; nodeId: string; media: Record<string, unknown> | null; userId: string; note?: string;
+    /**
+     * Resultado da montagem de gravação de tela, gravado na MESMA revisão da mídia: `durationSec` medido de cada
+     * gravação (casa por posição + nome do arquivo; se a lista mudou desde o pedido, o item é ignorado) e o `fit`
+     * da cena em todos os itens (`ok` | `short` | `trimmed`).
+     */
+    screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number }> };
+  },
 ) {
   for (let attempt = 0; attempt < 5; attempt++) {
     const draft = await getDraft(db, input.courseId);
@@ -160,6 +168,15 @@ export async function setNodeMedia(
       if (!['scenario', 'content', 'consequence', 'choice'].includes(node.type)) throw new DomainError('VALIDATION', 'Este tipo de bloco não aceita mídia');
       if (input.media) node.media = input.media;
       else delete node.media;
+      if (input.screenResult && Array.isArray(node.screenRecordings)) {
+        const list = node.screenRecordings as Array<Record<string, unknown>>;
+        list.forEach((rec, i) => {
+          const r = input.screenResult!.recordings[i];
+          if (!r || rec.fileName !== r.fileName) return;
+          rec.durationSec = Math.round(r.durationSec * 1000) / 1000;
+          rec.fit = input.screenResult!.fit;
+        });
+      }
       touched = true;
     }
     if (!touched) throw new DomainError('NOT_FOUND', 'Aula ou bloco não encontrado no rascunho');
