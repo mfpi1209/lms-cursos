@@ -14,3 +14,4 @@ export * as retention from './retention';
 export * as students from './students';
 export * as integrationTokens from './integration-tokens';
 export * as reports from './reports';
+export * as webhooks from './webhooks';

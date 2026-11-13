@@ -444,6 +444,8 @@ export async function eraseUser(db: Database, input: { email: string; apply: boo
       await tx.insert(s.auditLogs).values({ id: newId('aud'), actorId: input.actorId ?? null, action: 'badge.revoke', entityType: 'trail_badge', entityId: b.id, data: { userId: u.id, motivo: 'exclusão da conta a pedido do titular', via: input.via ?? 'dados:apagar' } });
     }
     await tx.delete(s.outboxEvents).where(outboxOf(u.id, enrollmentIds));
+    // entregas de webhook ainda guardadas: o corpo tem o e-mail e o RGM da pessoa
+    await tx.delete(s.webhookDeliveries).where(sql`${s.webhookDeliveries.payload} #>> '{data,aluno,id}' = ${u.id}`);
     await tx.insert(s.auditLogs).values({
       id: newId('aud'),
       actorId: input.actorId ?? null,
