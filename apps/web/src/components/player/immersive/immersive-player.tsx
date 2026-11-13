@@ -1140,6 +1140,22 @@ function Scene({
         onContinue={dismissSaved}
       />
     );
+  } else if (savedTask) {
+    panel = (
+      <TaskPanel
+        key={`salva:${savedTask.node.id}`}
+        node={savedTask.node}
+        carry={null}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={null}
+        onSend={send}
+        saved={{ status: savedTask.status, record: savedTask.record }}
+        onContinue={dismissSaved}
+        {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})}
+      />
+    );
   } else if (completed) {
     panel = (
       <EndPanel
@@ -1158,22 +1174,6 @@ function Scene({
         {...(frame.series ? { series: frame.series } : {})}
         {...(frame.courseEnd ? { courseEnd: { course: seriesEndsTrail(frame.series) ? frame.series!.trail : frame.courseTitle, ...((endNode?.closingLine?.trim() || recap?.closingLine) ? { closingLine: (endNode?.closingLine?.trim() || recap?.closingLine)! } : {}) } } : {})}
         {...(!nextLesson && frame.achievement && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { conquest: { name: frame.achievement, ...(frame.courseTrail ? { trail: frame.courseTrail } : {}) } } : {})}
-      />
-    );
-  } else if (savedTask) {
-    panel = (
-      <TaskPanel
-        key={`salva:${savedTask.node.id}`}
-        node={savedTask.node}
-        carry={null}
-        headingRef={headingRef}
-        headingId={headingId}
-        pending={pending}
-        fieldError={null}
-        onSend={send}
-        saved={{ status: savedTask.status, record: savedTask.record }}
-        onContinue={dismissSaved}
-        {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})}
       />
     );
   } else if (watching) {
