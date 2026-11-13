@@ -109,6 +109,11 @@ export interface DirectedInput {
    * muda o hash da cena (remonta) mas NÃO as chaves dos itens (o clipe pago do HeyGen é reaproveitado).
    */
   screenText?: string;
+  /**
+   * painel DINÂMICO: tópicos que entram um a um no tempo da fala (o `screenText` vira o título). Mesma regra de zona
+   * e mesma natureza (só montagem: muda o hash da cena, nunca as chaves dos itens pagos).
+   */
+  screenTopics?: Array<{ text: string; cue?: string }>;
   // ---- estado persistido ----
   units?: RenderUnit[];
   mergedShots?: string[];
@@ -1241,6 +1246,13 @@ export async function renderDirectedScene(
     const words = src?.words?.length ? src.words.map((w) => ({ text: w.text, start: w.start - src.sourceStart })).filter((w) => w.start >= -0.05) : undefined;
     chips.set(id, { graphics, ...(words ? { words } : {}) });
   }
+  // painel dinâmico: as mesmas palavras relativas ao plano (cada tópico entra quando a fala chega nele)
+  const topicWords = new Map<string, Array<{ text: string; start: number }>>();
+  if (input.screenTopics?.length) {
+    for (const [id, src] of wordSources) {
+      if (src.words?.length) topicWords.set(id, src.words.map((w) => ({ text: w.text, start: w.start - src.sourceStart })).filter((w) => w.start >= -0.05));
+    }
+  }
   const output = path.join(dir, 'scene.mp4');
   await renew();
   const result = await composeScene({
@@ -1251,6 +1263,7 @@ export async function renderDirectedScene(
     ...(input.nextQuestion?.trim() ? { teaser: { question: input.nextQuestion } } : {}),
     ...(input.lowerThird?.name?.trim() ? { lowerThird: input.lowerThird } : {}),
     ...(input.screenText?.trim() ? { screenText: input.screenText } : {}),
+    ...(input.screenTopics?.length ? { screenTopics: { topics: input.screenTopics, words: topicWords } } : {}),
     ...(input.videoPalette ? { palette: input.videoPalette } : {}),
     ...(watermark ? { watermark: { brand: watermark.brand, position: watermark.position, opacity: watermark.opacity, accent: input.directionStyle?.slideAccent ?? '#1a66d1' } } : {}),
   });

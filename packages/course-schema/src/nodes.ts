@@ -103,6 +103,13 @@ export const ScreenRecordingSchema = z.object({
 });
 export type ScreenRecording = z.infer<typeof ScreenRecordingSchema>;
 
+/** Tópico do painel dinâmico de uma cena (ver `topics` em `ScenarioNodeSchema`). */
+export const SceneTopicSchema = z.object({
+  text: z.string().trim().min(1).max(60),
+  cue: z.string().trim().min(1).max(160).optional(),
+});
+export type SceneTopicSpec = z.infer<typeof SceneTopicSchema>;
+
 export const ScenarioNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('scenario'),
@@ -116,6 +123,14 @@ export const ScenarioNodeSchema = z.object({
   media: MediaRefSchema.optional(),
   /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
   screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
+  /**
+   * Tópicos do painel dinâmico (estúdio com zonas, cena dirigida sem pílulas/cartão/slide): entram um a um no lado
+   * vazio conforme a apresentadora fala (o "Texto na tela" do `body` vira o título). `cue` = trecho da fala em que o
+   * tópico entra (sem ele vale o próprio texto). Só montagem: não entra nas chaves de reaproveitamento do clipe do
+   * HeyGen (muda só o hash da cena). Vêm de `docs/roteiros/telas/<roteiro>.topicos.md` (importador) ou do comando
+   * `aplicar-topicos` (rascunho existente).
+   */
+  topics: z.array(SceneTopicSchema).min(1).max(8).optional(),
 });
 
 export const ContentNodeSchema = z.object({
@@ -131,6 +146,8 @@ export const ContentNodeSchema = z.object({
   media: MediaRefSchema.optional(),
   /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
   screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
+  /** tópicos do painel dinâmico da cena (ver `ScenarioNodeSchema.topics`) */
+  topics: z.array(SceneTopicSchema).min(1).max(8).optional(),
   /**
    * Revisão de respostas ("Resultado da simulação"): decisões DESTA aula que a
    * cena lista com a pergunta, a resposta escolhida, a marca ("Forte" / "Pode

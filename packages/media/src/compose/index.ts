@@ -20,3 +20,4 @@ export * from './raster';
 export * from './screen';
 export * from './screen-mock';
 export * from './screen-mock-schedule';
+export * from './screen-topics';

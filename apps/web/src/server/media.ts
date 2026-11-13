@@ -208,7 +208,7 @@ export function directedPartialReuse(
  * orientadora · DNA Work"). Fora do modo de zonas, nada (o hash das cenas de
  * antes não muda). Cada campo só existe quando se aplica.
  */
-export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string } {
+export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string; screenTopics?: Array<{ text: string; cue?: string }> } {
   if (!directed || !zoneCamerasOf(doc.presentation.cameras)) return {};
   const nextQuestion = nextDecisionQuestion(graph, nodeId);
   const name = doc.branding?.presenterName?.trim();
@@ -216,11 +216,37 @@ export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | '
   const brand = platformBrandName(env.PLATFORM_BRAND, env);
   const lowerThird = name && firstNarratedNodeId(graph) === nodeId ? { name, ...(role ? { role } : {}), ...(brand ? { brand } : {}) } : undefined;
   const screenText = sceneScreenText(doc, graph, nodeId, direction);
-  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}) };
+  const screenTopics = sceneScreenTopics(doc, graph, nodeId, direction);
+  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}), ...(screenTopics ? { screenTopics } : {}) };
 }
 
 /** Limite do texto na tela que vai para o painel (o resto é cortado na montagem em até 3 linhas). */
 export const SCREEN_TEXT_MAX_CHARS = 140;
+
+/** Painel no lado livre só vale com a apresentadora num lado em TODOS os planos e sem pílulas/painel/cartão/slide. */
+function sidePanelApplies(doc: Pick<CourseDocument, 'presentation'>, direction?: Pick<SceneDirection, 'shots'>): boolean {
+  if (!direction?.shots.length) return false;
+  const cameras = doc.presentation.cameras ?? [];
+  for (const s of direction.shots) {
+    if ((s.layout ?? 'presenter') !== 'presenter' || s.slide) return false;
+    const zone = s.cameraId ? cameras.find((c) => c.id === s.cameraId)?.zone : undefined;
+    if (zone !== 'left' && zone !== 'right') return false;
+  }
+  return true;
+}
+
+/**
+ * Tópicos do painel dinâmico (`topics` do nó da cena; ver `parseSceneTopicsMarkdown`): mesma regra de zona do
+ * `sceneScreenText` (o "Texto na tela" vira o título). Só montagem: entra no hash da cena e no pedido, NUNCA nas
+ * chaves de reaproveitamento do clipe do HeyGen. Sem tópicos (ou cena que não se aplica): undefined = painel estático.
+ */
+export function sceneScreenTopics(doc: Pick<CourseDocument, 'presentation'>, graph: Pick<LessonGraph, 'nodes'>, nodeId: string, direction?: Pick<SceneDirection, 'shots'>): Array<{ text: string; cue?: string }> | undefined {
+  if (!sidePanelApplies(doc, direction)) return undefined;
+  const node = graph.nodes.find((n) => n.id === nodeId) as { type: string; topics?: Array<{ text: string; cue?: string }> } | undefined;
+  if (!node || (node.type !== 'scenario' && node.type !== 'content') || !node.topics?.length) return undefined;
+  const topics = node.topics.map((t) => ({ text: t.text.replace(/\s+/g, ' ').trim(), ...(t.cue?.trim() ? { cue: t.cue.replace(/\s+/g, ' ').trim() } : {}) })).filter((t) => t.text).slice(0, 8);
+  return topics.length ? topics : undefined;
+}
 
 /**
  * "Texto na tela" do roteiro (`body` do nó V..; a importação grava `Texto na tela:` ou, sem ele, o título da
@@ -229,13 +255,7 @@ export const SCREEN_TEXT_MAX_CHARS = 140;
  * com cartão, o texto já aparece nas pílulas. Texto igual ao título da cena (sem "Texto na tela") não vira painel.
  */
 export function sceneScreenText(doc: Pick<CourseDocument, 'presentation'>, graph: Pick<LessonGraph, 'nodes'>, nodeId: string, direction?: Pick<SceneDirection, 'shots'>): string | undefined {
-  if (!direction?.shots.length) return undefined;
-  const cameras = doc.presentation.cameras ?? [];
-  for (const s of direction.shots) {
-    if ((s.layout ?? 'presenter') !== 'presenter' || s.slide) return undefined;
-    const zone = s.cameraId ? cameras.find((c) => c.id === s.cameraId)?.zone : undefined;
-    if (zone !== 'left' && zone !== 'right') return undefined;
-  }
+  if (!sidePanelApplies(doc, direction)) return undefined;
   const node = graph.nodes.find((n) => n.id === nodeId) as { type: string; title?: string; body?: unknown } | undefined;
   if (!node || (node.type !== 'scenario' && node.type !== 'content')) return undefined;
   const text = richTextToPlain(node.body as never).replace(/\s+/g, ' ').trim();

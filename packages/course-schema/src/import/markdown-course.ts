@@ -9,6 +9,7 @@ import { parseDurationMinutes } from '../duration';
 import { applyCallsToGraph, callFromSituation } from '../bridge';
 import { screenMockLookupKey, type ScreenMockIssue } from './screen-mocks-markdown';
 import type { ScreenMock } from '../screen-mock';
+import type { SceneTopic, SceneTopicsIssue } from './scene-topics-markdown';
 import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
 
 /*
@@ -50,6 +51,11 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  *      SCREEN_LIST_MISMATCH). Avisos: SCREEN_MOCK_PENDING (uma vez por curso: "N telas simuladas a gerar"),
  *      SCREEN_MOCK_MISSING (gravação sem tela simulada e sem mídia), SCREEN_MOCK_UNUSED (tela que nenhuma cena
  *      usa) e SCREEN_MOCK_INVALID (problema do arquivo de telas, com chave e linha). Sem `screenMocks`, nada muda;
+ *      TÓPICOS DO PAINEL (estúdio com zonas): `docs/roteiros/telas/<nome-do-roteiro>.topicos.md` (`## V07` + `- tópico
+ *      (na fala: "trecho")`; leitor `parseSceneTopicsMarkdown`) → opção `sceneTopics`: a cena `V..` ganha `topics`
+ *      (campo opcional do nó), que a montagem mostra um a um no painel conforme a fala. Avisos: SCENE_TOPICS_INVALID
+ *      (problema do arquivo, com linha), SCENE_TOPICS_UNUSED (código sem cena de vídeo), SCENE_TOPICS_IGNORED (cena
+ *      com gravação de tela). Sem `sceneTopics`, nada muda;
  *    - `Q..` decisão: `Situação:`, `Voz opcional: sim|não`, `Chamada:` (frase
  *      com que a instrutora chama o aluno no FIM do vídeo anterior; ausente =
  *      `callFromSituation` — fato + pergunta do enunciado —, com aviso) e a tabela
@@ -974,6 +980,13 @@ export interface MarkdownCourseOptions {
   screenMocks?: Map<string, ScreenMock>;
   /** problemas lidos do arquivo de telas; viram avisos SCREEN_MOCK_INVALID */
   screenMockIssues?: ScreenMockIssue[];
+  /**
+   * Tópicos do painel dinâmico por código de cena em maiúsculas (`V07`; ver `parseSceneTopicsMarkdown`): viram `topics`
+   * no nó da cena de vídeo (estúdio com zonas). Sem o mapa, nada muda. Cena com gravação de tela não recebe (aviso).
+   */
+  sceneTopics?: Map<string, SceneTopic[]>;
+  /** problemas lidos do arquivo de tópicos; viram avisos SCENE_TOPICS_INVALID */
+  sceneTopicIssues?: SceneTopicsIssue[];
 }
 
 export interface MarkdownImportReport {
@@ -1082,6 +1095,8 @@ interface ScreenUse {
   pending: number;
   /** cenas que ganharam gravações só pela lista das notas */
   fallback: Set<string>;
+  /** cenas (código) que receberam tópicos do painel */
+  topicsUsed: Set<string>;
 }
 
 function buildLesson(
@@ -1189,6 +1204,11 @@ function buildLesson(
         if (wc(scene.narration) > speech.narrationMaxWords) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo ${speech.narrationMaxWords})` });
         if (wc(scene.narration) < speech.narrationMinWords) warn({ code: 'NARRATION_SHORT', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (alvo ${speech.narrationMinWords}–${speech.narrationMaxWords})` });
         if (wc(scene.screenText) > 25) warn({ code: 'SCREEN_TEXT_WITH_NARRATION', lessonId, nodeId: id, message: `${scene.code}: ${wc(scene.screenText)} palavras na tela numa cena com fala (recomendado até 25)` });
+        // tópicos do painel dinâmico (só cena de avatar; gravação de tela própria não tem painel)
+        const topicsOfScene = opts.sceneTopics?.get(scene.code.toUpperCase());
+        if (topicsOfScene?.length) ctx.screens.topicsUsed.add(scene.code.toUpperCase());
+        if (topicsOfScene?.length && screenRecordings) warn({ code: 'SCENE_TOPICS_IGNORED', lessonId, nodeId: id, message: `${scene.code}: tem gravação de tela (tela cheia, sem avatar); os tópicos do painel foram ignorados` });
+        const sceneTopics = topicsOfScene?.length && !screenRecordings ? topicsOfScene : undefined;
         const gestureId = videoIndex % 2 === 1 ? 'smile_welcoming' : 'nod_slightly_smile';
         nodes.push({
           id,
@@ -1201,6 +1221,7 @@ function buildLesson(
           motionPrompt: gesture(gestureId),
           ...(direction ? { direction } : {}),
           ...(screenRecordings ? { screenRecordings } : {}),
+          ...(sceneTopics ? { topics: sceneTopics.map((t) => ({ text: t.text, ...(t.cue ? { cue: t.cue } : {}) })) } : {}),
         });
         edges.push(go(`e_${id}`, id, nextOf(index, scene.code)));
         rows.push([id]);
@@ -1492,7 +1513,7 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const modules: Module[] = [];
   const lessonIds: string[] = [];
   const screenScenes = new Map<string, { lessonId: string; files: string[] }>();
-  const screens: ScreenUse = { notes: new Map((parsed.screenList ?? []).map((e) => [e.code, e.files])), used: new Set(), pending: 0, fallback: new Set() };
+  const screens: ScreenUse = { notes: new Map((parsed.screenList ?? []).map((e) => [e.code, e.files])), used: new Set(), pending: 0, fallback: new Set(), topicsUsed: new Set() };
   const lastLesson = parsed.modules[parsed.modules.length - 1]?.lessons.slice(-1)[0];
   for (const m of parsed.modules) {
     const moduleObjectiveIds = m.lessons.map((l) => `obj_aula_${pad2(l.number)}`);
@@ -1526,6 +1547,12 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
     for (const i of opts.screenMockIssues ?? []) warn({ code: 'SCREEN_MOCK_INVALID', message: `telas${i.key ? ` ${i.key}` : ''}${i.line ? ` (linha ${i.line})` : ''}: ${i.message}` });
     for (const name of opts.screenMocks.keys()) if (!screens.used.has(screenMockLookupKey(name))) warn({ code: 'SCREEN_MOCK_UNUSED', message: `a tela simulada "${name}" não é usada por nenhuma cena` });
     if (screens.pending) warn({ code: 'SCREEN_MOCK_PENDING', message: `${screens.pending} telas simuladas a gerar` });
+  }
+
+  // tópicos do painel: avisos do arquivo e códigos sem cena de vídeo
+  if (opts.sceneTopics) {
+    for (const i of opts.sceneTopicIssues ?? []) warn({ code: 'SCENE_TOPICS_INVALID', message: `tópicos (linha ${i.line}): ${i.message}` });
+    for (const code of opts.sceneTopics.keys()) if (!screens.topicsUsed.has(code.toUpperCase())) warn({ code: 'SCENE_TOPICS_UNUSED', message: `os tópicos de ${code} não foram usados: não há cena de vídeo com esse código` });
   }
 
   const h = parsed.header;

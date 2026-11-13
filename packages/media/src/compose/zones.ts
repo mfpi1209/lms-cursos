@@ -234,6 +234,7 @@ export function teaserWindow(total: number): { from: number; to: number } {
 /* Desenho                                                               */
 /* ------------------------------------------------------------------ */
 
+/** Desenha a árvore (satori) e rasteriza (resvg): PNG + pixels. */
 async function render(tree: Node, width: number, height: number): Promise<{ png: Uint8Array; pixels: Uint8Array; width: number; height: number }> {
   const svg = await satori(tree as never, { width, height, fonts: loadSlideFonts() });
   const r = await rasterizeSvg(svg, { pixels: true });
@@ -686,3 +687,6 @@ export async function renderScreenTextSprite(file: string, spec: ScreenTextSpec,
   const top = Math.round(H * ZONE_GEOMETRY.panelTop);
   return { path: file, x: col.x - box.x, y: top - box.y, w: cw, h: sh, side: col.side };
 }
+
+/** Para os desenhos irmãos (texto na tela dinâmico): mesma árvore satori e rasterização. */
+export { h as zoneH, render as zoneRender, type Node as ZoneNode };
