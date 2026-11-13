@@ -93,4 +93,19 @@ export const SCREEN_MOCK_SAMPLES: Record<MockInput['model'], MockInput & { durat
       { kind: 'highlight', text: 'até sexta-feira', weight: 1 },
     ],
   },
+  compare: {
+    model: 'compare',
+    device: 'phone',
+    app: 'Assistente de IA',
+    durationSec: 14,
+    sides: { left: { model: 'chat', label: 'Pedido vago' }, right: { model: 'chat', label: 'Pedido com contexto' } },
+    steps: [
+      { kind: 'type', side: 'left', text: 'me explica marketing' },
+      { kind: 'message', side: 'left', from: 'ai', text: 'Marketing é o conjunto de ações que uma empresa realiza para entender o mercado, criar valor para os clientes e comunicar esse valor.', weight: 2 },
+      { kind: 'type', side: 'right', text: 'Aja como um professor de marketing para iniciantes. Trabalho numa loja de roupa. Explique os quatro Ps com exemplos da minha loja.', weight: 2 },
+      { kind: 'show', side: 'right', title: 'Os 4 P na sua loja', lines: ['Produto: a coleção nova.', 'Preço: a promoção de fim de mês.', 'Praça: a vitrine da loja.', 'Promoção: o post nas redes.'], weight: 2 },
+      { kind: 'highlight', side: 'left', text: 'Genérico: serve para qualquer pessoa' },
+      { kind: 'highlight', side: 'right', text: 'Com exemplos da loja' },
+    ],
+  },
 };

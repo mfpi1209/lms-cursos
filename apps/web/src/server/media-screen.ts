@@ -5,7 +5,9 @@ import type { ResolvedScene, SceneEstimate, SceneProductionRequest } from './med
 
 /** Versão do montador de gravação de tela (entra no hash: mudar a regra de montagem refaz o vídeo). */
 // screen-4: balão do usuário sem duplicata mesmo com passos no meio; início sem espera vazia > 3 s e fim espalhado até ~90%
-export const SCREEN_PIPELINE_VERSION = 'screen-4'; // screen-3: passos no ritmo da fala; digitado + usuário igual vira um balão só
+// screen-5: modelo comparar (duas telas lado a lado); digitação no ritmo da fala e campo do chat com várias linhas; balão quase igual ao digitado não repete;
+//           `digita` com fala achada não é adiantado; SE na planilha; botão de toque acima da faixa de destaque
+export const SCREEN_PIPELINE_VERSION = 'screen-5'; // screen-3: passos no ritmo da fala; digitado + usuário igual vira um balão só
 
 /**
  * Gravações da cena prontas para produzir: todas precisam de arquivo enviado (`assetId`), senão a cena não é

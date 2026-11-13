@@ -14,6 +14,9 @@ import { ScreenMockSchema, type ScreenMock } from '../screen-mock';
  * - rótulos aceitam com e sem acento e em qualquer caixa (`Usuário:`, `usuario:`, `CÉLULA:`);
  * - `Aparelho:` celular → phone, computador → desktop (padrão phone);
  * - sufixo ` (na fala: "trecho")` (com ou sem ` (peso N)`) vira `cue` do passo;
+ * - `Modelo: comparar` = duas telas lado a lado: `Modelo: comparar [<modelo> | <modelo esq> | <modelo dir>]` (padrão
+ *   chat nas duas), `App: <nome>` ou `App: <esq> | <dir>`, rótulos opcionais `Esquerda: <texto>` / `Direita: <texto>` e
+ *   TODO passo com prefixo `- [esq] …` ou `- [dir] …` (vira `side` do passo);
  * - texto livre antes da primeira seção `##` é ignorado.
  */
 
@@ -43,8 +46,10 @@ const DEVICE_ALIASES: Record<string, 'phone' | 'desktop'> = { celular: 'phone', 
 const WEIGHT_RE = /\s*\(\s*peso\s+(\d+(?:[.,]\d+)?)\s*\)\s*$/i;
 const CUE_RE = /\s*\(\s*na\s+fala\s*:\s*["“”']([^"“”]+?)["“”']\s*\)\s*$/i;
 const SECTION_RE = /^##\s+(.+?)\s*$/;
-const META_RE = /^(modelo|aparelho|app)\s*:\s*(.*)$/i;
-const STEP_RE = /^-\s+([^:]+?)\s*:\s*(.*)$/;
+const META_RE = /^(modelo|aparelho|app|esquerda|direita)\s*:\s*(.*)$/i;
+const STEP_RE = /^-\s+(?:\[\s*([A-Za-zÀ-ÿ]+)\s*\]\s*)?([^:\[\]]+?)\s*:\s*(.*)$/;
+const SIDE_ALIASES: Record<string, 'left' | 'right'> = { esq: 'left', esquerda: 'left', e: 'left', left: 'left', dir: 'right', direita: 'right', d: 'right', right: 'right' };
+const COMPARE_RE = /^(comparar|comparacao|compare|lado a lado)\b\s*(.*)$/;
 
 export const screenMockKey = (name: string) => name.trim().replace(/\.mp4$/i, '').trim();
 /** Chave de comparação (sem caixa, sem `.mp4`). */
@@ -126,7 +131,7 @@ export function parseScreenMocksMarkdown(md: string): ParsedScreenMocks {
   const lines = md.replace(/^﻿/, '').split(/\r?\n/);
   const seen = new Map<string, number>();
 
-  type Section = { key: string; line: number; model?: string; device?: string; app?: string; steps: RawStep[]; bad: boolean };
+  type Section = { key: string; line: number; model?: string; device?: string; app?: string; sideModels?: [string, string]; labels: { left?: string; right?: string }; steps: RawStep[]; bad: boolean };
   let cur: Section | undefined;
 
   const flush = () => {
@@ -136,7 +141,18 @@ export function parseScreenMocksMarkdown(md: string): ParsedScreenMocks {
     const add = (message: string, line = sec.line, code: ScreenMockIssue['code'] = 'SCREEN_MOCK_SCHEMA') => issues.push({ code, message, key: sec.key, line });
     if (sec.bad) return;
     if (!sec.steps.length) return add('seção sem nenhum passo ("- digita: …", "- ia: …")', sec.line, 'SCREEN_MOCK_EMPTY');
-    const parsed = ScreenMockSchema.safeParse({ model: sec.model, ...(sec.device ? { device: sec.device } : {}), app: sec.app, steps: sec.steps.map((s) => s.obj) });
+    let app = sec.app;
+    let sides: Record<'left' | 'right', Record<string, unknown>> | undefined;
+    if (sec.model === 'compare') {
+      // `App: A | B` dá um nome a cada tela; o `app` da seção fica com o da esquerda
+      const [appL, appR] = (sec.app ?? '').split('|').map((p) => p.trim());
+      app = appL || undefined;
+      const mk = (model: string, a: string | undefined, label: string | undefined) => ({ model, ...(a && a !== app ? { app: a } : {}), ...(label ? { label } : {}) });
+      sides = { left: mk(sec.sideModels?.[0] ?? 'chat', appL, sec.labels.left), right: mk(sec.sideModels?.[1] ?? 'chat', appR || appL, sec.labels.right) };
+    } else if (sec.labels.left !== undefined || sec.labels.right !== undefined) {
+      return add('"Esquerda:"/"Direita:" só valem com "Modelo: comparar"');
+    }
+    const parsed = ScreenMockSchema.safeParse({ model: sec.model, ...(sec.device ? { device: sec.device } : {}), app, steps: sec.steps.map((s) => s.obj), ...(sides ? { sides } : {}) });
     if (!parsed.success) {
       for (const e of parsed.error.issues) {
         const [head, idx] = e.path;
@@ -163,7 +179,7 @@ export function parseScreenMocksMarkdown(md: string): ParsedScreenMocks {
       if (!key || key.startsWith('@')) issues.push({ code: 'SCREEN_MOCK_SYNTAX', message: 'seção sem nome de arquivo', line: n });
       else if (dupAt !== undefined) issues.push({ code: 'SCREEN_MOCK_DUPLICATE', message: `seção duplicada "${key}" (a primeira está na linha ${dupAt}); a repetição foi ignorada`, key, line: n });
       else seen.set(lk, n);
-      cur = { key, line: n, steps: [], bad };
+      cur = { key, line: n, labels: {}, steps: [], bad };
       return;
     }
     if (!cur || !line || line.startsWith('#') || /^[-*_]{3,}$/.test(line) || line.startsWith('<!--')) return;
@@ -177,10 +193,24 @@ export function parseScreenMocksMarkdown(md: string): ParsedScreenMocks {
       const k = fold(meta[1]!);
       const v = meta[2]!.trim();
       if (k === 'app') here.app = v;
+      else if (k === 'esquerda') here.labels.left = v;
+      else if (k === 'direita') here.labels.right = v;
       else if (k === 'modelo') {
+        const cmp = COMPARE_RE.exec(fold(v));
+        if (cmp) {
+          // `comparar`, `comparar notas`, `comparar chat | notas`
+          const names = cmp[2]!.split('|').map((p) => p.trim()).filter(Boolean);
+          const ms = names.map((x) => MODEL_ALIASES[x]);
+          if (names.length > 2 || ms.some((x) => !x)) issue(`Modelo "${v}": depois de "comparar" use um modelo (vale para as duas telas) ou "<esquerda> | <direita>" (chat, browser, form, settings, calendar, sheet ou notes)`);
+          else {
+            here.model = 'compare';
+            here.sideModels = [ms[0] ?? 'chat', ms[1] ?? ms[0] ?? 'chat'];
+          }
+          return;
+        }
         const m = MODEL_ALIASES[fold(v)];
         if (m) here.model = m;
-        else issue(`Modelo "${v}" desconhecido (use chat, browser, form, settings, calendar, sheet ou notes)`);
+        else issue(`Modelo "${v}" desconhecido (use chat, browser, form, settings, calendar, sheet, notes ou comparar)`);
       } else {
         const d = DEVICE_ALIASES[fold(v)];
         if (d) here.device = d;
@@ -191,8 +221,13 @@ export function parseScreenMocksMarkdown(md: string): ParsedScreenMocks {
     if (line.startsWith('-')) {
       const m = STEP_RE.exec(line);
       if (!m) return issue('passo precisa de "- rótulo: valor"');
-      const step = parseStep(m[1]!, m[2]!, n, issue);
-      if (step) here.steps.push(step);
+      const side = m[1] ? SIDE_ALIASES[fold(m[1])] : undefined;
+      if (m[1] && !side) return issue(`prefixo "[${m[1]}]" desconhecido (use [esq] ou [dir])`);
+      const step = parseStep(m[2]!, m[3]!, n, issue);
+      if (step) {
+        if (side) step.obj.side = side;
+        here.steps.push(step);
+      }
       return;
     }
     issue(`linha não reconhecida: "${line.slice(0, 60)}"`);

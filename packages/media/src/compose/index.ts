@@ -21,3 +21,4 @@ export * from './screen';
 export * from './screen-mock';
 export * from './screen-mock-schedule';
 export * from './zone-panel';
+export * from './storyboard';

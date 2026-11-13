@@ -10,20 +10,31 @@ import { ellipsize, textWidth, wrapText, type MockWeight, type WrappedLine } fro
 /* ---------------- contrato (espelha `ScreenMock` de @lms/course-schema, sem depender do pacote) ---------------- */
 
 export type MockStep =
-  | { kind: 'type'; text: string; weight?: number; cue?: string }
-  | { kind: 'message'; from: 'user' | 'ai' | 'other'; text: string; weight?: number; cue?: string }
-  | { kind: 'show'; title?: string; lines?: string[]; weight?: number; cue?: string }
-  | { kind: 'toggle'; label: string; on: boolean; weight?: number; cue?: string }
-  | { kind: 'tap'; label: string; weight?: number; cue?: string }
-  | { kind: 'cell'; ref: string; value: string; weight?: number; cue?: string }
-  | { kind: 'event'; title: string; day: string; time: string; color?: string; weight?: number; cue?: string }
-  | { kind: 'highlight'; text: string; weight?: number; cue?: string };
+  | { kind: 'type'; text: string; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'message'; from: 'user' | 'ai' | 'other'; text: string; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'show'; title?: string; lines?: string[]; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'toggle'; label: string; on: boolean; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'tap'; label: string; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'cell'; ref: string; value: string; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'event'; title: string; day: string; time: string; color?: string; weight?: number; cue?: string; side?: 'left' | 'right' }
+  | { kind: 'highlight'; text: string; weight?: number; cue?: string; side?: 'left' | 'right' };
+
+export type MockSideModel = 'chat' | 'browser' | 'form' | 'settings' | 'calendar' | 'sheet' | 'notes';
+
+export interface MockSide {
+  model?: MockSideModel;
+  app?: string;
+  /** rótulo curto em cima da tela */
+  label?: string;
+}
 
 export interface MockInput {
-  model: 'chat' | 'browser' | 'form' | 'settings' | 'calendar' | 'sheet' | 'notes';
+  /** `compare` = duas telas lado a lado: cada passo diz o lado (`side`) e `sides` descreve cada tela */
+  model: MockSideModel | 'compare';
   device?: 'phone' | 'desktop';
   app: string;
   steps: MockStep[];
+  sides?: { left?: MockSide; right?: MockSide };
 }
 
 export const MOCK_W = 1920;
@@ -109,6 +120,10 @@ interface F {
   /** espaço (px) embaixo da área rolável ocupado pela faixa de destaque visível */
   reserve: number;
   col: { x: number; w: number };
+  /** prefixo dos ids de `<defs>` (duas telas no mesmo SVG não podem repetir id) */
+  idp: string;
+  /** janela do computador mais estreita (comparação lado a lado); ausente = janela cheia */
+  win?: Rect;
 }
 
 const S = { body: 34, lh: 48, small: 28, slh: 38, label: 30, head: 38 };
@@ -141,6 +156,9 @@ function textBlock(f: F, text: string, o: TextOpts): { svg: string; h: number; l
   }
   const low = text.toLowerCase();
   const parts: string[] = [];
+  // texto claro (balão escuro) sobre o realce amarelo fica ilegível: o trecho realçado é reescrito em cor escura por cima
+  const light = (o.fill ?? C.ink).toUpperCase() === C.white.toUpperCase();
+  const over: string[] = [];
   // realces antes do texto
   for (const h of f.hls) {
     const k = low.indexOf(h.needle);
@@ -155,6 +173,7 @@ function textBlock(f: F, text: string, o: TextOpts): { svg: string; h: number; l
       const wd = textWidth(text.slice(a, b), size, weight);
       const lx = o.align === 'center' ? o.x + (o.w - ln.width) / 2 : o.align === 'right' ? o.x + o.w - ln.width : o.x;
       parts.push(`<rect x="${num(lx + off - 4)}" y="${num(o.y + i * lh + (lh - size * 1.25) / 2)}" width="${num((wd + 8) * ez(h.p))}" height="${num(size * 1.25)}" rx="6" fill="${C.hl}"/>`);
+      if (light && h.p > 0.5) over.push(`<text x="${num(lx + off)}" y="${num(o.y + i * lh + lh / 2 + size * 0.34)}" font-size="${size}" font-weight="${weight}" fill="${C.ink}" xml:space="preserve">${esc(text.slice(a, b))}</text>`);
     });
   }
   lines.forEach((ln, i) => {
@@ -164,6 +183,7 @@ function textBlock(f: F, text: string, o: TextOpts): { svg: string; h: number; l
     const caret = o.caret && i === lines.length - 1 ? `<tspan fill="${C.ink}" font-weight="400">|</tspan>` : '';
     parts.push(`<text x="${num(lx)}" y="${num(by)}" font-size="${size}" font-weight="${weight}" fill="${o.fill ?? C.ink}" text-anchor="${anchor}" xml:space="preserve">${esc(ln.text)}${caret}</text>`);
   });
+  parts.push(...over);
   return { svg: parts.join(''), h: lines.length * lh, lines, maxW: lines.reduce((m, l) => Math.max(m, l.width), 0) };
 }
 
@@ -221,7 +241,7 @@ function flow(f: F, items: Item[], view0: Rect, o: { padTop?: number; padBottom?
   }
   const total = y + padBottom;
   const scroll = Math.max(0, total - view.h);
-  const id = `cv${f.defs.length}`;
+  const id = `${f.idp}cv${f.defs.length}`;
   f.defs.push(`<clipPath id="${id}"><rect x="${num(view.x)}" y="${num(view.y)}" width="${num(view.w)}" height="${num(view.h)}"/></clipPath>`);
   const parts = placed.map(({ it, y: iy, e }) => {
     const ay = view.y + iy - scroll + (1 - e) * 26;
@@ -231,7 +251,7 @@ function flow(f: F, items: Item[], view0: Rect, o: { padTop?: number; padBottom?
     return `<g opacity="${num(e)}">${svg}</g>`;
   });
   // degradê sob a barra do topo: o que rola não aparece com uma linha cortada de repente
-  const fid = `fd${f.defs.length}`;
+  const fid = `${f.idp}fd${f.defs.length}`;
   const fh = Math.min(44, view.h / 4);
   const fc = o.fade ?? C.screen;
   f.defs.push(`<linearGradient id="${fid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${fc}" stop-opacity="1"/><stop offset="1" stop-color="${fc}" stop-opacity="0"/></linearGradient>`);
@@ -246,15 +266,21 @@ function addTarget(f: F, label: string, r: Rect, tap?: { x: number; y: number })
 
 /* ---------------- tempo dos passos ---------------- */
 
-function typeDur(w: number, len: number) {
+/**
+ * Quanto dura a digitação de um texto numa janela de `w` segundos: ~16 letras por segundo, no máximo 80% da janela.
+ * Com `spoken` (quanto a FALA leva para dizer o texto digitado; ver `typeSec` da agenda) a digitação acompanha a fala:
+ * as letras aparecem enquanto o texto é dito e a mensagem é enviada quando a fala termina de ditá-la.
+ */
+function typeDur(w: number, len: number, spoken?: number) {
+  if (spoken !== undefined && spoken > 0) return Math.max(Math.min(0.4, w * 0.8), Math.min(w * 0.95, spoken));
   return Math.min(w * 0.8, Math.max(0.4, len / 16));
 }
-function typedText(text: string, t: number, s: number, e: number): string {
-  const p = prog(t, s, s + typeDur(e - s, text.length));
+function typedText(text: string, t: number, s: number, e: number, spoken?: number): string {
+  const p = prog(t, s, s + typeDur(e - s, text.length, spoken));
   return text.slice(0, Math.floor(p * text.length + 1e-9));
 }
-function sentAt(s: number, e: number, len: number) {
-  return s + Math.min((e - s) * 0.92, typeDur(e - s, len) + 0.3);
+function sentAt(s: number, e: number, len: number, spoken?: number) {
+  return s + Math.min((e - s) * (spoken !== undefined ? 0.98 : 0.92), typeDur(e - s, len, spoken) + (spoken !== undefined ? 0.15 : 0.3));
 }
 const blink = (t: number) => Math.floor(t * 2.2) % 2 === 0;
 
@@ -294,7 +320,7 @@ function drawChrome(f: F, bodyBg: string): Chrome {
     ].join('');
     return { svg, body, screen: sc, pillCenterX: sc.x + sc.w / 2 };
   }
-  const win = { x: 48, y: 36, w: 1824, h: 1008 };
+  const win = f.win ?? { x: 48, y: 36, w: 1824, h: 1008 };
   const body = { x: win.x, y: win.y + 64, w: win.w, h: win.h - 64 };
   const svg = [
     rect({ x: win.x + 6, y: win.y + 12, w: win.w, h: win.h }, 22, 'rgba(11,20,36,0.18)'),
@@ -302,7 +328,7 @@ function drawChrome(f: F, bodyBg: string): Chrome {
     rect({ x: win.x, y: win.y, w: win.w, h: 64 }, 20, '#E7EBF1'),
     rect({ x: win.x, y: win.y + 40, w: win.w, h: 24 }, 0, '#E7EBF1'),
     `<circle cx="${win.x + 36}" cy="${win.y + 32}" r="9" fill="#EF6B5F"/><circle cx="${win.x + 66}" cy="${win.y + 32}" r="9" fill="#F4BF4F"/><circle cx="${win.x + 96}" cy="${win.y + 32}" r="9" fill="#61C554"/>`,
-    `<text x="${win.x + win.w / 2}" y="${win.y + 42}" font-size="30" font-weight="600" fill="${C.ink}" text-anchor="middle">${esc(ellipsize(app, 900, 30, 600))}</text>`,
+    `<text x="${win.x + win.w / 2}" y="${win.y + 42}" font-size="30" font-weight="600" fill="${C.ink}" text-anchor="middle">${esc(ellipsize(app, Math.min(900, win.w - 300), 30, 600))}</text>`,
   ].join('');
   return { svg, body, screen: win, pillCenterX: win.x + win.w / 2 };
 }
@@ -380,24 +406,54 @@ function cardItem(f: F, title: string | undefined, lines: string[], p: number, o
 
 function windowOf(f: F, i: number) {
   const w = f.sch.windows[i]!;
-  return { s: w.start, e: w.end };
+  return { s: w.start, e: w.end, sp: w.typeSec };
+}
+
+/** Similaridade mínima (palavras em comum, coeficiente de Dice) para um `usuário:` contar como o mesmo texto de um `digita:`. */
+export const SAME_MESSAGE_MIN_SIMILARITY = 0.8;
+
+/**
+ * Os dois textos são a mesma mensagem? Normalizados (sem caixa, acento e pontuação): iguais; ou um contém o outro
+ * (o menor com 8+ letras, para "ok" não casar com qualquer frase); ou ≥ 80% das palavras em comum (Dice, contando
+ * repetições). "me explica marketing" × "o que é marketing" NÃO são a mesma (0,29): são dois pedidos diferentes.
+ */
+export function sameMessageText(a: string, b: string): boolean {
+  const x = norm(a);
+  const y = norm(b);
+  if (!x || !y) return false;
+  if (x === y) return true;
+  const [short, long] = x.length <= y.length ? [x, y] : [y, x];
+  if (short.length >= 8 && ` ${long} `.includes(` ${short} `)) return true;
+  const xs = x.split(' ');
+  const left = new Map<string, number>();
+  for (const w of y.split(' ')) left.set(w, (left.get(w) ?? 0) + 1);
+  let common = 0;
+  for (const w of xs) {
+    const n = left.get(w) ?? 0;
+    if (n > 0) {
+      common++;
+      left.set(w, n - 1);
+    }
+  }
+  return (2 * common) / (xs.length + y.split(' ').length) >= SAME_MESSAGE_MIN_SIMILARITY;
 }
 
 /**
  * Índices de `message from:'user'` que repetem um `type` anterior ainda não "consumido". Regra do chat: todo `type`
  * vira balão do usuário ao ser enviado (quando o próximo passo é `ia:`/`toca: Enviar`/qualquer outro, o balão nasce no
- * fim da digitação, não depende de haver um `usuário:` depois); um `usuário:` de texto igual (normalizado) a um `type`
- * anterior que ainda não casou com outro `usuário:` é a mesma mensagem e não gera balão novo, haja o que houver entre
- * os dois passos.
+ * fim da digitação, não depende de haver um `usuário:` depois); um `usuário:` com a mesma mensagem (`sameMessageText`:
+ * texto igual, um contido no outro ou ≥ 80% das palavras em comum) de um `type` anterior que ainda não casou com outro
+ * `usuário:` não gera balão novo, haja o que houver entre os dois passos. Vale o texto digitado.
  */
 export function duplicateUserMessages(steps: ReadonlyArray<MockStep>): Set<number> {
   const out = new Set<number>();
-  const free: Array<{ key: string; used: boolean }> = [];
+  const free: Array<{ text: string; used: boolean }> = [];
   steps.forEach((st, i) => {
-    if (st.kind === 'type') free.push({ key: norm(st.text), used: false });
+    if (st.kind === 'type') free.push({ text: st.text, used: false });
     else if (st.kind === 'message' && st.from === 'user') {
+      // primeiro o texto idêntico; depois o quase igual
       const k = norm(st.text);
-      const hit = free.find((x) => !x.used && x.key === k);
+      const hit = free.find((x) => !x.used && norm(x.text) === k) ?? free.find((x) => !x.used && sameMessageText(x.text, st.text));
       if (hit) {
         hit.used = true;
         out.add(i);
@@ -407,18 +463,32 @@ export function duplicateUserMessages(steps: ReadonlyArray<MockStep>): Set<numbe
   return out;
 }
 
+/** linhas visíveis do campo de digitação do chat enquanto o texto é digitado */
+const CHAT_FIELD_LINES = 5;
+
 function drawChat(f: F, ch: Chrome): string {
   const { t } = f;
-  const barH = f.phone ? 112 : 124;
-  const view = { x: ch.body.x, y: ch.body.y, w: ch.body.w, h: ch.body.h - barH };
   const items: Item[] = [];
   let typingNow = null as { text: string; done: boolean } | null;
   const dupUser = duplicateUserMessages(f.steps);
   f.steps.forEach((st, i) => {
-    const { s, e } = windowOf(f, i);
+    if (st.kind !== 'type') return;
+    const { s, e, sp } = windowOf(f, i);
+    if (t >= s && t < sentAt(s, e, st.text.length, sp)) typingNow = { text: typedText(st.text, t, s, e, sp), done: t >= s + typeDur(e - s, st.text.length, sp) };
+  });
+  // o campo de digitação cresce com o texto (até CHAT_FIELD_LINES linhas, mostrando o fim): dá para LER o que é digitado
+  const fx = f.col.x;
+  const fw = f.col.w - 84;
+  const fieldLines = typingNow ? wrapText(typingNow.text || ' ', fw - 64, S.body) : [];
+  const shownLines = fieldLines.slice(-CHAT_FIELD_LINES);
+  const grow = Math.max(0, shownLines.length - 1) * S.lh;
+  const barH = (f.phone ? 112 : 124) + grow;
+  f.inset = barH;
+  const view = { x: ch.body.x, y: ch.body.y, w: ch.body.w, h: ch.body.h - barH };
+  f.steps.forEach((st, i) => {
+    const { s, e, sp } = windowOf(f, i);
     if (st.kind === 'type') {
-      const sa = sentAt(s, e, st.text.length);
-      if (t >= s && t < sa) typingNow = { text: typedText(st.text, t, s, e), done: t >= s + typeDur(e - s, st.text.length) };
+      const sa = sentAt(s, e, st.text.length, sp);
       if (t >= sa) items.push(bubbleItem(f, 'user', st.text, prog(t, sa, sa + 0.3), view));
     } else if (st.kind === 'message') {
       if (t < s) return;
@@ -446,18 +516,20 @@ function drawChat(f: F, ch: Chrome): string {
   // barra de digitação
   const by = ch.body.y + ch.body.h - barH;
   parts.push(rect({ x: ch.body.x, y: by, w: ch.body.w, h: barH }, 0, C.white), `<path d="M${ch.body.x} ${by} H${ch.body.x + ch.body.w}" stroke="${C.line}" stroke-width="2"/>`);
-  const fx = f.col.x;
-  const fw = f.col.w - 84;
-  const fy = by + (barH - 76) / 2;
+  const fy = by + (barH - 76 - grow) / 2;
   const ty = typingNow;
-  parts.push(rect({ x: fx, y: fy, w: fw, h: 76 }, 38, C.screen, `stroke="${ty ? C.ink : C.line}" stroke-width="2"`));
+  parts.push(rect({ x: fx, y: fy, w: fw, h: 76 + grow }, 38, C.screen, `stroke="${ty ? C.ink : C.line}" stroke-width="2"`));
   if (ty) {
-    const tt = ty.text;
-    parts.push(`<text x="${fx + 28}" y="${fy + 38 + S.body * 0.34}" font-size="${S.body}" fill="${C.ink}" xml:space="preserve">${esc(fieldText(tt, fw - 70, S.body))}<tspan font-weight="400">|</tspan></text>`);
+    shownLines.forEach((ln, k) => {
+      const lead = k === 0 && fieldLines.length > shownLines.length ? '…' : '';
+      const caret = k === shownLines.length - 1 ? '<tspan font-weight="400">|</tspan>' : '';
+      parts.push(`<text x="${fx + 28}" y="${num(fy + 38 + k * S.lh + S.body * 0.34)}" font-size="${S.body}" fill="${C.ink}" xml:space="preserve">${esc(lead + ln.text)}${caret}</text>`);
+    });
   } else parts.push(`<text x="${fx + 28}" y="${fy + 38 + S.body * 0.34}" font-size="${S.body}" fill="${C.faint}">${esc(ellipsize('Mensagem', fw - 70, S.body))}</text>`);
   const sx = fx + fw + 42;
-  parts.push(`<circle cx="${sx}" cy="${fy + 38}" r="38" fill="${ty ? C.navy : C.chip}"/>${icon('send', sx, fy + 38, 40, ty ? C.lime : C.faint)}`);
-  addTarget(f, 'enviar', { x: sx - 38, y: fy, w: 76, h: 76 });
+  const sy = fy + grow + 38;
+  parts.push(`<circle cx="${sx}" cy="${sy}" r="38" fill="${ty ? C.navy : C.chip}"/>${icon('send', sx, sy, 40, ty ? C.lime : C.faint)}`);
+  addTarget(f, 'enviar', { x: sx - 38, y: sy - 38, w: 76, h: 76 });
   return parts.join('');
 }
 
@@ -476,11 +548,11 @@ function drawBrowser(f: F, ch: Chrome): string {
   let hasType = false;
   f.steps.forEach((st, i) => {
     if (st.kind !== 'type') return;
-    const { s, e } = windowOf(f, i);
+    const { s, e, sp } = windowOf(f, i);
     if (t >= s) {
       hasType = true;
-      text = typedText(st.text, t, s, e);
-      active = t < s + typeDur(e - s, st.text.length) + 0.3;
+      text = typedText(st.text, t, s, e, sp);
+      active = t < s + typeDur(e - s, st.text.length, sp) + 0.3;
     }
   });
   if (!f.phone) {
@@ -754,7 +826,7 @@ function drawCalendar(f: F, ch: Chrome): string {
   });
   if (f.phone) parts.push(`<text x="${ch.body.x + f.pad}" y="${ch.body.y + 18}" font-size="1" fill="none"> </text>`);
   // grade de horas
-  const id = `cg${f.defs.length}`;
+  const id = `${f.idp}cg${f.defs.length}`;
   f.defs.push(`<clipPath id="${id}"><rect x="${num(gridView.x)}" y="${num(gridView.y)}" width="${num(gridView.w)}" height="${num(gridView.h)}"/></clipPath>`);
   const g: string[] = [];
   for (let h = hours0; h <= hours1; h++) {
@@ -829,7 +901,7 @@ function fmtNumber(n: number, money: boolean): string {
 
 const colIndex = (c: string) => [...c].reduce((a, ch) => a * 26 + ch.charCodeAt(0) - 64, 0) - 1;
 
-/** Valor exibido de uma célula: fórmulas simples (SOMA/MÉDIA/MÁXIMO/MÍNIMO de intervalo, + e -) são calculadas; senão mostra o texto. */
+/** Valor exibido de uma célula: fórmulas simples (SOMA/MÉDIA/MÁXIMO/MÍNIMO de intervalo, SE com uma comparação e dois textos, + e -) são calculadas; senão mostra o texto. */
 export function evalCell(raw: string, cells: Map<string, string>): string {
   if (!raw.startsWith('=')) return raw;
   const get = (ref: string) => {
@@ -849,6 +921,15 @@ export function evalCell(raw: string, cells: Map<string, string>): string {
     const fn = norm(m[1]!);
     const out = fn === 'soma' || fn === 'sum' ? vals.reduce((a, b) => a + b, 0) : fn === 'media' || fn === 'average' ? vals.reduce((a, b) => a + b, 0) / vals.length : fn === 'maximo' || fn === 'max' ? Math.max(...vals) : Math.min(...vals);
     return fmtNumber(out, money);
+  }
+  // SE/IF simples: =SE(B2>5000; "bateu"; "não bateu")
+  const se = /^=\s*(?:SE|IF)\s*\(\s*([A-Za-z]{1,2}\d+)\s*(>=|<=|<>|>|<|=)\s*(-?[\d.,]+)\s*[;,]\s*"([^"]*)"\s*[;,]\s*"([^"]*)"\s*\)\s*$/i.exec(raw);
+  if (se) {
+    const a = get(se[1]!);
+    const b = parseNumber(se[3]!);
+    if (a === null || b === null) return raw;
+    const ok = se[2] === '>' ? a > b : se[2] === '<' ? a < b : se[2] === '>=' ? a >= b : se[2] === '<=' ? a <= b : se[2] === '=' ? a === b : a !== b;
+    return ok ? se[4]! : se[5]!;
   }
   const terms = raw.slice(1).split(/([+-])/).map((x) => x.trim());
   if (terms.length >= 3 || terms.length === 1) {
@@ -940,7 +1021,7 @@ function drawSheet(f: F, ch: Chrome): string {
   const bt = textBlock(f, bar, { x: fxX + 64, y: ch.body.y + (fbH - 48) / 2, w: ch.body.x + ch.body.w - (fxX + 64) - 16, lh: 48, size: f.phone ? 28 : S.body, caret: barActive, maxLines: 1 });
   parts.push(bt.svg);
   // grade
-  const id = `cg${f.defs.length}`;
+  const id = `${f.idp}cg${f.defs.length}`;
   f.defs.push(`<clipPath id="${id}"><rect x="${num(view.x)}" y="${num(ch.body.y + fbH)}" width="${num(view.w)}" height="${num(view.h + hdrH)}"/></clipPath>`);
   const g: string[] = [rect({ x: view.x, y: ch.body.y + fbH, w: view.w, h: view.h + hdrH }, 0, C.white)];
   const gx = view.x + rhW - sx;
@@ -1013,11 +1094,11 @@ function drawNotes(f: F, ch: Chrome): string {
   f.col = col;
   const items: Item[] = [];
   f.steps.forEach((st, i) => {
-    const { s, e } = windowOf(f, i);
+    const { s, e, sp } = windowOf(f, i);
     if (t < s) return;
     if (st.kind === 'type') {
-      const done = t >= s + typeDur(e - s, st.text.length);
-      const text = typedText(st.text, t, s, e);
+      const done = t >= s + typeDur(e - s, st.text.length, sp);
+      const text = typedText(st.text, t, s, e, sp);
       const lines = wrapText(text || ' ', col.w - 14, S.body);
       items.push({
         h: lines.length * S.lh,
@@ -1080,7 +1161,8 @@ function drawTap(f: F, ch: Chrome, stepIdx: number, st: Extract<MockStep, { kind
     // sem alvo na tela: botão genérico com o rótulo
     const w = Math.min(ch.body.w - 2 * f.pad, textWidth(st.label, S.body, 700) + 90);
     const x = ch.body.x + (ch.body.w - w) / 2;
-    const y = ch.body.y + ch.body.h - 130;
+    // acima da barra fixa de baixo e da faixa de destaque (se houver): o botão não cobre a faixa
+    const y = ch.body.y + ch.body.h - 130 - f.inset - f.reserve;
     const vis = ez(prog(t, s, s + 0.2)) * (1 - prog(t, s + dur + 0.5, s + dur + 0.9));
     tg = { norm: lbl, x, y, w, h: 84, px: x + w / 2, py: y + 42 };
     if (vis <= 0) return '';
@@ -1101,12 +1183,79 @@ function drawTap(f: F, ch: Chrome, stepIdx: number, st: Extract<MockStep, { kind
 
 /** Quadro completo. Se há faixa de destaque, redesenha reservando o espaço dela: o conteúdo rola para cima da faixa. */
 export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): string {
-  const first = buildFrame(mock, sch, t, 0);
-  if (first.bannerH <= 0) return first.svg;
-  return buildFrame(mock, sch, t, (first.bannerH + 26 + 16) * ez(first.bannerP)).svg;
+  const parts = mock.model === 'compare' ? buildCompare(mock, sch, t) : buildScreen(mock as SingleMock, sch, t);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${MOCK_W}" height="${MOCK_H}" viewBox="0 0 ${MOCK_W} ${MOCK_H}" font-family="Inter"><defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EDF3"/><stop offset="1" stop-color="#C9D2DF"/></linearGradient></defs><rect width="${MOCK_W}" height="${MOCK_H}" fill="url(#bgg)"/><defs>${parts.defs}</defs>${parts.inner}</svg>`;
 }
 
-function buildFrame(mock: MockInput, sch: StepSchedule, t: number, reserve: number): { svg: string; bannerH: number; bannerP: number } {
+type SingleMock = MockInput & { model: MockSideModel };
+interface FrameOpts {
+  idp?: string;
+  win?: Rect;
+}
+interface FrameParts {
+  defs: string;
+  inner: string;
+}
+
+/** Uma tela (aparelho + conteúdo), sem o fundo. Se há faixa de destaque, redesenha reservando o espaço dela. */
+function buildScreen(mock: SingleMock, sch: StepSchedule, t: number, o: FrameOpts = {}): FrameParts {
+  const first = buildFrame(mock, sch, t, 0, o);
+  if (first.bannerH <= 0) return first;
+  return buildFrame(mock, sch, t, (first.bannerH + 26 + 16) * ez(first.bannerP), o);
+}
+
+/* ---------------- comparação: duas telas lado a lado ---------------- */
+
+export const COMPARE_SIDES = ['left', 'right'] as const;
+/** janela do computador na comparação (metade da largura; centrada como a janela cheia) */
+const COMPARE_WIN: Rect = { x: 508, y: 36, w: 904, h: 1008 };
+/** distância (px) do centro de cada tela ao centro do quadro */
+const COMPARE_OFFSET = { phone: 300, desktop: 464 };
+/** com rótulo em cima, a tela encolhe para caber: topo do aparelho em `top`, escala `scale` */
+const COMPARE_LABELED = { scale: 0.9, top: 100 };
+
+/**
+ * Agenda de UM lado da comparação: os passos daquele lado, com o início que cada um tem na linha do tempo única da
+ * cena; cada passo vai até o próximo passo DO MESMO lado (a tela só muda nos passos dela).
+ */
+export function sideSchedule(steps: ReadonlyArray<{ side?: 'left' | 'right' }>, sch: StepSchedule, side: 'left' | 'right'): { indexes: number[]; sch: StepSchedule } {
+  const indexes = steps.map((s, i) => (s.side === side ? i : -1)).filter((i) => i >= 0);
+  const spanEnd = sch.windows[sch.windows.length - 1]?.end ?? sch.durationSec;
+  const windows = indexes.map((g, k) => ({ index: k, start: sch.windows[g]!.start, end: k + 1 < indexes.length ? sch.windows[indexes[k + 1]!]!.start : spanEnd, weight: sch.windows[g]!.weight, ...(sch.windows[g]!.typeSec !== undefined ? { typeSec: sch.windows[g]!.typeSec } : {}) }));
+  return { indexes, sch: { ...sch, windows } };
+}
+
+function buildCompare(mock: MockInput, sch: StepSchedule, t: number): FrameParts {
+  const phone = (mock.device ?? 'phone') === 'phone';
+  const labeled = COMPARE_SIDES.some((sd) => mock.sides?.[sd]?.label?.trim());
+  const scale = labeled ? COMPARE_LABELED.scale : 1;
+  const nativeTop = phone ? 20 : COMPARE_WIN.y;
+  const ty = labeled ? COMPARE_LABELED.top - nativeTop * scale : 0;
+  const off = phone ? COMPARE_OFFSET.phone : COMPARE_OFFSET.desktop;
+  const devW = (phone ? 480 : COMPARE_WIN.w) * scale;
+  const defs: string[] = [];
+  const inner: string[] = [];
+  for (const sd of COMPARE_SIDES) {
+    const side = mock.sides?.[sd] ?? {};
+    const sub = sideSchedule(mock.steps, sch, sd);
+    const cx = MOCK_W / 2 + (sd === 'left' ? -off : off);
+    const label = side.label?.trim();
+    if (label) {
+      const size = 32;
+      const txt = ellipsize(label, devW - 60, size, 700);
+      const w = Math.min(devW, textWidth(txt, size, 700) + 64);
+      inner.push(`${rect({ x: cx - w / 2, y: 22, w, h: 60 }, 30, C.navy)}<text x="${num(cx)}" y="${num(22 + 30 + size * 0.34)}" font-size="${size}" font-weight="700" fill="${C.white}" text-anchor="middle">${esc(txt)}</text>`);
+    }
+    if (!sub.indexes.length) continue;
+    const one: SingleMock = { model: side.model ?? 'chat', device: mock.device, app: side.app ?? mock.app, steps: sub.indexes.map((i) => mock.steps[i]!) };
+    const fr = buildScreen(one, sub.sch, t, { idp: sd === 'left' ? 'L' : 'R', ...(phone ? {} : { win: COMPARE_WIN }) });
+    defs.push(fr.defs);
+    inner.push(`<g transform="translate(${num(cx - (MOCK_W / 2) * scale)} ${num(ty)}) scale(${scale})">${fr.inner}</g>`);
+  }
+  return { defs: defs.join(''), inner: inner.join('') };
+}
+
+function buildFrame(mock: SingleMock, sch: StepSchedule, t: number, reserve: number, o: FrameOpts = {}): FrameParts & { bannerH: number; bannerP: number } {
   const phone = (mock.device ?? 'phone') === 'phone';
   const steps = mock.steps;
   const f: F = {
@@ -1122,6 +1271,8 @@ function buildFrame(mock: MockInput, sch: StepSchedule, t: number, reserve: numb
     inset: mock.model === "chat" ? (phone ? 112 : 124) : mock.model === "form" && mock.steps.some((s) => s.kind === "tap") ? (phone ? 150 : 140) : 0,
     reserve,
     col: { x: 0, w: 0 },
+    idp: o.idp ?? '',
+    ...(o.win ? { win: o.win } : {}),
   };
   // realces ativos
   steps.forEach((st, i) => {
@@ -1167,13 +1318,9 @@ function buildFrame(mock: MockInput, sch: StepSchedule, t: number, reserve: numb
   steps.forEach((st, i) => {
     if (st.kind === 'tap' && t >= sch.windows[i]!.start) over.push(drawTap(f, ch, i, st));
   });
-  const clipId = 'screenclip';
-  const clipRect = phone ? `<rect x="${ch.screen.x}" y="${ch.screen.y}" width="${ch.screen.w}" height="${ch.screen.h}" rx="52"/>` : `<rect x="${ch.screen.x}" y="${ch.screen.y}" width="${ch.screen.w}" height="${ch.screen.h}" rx="20"/>`;
-  const bg = phone
-    ? `<defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EDF3"/><stop offset="1" stop-color="#C9D2DF"/></linearGradient></defs><rect width="${MOCK_W}" height="${MOCK_H}" fill="url(#bgg)"/>`
-    : `<defs><linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EDF3"/><stop offset="1" stop-color="#C9D2DF"/></linearGradient></defs><rect width="${MOCK_W}" height="${MOCK_H}" fill="url(#bgg)"/>`;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${MOCK_W}" height="${MOCK_H}" viewBox="0 0 ${MOCK_W} ${MOCK_H}" font-family="Inter">${bg}<defs><clipPath id="${clipId}">${clipRect}</clipPath>${f.defs.join('')}</defs>${ch.svg}<g clip-path="url(#${clipId})">${content}${over.join('')}</g></svg>`;
-  return { svg, bannerH, bannerP: fresh ? fresh.b.p : 0 };
+  const clipId = `${f.idp}screenclip`;
+  const clipRect = `<rect x="${ch.screen.x}" y="${ch.screen.y}" width="${ch.screen.w}" height="${ch.screen.h}" rx="${phone ? 52 : 20}"/>`;
+  return { defs: `<clipPath id="${clipId}">${clipRect}</clipPath>${f.defs.join('')}`, inner: `${ch.svg}<g clip-path="url(#${clipId})">${content}${over.join('')}</g>`, bannerH, bannerP: fresh ? fresh.b.p : 0 };
 }
 
 export { scheduleSteps };

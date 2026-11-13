@@ -20,6 +20,8 @@ export interface StepWindow {
   start: number;
   end: number;
   weight: number;
+  /** só `digita`: quanto a FALA leva para dizer o texto digitado (a digitação acompanha a fala); ausente = ritmo padrão */
+  typeSec?: number;
 }
 
 export interface StepSchedule {
@@ -112,14 +114,16 @@ function findPhrase(speech: string[], phrase: string[], from: number, need: numb
     if (!same(speech[j]!, phrase[0]!)) continue;
     let p = 0;
     let last = j;
+    // se a primeira palavra se repete antes da segunda casar ("lado a lado. À esquerda"), o trecho começa na última
+    let first = j;
     const limit = Math.min(speech.length, j + k + slack);
     for (let q = j; q < limit && p < k; q++) {
       if (same(speech[q]!, phrase[p]!)) {
         p++;
         last = q;
-      }
+      } else if (p === 1 && k > 1 && same(speech[q]!, phrase[0]!)) first = q;
     }
-    if (p >= need) return { at: j, end: last + 1 };
+    if (p >= need) return { at: first, end: last + 1 };
   }
   return undefined;
 }
@@ -137,9 +141,48 @@ function contentChunks(text: string): Array<{ words: string[]; /** palavras de c
   return out;
 }
 
+/**
+ * Onde a fala TERMINA de dizer um texto digitado que começa no token `start`: procura as 3 últimas palavras do texto
+ * adiante (até ~1,6× o tamanho do texto) e confere que ao menos 60% das palavras do texto estão, em ordem, até ali.
+ * Devolve o índice do último token, ou `undefined` (o texto não é ditado na fala; ex.: só o `cue` casou).
+ */
+function spokenEnd(speech: string[], text: string[], start: number): number | undefined {
+  const n = text.length;
+  if (n < 2) return undefined;
+  const tail = text.slice(-Math.min(3, n));
+  const limit = Math.min(speech.length, start + Math.ceil(n * 1.6) + 8);
+  for (let j = start + Math.max(0, Math.floor(n * 0.5) - tail.length); j < limit; j++) {
+    if (!same(speech[j]!, tail[0]!)) continue;
+    let p = 0;
+    let last = j;
+    for (let q = j; q < Math.min(limit, j + tail.length + 2) && p < tail.length; q++) {
+      if (same(speech[q]!, tail[p]!)) {
+        p++;
+        last = q;
+      }
+    }
+    if (p < tail.length) continue;
+    let hit = 0;
+    let q = start;
+    for (const w of text) {
+      for (let k = q; k <= last; k++) {
+        if (same(speech[k]!, w)) {
+          hit++;
+          q = k + 1;
+          break;
+        }
+      }
+    }
+    if (hit >= Math.ceil(n * 0.6)) return last;
+  }
+  return undefined;
+}
+
 export interface CueMatch {
   /** início (s) de cada passo achado na fala; `undefined` = sem correspondência */
   times: Array<number | undefined>;
+  /** só `digita` achado e DITADO na fala: instante em que a fala termina de dizer o texto; senão `undefined` */
+  typeEnds: Array<number | undefined>;
   /** índice (em `words`) onde continuar a busca na próxima tela da cena */
   nextIndex: number;
 }
@@ -163,6 +206,7 @@ export function matchStepCues(steps: ReadonlyArray<CueStep>, words: ReadonlyArra
   if (fromIndex > 0 && !at.some((x) => x >= fromIndex)) pos = speech.length;
   let lastTime = -Infinity;
   const times: Array<number | undefined> = [];
+  const typeEnds: Array<number | undefined> = [];
   for (const st of steps) {
     let found: { at: number; end: number } | undefined;
     let rest = 0;
@@ -185,15 +229,20 @@ export function matchStepCues(steps: ReadonlyArray<CueStep>, words: ReadonlyArra
     }
     if (!found) {
       times.push(undefined);
+      typeEnds.push(undefined);
       continue;
     }
     const t = Math.max(words[at[found.at]!]!.start, lastTime);
     lastTime = t;
     times.push(t);
+    // texto digitado que a fala dita: até onde vai (a digitação acompanha a fala)
+    const endTok = st.kind === 'type' && typeof st.text === 'string' ? spokenEnd(speech, tokens(st.text), found.at) : undefined;
+    const endWord = endTok !== undefined ? words[at[endTok]!]! : undefined;
+    typeEnds.push(endWord ? Math.max(t, endWord.end ?? endWord.start + 0.3) : undefined);
     // segue depois do trecho achado (e do que sobra do texto do passo), para o texto repetido noutro passo não casar de novo
-    pos = Math.max(pos, found.at + 1, found.end + rest);
+    pos = Math.max(pos, found.at + 1, endTok !== undefined ? endTok + 1 : found.end + rest);
   }
-  return { times, nextIndex: pos >= speech.length ? words.length : at[pos]! };
+  return { times, typeEnds, nextIndex: pos >= speech.length ? words.length : at[pos]! };
 }
 
 function holdOf(durationSec: number): number {
@@ -275,7 +324,7 @@ export function scheduleStepsWithCues(steps: ReadonlyArray<CueStep>, alignmentWo
 }
 
 /** Monta o `StepSchedule` (usado pelo desenho) a partir dos inícios; cada passo vai até o início do próximo. */
-export function scheduleFromStarts(starts: ReadonlyArray<number>, weights: ReadonlyArray<number | undefined>, durationSec: number): StepSchedule {
+export function scheduleFromStarts(starts: ReadonlyArray<number>, weights: ReadonlyArray<number | undefined>, durationSec: number, typeSecs: ReadonlyArray<number | undefined> = []): StepSchedule {
   if (!(durationSec > 0) || !Number.isFinite(durationSec)) throw new Error('durationSec deve ser positivo');
   const spanEnd = Math.max(starts[starts.length - 1] ?? 0, durationSec - holdOf(durationSec));
   const windows = starts.map((start, index) => ({
@@ -283,6 +332,74 @@ export function scheduleFromStarts(starts: ReadonlyArray<number>, weights: Reado
     start,
     end: index === starts.length - 1 ? spanEnd : starts[index + 1]!,
     weight: weights[index] !== undefined && Number.isFinite(weights[index]!) && weights[index]! > 0 ? weights[index]! : 1,
+    ...(typeSecs[index] !== undefined && typeSecs[index]! > 0 ? { typeSec: typeSecs[index]! } : {}),
   }));
   return { windows, leadSec: starts[0] ?? 0, holdSec: Math.max(0, durationSec - spanEnd), durationSec };
+}
+
+/* ---------------- linha do tempo da cena (várias telas + a fala) ---------------- */
+
+export interface SceneRecordingPlanInput {
+  /** tela simulada a gerar: os passos dela */
+  steps?: ReadonlyArray<CueStep>;
+  /** gravação enviada: a duração dela */
+  uploadSec?: number;
+}
+
+export interface SceneScreenPlan {
+  /** duração (s) de cada gravação da cena, na ordem */
+  durations: number[];
+  /** início (s) de cada gravação na narração */
+  starts: number[];
+  /** início (s) de cada passo, relativo ao início da própria tela; `undefined` = proporcional ao peso (sem fala achada) ou gravação enviada */
+  stepStarts: Array<number[] | undefined>;
+  /** só com `stepStarts`: para cada `digita` ditado na fala, quanto a fala leva para dizê-lo (s); senão `undefined` */
+  typeSecs: Array<Array<number | undefined> | undefined>;
+}
+
+/**
+ * Plano de tempo de uma cena de tela: quanto dura cada gravação e quando começa cada passo, a partir da fala.
+ * É a MESMA conta da montagem (`processScreenJob`) e da prévia local: os passos de cada tela são procurados na fala em
+ * sequência (a busca de uma tela continua de onde a anterior parou); a duração de cada tela gerada vai até a fala
+ * chegar no primeiro passo da próxima (`splitMockDurations`); se alguma tela gerada não achou nenhum passo na fala, a
+ * divisão é proporcional ao peso e os passos de todas seguem proporcionais também. `words` vazio = tudo proporcional.
+ * O primeiro passo achado que é `digita` ou tem `(na fala: "…")` fica no instante da fala (não é adiantado).
+ * `split` = `splitMockDurations` (injetado para este módulo não depender de `screen.ts`).
+ */
+export function planSceneScreens(
+  recs: ReadonlyArray<SceneRecordingPlanInput>,
+  words: ReadonlyArray<CueWord>,
+  narrationSec: number,
+  split: (items: Array<{ uploadSec: number } | { mockWeight: number; cueSec?: number }>, narrationSec: number) => number[],
+): SceneScreenPlan {
+  const cues = new Map<number, Array<number | undefined>>();
+  const ends = new Map<number, Array<number | undefined>>();
+  let from = 0;
+  recs.forEach((r, i) => {
+    if (!r.steps || !words.length) return;
+    const m = matchStepCues(r.steps, words, from);
+    cues.set(i, m.times);
+    ends.set(i, m.typeEnds);
+    from = m.nextIndex;
+  });
+  const weightOf = (steps: ReadonlyArray<CueStep>) => steps.reduce((a, s) => a + (s.weight ?? 1), 0);
+  const durations = split(recs.map((r, i) => (r.steps ? { mockWeight: weightOf(r.steps), cueSec: cues.get(i)?.find((t) => t !== undefined) } : { uploadSec: r.uploadSec ?? 0 })), narrationSec);
+  // se alguma tela gerada não achou nenhum passo na fala, a divisão foi proporcional: os passos seguem proporcionais também
+  if (recs.some((r, i) => r.steps && !cues.get(i)?.some((t) => t !== undefined))) cues.clear();
+  const starts: number[] = [];
+  durations.reduce((acc, d, i) => (starts[i] = acc) + d, 0);
+  const stepStarts = recs.map((r, i) => {
+    const ct = cues.get(i);
+    if (!r.steps || !ct) return undefined;
+    return startsFromCues(ct.map((t) => (t === undefined ? undefined : t - starts[i]!)), r.steps.map((s) => s.weight), durations[i]!, r.steps.map((s) => s.kind === 'type' || !!s.cue));
+  });
+  const typeSecs = recs.map((_, i) => {
+    const ss = stepStarts[i];
+    const ct = cues.get(i);
+    const en = ends.get(i);
+    if (!ss || !ct || !en) return undefined;
+    // só vale se o início do passo ficou onde a fala começa a ditar (não foi deslocado pelos limites da agenda)
+    return en.map((e, k) => (e !== undefined && ct[k] !== undefined && Math.abs(ss[k]! - (ct[k]! - starts[i]!)) < 0.05 ? e - ct[k]! : undefined));
+  });
+  return { durations, starts, stepStarts, typeSecs };
 }

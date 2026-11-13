@@ -30,6 +30,8 @@ export interface RenderScreenMockOptions {
   workDir?: string;
   /** início (s) de cada passo (ver `scheduleStepsWithCues`); ausente = distribuição proporcional ao peso */
   stepStarts?: number[];
+  /** com `stepStarts`: para cada `digita` ditado na fala, quanto a fala leva para dizê-lo (a digitação acompanha) */
+  stepTypeSecs?: Array<number | undefined>;
 }
 
 export interface RenderScreenMockResult {
@@ -47,7 +49,7 @@ export async function renderScreenMock(mock: MockInput, opts: RenderScreenMockOp
   try {
     const fontFiles = await writeMockFonts(path.join(work, 'fonts'));
     const weights = mock.steps.map((s) => s.weight);
-    const sch = opts.stepStarts && opts.stepStarts.length === mock.steps.length ? scheduleFromStarts(opts.stepStarts, weights, opts.durationSec) : scheduleSteps(weights, opts.durationSec);
+    const sch = opts.stepStarts && opts.stepStarts.length === mock.steps.length ? scheduleFromStarts(opts.stepStarts, weights, opts.durationSec, opts.stepTypeSecs) : scheduleSteps(weights, opts.durationSec);
     const total = Math.max(1, Math.round(opts.durationSec * SCREEN_MOCK_FPS));
     // quadros únicos, em ordem de exibição, com quantos quadros de vídeo cada um dura
     const runs: Array<{ key: string; frames: number }> = [];
