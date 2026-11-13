@@ -119,6 +119,14 @@ Aprovação: 2 de 3
 
    Explicação: Com data, pedido e próximo passo, qualquer colega consegue continuar o atendimento.
 
+Destino: T01
+
+### T01 — Missão final: seu registro de atendimento
+Entrega: link e arquivo
+Arquivos: PDF · imagem
+Instrução: Escreva um registro de atendimento de um caso real ou inventado (data, pedido e próximo passo). Cole aqui o link do documento e, se quiser, anexe o arquivo em PDF ou foto.
+Critérios: Tem a data · Descreve o pedido do cliente · Diz o próximo passo
+Correção: avaliador
 Destino: FIM
 
 ### FIM — O que você levou
@@ -127,3 +135,9 @@ Destino: FIM
 - Registre data, pedido e próximo passo.
 
 Checklist: Encaminhamento: responsável dito · prazo combinado · atendimento registrado
+
+## Notas para a montagem
+
+- O cabeçalho mostra as linhas do perfil EaD: `Formato`, `Duração-alvo` (só horas, como `6 h`), `Certificado` e `Carga horária`.
+- `T01` é a tarefa com entrega: a aula segue depois do envio, a entrega aparece em "Entregas" no estúdio e o certificado só sai com ela aprovada.
+- As outras variações do bloco `T..` (correção automática e tarefa opcional) estão em [exemplo-cruzeiro-tarefa.md](exemplo-cruzeiro-tarefa.md), um curso curto à parte. Os testes do importador leem os dois arquivos, por isso eles continuam separados.

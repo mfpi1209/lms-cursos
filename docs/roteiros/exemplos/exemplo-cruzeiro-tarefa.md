@@ -83,6 +83,8 @@ Destino: FIM
 
 ## Notas para a montagem
 
+- Este curso curto mostra só o bloco `T..` e suas variações. O exemplo completo do perfil EaD (formato, carga horária, certificado, decisões e avaliação) está em [exemplo-cruzeiro.md](exemplo-cruzeiro.md).
+
 - `T01` usa correção por avaliador: a aula segue depois do envio e a entrega aparece em "Entregas" no estúdio. O aluno vê "Em correção", "Aprovada" ou "Devolvida" (com o comentário) e pode reenviar quando é devolvida.
 - `T02` usa correção automática: a entrega é aprovada ao enviar. Os critérios aparecem para o aluno só como orientação (o importador avisa: `TASK_AUTO_CRITERIA`).
 - `Obrigatória: não` tira a tarefa da regra do certificado. Sem a linha, a tarefa é obrigatória: o certificado só sai com a entrega aprovada.

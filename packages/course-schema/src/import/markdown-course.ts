@@ -1250,8 +1250,11 @@ function buildLesson(
   const takeaways = end.takeaways.length ? doc(paragraph(end.title || 'O que você levou'), list(end.takeaways)) : paragraphs(end.title);
   nodes.push(endNode(endId, takeaways, outcome));
   const endRow = [endId];
-  if (hasAssessment && assessments.some((a) => Math.min(a.passMin, a.questions.length) > 0)) {
-    const a = assessments[0]!;
+  // o encerramento "revisar" só existe quando alguma avaliação com critério termina a aula (Destino: FIM);
+  // com outro destino (ex.: uma tarefa depois), quem não passa segue o mesmo caminho e o nó ficaria solto
+  const retryAssessments = assessments.filter((a) => Math.min(a.passMin, a.questions.length) > 0 && resolve(a.destination, a.code) === endId);
+  if (retryAssessments.length) {
+    const a = retryAssessments[0]!;
     nodes.push(
       endNode(
         retryEndId,

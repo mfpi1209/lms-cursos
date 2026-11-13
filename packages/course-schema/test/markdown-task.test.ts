@@ -171,3 +171,33 @@ describe('importador: bloco T (tarefa com entrega)', () => {
     expect(r.compile.warnings.filter((w) => w.code.startsWith('TASK')).map((w) => [w.code, w.nodeId])).toEqual([['TASK_AUTO_CRITERIA', 't02']]);
   });
 });
+
+describe('avaliação seguida de tarefa', () => {
+  const AV = (destino: string) => `### AV01 — Revisão
+Tentativas: 2
+Aprovação: 1 de 1
+
+1. Qual é a melhor atitude?
+
+   - Esperar.
+   - Agir com clareza. (correta)
+   - Ignorar.
+
+   Explicação: Clareza ajuda.
+
+Destino: ${destino}
+`;
+  const TASK = `### T01 — Missão final
+Entrega: link
+Instrução: Envie o link do seu registro.
+Critérios: Tem a data
+Destino: FIM
+`;
+  it('Destino: FIM mantém o encerramento "revisar"; com a tarefa depois, ele não é criado (sem nó solto)', () => {
+    const fim = importMarkdownCourse(roteiro('x').replace(/### T01[\s\S]*?(?=### FIM)/, AV('FIM')));
+    expect(allLessons(fim.document)[0]!.graph.nodes.some((n) => n.id.endsWith('_revisar'))).toBe(true);
+    const comTarefa = importMarkdownCourse(roteiro('x').replace(/### T01[\s\S]*?(?=### FIM)/, `${AV('T01')}\n${TASK}\n`));
+    expect(allLessons(comTarefa.document)[0]!.graph.nodes.some((n) => n.id.endsWith('_revisar'))).toBe(false);
+    expect(comTarefa.compile.warnings.map((w) => w.code)).not.toContain('UNREACHABLE');
+  });
+});
