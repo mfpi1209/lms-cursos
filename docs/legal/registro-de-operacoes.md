@@ -1,6 +1,6 @@
 # Registro das operações de tratamento (LGPD, art. 37)
 
-Documento interno. Controladora: DNA Work Treinamento e Desenvolvimento Profissional Ltda., CNPJ 40.380.163/0001-61. Encarregado: Caio Vinicius Pinheiro / Luan Melo Villas Boas, contato@dnawork.ai. Versão de 12/11/2026 (linhas 17 a 21 acrescentadas na fase 1), feita a partir do código (ver `pendencias.md`, seção 10). Não é parecer jurídico: as bases legais e os prazos são propostas marcadas `[A CONFIRMAR]`.
+Documento interno. NOTA (13/11/2026): no workspace de cliente a DNA Work é operadora e o cliente é o controlador (`pendencias.md`, seção 13); a coluna de papéis será revista depois de confirmado o controlador. Controladora: DNA Work Treinamento e Desenvolvimento Profissional Ltda., CNPJ 40.380.163/0001-61. Encarregado: Caio Vinicius Pinheiro / Luan Melo Villas Boas, contato@dnawork.ai. Versão de 12/11/2026 (linhas 17 a 21 acrescentadas na fase 1), feita a partir do código (ver `pendencias.md`, seção 10). Não é parecer jurídico: as bases legais e os prazos são propostas marcadas `[A CONFIRMAR]`.
 
 Como manter: uma linha por atividade. Ao criar tabela, campo, integração ou relatório novo que toque dado de aluno, incluir a linha aqui antes de subir, e rever a política de privacidade.
 
