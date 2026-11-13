@@ -74,3 +74,19 @@ export async function touchTokenLastUsed(db: DbOrTx, tokenId: string, minGapMs =
     .set({ lastUsedAt: new Date() })
     .where(and(eq(s.integrationTokens.id, tokenId), sql`(${s.integrationTokens.lastUsedAt} is null or ${s.integrationTokens.lastUsedAt} < now() - (${minGapMs} * interval '1 millisecond'))`));
 }
+
+export async function listIntegrationTokens(db: DbOrTx, workspaceId: string) {
+  return db
+    .select({
+      id: s.integrationTokens.id,
+      name: s.integrationTokens.name,
+      prefix: s.integrationTokens.prefix,
+      scopes: s.integrationTokens.scopes,
+      createdAt: s.integrationTokens.createdAt,
+      lastUsedAt: s.integrationTokens.lastUsedAt,
+      revokedAt: s.integrationTokens.revokedAt,
+    })
+    .from(s.integrationTokens)
+    .where(eq(s.integrationTokens.workspaceId, workspaceId))
+    .orderBy(s.integrationTokens.createdAt);
+}

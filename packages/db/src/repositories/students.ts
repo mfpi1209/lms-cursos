@@ -307,23 +307,3 @@ export async function listPublishedCourseSlugs(db: DbOrTx, workspaceId: string) 
     .where(and(eq(s.courses.workspaceId, workspaceId), eq(s.courses.status, 'published'), isNull(s.courses.archivedAt)))
     .orderBy(s.courses.title);
 }
-
-/* ------------------------------------------------------------------------ */
-/* Tokens de integração                                                       */
-/* ------------------------------------------------------------------------ */
-
-export async function listIntegrationTokens(db: DbOrTx, workspaceId: string) {
-  return db
-    .select({
-      id: s.integrationTokens.id,
-      name: s.integrationTokens.name,
-      prefix: s.integrationTokens.prefix,
-      scopes: s.integrationTokens.scopes,
-      createdAt: s.integrationTokens.createdAt,
-      lastUsedAt: s.integrationTokens.lastUsedAt,
-      revokedAt: s.integrationTokens.revokedAt,
-    })
-    .from(s.integrationTokens)
-    .where(eq(s.integrationTokens.workspaceId, workspaceId))
-    .orderBy(s.integrationTokens.createdAt);
-}
