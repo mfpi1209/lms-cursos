@@ -1,6 +1,6 @@
 import { CourseDocumentSchema, type Branding, type CastMember, type CourseDocument, type Lesson, type Module, type Presentation } from '../course';
 import type { Edge, LessonGraph, Objective } from '../graph';
-import { TASK_CRITERIA_MAX, type AnyNode, type ChoiceQuality, type RecapItem, type TaskDeliverable, type TaskFileKind, type TaskReview } from '../nodes';
+import { TASK_CRITERIA_MAX, type AnyNode, type ScreenRecording, type ChoiceQuality, type RecapItem, type TaskDeliverable, type TaskFileKind, type TaskReview } from '../nodes';
 import type { RichTextDocument } from '../richtext';
 import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, nextChipsCamera, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, zoneTalkCamera, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
 import { compileCourse, type CompileIssue, type CourseCompileResult } from '../compile';
@@ -29,6 +29,16 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  *    - `V..` vídeo: `**Fala para gravação**` + fala entre aspas, `Texto na tela:`
  *      (palavras-chave) e `Cartão:` opcional (título + tópicos com **negrito**);
  *      segue para a cena seguinte;
+ *      `Vídeo próprio: arquivo.mp4` (também `Video proprio:`; uma ou mais linhas, em ordem) marca gravação
+ *      de tela própria: MP4 em tela cheia, narração da instrutora por cima, legenda, SEM avatar. Vira
+ *      `screenRecordings` no nó (`fileName`; o `assetId` vem quando o MP4 é anexado na cena). A cena importa
+ *      sem o arquivo existir (aviso SCREEN_MEDIA_MISSING por cena sem mídia anexada). Nessas cenas não se
+ *      gera direção/câmera de avatar: o `Cartão:` (se houver) vai para o texto da tela. `Vídeo próprio:` em
+ *      cena que não é `V..` gera SCREEN_RECORDING_WRONG_SCENE (a linha é ignorada). Conferência cruzada: se as
+ *      notas (`## Notas…`) trouxerem `Cenas com gravação de tela (anexar o MP4 na cena): V07 (a, b) · V12 (c)`
+ *      (nomes sem `.mp4`), a lista é comparada com as cenas que têm `Vídeo próprio:`; divergência de cena ou
+ *      de arquivos gera SCREEN_LIST_MISMATCH. Sem a linha nas notas, não há conferência.
+ *      Exemplo em docs/roteiros/exemplos/exemplo-video-proprio.md;
  *    - `Q..` decisão: `Situação:`, `Voz opcional: sim|não`, `Chamada:` (frase
  *      com que a instrutora chama o aluno no FIM do vídeo anterior; ausente =
  *      `callFromSituation` — fato + pergunta do enunciado —, com aviso) e a tabela
@@ -180,7 +190,8 @@ export interface ParsedEnd {
   checklist?: { title: string; items: string[] };
 }
 
-export type ParsedScene = ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedTask | ParsedEnd;
+/** `screenFiles`: nomes das linhas `Vídeo próprio:` da cena, em ordem (só valem em `V..`; nas demais geram aviso). */
+export type ParsedScene = (ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedTask | ParsedEnd) & { screenFiles?: string[] };
 
 export interface ParsedLesson {
   number: number;
@@ -200,6 +211,8 @@ export interface ParsedCourse {
   title: string;
   header: ParsedHeader;
   modules: ParsedModule[];
+  /** linha das notas `Cenas com gravação de tela (...)`; ausente = a linha não existe (sem conferência) */
+  screenList?: Array<{ code: string; files: string[] }>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -554,7 +567,28 @@ function parseEnd(b: Block): ParsedEnd {
   return { kind: 'end', code: 'FIM', title: b.title, takeaways, myScript, ...(checklist ? { checklist } : {}) };
 }
 
+const SCREEN_FILE_RE = /^[^\\/]+\.mp4$/i;
+
+/** Linhas `Vídeo próprio: arquivo.mp4` do corpo da cena, em ordem. */
+function screenFilesOf(b: Block): string[] {
+  const files: string[] = [];
+  b.body.forEach((raw, i) => {
+    const kv = keyLine(raw.trim());
+    if (kv?.key !== 'video proprio') return;
+    const name = kv.value.replace(/^[`"“'\s]+|[`"”'\s]+$/g, '');
+    if (!SCREEN_FILE_RE.test(name) || name.includes('..')) throw new MarkdownCourseError(`${b.code}: "Vídeo próprio:" precisa de um arquivo .mp4 sem pasta (recebido "${kv.value}")`, b.line + i + 1);
+    files.push(name);
+  });
+  return files;
+}
+
 function parseScene(b: Block): ParsedScene {
+  const scene = parseSceneKind(b);
+  const screenFiles = screenFilesOf(b);
+  return screenFiles.length ? { ...scene, screenFiles } : scene;
+}
+
+function parseSceneKind(b: Block): ParsedScene {
   if (b.code === 'FIM') return parseEnd(b);
   if (b.code.startsWith('AV')) return parseAssessment(b);
   if (b.code.startsWith('V')) return parseVideo(b);
@@ -579,6 +613,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
   let block: Block | undefined;
   let lessonHeaderLines: string[] = [];
   let stopped = false;
+  let stopAt = -1;
 
   const flushBlock = () => {
     if (!block) return;
@@ -611,6 +646,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
       // qualquer outra seção "##" (ex.: "Notas para a montagem") encerra o roteiro
       flushLesson();
       stopped = true;
+      stopAt = i;
       break;
     }
     const les = LESSON_RE.exec(line);
@@ -637,6 +673,17 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
   }
   flushLesson();
 
+  // notas: lista de cenas com gravação de tela (conferência cruzada com `Vídeo próprio:`)
+  let screenList: ParsedCourse['screenList'];
+  if (stopAt >= 0) {
+    for (const raw of lines.slice(stopAt)) {
+      const m = /^\s*Cenas com grava[çc][ãa]o de tela[^:]*:\s*(.*)$/i.exec(raw);
+      if (!m) continue;
+      screenList = [...(screenList ?? [])];
+      for (const e of m[1]!.matchAll(/([A-Za-z]+\d+)\s*\(([^)]*)\)/g)) screenList.push({ code: e[1]!.toUpperCase(), files: e[2]!.split(',').map((x) => x.trim()).filter(Boolean) });
+    }
+  }
+
   // códigos únicos no curso inteiro
   const seen = new Map<string, string>();
   for (const m of modules)
@@ -647,7 +694,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
         if (seen.has(s.code)) throw new MarkdownCourseError(`código ${s.code} repetido (${seen.get(s.code)} e ${where})`);
         seen.set(s.code, where);
       }
-  return { title, header, modules };
+  return { title, header, modules, ...(screenList ? { screenList } : {}) };
 }
 
 /* ------------------------------------------------------------------ */
@@ -1027,6 +1074,7 @@ function buildLesson(
   let chipsSide: 'left' | 'right' | undefined;
 
   scenes.forEach((scene, index) => {
+    if (scene.screenFiles?.length && scene.kind !== 'video') warn({ code: 'SCREEN_RECORDING_WRONG_SCENE', lessonId, ...(scene.kind === 'end' ? {} : { nodeId: nodeIdOf(scene.code) }), message: `${scene.code}: "Vídeo próprio:" só vale em cena de vídeo (V..); a linha foi ignorada` });
     if (scene.kind === 'end') return;
     const id = nodeIdOf(scene.code);
     switch (scene.kind) {
@@ -1036,7 +1084,12 @@ function buildLesson(
         videoIndex++;
         let body = paragraphs(scene.screenText || scene.title);
         let direction: SceneDirection | undefined;
-        if (scene.card) {
+        // gravação de tela própria: tela cheia, sem avatar → nenhuma direção/câmera de avatar; o cartão (se houver) vai para o texto da tela
+        const screenRecordings: ScreenRecording[] | undefined = scene.screenFiles?.length ? scene.screenFiles.map((fileName) => ({ fileName })) : undefined;
+        if (screenRecordings) {
+          warn({ code: 'SCREEN_MEDIA_MISSING', lessonId, nodeId: id, message: `${scene.code}: falta mídia (${screenRecordings.map((r) => r.fileName).join(', ')})` });
+          if (scene.card) body = doc(paragraph(scene.screenText || scene.title), paragraph(scene.card.title), list(scene.card.bullets));
+        } else if (scene.card) {
           if (scene.card.bullets.length > CARD_LIMITS.bullets) warn({ code: 'CARD_TOO_MANY_BULLETS', lessonId, nodeId: id, message: `${scene.code}: cartão com ${scene.card.bullets.length} tópicos (recomendado até ${CARD_LIMITS.bullets})` });
           for (const b of scene.card.bullets) if (wc(stripBold(b)) > CARD_LIMITS.bulletWords) warn({ code: 'CARD_BULLET_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: tópico do cartão com ${wc(stripBold(b))} palavras (máximo ${CARD_LIMITS.bulletWords})` });
           if (wc(stripBold(scene.card.title)) > CARD_LIMITS.titleWords) warn({ code: 'CARD_TITLE_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: título do cartão com ${wc(stripBold(scene.card.title))} palavras (máximo ${CARD_LIMITS.titleWords})` });
@@ -1054,7 +1107,7 @@ function buildLesson(
           }
         }
         // estúdio com zonas: as falas sem cartão também ganham direção (câmera da cena; as cenas alternam 3/4 e laterais)
-        if (!direction && !scene.card && opts.zones && opts.direction !== false) {
+        if (!direction && !scene.card && !screenRecordings && opts.zones && opts.direction !== false) {
           const talkId = zoneTalkCamera(opts.zones.set, videoIndex - 1);
           direction = buildTalkDirection(scene.narration, { cameraId: talkId, framing: opts.zones.framing(talkId) });
         }
@@ -1073,6 +1126,7 @@ function buildLesson(
           narration: scene.narration,
           motionPrompt: gesture(gestureId),
           ...(direction ? { direction } : {}),
+          ...(screenRecordings ? { screenRecordings } : {}),
         });
         edges.push(go(`e_${id}`, id, nextOf(index, scene.code)));
         rows.push([id]);
@@ -1361,6 +1415,7 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const objectives: Objective[] = [];
   const modules: Module[] = [];
   const lessonIds: string[] = [];
+  const screenScenes = new Map<string, { lessonId: string; files: string[] }>();
   const lastLesson = parsed.modules[parsed.modules.length - 1]?.lessons.slice(-1)[0];
   for (const m of parsed.modules) {
     const moduleObjectiveIds = m.lessons.map((l) => `obj_aula_${pad2(l.number)}`);
@@ -1368,11 +1423,25 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
     for (const l of m.lessons) {
       const lessonId = `aula_${pad2(l.number)}`;
       const built = buildLesson(l, { moduleObjectiveIds, lessonId, objectiveId: `obj_aula_${pad2(l.number)}`, lastOfCourse: l === lastLesson, opts: lessonOpts, warn, nextVariant, allCodes, reactionIndex });
+      for (const sc of l.scenes) if (sc.kind === 'video' && sc.screenFiles?.length) screenScenes.set(sc.code, { lessonId, files: sc.screenFiles });
       lessons.push(built.lesson);
       objectives.push(built.objective);
       lessonIds.push(lessonId);
     }
     modules.push({ id: `mod_${pad2(m.number)}`, title: clipChars(m.title, 160), description: clipChars(m.description, 1000), lessons });
+  }
+
+  // conferência cruzada com a linha das notas (sem a linha, nada a conferir)
+  if (parsed.screenList) {
+    const base = (f: string) => f.replace(/\.mp4$/i, '').trim().toLowerCase();
+    const listed = new Map(parsed.screenList.map((e) => [e.code, e.files]));
+    const mismatch = (code: string, lessonId: string | undefined, why: string) => warn({ code: 'SCREEN_LIST_MISMATCH', ...(lessonId ? { lessonId, nodeId: nodeIdOf(code) } : {}), message: `${code}: ${why}` });
+    for (const [code, { lessonId, files }] of screenScenes) {
+      const inNotes = listed.get(code);
+      if (!inNotes) mismatch(code, lessonId, 'tem "Vídeo próprio:" mas não está na lista das notas');
+      else if (files.map(base).join('|') !== inNotes.map(base).join('|')) mismatch(code, lessonId, `arquivos diferentes das notas (cena: ${files.join(', ')}; notas: ${inNotes.join(', ')})`);
+    }
+    for (const code of listed.keys()) if (!screenScenes.has(code)) mismatch(code, undefined, 'está na lista das notas mas a cena não tem "Vídeo próprio:"');
   }
 
   const h = parsed.header;

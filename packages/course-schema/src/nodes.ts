@@ -76,6 +76,28 @@ const BaseNode = {
   title: z.string().max(120).optional(),
 };
 
+/**
+ * Gravação de tela própria (MP4 em tela cheia, narração da instrutora por cima, legenda da narração, SEM avatar).
+ * A ordem do array é a ordem de exibição. Contrato consumido pela montagem (ffmpeg):
+ *  - `fileName`: nome do arquivo `.mp4` (sem pasta), como escrito em `Vídeo próprio:` no roteiro;
+ *  - `assetId`: mídia anexada na cena (ausente = ainda falta anexar → aviso SCREEN_MEDIA_MISSING);
+ *  - `durationSec`: duração real do MP4, preenchida pela montagem/upload;
+ *  - `fit`: como o MP4 coube na fala (`ok` cabe, `short` ficou curto, `trimmed` foi cortado), preenchido pela montagem.
+ * Cena com `screenRecordings` não vazio = tela cheia sem avatar (a direção/câmera do avatar não se aplica).
+ */
+export const ScreenRecordingSchema = z.object({
+  fileName: z
+    .string()
+    .min(5)
+    .max(160)
+    .refine((v) => /\.mp4$/i.test(v), 'o arquivo deve terminar em .mp4')
+    .refine((v) => !/[\\/]/.test(v) && !v.includes('..'), 'use só o nome do arquivo, sem pasta nem ".."'),
+  assetId: z.string().min(1).max(128).optional(),
+  durationSec: z.number().positive().max(36000).optional(),
+  fit: z.enum(['ok', 'short', 'trimmed']).optional(),
+});
+export type ScreenRecording = z.infer<typeof ScreenRecordingSchema>;
+
 export const ScenarioNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('scenario'),
@@ -87,6 +109,8 @@ export const ScenarioNodeSchema = z.object({
   /** direção cinematográfica (planos); quando presente, o vídeo é montado plano a plano */
   direction: SceneDirectionSchema.optional(),
   media: MediaRefSchema.optional(),
+  /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
+  screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
 });
 
 export const ContentNodeSchema = z.object({
@@ -100,6 +124,8 @@ export const ContentNodeSchema = z.object({
   /** direção cinematográfica (planos); quando presente, o vídeo é montado plano a plano */
   direction: SceneDirectionSchema.optional(),
   media: MediaRefSchema.optional(),
+  /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
+  screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
   /**
    * Revisão de respostas ("Resultado da simulação"): decisões DESTA aula que a
    * cena lista com a pergunta, a resposta escolhida, a marca ("Forte" / "Pode
@@ -500,6 +526,11 @@ export type EndNode = z.infer<typeof EndNodeSchema>;
 export type ExecutableNode = z.infer<typeof ExecutableNodeSchema>;
 export type AnyNode = z.infer<typeof AnyNodeSchema>;
 export type NodeType = AnyNode['type'];
+
+/** A cena é uma gravação de tela própria (tela cheia, sem avatar)? */
+export function sceneUsesScreenRecording(node: AnyNode | { screenRecordings?: ScreenRecording[] | undefined }): boolean {
+  return ((node as { screenRecordings?: ScreenRecording[] }).screenRecordings?.length ?? 0) > 0;
+}
 
 /** Tipos com executor + renderer registrados no incremento atual. */
 export const EXECUTABLE_NODE_TYPES = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'task', 'assessment', 'end'] as const;

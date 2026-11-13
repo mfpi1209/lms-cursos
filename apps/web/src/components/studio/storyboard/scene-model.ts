@@ -272,6 +272,8 @@ export function summaryLine(errors: number, warnings: number, stale = 0): string
 
 const ISSUE_CODE_LABEL: Record<string, string> = {
   MEDIA_STALE: 'Vídeo desatualizado',
+  SCREEN_MEDIA_MISSING: 'Falta mídia',
+  SCREEN_LIST_MISMATCH: 'Lista de gravações diferente das notas',
   RECAP_SOURCE_MISSING: 'Fonte do roteiro inválida',
   RECAP_DUPLICATE_ID: 'Itens do roteiro repetidos',
   OPTION_WITHOUT_DESTINATION: 'Opção sem destino',
