@@ -276,18 +276,10 @@ describe('upsertStudents: idempotência pelo RGM', () => {
     expect(again.results[0]!.status).toBe('unchanged');
   });
 
-  it('linha sem RGM segue pelo e-mail: cria sem RGM, atualiza nome e não mexe no RGM existente', async () => {
-    const created = await run([{ nome: 'Sem Rgm', email: 'semrgm@rgm.local' }]);
-    expect(created.results[0]).toMatchObject({ status: 'created' });
-    const id = await idOf('semrgm@rgm.local');
-    expect((await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, id)))[0]!.rgm).toBeNull();
-    const upd = await run([{ nome: 'Sem Rgm Um', email: 'semrgm@rgm.local', cursos: [SLUG] }]);
-    expect(upd.results[0]).toMatchObject({ status: 'updated', enrolled: [SLUG] });
-    // aluno que já tem RGM, enviado sem RGM: RGM preservado
-    await run([{ nome: 'Sil', email: 'sil@rgm.local' }]);
-    const [m] = await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, await idOf('sil@rgm.local')));
-    expect(m!.rgm).toBe('S-1');
-    expect((await run([{ nome: 'Sil', email: 'sil@rgm.local' }])).results[0]!.status).toBe('unchanged');
+  it('linha sem RGM: erro RGM_EM_BRANCO e nada é gravado', async () => {
+    const r = await run([{ nome: 'Sem Rgm', email: 'semrgm@rgm.local' }, { nome: 'Sil', email: 'sil@rgm.local', rgm: '  ' }]);
+    expect(r.results.map((x) => [x.status, x.code, x.reason])).toEqual([['error', 'RGM_EM_BRANCO', 'RGM em branco'], ['error', 'RGM_EM_BRANCO', 'RGM em branco']]);
+    expect(await db.select().from(s.user).where(eq(s.user.email, 'semrgm@rgm.local'))).toHaveLength(0);
   });
 });
 

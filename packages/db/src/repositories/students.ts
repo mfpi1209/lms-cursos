@@ -8,7 +8,7 @@ import { enrollStudent } from './learning';
  * Cadastro de alunos em massa (CSV do estúdio e API de integração).
  *
  * - Idempotente pelo RGM dentro do workspace (recomendado): RGM conhecido atualiza nome, telefone e e-mail daquela pessoa;
- *   repetir o mesmo lote não cria nada de novo nem repete efeitos. Linha SEM RGM segue a regra antiga, pelo e-mail (compatibilidade).
+ *   repetir o mesmo lote não cria nada de novo nem repete efeitos. O RGM é obrigatório: linha sem RGM volta com erro `RGM_EM_BRANCO`.
  * - RGM novo + e-mail de aluno que já tem OUTRO RGM: erro na linha (`EMAIL_EM_USO_POR_OUTRO_RGM`), sem trocar dono de conta.
  *   RGM novo + e-mail de membro antigo sem RGM: o RGM é atribuído a esse membro.
  * - Troca de e-mail só por RGM conhecido; grava auditoria (`student.email_changed`) e encerra as sessões abertas da pessoa.
@@ -21,7 +21,7 @@ import { enrollStudent } from './learning';
 export interface StudentInput {
   nome: string;
   email: string;
-  /** recomendado: é a chave de idempotência. Em branco = compatibilidade, identifica pelo e-mail */
+  /** obrigatório: é a chave de idempotência (em branco = erro `RGM_EM_BRANCO`) */
   rgm?: string;
   telefone?: string | null;
   /** slugs de cursos publicados do workspace */
@@ -51,6 +51,7 @@ export interface StudentRowResult {
 export type StudentErrorCode =
   | 'EMAIL_INVALIDO'
   | 'NOME_EM_BRANCO'
+  | 'RGM_EM_BRANCO'
   | 'RGM_LONGO'
   | 'EMAIL_REPETIDO_NO_LOTE'
   | 'RGM_REPETIDO_NO_LOTE'
@@ -108,6 +109,7 @@ function prepare(rows: StudentInput[], extraSlugs: string[]): Prepared[] {
     const base = { index, email, name, rgm, phone, slugs };
     if (!isValidEmail(email)) return { ...base, error: 'E-mail inválido', code: 'EMAIL_INVALIDO' as const };
     if (!name) return { ...base, error: 'Nome em branco', code: 'NOME_EM_BRANCO' as const };
+    if (!rgm) return { ...base, error: 'RGM em branco', code: 'RGM_EM_BRANCO' as const };
     if (rgm.length > 40) return { ...base, error: 'RGM longo demais', code: 'RGM_LONGO' as const };
     const prevEmail = seenEmail.get(email);
     if (prevEmail !== undefined) return { ...base, error: `E-mail repetido no lote (linha ${prevEmail + 1})`, code: 'EMAIL_REPETIDO_NO_LOTE' as const };

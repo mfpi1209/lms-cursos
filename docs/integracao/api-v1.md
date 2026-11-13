@@ -56,7 +56,7 @@ Sempre este formato:
 
 ## 3. Alunos
 
-`POST /alunos` (escopo `students:write`). Cadastra ou atualiza, de forma idempotente pelo **RGM** dentro do workspace: repetir o mesmo lote dá o mesmo resultado, sem conta, matrícula ou efeito duplicado. O RGM é único no workspace e **é a chave recomendada**: envie-o sempre. A conta nasce sem senha; o aluno entra por link de acesso.
+`POST /alunos` (escopo `students:write`). Cadastra ou atualiza, de forma idempotente pelo **RGM** dentro do workspace: repetir o mesmo lote dá o mesmo resultado, sem conta, matrícula ou efeito duplicado. O RGM é único no workspace e **é obrigatório** e é a chave da linha. A conta nasce sem senha; o aluno entra por link de acesso.
 
 ### Como cada linha é identificada
 
@@ -66,7 +66,7 @@ Sempre este formato:
 | RGM novo, e-mail novo | Cria a conta e o vínculo de aluno |
 | RGM novo, e-mail de membro antigo **sem RGM** | Atribui o RGM a esse membro |
 | RGM novo, e-mail que já pertence a **outro RGM** | Erro só nessa linha (`EMAIL_EM_USO_POR_OUTRO_RGM`). Nunca se troca o dono de uma conta |
-| Sem RGM (compatibilidade) | Identifica pelo e-mail, como antes: cria ou atualiza nome/telefone e matrícula. Não altera nem apaga o RGM que a pessoa já tem. Não use em integrações novas: sem RGM não há como trocar e-mail com segurança |
+| Sem RGM | Erro só nessa linha (`RGM_EM_BRANCO`) |
 
 ### Troca de e-mail
 
@@ -105,7 +105,7 @@ Só acontece por RGM conhecido: o mesmo RGM chegando com outro e-mail troca o e-
 
 | `codigo` | Quando |
 |---|---|
-| `EMAIL_INVALIDO`, `NOME_EM_BRANCO`, `RGM_LONGO` | dado da linha inválido (RGM até 40 caracteres) |
+| `EMAIL_INVALIDO`, `NOME_EM_BRANCO`, `RGM_EM_BRANCO`, `RGM_LONGO` | dado da linha inválido ou ausente (RGM obrigatório, até 40 caracteres) |
 | `EMAIL_REPETIDO_NO_LOTE`, `RGM_REPETIDO_NO_LOTE` | o mesmo e-mail ou RGM em duas linhas do lote |
 | `CURSO_INVALIDO` | curso inexistente ou não publicado |
 | `CONTA_DA_EQUIPE` | e-mail ou RGM de conta da equipe; não é alterada por esta rota |
