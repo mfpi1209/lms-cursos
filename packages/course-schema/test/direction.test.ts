@@ -177,6 +177,20 @@ describe('câmera em tela cheia: sem zoom digital', () => {
     expect(panelIconFor('Chegue **dez minutos antes**')).toBe('clock');
     expect(panelIconFor('Algo sem relação')).toBe('check');
     expect(panelIconFor('Algo sem relação', 'star')).toBe('star');
+    // tópicos das cenas dirigidas (cursos sobre IA): regras novas, depois das antigas
+    expect(panelIconFor('Onde a IA erra')).toBe('sparkles');
+    expect(panelIconFor('Versão gratuita em todas')).toBe('gift');
+    expect(panelIconFor('Nome do erro: alucinação')).toBe('alert');
+    expect(panelIconFor('Nunca enviar dados sensíveis')).toBe('alert');
+    expect(panelIconFor('Sem dado pessoal')).toBe('shield');
+    expect(panelIconFor('Dúvidas frequentes')).toBe('help');
+    expect(panelIconFor('Não consulta a verdade')).toBe('search');
+    expect(panelIconFor('Provável não é verdadeiro')).toBe('eye');
+    expect(panelIconFor('Frase mais importante')).toBe('target');
+    expect(panelIconFor('Tabela ou tópicos')).toBe('list');
+    expect(panelIconFor('Truque um: dar exemplo')).toBe('lightbulb');
+    expect(panelIconFor('Rascunho, resumo, ideias')).toBe('lightbulb');
+    expect(panelIconFor('Soa certo, quase sempre acerta')).toBe('check');
   });
   it('isCardLayout: card e presenter_panel; branding.watermark aditivo', () => {
     expect(isCardLayout('card') && isCardLayout('presenter_panel') && !isCardLayout('presenter')).toBe(true);
