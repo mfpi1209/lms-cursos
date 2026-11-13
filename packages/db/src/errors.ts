@@ -1,4 +1,4 @@
-export type DomainErrorCode = 'NOT_FOUND' | 'CONFLICT' | 'VALIDATION' | 'FORBIDDEN' | 'PUBLISH_BLOCKED' | 'ENGINE' | 'BUDGET_EXCEEDED';
+export type DomainErrorCode = 'NOT_FOUND' | 'CONFLICT' | 'VALIDATION' | 'FORBIDDEN' | 'PUBLISH_BLOCKED' | 'ENGINE' | 'BUDGET_EXCEEDED' | 'RATE_LIMITED';
 
 export class DomainError extends Error {
   constructor(
@@ -20,4 +20,6 @@ export const httpStatusFor: Record<DomainErrorCode, number> = {
   ENGINE: 422,
   /** teto diário de gasto do workspace seria ultrapassado */
   BUDGET_EXCEEDED: 402,
+  /** muitos pedidos em pouco tempo (ex.: envio de arquivos de entrega) */
+  RATE_LIMITED: 429,
 };

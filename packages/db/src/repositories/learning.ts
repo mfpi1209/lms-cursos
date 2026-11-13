@@ -22,6 +22,7 @@ import { newId } from '../ids';
 import { DomainError } from '../errors';
 import * as s from '../schema';
 import { getLatestVersion } from './publishing';
+import { saveTaskSubmission, taskRecordOf, type TaskRecord, type TaskSubmitOutcome } from './submissions';
 
 export async function enrollStudent(db: Database, input: { courseId: string; userId: string; createdBy: string }) {
   return db.transaction(async (tx) => {
@@ -264,6 +265,8 @@ export interface LearnerEventResult {
   courseCompleted: boolean;
   /** só na intenção `mission`: o que ficou VALENDO no registro (o servidor não rebaixa "Já experimentei" para "Vou fazer depois") */
   mission?: { status: 'later' | 'done'; note: string | null };
+  /** só na intenção `submit`: a entrega que ficou VALENDO (um envio repetido não desfaz uma entrega em correção ou aprovada) */
+  task?: { outcome: TaskSubmitOutcome; record: TaskRecord };
 }
 
 /** `optionalLessonIds`: aulas acrescentadas depois de a pessoa concluir (não entram na conta; ver `enrollments.optionalLessonIds`). */
@@ -332,6 +335,20 @@ export async function applyLearnerEvent(db: Database, input: LearnerEventInput):
       missionResult = { status: rec.status, note: rec.note };
     }
 
+    // tarefa com entrega: a entrega vive na matrícula (a correção vem depois da aula) e NUNCA bloqueia a aula nem o curso.
+    // Gravada na mesma transação do evento; o arquivo e o link são conferidos aqui (o motor só confere o formato do link).
+    let taskResult: LearnerEventResult['task'];
+    if (input.intent.kind === 'submit') {
+      const node = found.lesson.graph.nodes.find((n) => n.id === input.nodeId);
+      if (!node || node.type !== 'task') throw new DomainError('ENGINE', 'Este bloco não é uma tarefa');
+      const saved = await saveTaskSubmission(
+        tx,
+        { enrollmentId: attempt.enrollmentId, userId: enr.enrollment.userId, workspaceId: enr.course.workspaceId, courseId: enr.course.id, courseVersionId: enr.version.id, lessonId: attempt.lessonId, node, now },
+        { link: input.intent.link, fileAssetId: input.intent.fileAssetId, keep: input.intent.keep },
+      );
+      taskResult = { outcome: saved.outcome, record: await taskRecordOf(tx, saved.submission) };
+    }
+
     let courseCompleted = false;
     if (lessonCompleted) {
       await tx.insert(s.outboxEvents).values({ id: newId('obx'), type: 'lesson.completed', version: 1, payload: { enrollmentId: attempt.enrollmentId, attemptId: attempt.id, lessonId: attempt.lessonId } });
@@ -360,15 +377,20 @@ export async function applyLearnerEvent(db: Database, input: LearnerEventInput):
       lessonCompleted,
       courseCompleted,
       ...(missionResult ? { mission: missionResult } : {}),
+      ...(taskResult ? { task: taskResult } : {}),
     };
+    // o evento da aula não guarda o link nem o arquivo da entrega (dado pessoal: fica só em task_submissions)
+    const payload: Record<string, unknown> =
+      input.intent.kind === 'submit' ? { kind: 'submit', ...(input.intent.keep ? { keep: true } : {}), hasFile: !!input.intent.fileAssetId } : (input.intent as unknown as Record<string, unknown>);
+    const storedResult = taskResult ? { ...result, task: { outcome: taskResult.outcome, record: { nodeId: taskResult.record.nodeId, lessonId: taskResult.record.lessonId, status: taskResult.record.status, revision: taskResult.record.revision } } } : result;
     await tx.insert(s.learnerEvents).values({
       id: newId('evt'),
       attemptId: attempt.id,
       eventId: input.eventId,
       type: input.intent.kind,
       nodeId: input.nodeId,
-      payload: input.intent as unknown as Record<string, unknown>,
-      result: result as unknown as Record<string, unknown>,
+      payload,
+      result: storedResult as unknown as Record<string, unknown>,
       resultingRevision: revision,
     });
     return result;

@@ -1,6 +1,7 @@
 export * as authoring from './authoring';
 export * as publishing from './publishing';
 export * as learning from './learning';
+export * as submissions from './submissions';
 export * as identity from './identity';
 export * as media from './media';
 export * as sources from './sources';
