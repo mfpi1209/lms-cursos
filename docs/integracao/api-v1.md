@@ -136,6 +136,9 @@ A ordem é a do `id` da matrícula, que não muda. Siga `proximoCursor` até ele
       "avaliacoes": [
         { "aula_id": "aula_negociar_prazo", "aula": "Negociar um prazo", "grupo_id": "av1", "titulo": "Revisão", "acertos": 2, "total": 3, "respondidas": 3, "aprovado": true }
       ],
+      "reflexoes": [
+        { "aula_id": "aula_negociar_prazo", "aula": "Negociar um prazo", "cena": "missao", "titulo": "Missão", "obrigatoria": true, "resposta": "https://exemplo.com/minha-entrega", "respondida_em": "2026-03-12T14:00:00.000Z" }
+      ],
       "tarefa": { "status": "aprovada", "total": 1, "pendentes": 0, "enviadas": 0, "aprovadas": 1, "devolvidas": 0 },
       "curso_concluido": true,
       "concluido_em": "2026-03-18T21:40:05.000Z",
@@ -169,6 +172,16 @@ Um item por **grupo de avaliação**. O bloco `AV..` do roteiro vira várias cen
   - `false`: respondeu todas e ficou abaixo do limiar;
   - `null`: ainda sem resultado (não respondeu nada, ou há perguntas por responder e o limiar ainda não foi atingido).
 - O array traz todos os grupos da versão do curso em que o aluno está matriculado, na ordem do curso, mesmo os ainda não iniciados.
+
+### Reflexões (`reflexoes`)
+
+Um item por **cena de reflexão** do curso (cena do tipo `reflection`), na ordem do curso, mesmo as ainda não respondidas. No piloto, a "missão" é uma reflexão obrigatória em que o aluno cola um link. Curso sem reflexão: `[]`. A missão "Leve para a vida real" (`mission`) não entra aqui.
+
+- `aula_id`, `aula`: a aula, como em `avaliacoes`. `cena`: o id da cena no roteiro. `titulo`: o título da cena (o id, se a cena não tem título).
+- `obrigatoria`: `true` quando a cena é obrigatória para concluir a aula.
+- `resposta`: o texto livre da resposta **mais recente** do aluno (entre todas as tentativas da aula; empate, a tentativa de maior número); `null` se nunca respondeu. É dado pessoal e pode ter quebras de linha.
+- `respondida_em`: quando essa resposta foi dada (ISO 8601); `null` se nunca respondeu.
+- O filtro `desde` não olha a data das respostas: ele segue a atividade da matrícula (tentativas, acessos, entregas), que já acompanha cada resposta.
 
 ### Tarefa (`tarefa`)
 
@@ -211,7 +224,7 @@ O LMS faz um `POST` no seu endereço quando algo acontece. Cadastre em **Configu
 ```
 
 - `id`: o id do evento. É o mesmo em todas as tentativas e reenvios: **descarte repetidos por ele**.
-- `data` é pequeno de propósito: ids, o slug do curso e quem é o aluno (e-mail e RGM, o necessário para o seu sistema reconhecer a pessoa). Não há nome, telefone, link nem arquivo de entrega, comentário do avaliador nem respostas. Para mais, consulte `GET /progresso`.
+- `data` é pequeno de propósito: ids, o slug do curso e quem é o aluno (e-mail e RGM, o necessário para o seu sistema reconhecer a pessoa). Não há nome, telefone, link nem arquivo de entrega, comentário do avaliador nem respostas das reflexões. Para mais, consulte `GET /progresso`.
 - Todos os eventos de aluno trazem `matricula_id`, `curso` e `aluno`. O que muda:
 
 | Evento | Campos a mais em `data` |
@@ -347,10 +360,11 @@ Sem a chave, fora de produção, os segredos são guardados sem cifra (só para 
 
 - UTF-8 com BOM, separador `;`, uma linha por aluno e curso;
 - uma coluna por grupo de avaliação (`Avaliação: <aula> (acertos/total)`, com o valor `2/3 aprovado`);
+- uma coluna por cena de reflexão, depois das avaliações (`Resposta: <aula> · <cena>`, com o título da cena; com mais de um curso no arquivo, `Resposta: <curso> › <aula> · <cena>`), com o texto da resposta mais recente (vazia se não respondeu); curso sem reflexão não ganha coluna;
 - datas em horário de Brasília;
 - células que começam com `=`, `+`, `-` ou `@` recebem um apóstrofo (à prova de injeção de fórmula);
-- filtro por curso; cada exportação gera um registro de auditoria (`report.export_progress`) só com a quantidade de linhas e o curso.
+- filtro por curso; cada exportação gera um registro de auditoria (`report.export_progress`) só com a quantidade de linhas e o curso. A leitura da API (`GET /progresso`) não gera auditoria: o uso fica no `last_used_at` do token.
 
 ## 8. Dados pessoais
 
-O progresso, o CSV e os webhooks carregam dados pessoais de alunos (nome, e-mail, RGM, datas de acesso e resultados). Use o menor escopo possível, guarde o token e o segredo como senhas, e trate os dados recebidos conforme a LGPD. O registro das operações está em `docs/legal/registro-de-operacoes.md`.
+O progresso, o CSV e os webhooks carregam dados pessoais de alunos (nome, e-mail, RGM, datas de acesso, resultados e o texto livre das respostas das reflexões). Use o menor escopo possível, guarde o token e o segredo como senhas, e trate os dados recebidos conforme a LGPD. O registro das operações está em `docs/legal/registro-de-operacoes.md`.

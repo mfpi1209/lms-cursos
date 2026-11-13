@@ -5,6 +5,7 @@ import { parseCsvCells } from './alunos-csv';
 
 type Row = reports.ProgressRow;
 const av = (over: Partial<Row['avaliacoes'][number]> = {}): Row['avaliacoes'][number] => ({ aula_id: 'aula_1', aula: 'Aula 1', grupo_id: 'av1', titulo: 'Revisão', acertos: 2, total: 3, respondidas: 3, aprovado: true, ...over });
+const rf = (over: Partial<Row['reflexoes'][number]> = {}): Row['reflexoes'][number] => ({ aula_id: 'aula_1', aula: 'Aula 1', cena: 'missao', titulo: 'Missão', obrigatoria: true, resposta: 'https://exemplo.com/entrega', respondida_em: '2026-03-11T12:00:00.000Z', ...over });
 const row = (over: Partial<Row> = {}): Row => ({
   matricula_id: 'enr_1',
   status_matricula: 'active',
@@ -17,6 +18,7 @@ const row = (over: Partial<Row> = {}): Row => ({
   aulas_concluidas: 1,
   aulas_total: 2,
   avaliacoes: [av()],
+  reflexoes: [],
   tarefa: { status: 'enviada', total: 1, pendentes: 0, enviadas: 1, aprovadas: 0, devolvidas: 0 },
   curso_concluido: false,
   concluido_em: null,
@@ -106,5 +108,49 @@ describe('CSV do progresso', () => {
   it('sem linhas, só o cabeçalho', () => {
     const lines = progressToCsv([]).trim().split('\r\n');
     expect(lines).toHaveLength(1);
+  });
+
+  it('curso sem reflexão: nenhuma coluna "Resposta:"', () => {
+    const [head, line] = parse(progressToCsv([row()]));
+    expect(head!.some((h) => h.startsWith('Resposta:'))).toBe(false);
+    expect(line!.length).toBe(head!.length);
+  });
+
+  it('uma coluna por cena de reflexão, depois das avaliações e antes da cauda; sem resposta fica vazia', () => {
+    const a = row({ reflexoes: [rf(), rf({ aula_id: 'aula_2', aula: 'Aula 2', cena: 'r2', titulo: 'Fechamento', resposta: null, respondida_em: null })] });
+    const b = row({ matricula_id: 'enr_2', reflexoes: [rf({ resposta: null, respondida_em: null }), rf({ aula_id: 'aula_2', aula: 'Aula 2', cena: 'r2', titulo: 'Fechamento', resposta: 'Aprendi a pedir ajuda' })] });
+    const [head, l1, l2] = parse(progressToCsv([a, b]));
+    const i1 = head!.indexOf('Resposta: Aula 1 · Missão');
+    const i2 = head!.indexOf('Resposta: Aula 2 · Fechamento');
+    expect(i1).toBeGreaterThan(head!.indexOf('Avaliação: Aula 1 (acertos/total)'));
+    expect(i2).toBe(i1 + 1);
+    expect(head![i2 + 1]).toBe('Tarefa obrigatória');
+    expect(l1![i1]).toBe('https://exemplo.com/entrega');
+    expect(l1![i2]).toBe('');
+    expect(l2![i1]).toBe('');
+    expect(l2![i2]).toBe('Aprendi a pedir ajuda');
+    expect(l1!.length).toBe(head!.length);
+  });
+
+  it('resposta com vírgula, ponto e vírgula, aspas, quebra de linha e fórmula é protegida', () => {
+    const texts = ['a, b; c', 'ele disse "oi"', 'linha 1\nlinha 2\r\nlinha 3', '=HYPERLINK("http://x.com";"clique")', '+1', '-2', '@soma'];
+    const rows = texts.map((resposta, i) => row({ matricula_id: `enr_${i}`, reflexoes: [rf({ resposta })] }));
+    const parsed = parse(progressToCsv(rows));
+    const idx = parsed[0]!.indexOf('Resposta: Aula 1 · Missão');
+    expect(parsed).toHaveLength(texts.length + 1);
+    expect(parsed[1]![idx]).toBe('a, b; c');
+    expect(parsed[2]![idx]).toBe('ele disse "oi"');
+    expect(parsed[3]![idx]).toBe('linha 1\nlinha 2\r\nlinha 3');
+    expect(parsed[4]![idx]).toBe(`'=HYPERLINK("http://x.com";"clique")`);
+    expect(parsed[5]![idx]).toBe("'+1");
+    expect(parsed[6]![idx]).toBe("'-2");
+    expect(parsed[7]![idx]).toBe("'@soma");
+  });
+
+  it('com mais de um curso no arquivo, o cabeçalho leva o título do curso', () => {
+    const other = row({ matricula_id: 'enr_9', curso: { id: 'crs_2', slug: 'outro', titulo: 'Outro curso' }, reflexoes: [rf()] });
+    const [head] = parse(progressToCsv([row({ reflexoes: [rf()] }), other]));
+    expect(head).toContain('Resposta: Primeiro emprego › Aula 1 · Missão');
+    expect(head).toContain('Resposta: Outro curso › Aula 1 · Missão');
   });
 });
