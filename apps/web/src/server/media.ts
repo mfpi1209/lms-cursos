@@ -208,14 +208,39 @@ export function directedPartialReuse(
  * orientadora · DNA Work"). Fora do modo de zonas, nada (o hash das cenas de
  * antes não muda). Cada campo só existe quando se aplica.
  */
-export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string } } {
+export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string } {
   if (!directed || !zoneCamerasOf(doc.presentation.cameras)) return {};
   const nextQuestion = nextDecisionQuestion(graph, nodeId);
   const name = doc.branding?.presenterName?.trim();
   const role = doc.branding?.presenterRole?.trim();
   const brand = platformBrandName(env.PLATFORM_BRAND, env);
   const lowerThird = name && firstNarratedNodeId(graph) === nodeId ? { name, ...(role ? { role } : {}), ...(brand ? { brand } : {}) } : undefined;
-  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}) };
+  const screenText = sceneScreenText(doc, graph, nodeId, direction);
+  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}) };
+}
+
+/** Limite do texto na tela que vai para o painel (o resto é cortado na montagem em até 3 linhas). */
+export const SCREEN_TEXT_MAX_CHARS = 140;
+
+/**
+ * "Texto na tela" do roteiro (`body` do nó V..; a importação grava `Texto na tela:` ou, sem ele, o título da
+ * cena) para o painel do lado livre do estúdio com zonas. Só vale em cena dirigida com a apresentadora num lado
+ * (todos os planos `presenter` numa câmera de zona esquerda/direita) e SEM pílulas/painel/cartão/slide no plano:
+ * com cartão, o texto já aparece nas pílulas. Texto igual ao título da cena (sem "Texto na tela") não vira painel.
+ */
+export function sceneScreenText(doc: Pick<CourseDocument, 'presentation'>, graph: Pick<LessonGraph, 'nodes'>, nodeId: string, direction?: Pick<SceneDirection, 'shots'>): string | undefined {
+  if (!direction?.shots.length) return undefined;
+  const cameras = doc.presentation.cameras ?? [];
+  for (const s of direction.shots) {
+    if ((s.layout ?? 'presenter') !== 'presenter' || s.slide) return undefined;
+    const zone = s.cameraId ? cameras.find((c) => c.id === s.cameraId)?.zone : undefined;
+    if (zone !== 'left' && zone !== 'right') return undefined;
+  }
+  const node = graph.nodes.find((n) => n.id === nodeId) as { type: string; title?: string; body?: unknown } | undefined;
+  if (!node || (node.type !== 'scenario' && node.type !== 'content')) return undefined;
+  const text = richTextToPlain(node.body as never).replace(/\s+/g, ' ').trim();
+  if (!text || text === (node.title ?? '').replace(/\s+/g, ' ').trim()) return undefined;
+  return text.length > SCREEN_TEXT_MAX_CHARS ? `${text.slice(0, SCREEN_TEXT_MAX_CHARS - 1).replace(/\s+\S*$/, '')}…` : text;
 }
 
 /**
@@ -319,7 +344,7 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
   // só entra no hash/entrada quando se aplica
   const watermark = resolveWatermark(doc.branding?.watermark, env.PLATFORM_BRAND);
   // estúdio com zonas: pergunta a seguir (próximo nó é decisão) e letreiro com o nome (primeira cena da aula); só quando se aplicam
-  const studio = studioSceneOverlays(doc, found.lesson.graph, body.nodeId, !!direction, env);
+  const studio = studioSceneOverlays(doc, found.lesson.graph, body.nodeId, !!direction, env, direction);
   // cores dos gráficos montados (véu, pergunta a seguir, letreiro): só no vídeo dirigido e só quando o curso define
   const videoPalette = direction && doc.branding?.videoPalette ? { videoPalette: doc.branding.videoPalette } : {};
   const hashParams = direction
