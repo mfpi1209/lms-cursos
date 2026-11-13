@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BrandingSchema, clampFullFrameShots, clampShotToNativeFraming, DirectionStyleSchema, isCardLayout, LAYOUTS, panelIconFor, SceneDirectionSchema, ShotSchema, shotIsCinematic } from '../src';
+import { BrandingSchema, clampFullFrameShots, clampShotToNativeFraming, DirectionStyleSchema, isCardLayout, LAYOUTS, panelIconFor, SceneDirectionSchema, ShotSchema, shotIsCinematic, takeRetake } from '../src';
 
 describe('direção: cena em movimento (layout cinematic)', () => {
   it('dados antigos continuam válidos (sem cinematic, estilo sem maxCinematicPerLesson)', () => {
@@ -182,5 +182,16 @@ describe('câmera em tela cheia: sem zoom digital', () => {
     expect(isCardLayout('card') && isCardLayout('presenter_panel') && !isCardLayout('presenter')).toBe(true);
     expect(BrandingSchema.parse({}).watermark).toBeUndefined();
     expect(BrandingSchema.parse({ watermark: { enabled: false } }).watermark).toEqual({ enabled: false, position: 'bottom-right' });
+  });
+});
+
+describe("direção: retake (refazer só uma tomada)", () => {
+  it("campo opcional e takeRetake pega a maior variação entre os planos da tomada", () => {
+    const d = SceneDirectionSchema.parse({ shots: [{ id: "s1", line: "Oi." }], retake: { s1: 2 } });
+    expect(d.retake).toEqual({ s1: 2 });
+    expect(SceneDirectionSchema.parse({ shots: [{ id: "s1", line: "Oi." }] })).not.toHaveProperty("retake");
+    expect(takeRetake(undefined, ["s1"])).toBe(0);
+    expect(takeRetake({ s2: 3, s1: 1 }, ["s1", "s2"])).toBe(3);
+    expect(takeRetake({ s9: 3 }, ["s1"])).toBe(0);
   });
 });

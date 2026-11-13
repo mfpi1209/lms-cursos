@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { DomainError, media } from '@lms/db';
-import { mediaSceneOf, continuousTakeGroups, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection, type Shot } from '@lms/course-schema';
+import { mediaSceneOf, continuousTakeGroups, takeRetake, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection, type Shot } from '@lms/course-schema';
 import { resolveScreenScene } from './media-screen';
 import { COMPOSE_PIPELINE_VERSION, ELEVENLABS_ADAPTER_VERSION, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, describeMediaMode, directionLinesMatchSpoken, estimateMediaCostUsd, estimateNarrationSeconds, mediaConfigFromEnv, platformBrandName, resolveWatermark, sceneHashSync, singleShotAlphaKey, type MediaProviderConfig } from '@lms/media';
 
@@ -143,14 +143,18 @@ export interface PartialReuse {
   estimatedUsd: number;
 }
 
-type ShotLike = { line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null; slide?: unknown };
+type ShotLike = { id?: string; line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null; slide?: unknown };
 /**
  * Tomadas contínuas: o worker gera UM clipe por grupo de planos vizinhos na mesma câmera (`continuousTakeGroups`),
  * então o reaproveitamento é por GRUPO (a chave do clipe vem da fala inteira do grupo, a câmera e o gesto do primeiro plano).
  */
 const takeGroups = (shots: ShotLike[], ownAudio: boolean): ShotLike[][] =>
   continuousTakeGroups(shots.map((s) => ({ line: s.line, cameraId: s.cameraId ?? undefined, layout: (s.layout ?? 'presenter') as Shot['layout'], slide: s.slide as Shot['slide'] })), { hasNarrationAudio: ownAudio }).map((g) => g.map((i) => shots[i]!));
-const takeReuseKey = (g: ShotLike[]) => JSON.stringify([g.map((s) => s.line.replace(/\s+/g, ' ').trim()).join(' '), g[0]!.cameraId ?? '', g[0]!.motionPrompt?.trim() ?? '', g.length === 1 ? (g[0]!.layout ?? 'presenter') : 'take']);
+/** `retake` = direction.retake da cena; a variação da tomada entra na chave só quando > 0 (chaves antigas inalteradas). */
+const takeReuseKey = (g: ShotLike[], retake?: Record<string, number>) => {
+  const rt = takeRetake(retake, g.map((s) => s.id ?? ''));
+  return JSON.stringify([g.map((s) => s.line.replace(/\s+/g, ' ').trim()).join(' '), g[0]!.cameraId ?? '', g[0]!.motionPrompt?.trim() ?? '', g.length === 1 ? (g[0]!.layout ?? 'presenter') : 'take', ...(rt > 0 ? [rt] : [])]);
+};
 /** Menos palavras que isto e o worker funde o plano ao vizinho (MIN_UNIT_SECONDS 1,2 s a 2,5 palavras/s), mudando a chave do item pago. */
 const MIN_FRESH_SHOT_WORDS = 4;
 
@@ -164,8 +168,8 @@ export function directedPartialReuse(
    */
   fingerprintForPrevCameras?: string,
 ): PartialReuse | null {
-  const nextDir = next.jobInput.direction as { shots?: ShotLike[] } | undefined;
-  const prevDir = prev.input.direction as { shots?: ShotLike[] } | undefined;
+  const nextDir = next.jobInput.direction as { shots?: ShotLike[]; retake?: Record<string, number> } | undefined;
+  const prevDir = prev.input.direction as { shots?: ShotLike[]; retake?: Record<string, number> } | undefined;
   if (!nextDir?.shots?.length || !prevDir?.shots?.length) return null;
   if (prev.adapterVersion !== next.adapterVersion || prev.simulated !== simulated) return null;
   if ((prev.input.voiceId ?? null) !== (next.jobInput.voiceId ?? null) || prev.input.voiceProvider !== next.jobInput.voiceProvider || prev.input.avatarId !== next.jobInput.avatarId) return null;
@@ -173,11 +177,11 @@ export function directedPartialReuse(
   if (!fp || prev.input.presentationFingerprint !== fp) return null;
   const ownAudio = next.jobInput.voiceProvider === 'elevenlabs';
   const pool = new Map<string, number>();
-  for (const g of takeGroups(prevDir.shots, ownAudio)) pool.set(takeReuseKey(g), (pool.get(takeReuseKey(g)) ?? 0) + 1);
+  for (const g of takeGroups(prevDir.shots, ownAudio)) pool.set(takeReuseKey(g, prevDir.retake), (pool.get(takeReuseKey(g, prevDir.retake)) ?? 0) + 1);
   const fresh: ShotLike[] = [];
   const freshGroups: ShotLike[][] = [];
   for (const g of takeGroups(nextDir.shots, ownAudio)) {
-    const k = takeReuseKey(g);
+    const k = takeReuseKey(g, nextDir.retake);
     const left = pool.get(k) ?? 0;
     if (left > 0) pool.set(k, left - 1);
     else {
@@ -190,7 +194,9 @@ export function directedPartialReuse(
   if (freshGroups.some((g) => g.some((s) => s.layout === 'cinematic') || g.map((s) => s.line).join(' ').trim().split(/\s+/).filter(Boolean).length < MIN_FRESH_SHOT_WORDS)) return null;
   const text = fresh.map((s) => s.line.trim()).join(' ');
   const seconds = fresh.length ? estimateNarrationSeconds(text) : 0;
-  const chars = text.length;
+  // tomada refeita (só a variação mudou): o vídeo é novo (HeyGen), mas a voz do trecho já está paga (mesma fala) — não cobra caracteres
+  const prevPlain = new Set(takeGroups(prevDir.shots, ownAudio).map((g) => takeReuseKey(g)));
+  const chars = freshGroups.filter((g) => !prevPlain.has(takeReuseKey(g))).reduce((a, g) => a + g.map((s) => s.line.trim()).join(' ').length, 0);
   const estimatedUsd = fresh.length ? estimateMediaCostUsd({ elevenLabsChars: next.jobInput.voiceProvider === 'elevenlabs' ? chars : 0, heygenSeconds: seconds }) : 0;
   return { fromJobId: prev.jobId, reusedShots, newShots: fresh.length, chars, seconds, estimatedUsd };
 }
@@ -319,7 +325,7 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
   const hashParams = direction
     ? {
         ...params,
-        direction: { version: direction.version, shots: effectiveShots },
+        direction: { version: direction.version, shots: effectiveShots, ...(direction.retake && Object.keys(direction.retake).length ? { retake: direction.retake } : {}) },
         ...(watermark ? { watermark } : {}),
         ...studio,
         ...videoPalette,

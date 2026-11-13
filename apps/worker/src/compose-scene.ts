@@ -387,6 +387,7 @@ function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefin
     ...(placementKeyTag(pl) ? { placement: placementKeyTag(pl) } : {}),
     // harmonização de cor (só na montagem nossa, direita/esquerda)
     ...(pl.transparent && gradeFromParams(p) ? { grade: gradeFromParams(p) } : {}),
+    ...(u.retake ? { retake: u.retake } : {}),
   });
 }
 
@@ -397,6 +398,7 @@ function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
     motionPrompt: unitMotion(input, u, p), expressiveness: p.expressiveness, background: 'transparent',
     engine: p.engine, resolution: '1080p', aspectRatio: '16:9', adapterVersion: ctx.sim ? `${ctx.adapterVersion}+sim-standin-2` : ctx.adapterVersion, simulated: ctx.sim,
+    ...(u.retake ? { retake: u.retake } : {}),
   });
 }
 
@@ -417,7 +419,7 @@ async function planAndReuse(jobId: string, ctx: Ctx) {
     // cenas em movimento: pedido de câmera, narração própria e fala de até 15 s — ANTES de qualquer cobrança
     const problems = cinematicPlanProblems(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio });
     if (problems.length) throw new InvalidDirectionError(problems.join(' '));
-    const { units, merged } = planRenderUnits(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio });
+    const { units, merged } = planRenderUnits(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio, retake: ctx.direction.retake });
     // valida as câmeras ANTES de qualquer cobrança
     for (const u of units) if (u.kind !== 'audio') unitCamera(input, u);
     if (merged.length) console.warn(`[media] job ${jobId}: planos curtos fundidos ao vizinho para o HeyGen: ${merged.join(', ')}`);
@@ -953,8 +955,8 @@ async function pollInFlight(jobId: string, heygen: HeyGenAdapter): Promise<boole
 }
 
 /** Idempotency-Key de um envio, derivada só do estado gravado (estável entre passos, retries e processos). */
-export function submitKey(requestId: string, itemId: string, s: Pick<ShotState, 'submitSeq' | 'plateFallback'>): string {
-  return `${requestId}:${itemId}:${s.submitSeq ?? 0}${s.plateFallback ? ':bg' : ''}`.replace(/[^A-Za-z0-9_:.-]/g, '-').slice(0, 255);
+export function submitKey(requestId: string, itemId: string, s: Pick<ShotState, 'submitSeq' | 'plateFallback'>, retake?: number): string {
+  return `${requestId}:${itemId}:${s.submitSeq ?? 0}${s.plateFallback ? ':bg' : ''}${retake ? `:rt${retake}` : ''}`.replace(/[^A-Za-z0-9_:.-]/g, '-').slice(0, 255);
 }
 
 /** HeyGen recusou o pedido por causa do conteúdo (4xx que não é concorrência/limite): candidato a cair no fundo da apresentação. */
@@ -1011,7 +1013,7 @@ async function submitWindow(jobId: string, ctx: Ctx, heygen: HeyGenAdapter) {
     const cam = unitCamera(input, u);
     // mesma chave em retries do MESMO envio (24h), derivada SÓ do estado gravado; nova chave só após falha do HeyGen
     // (submitSeq) ou com o fundo da apresentação após recusa do fundo de continuidade (`:bg`, plateFallback gravado antes)
-    const idempotencyKey = submitKey(job.requestId, u.id, s);
+    const idempotencyKey = submitKey(job.requestId, u.id, s, u.retake);
     if (u.kind === 'cinematic') {
       const seconds = s.cinematicSeconds ?? cinematicClipSeconds(u.cinematicAction, s.segmentSeconds ?? 0);
       const created = await heygen.createCinematicVideo({

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { CINEMATIC_MAX_SECONDS, clampShotToNativeFraming, continuousTakeGroups, shotNeedsPresenter, resolveCameraPlacement, shotIsCinematic, type Camera, type CinematicAction, type ResolvedPlacement, type Shot } from '@lms/course-schema';
+import { CINEMATIC_MAX_SECONDS, clampShotToNativeFraming, continuousTakeGroups, shotNeedsPresenter, takeRetake, resolveCameraPlacement, shotIsCinematic, type Camera, type CinematicAction, type ResolvedPlacement, type Shot } from '@lms/course-schema';
 import type { ShotTiming } from '@lms/media/compose';
 
 /**
@@ -35,6 +35,8 @@ export interface RenderUnit {
   /** pedido de câmera (inglês) da cena em movimento */
   cinematicPrompt?: string;
   cinematicAction?: CinematicAction;
+  /** variação de refação da tomada (`direction.retake`; ausente = original): entra nas chaves e na Idempotency-Key */
+  retake?: number;
 }
 
 /** Estado persistido por item em `job.input.shots[itemId]` (retries/reconciliação retomam daqui). */
@@ -126,7 +128,7 @@ export function cinematicPlanProblems(shots: Shot[], opts: { hasNarrationAudio: 
  * (determinística antes de pagar a narração — permite calcular as chaves e
  * reaproveitar antes de sintetizar). Só funde planos de apresentador vizinhos.
  */
-export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolean; minSeconds?: number; durations?: number[] }): { units: RenderUnit[]; merged: string[] } {
+export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolean; minSeconds?: number; durations?: number[]; retake?: Record<string, number> }): { units: RenderUnit[]; merged: string[] } {
   const min = opts.minSeconds ?? MIN_UNIT_SECONDS;
   const dur = (i: number) => opts.durations?.[i] ?? estimateLineSeconds(shots[i]!.line);
   const cine = shots.map((s) => s.layout === 'cinematic');
@@ -159,6 +161,7 @@ export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolea
     // câmera do plano mais longo do item; gesto: tomada contínua (mesma câmera) = o do PRIMEIRO plano
     // (um só pedido de movimento para o clipe todo); item que fundiu câmeras diferentes = o do mais longo
     const main = g.reduce((best, i) => (dur(i) > dur(best) ? i : best), g[0]!);
+    const rt = takeRetake(opts.retake, g.map((i) => shots[i]!.id));
     const sameCamera = g.every((i) => (shots[i]!.cameraId ?? '') === (shots[g[0]!]!.cameraId ?? ''));
     return {
       id: shots[g[0]!]!.id,
@@ -167,6 +170,7 @@ export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolea
       script: g.map((i) => shots[i]!.line.trim()).join(' '),
       cameraId: shots[main]!.cameraId,
       motionPrompt: (sameCamera ? shots[g[0]!]! : shots[main]!).motionPrompt,
+      ...(rt > 0 && !cine[g[0]!] && clipShot[g[0]!] ? { retake: rt } : {}),
       ...(cine[g[0]!] ? { cinematicPrompt: shots[g[0]!]!.cinematic?.prompt?.trim(), cinematicAction: shots[g[0]!]!.cinematic?.action } : {}),
     };
   });
@@ -292,6 +296,8 @@ export interface ItemKeyInput {
   placement?: string;
   /** harmonização de cor da apresentadora (só quando pedida; chaves antigas inalteradas) */
   grade?: string;
+  /** variação de refação da tomada (só quando > 0; chaves antigas inalteradas) */
+  retake?: number;
   adapterVersion: string;
   /** itens simulados nunca são reaproveitados por jobs reais (e vice-versa) */
   simulated: boolean;
@@ -325,7 +331,7 @@ export function itemKey(input: ItemKeyInput): string {
     av: input.adapterVersion,
   };
   const clip = input.kind === 'clip'
-    ? { l: input.lookId, m: input.motionPrompt?.trim() || null, e: input.expressiveness ?? null, rb: !!input.removeBackground, bg: input.background ?? null, en: input.engine ?? null, r: input.resolution ?? '1080p', ar: input.aspectRatio ?? '16:9', ...(input.placement ? { pl: input.placement } : {}), ...(input.grade ? { gr: input.grade } : {}) }
+    ? { l: input.lookId, m: input.motionPrompt?.trim() || null, e: input.expressiveness ?? null, rb: !!input.removeBackground, bg: input.background ?? null, en: input.engine ?? null, r: input.resolution ?? '1080p', ar: input.aspectRatio ?? '16:9', ...(input.placement ? { pl: input.placement } : {}), ...(input.grade ? { gr: input.grade } : {}), ...(input.retake ? { rt: input.retake } : {}) }
     : {};
   return createHash('sha256').update(JSON.stringify({ ...base, ...clip })).digest('hex');
 }

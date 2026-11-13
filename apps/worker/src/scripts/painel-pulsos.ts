@@ -1,9 +1,13 @@
 /**
- * Conferência de pulsos/mãos: para cada cena de apresentador com vídeo, extrai 3 quadros (25%, 50% e 75% do vídeo)
- * recortados na região das mãos e pulsos (calculada pela zona e pelo enquadramento da câmera do plano naquele momento)
- * e monta `painel.png` (grade: uma linha por cena, 3 quadros) + `index.html` (rótulo `aula/cena`, os 3 recortes e o
- * vídeo ao lado). Só lê o banco e o storage e roda ffmpeg: nenhum provedor, nenhum job, nada é gravado no banco.
- * Os rótulos ficam no HTML (o ffmpeg local não tem o filtro drawtext).
+ * Conferência de pulsos/mãos POR TOMADA: cada cena de apresentador com vídeo é dividida em tomadas (grupos de planos
+ * consecutivos na mesma câmera: um pedido ao HeyGen, `continuousTakeGroups`) e, de cada tomada, saem 2 recortes (40% e 75%
+ * do tempo dela) na região das mãos e pulsos (pela zona e pelo enquadramento da câmera naquele instante). Monta
+ * `painel.png` (grade: uma linha por tomada, 2 recortes), `index.html` (rótulo `aula/cena#<1º plano da tomada>`,
+ * câmera, tempo, os recortes e o vídeo posicionado na tomada) e `tomadas.txt` (uma linha por recorte: número da imagem
+ * no painel -> aula/cena#plano · câmera · tempo) para marcar as tomadas ruins e passá-las ao `refazer-tomadas`.
+ * Tempos: sem os tempos das palavras no documento, a tomada ocupa do vídeo a fatia proporcional ao tamanho da fala
+ * (planos tirados no ajuste fino não contam). Só lê o banco e o storage e roda ffmpeg: nenhum provedor, nenhum job,
+ * nada é gravado no banco. Os rótulos ficam no HTML/TXT (o ffmpeg local não tem o filtro drawtext).
  *
  *   ./apps/worker/node_modules/.bin/tsx apps/worker/src/scripts/painel-pulsos.ts --course crs_xxx [--cenas v01,v02,q01~a] --out ./painel-c1
  *
@@ -13,13 +17,14 @@ import { existsSync } from 'node:fs';
 import { mkdir, symlink, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { allLessons, type Camera, type CourseDocument, type Shot, type ShotFraming } from '@lms/course-schema';
+import { allLessons, continuousTakeGroups, shotNeedsPresenter, type Camera, type CourseDocument, type Shot, type ShotFraming } from '@lms/course-schema';
 import { authoring, getDb, media } from '@lms/db';
 import { ffprobe, runFfmpeg } from '@lms/media/compose';
 import { readAsset } from '../media';
 
-export const PERCENTS = [25, 50, 75] as const;
-/** linhas por imagem do painel (24 × 360 px = 8.640 px de altura) */
+/** instantes recortados dentro de cada TOMADA (fração do tempo dela) */
+export const TAKE_PERCENTS = [40, 75] as const;
+/** linhas (tomadas) por imagem do painel (24 × 360 px = 8.640 px de altura) */
 export const ROWS_PER_PAGE = 24;
 const TILE_W = 640;
 const TILE_H = 360;
@@ -74,40 +79,96 @@ export function cropExpr(r: HandsRegion): string {
   return `iw*${f(r.w)}:ih*${f(r.h)}:iw*${f(r.x)}:ih*${f(r.y)}`;
 }
 
-/** Plano falado no instante `percent` do vídeo (aproximação pelo tamanho da fala de cada plano). */
-export function shotAtPercent<T extends Pick<Shot, 'line'>>(shots: readonly T[], percent: number): T | undefined {
-  if (!shots.length) return undefined;
-  const total = shots.reduce((a, s) => a + s.line.length, 0) || 1;
-  let acc = 0;
-  for (const s of shots) {
-    acc += s.line.length;
-    if ((percent / 100) * total <= acc) return s;
-  }
-  return shots[shots.length - 1];
-}
-
 export function frameTime(durationSeconds: number, percent: number): number {
   return +(durationSeconds * (percent / 100)).toFixed(3);
 }
 
+export interface TakeFrame {
+  percent: number;
+  /** instante no vídeo (s) */
+  time: number;
+  /** plano falado nesse instante (enquadramento/câmera do recorte) */
+  shot: Pick<Shot, 'id' | 'line' | 'cameraId' | 'framing'> | undefined;
+}
+
+export interface TakePlan {
+  /** id do 1º plano da tomada (o que `refazer-tomadas` espera) */
+  firstShotId: string;
+  shotIds: string[];
+  cameraId: string | undefined;
+  start: number;
+  end: number;
+  frames: TakeFrame[];
+}
+
+/**
+ * Tomadas de apresentador da cena com o trecho do vídeo de cada uma (proporcional ao tamanho da fala; `dropped` = planos
+ * tirados no ajuste fino, que não estão no vídeo) e os instantes dos recortes. Cena sem direção: uma tomada só.
+ */
+export function planTakes<T extends Pick<Shot, 'id' | 'line' | 'cameraId' | 'framing' | 'layout' | 'slide'>>(shots: readonly T[], opts: { hasNarrationAudio: boolean; durationSeconds: number; dropped?: readonly string[] }): TakePlan[] {
+  const dropped = new Set(opts.dropped ?? []);
+  const kept = shots.filter((s) => !dropped.has(s.id));
+  if (!kept.length) return [];
+  const total = kept.reduce((a, s) => a + s.line.length, 0) || 1;
+  const start = new Map<string, number>();
+  let acc = 0;
+  for (const s of kept) {
+    start.set(s.id, (acc / total) * opts.durationSeconds);
+    acc += s.line.length;
+  }
+  const endOf = (s: T) => ((start.get(s.id)! / opts.durationSeconds) * total + s.line.length) / total * opts.durationSeconds;
+  const out: TakePlan[] = [];
+  for (const g of continuousTakeGroups(kept, { hasNarrationAudio: opts.hasNarrationAudio })) {
+    const first = kept[g[0]!]!;
+    if (first.layout === 'cinematic' || !shotNeedsPresenter(first, opts.hasNarrationAudio)) continue;
+    const a = start.get(first.id)!;
+    const b = endOf(kept[g[g.length - 1]!]!);
+    const members = g.map((i) => kept[i]!);
+    const frames = TAKE_PERCENTS.map((percent): TakeFrame => {
+      const time = +(a + (b - a) * (percent / 100)).toFixed(3);
+      const shot = members.find((m) => time <= endOf(m) + 1e-6) ?? members[members.length - 1];
+      return { percent, time, shot };
+    });
+    out.push({ firstShotId: first.id, shotIds: members.map((m) => m.id), cameraId: first.cameraId, start: +a.toFixed(3), end: +b.toFixed(3), frames });
+  }
+  return out;
+}
+
 interface Row {
+  /** `aula/cena#<1º plano da tomada>` */
   label: string;
   title: string;
+  /** câmera da tomada (id) */
+  camera: string;
+  start: number;
+  end: number;
   video: string;
   frames: string[];
   /** zona/enquadramento por quadro (para a legenda) */
   notes: string[];
+  /** número da 1ª imagem da tomada no painel (a 2ª é +1) */
+  firstImage: number;
 }
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+const secs = (n: number) => `${n.toFixed(1)}s`;
+
+/** `tomadas.txt`: uma linha por recorte, na ordem das imagens do painel (painel.png, painel-2.png…, da esquerda para a direita e de cima para baixo). */
+export function buildTakesText(rows: readonly Row[]): string {
+  const lines: string[] = [];
+  for (const r of rows) {
+    r.frames.forEach((_, i) => lines.push(`${r.firstImage + i} -> ${r.label} · ${r.camera} · ${secs(r.start)}-${secs(r.end)} (${TAKE_PERCENTS[i]}%)`));
+  }
+  return `${lines.join('\n')}\n`;
+}
 
 export function buildIndexHtml(courseTitle: string, rows: Row[], pages: string[]): string {
   return `<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><title>Pulsos — ${esc(courseTitle)}</title>
-<style>body{font:14px system-ui;margin:16px;background:#111;color:#eee}h1{font-size:18px}.row{display:grid;grid-template-columns:140px repeat(3,minmax(0,1fr)) minmax(0,1.4fr);gap:8px;align-items:start;border-top:1px solid #333;padding:8px 0}.row img,.row video{width:100%;display:block;background:#000}.lb{font-weight:600}.lb small{display:block;font-weight:400;color:#aaa}.note{color:#999;font-size:11px}</style></head><body>
-<h1>Conferência de pulsos — ${esc(courseTitle)} (${rows.length} cenas)</h1>
-<p>${pages.map((p) => `<a style="color:#8cf" href="${esc(p)}">${esc(p)}</a>`).join(' · ')}</p>
-${rows.map((r) => `<div class="row"><div class="lb">${esc(r.label)}<small>${esc(r.title)}</small></div>${r.frames.map((f, i) => `<div><img loading="lazy" src="${esc(f)}" alt="${esc(r.label)} ${PERCENTS[i]}%"><div class="note">${PERCENTS[i]}% · ${esc(r.notes[i] ?? '')}</div></div>`).join('')}<video controls preload="none" src="${esc(r.video)}"></video></div>`).join('\n')}
+<style>body{font:14px system-ui;margin:16px;background:#111;color:#eee}h1{font-size:18px}.row{display:grid;grid-template-columns:170px repeat(2,minmax(0,1fr)) minmax(0,1.4fr);gap:8px;align-items:start;border-top:1px solid #333;padding:8px 0}.row img,.row video{width:100%;display:block;background:#000}.lb{font-weight:600}.lb small{display:block;font-weight:400;color:#aaa}.note{color:#999;font-size:11px}</style></head><body>
+<h1>Conferência de pulsos por tomada — ${esc(courseTitle)} (${rows.length} tomadas)</h1>
+<p>${pages.map((p) => `<a style="color:#8cf" href="${esc(p)}">${esc(p)}</a>`).join(' · ')} · <a style="color:#8cf" href="tomadas.txt">tomadas.txt</a></p>
+${rows.map((r) => `<div class="row"><div class="lb">${esc(r.label)}<small>${esc(r.title)} · ${esc(r.camera)} · ${secs(r.start)}-${secs(r.end)}</small></div>${r.frames.map((f, i) => `<div><img loading="lazy" src="${esc(f)}" alt="${esc(r.label)} ${TAKE_PERCENTS[i]}%"><div class="note">#${r.firstImage + i} · ${TAKE_PERCENTS[i]}% · ${esc(r.notes[i] ?? '')}</div></div>`).join('')}<video controls preload="none" src="${esc(r.video)}#t=${r.start},${r.end}"></video></div>`).join('\n')}
 </body></html>
 `;
 }
@@ -138,12 +199,13 @@ async function main() {
   await mkdir(tilesDir, { recursive: true });
 
   const only = args.cenas ? new Set(args.cenas) : null;
+  const hasNarrationAudio = (doc.presentation.voiceProvider ?? 'heygen') === 'elevenlabs';
   const rows: Row[] = [];
   const tiles: string[] = [];
   for (const l of allLessons(doc)) {
     for (const n of l.graph.nodes) {
       if (only && !only.has(n.id)) continue;
-      const m = (n as { media?: { kind?: string; assetId?: string } }).media;
+      const m = (n as { media?: { kind?: string; assetId?: string; adjust?: { drop?: string[] } } }).media;
       if (m?.kind !== 'video' || !m.assetId) continue;
       const asset = await media.getAsset(db, m.assetId);
       if (!asset?.storageKey) { console.log(`[pulsos] ${l.id}/${n.id}: vídeo sem arquivo no storage; pulado`); continue; }
@@ -154,44 +216,52 @@ async function main() {
       const link = path.join(videosDir, `${asset.id}.mp4`);
       if (src !== link) { await rm(link, { force: true }); await symlink(src, link); }
       const info = await ffprobe(src);
-      const label = `${l.id}/${n.id}`;
-      const safe = label.replace(/[^A-Za-z0-9_-]+/g, '_');
-      const frames: string[] = [];
-      const notes: string[] = [];
-      for (const pct of PERCENTS) {
-        const shot = shotAtPercent(shots, pct);
-        const cam = (shot?.cameraId ? cameras.find((c) => c.id === shot.cameraId) : undefined) ?? mainCam;
-        const framing = shot && cam?.placement === 'full_frame' ? cam.nativeFraming : (shot?.framing ?? cam?.nativeFraming);
-        const region = handsRegion(cam?.zone, framing);
-        const rel = path.join('quadros', `${safe}_${pct}.png`);
-        await runFfmpeg(['-ss', String(frameTime(info.durationSeconds, pct)), '-i', src, '-frames:v', '1', '-vf', `crop=${cropExpr(region)}`, path.join(args.out, rel)]);
-        frames.push(rel);
-        notes.push(`${cam?.zone ?? 'centro'} / ${framing ?? 'medium'}${shot ? ` / plano ${shot.id}` : ''}`);
-        const tile = path.join(tilesDir, `t${String(tiles.length + 1).padStart(5, '0')}.png`);
-        await runFfmpeg(['-i', path.join(args.out, rel), '-vf', `scale=${TILE_W}:${TILE_H}`, tile]);
-        tiles.push(tile);
+      const safe = `${l.id}/${n.id}`.replace(/[^A-Za-z0-9_-]+/g, '_');
+      // cena sem direção (plano único): uma tomada só, na câmera principal
+      const takes: TakePlan[] = shots.length
+        ? planTakes(shots, { hasNarrationAudio, durationSeconds: info.durationSeconds, dropped: m.adjust?.drop })
+        : [{ firstShotId: 'unico', shotIds: ['unico'], cameraId: undefined, start: 0, end: info.durationSeconds, frames: TAKE_PERCENTS.map((percent) => ({ percent, time: frameTime(info.durationSeconds, percent), shot: undefined })) }];
+      for (const t of takes) {
+        const frames: string[] = [];
+        const notes: string[] = [];
+        const cam0 = (t.cameraId ? cameras.find((c) => c.id === t.cameraId) : undefined) ?? mainCam;
+        for (const f of t.frames) {
+          const shot = f.shot;
+          const cam = (shot?.cameraId ? cameras.find((c) => c.id === shot.cameraId) : undefined) ?? mainCam;
+          const framing = shot && cam?.placement === 'full_frame' ? cam.nativeFraming : (shot?.framing ?? cam?.nativeFraming);
+          const region = handsRegion(cam?.zone, framing);
+          const rel = path.join('quadros', `${safe}_${t.firstShotId.replace(/[^A-Za-z0-9_-]+/g, '_')}_${f.percent}.png`);
+          await runFfmpeg(['-ss', String(f.time), '-i', src, '-frames:v', '1', '-vf', `crop=${cropExpr(region)}`, path.join(args.out, rel)]);
+          frames.push(rel);
+          notes.push(`${cam?.zone ?? 'centro'} / ${framing ?? 'medium'}${shot ? ` / plano ${shot.id}` : ''}`);
+          const tile = path.join(tilesDir, `t${String(tiles.length + 1).padStart(5, '0')}.png`);
+          await runFfmpeg(['-i', path.join(args.out, rel), '-vf', `scale=${TILE_W}:${TILE_H}`, tile]);
+          tiles.push(tile);
+        }
+        rows.push({ label: `${l.id}/${n.id}#${t.firstShotId}`, title: (n as { title?: string }).title ?? n.id, camera: cam0?.id ?? 'principal', start: t.start, end: t.end, video: path.join('videos', `${asset.id}.mp4`), frames, notes, firstImage: tiles.length - frames.length + 1 });
       }
-      rows.push({ label, title: (n as { title?: string }).title ?? n.id, video: path.join('videos', `${asset.id}.mp4`), frames, notes });
-      console.log(`[pulsos] ${label}: 3 quadros`);
+      console.log(`[pulsos] ${l.id}/${n.id}: ${takes.length} tomadas`);
     }
   }
   if (!rows.length) throw new Error('nenhuma cena de apresentador com vídeo (confira --course e --cenas)');
 
-  // painel.png em páginas: uma linha por cena, 3 quadros (25/50/75%)
+  // painel.png em páginas: uma linha por tomada, 2 recortes (40/75%)
+  const cols = TAKE_PERCENTS.length;
   const pages: string[] = [];
   for (let p = 0; p * ROWS_PER_PAGE < rows.length; p++) {
     const pageRows = Math.min(ROWS_PER_PAGE, rows.length - p * ROWS_PER_PAGE);
     const name = p === 0 ? 'painel.png' : `painel-${p + 1}.png`;
     const dir = path.join(tilesDir, `p${p}`);
     await mkdir(dir, { recursive: true });
-    const slice = tiles.slice(p * ROWS_PER_PAGE * 3, (p * ROWS_PER_PAGE + pageRows) * 3);
+    const slice = tiles.slice(p * ROWS_PER_PAGE * cols, (p * ROWS_PER_PAGE + pageRows) * cols);
     for (let i = 0; i < slice.length; i++) await symlink(slice[i]!, path.join(dir, `f${String(i + 1).padStart(5, '0')}.png`));
-    await runFfmpeg(['-framerate', '1', '-i', path.join(dir, 'f%05d.png'), '-vf', `tile=3x${pageRows}`, '-frames:v', '1', path.join(args.out, name)]);
+    await runFfmpeg(['-framerate', '1', '-i', path.join(dir, 'f%05d.png'), '-vf', `tile=${cols}x${pageRows}`, '-frames:v', '1', path.join(args.out, name)]);
     pages.push(name);
   }
   await rm(tilesDir, { recursive: true, force: true });
   await writeFile(path.join(args.out, 'index.html'), buildIndexHtml(doc.title, rows, pages));
-  console.log(`[pulsos] ${rows.length} cenas; abra ${path.join(args.out, 'index.html')} (e ${pages.join(', ')})`);
+  await writeFile(path.join(args.out, 'tomadas.txt'), buildTakesText(rows));
+  console.log(`[pulsos] ${rows.length} tomadas; abra ${path.join(args.out, 'index.html')} (e ${pages.join(', ')}); tomadas.txt lista imagem -> aula/cena#plano`);
 }
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);

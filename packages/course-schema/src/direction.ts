@@ -455,6 +455,12 @@ export function continuousTakeGroups(shots: ReadonlyArray<Pick<Shot, 'line' | 'c
   return groups;
 }
 
+/** Variação de refação de uma tomada (0 = original): a maior entre os ids dos planos da tomada (normalmente só o do 1º plano). */
+export function takeRetake(retake: Readonly<Record<string, number>> | undefined, shotIds: readonly string[]): number {
+  if (!retake) return 0;
+  return shotIds.reduce((m, id) => Math.max(m, retake[id] ?? 0), 0);
+}
+
 /** Plano de cena em movimento (layout `cinematic` com pedido de câmera preenchido). */
 export function shotIsCinematic(shot: Pick<Shot, 'layout'> & { cinematic?: { prompt?: string } | null }): boolean {
   return shot.layout === 'cinematic' && !!shot.cinematic?.prompt?.trim();
@@ -499,6 +505,13 @@ export const SceneDirectionSchema = z.preprocess(
       intent: z.string().max(300).default(''),
       /** quem definiu: IA (proposta aprovada) ou autor */
       source: z.enum(['ai', 'author']).default('author'),
+      /**
+       * Refazer só uma tomada. Chave = id do PRIMEIRO plano da tomada (ver `continuousTakeGroups`; ex.: "v09"),
+       * valor = variação (inteiro >= 1; incrementar a cada refação). A variação entra na chave de reaproveitamento
+       * e na Idempotency-Key do pedido HeyGen SÓ dessa tomada: ao gerar a cena as demais tomadas são reaproveitadas
+       * (custo 0) e a marcada é pedida de novo. Ausente/vazio = comportamento de sempre (hashes antigos inalterados).
+       */
+      retake: z.record(z.string().max(40), z.number().int().min(1).max(99)).optional(),
     })
     .superRefine((d, ctx) => {
       const seen = new Set<string>();
