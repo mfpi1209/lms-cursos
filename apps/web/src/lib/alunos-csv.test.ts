@@ -53,6 +53,11 @@ describe('parseStudentsCsv', () => {
     expect(parseStudentsCsv(ok).rows).toHaveLength(CSV_MAX_ROWS);
   });
 
+  it('cursos separados por ; sem aspas num arquivo separado por ; (colunas a mais) também valem', () => {
+    const r = parseStudentsCsv('nome;email;rgm;telefone;cursos\nA;a@x.com;1;;c1;c2;c3');
+    expect(r.rows[0]!.cursos).toEqual(['c1', 'c2', 'c3']);
+  });
+
   it('cursos repetidos viram um, espaços são aparados', () => {
     const r = parseStudentsCsv('nome,email,rgm,cursos\nA,a@x.com,1," a ; a ;b "');
     expect(r.rows[0]!.cursos).toEqual(['a', 'b']);

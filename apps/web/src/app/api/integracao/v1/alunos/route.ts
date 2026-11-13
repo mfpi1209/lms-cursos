@@ -4,7 +4,7 @@ import { HttpError } from '@/server/viewer';
 
 export const dynamic = 'force-dynamic';
 
-/** Cadastra ou atualiza alunos (idempotente pelo e-mail). Escopo: students:write. Contrato em docs/integracao-alunos.md. */
+/** Cadastra ou atualiza alunos (idempotente pelo e-mail). Escopo: students:write. Corpo e resposta: ver server/integration-students.ts. */
 export async function POST(req: Request) {
   return withIntegration(req, 'students:write', async (ctx) => {
     let json: unknown;

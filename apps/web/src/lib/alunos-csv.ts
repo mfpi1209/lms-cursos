@@ -136,7 +136,8 @@ export function parseStudentsCsv(input: string): CsvParseResult {
     email: get(r.cells, 'email'),
     rgm: get(r.cells, 'rgm'),
     telefone: get(r.cells, 'telefone'),
-    cursos: [...new Set(get(r.cells, 'cursos').split(/[;|,]/).map((s) => s.trim()).filter(Boolean))],
+    // `cursos` é a última coluna: células a mais (curso1;curso2 sem aspas num arquivo separado por ;) também são cursos
+    cursos: [...new Set((col.cursos !== undefined && col.cursos === header.cells.length - 1 ? r.cells.slice(col.cursos).join(';') : get(r.cells, 'cursos')).split(/[;|,]/).map((s) => s.trim()).filter(Boolean))],
   }));
   return { rows, fatal };
 }
