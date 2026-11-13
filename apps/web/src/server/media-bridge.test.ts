@@ -45,6 +45,14 @@ const cams = [
 ];
 const doc = markdownToCourseDocument(parseMarkdownCourse(MD), { presentation: { avatarId: 'l34', voiceProvider: 'elevenlabs', voiceId: 'v1', cameras: cams } });
 const lesson = allLessons(doc)[0]!;
+// o importador agora grava cada cena numa câmera só; estes testes cobrem a direção MANUAL com troca de câmera (2 tomadas):
+// os 2 primeiros planos numa lateral e o restante (incluindo a chamada) na outra
+{
+  const v01 = lesson.graph.nodes.find((n) => n.id === 'v01') as unknown as { direction: { shots: Array<{ cameraId?: string }> } };
+  v01.direction.shots.forEach((sh, i) => {
+    sh.cameraId = i < 2 ? 'cam_dir' : 'cam_esq';
+  });
+}
 const cfg = mediaConfigFromEnv({ MEDIA_SIMULATION: '0' } as unknown as NodeJS.ProcessEnv);
 const env = { PLATFORM_BRAND: 'dnawork' } as unknown as NodeJS.ProcessEnv;
 

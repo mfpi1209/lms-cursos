@@ -2,7 +2,7 @@ import { CourseDocumentSchema, type Branding, type CastMember, type CourseDocume
 import type { Edge, LessonGraph, Objective } from '../graph';
 import { TASK_CRITERIA_MAX, type AnyNode, type ScreenRecording, type ChoiceQuality, type RecapItem, type TaskDeliverable, type TaskFileKind, type TaskReview } from '../nodes';
 import type { RichTextDocument } from '../richtext';
-import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, nextChipsCamera, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, zoneTalkCamera, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
+import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
 import { compileCourse, type CompileIssue, type CourseCompileResult } from '../compile';
 import { courseLengthReport, lengthProfile, type CourseFormat } from '../length';
 import { parseDurationMinutes } from '../duration';
@@ -777,28 +777,14 @@ function groupLines(sentences: string[], max = PRESENTER_SHOT_WORDS.max): string
 const GESTURE_CYCLE = ['nod_slightly_smile', 'lean_in_curious', 'relaxed_shoulders_calm', 'relaxed_shoulders_reassuring', 'nod_warm', 'tilt_head_thoughtful'] as const;
 const gesture = (id: string) => SAFE_GESTURES.find((g) => g.id === id)?.prompt ?? 'nods slowly, warm';
 
-/** Câmera alternativa de uma troca com propósito (outra câmera pronta do kit) e o enquadramento nativo dela. */
-export interface AltCamera {
-  cameraId: string;
-  framing: ShotFraming;
-}
-
 /**
- * Alternância de câmera com propósito (estúdio com mais de uma câmera pronta): a câmera base (principal da
- * cena) abre com 2 planos; depois, a cada 3 planos, a cena troca para OUTRA câmera do kit e volta à base.
- * No máximo UMA troca a cada 2–3 planos e nunca para a mesma câmera (as alternativas nunca incluem a base).
- * Cenas de 1–2 planos, ou sem câmera alternativa, não trocam. Devolve, por plano, a câmera alternativa ou
- * `undefined` (= base). Pura.
+ * Estúdio com zonas: uma cena dirigida usa UMA câmera para todos os planos (uma tomada contínua, sem troca de
+ * lado no meio da fala). Câmera da cena `sceneIndex` (cenas dirigidas da aula, a partir de 0): esquerda, direita,
+ * esquerda… (só um lado no kit = sempre esse lado). Pura.
  */
-export function altCameraPlan(shotCount: number, alts: readonly AltCamera[]): Array<AltCamera | undefined> {
-  const out: Array<AltCamera | undefined> = Array.from({ length: shotCount }, () => undefined);
-  if (shotCount < 3 || !alts.length) return out;
-  let turn = 0;
-  for (let start = 2; start < shotCount; start += 6) {
-    const alt = alts[turn++ % alts.length]!;
-    for (let k = start; k < Math.min(start + 3, shotCount); k++) out[k] = alt;
-  }
-  return out;
+export function sideCameraOf(z: ZoneCameraSet, sceneIndex: number): string {
+  const sides = [z.left, z.right].filter((x): x is string => !!x);
+  return sides[sceneIndex % sides.length]!;
 }
 
 export interface CardDirectionOptions {
@@ -814,12 +800,11 @@ export interface CardDirectionOptions {
   /** `card` = o cartão em tela cheia de antes (sem apresentadora); padrão `presenter_panel` */
   cardLayout?: 'presenter_panel' | 'card';
   /**
-   * estúdio com zonas: a fala vai na câmera de fala da cena (`talk`) e o
-   * cartão vira `presenter_chips` na câmera lateral `chips` (o lado que
-   * alterna com as pílulas anteriores). Cada câmera com o enquadramento
-   * nativo dela (tela cheia, sem zoom). Ignora `cameraId`/`cardLayout`.
+   * estúdio com zonas: a fala inteira vai na câmera da cena (`talk`, uma só) e o
+   * cartão vira `presenter_chips` NA MESMA câmera (as pílulas ficam na parede
+   * livre do outro lado). Enquadramento nativo dela (tela cheia, sem zoom). Ignora `cameraId`/`cardLayout`.
    */
-  zone?: { talk: { cameraId: string; framing: ShotFraming }; chips: { cameraId: string; framing: ShotFraming }; alts?: readonly AltCamera[] };
+  zone?: { talk: { cameraId: string; framing: ShotFraming } };
 }
 
 /**
@@ -884,7 +869,7 @@ export function buildCardDirection(narration: string, card: ParsedCard, opts: Ca
   if (opts.zone) {
     // estúdio com zonas: a apresentadora num terço (câmera lateral, sem transformação) e as pílulas na parede livre, surgindo quando ditas
     const p = presenter(cardLine);
-    shots.push({ ...p, cameraId: opts.zone.chips.cameraId, framing: opts.zone.chips.framing, layout: 'presenter_chips', slide: { ...cardSlide, bullets: card.bullets.slice(0, CHIPS_LIMITS.chips).map((b) => b.slice(0, 90)) } });
+    shots.push({ ...p, layout: 'presenter_chips', slide: { ...cardSlide, bullets: card.bullets.slice(0, CHIPS_LIMITS.chips).map((b) => b.slice(0, 90)) } });
   } else if (opts.cardLayout === 'card') {
     shots.push({ id: `s${shots.length + 1}`, line: cardLine, framing: 'medium', layout: 'card', cameraMove: 'static', slide: { ...cardSlide, variant: opts.variant }, transitionIn: 'cut' });
   } else {
@@ -893,15 +878,7 @@ export function buildCardDirection(narration: string, card: ParsedCard, opts: Ca
     shots.push({ ...p, framing: opts.fullFrameNative ?? 'medium', layout: 'presenter_panel', slide: cardSlide });
   }
   for (const line of closing) shots.push(presenter(line));
-  if (opts.zone?.alts?.length) {
-    // troca de câmera com propósito nos planos de fala (o plano das pílulas fica na câmera lateral dele)
-    const plan = altCameraPlan(shots.length, opts.zone.alts);
-    shots.forEach((sh, i) => {
-      const alt = plan[i];
-      if (alt && sh.layout !== 'presenter_chips') shots[i] = { ...sh, cameraId: alt.cameraId, framing: alt.framing };
-    });
-  }
-  const direction: SceneDirection = { version: 1, shots, intent: opts.zone ? `Estúdio com zonas: a fala na câmera da cena; as pílulas "${clipWords(stripBold(card.title), 6)}" surgem na parede livre e a fala volta.` : opts.cardLayout === 'card' ? `Apresentadora na câmera principal; o cartão "${clipWords(stripBold(card.title), 6)}" cobre a lista e a fala volta a ela.` : `Apresentadora na câmera principal; o painel "${clipWords(stripBold(card.title), 6)}" mostra a lista ao lado dela e a fala segue com ela.`, source: 'author' };
+  const direction: SceneDirection = { version: 1, shots, intent: opts.zone ? `Estúdio com zonas: a cena inteira numa câmera só (uma tomada); as pílulas "${clipWords(stripBold(card.title), 6)}" surgem na parede livre e a fala volta.` : opts.cardLayout === 'card' ? `Apresentadora na câmera principal; o cartão "${clipWords(stripBold(card.title), 6)}" cobre a lista e a fala volta a ela.` : `Apresentadora na câmera principal; o painel "${clipWords(stripBold(card.title), 6)}" mostra a lista ao lado dela e a fala segue com ela.`, source: 'author' };
   if (!sameWords(shots.map((s) => s.line).join(' '), narration)) return undefined;
   return direction;
 }
@@ -912,22 +889,21 @@ export function buildCardDirection(narration: string, card: ParsedCard, opts: Ca
  * enquadramento nativo dela (sem zoom; nenhum corte de câmera dentro da cena).
  * `undefined` quando a fala não tem palavras.
  */
-export function buildTalkDirection(narration: string, talk: { cameraId: string; framing: ShotFraming }, alts: readonly AltCamera[] = []): SceneDirection | undefined {
+export function buildTalkDirection(narration: string, talk: { cameraId: string; framing: ShotFraming }): SceneDirection | undefined {
   const lines = groupLines(splitSentences(narration));
   if (!lines.length) return undefined;
-  const plan = altCameraPlan(lines.length, alts.filter((a) => a.cameraId !== talk.cameraId));
   const shots: Shot[] = lines.map((line, i) => ({
     id: `s${i + 1}`,
     line,
-    cameraId: plan[i]?.cameraId ?? talk.cameraId,
-    framing: plan[i]?.framing ?? talk.framing,
+    cameraId: talk.cameraId,
+    framing: talk.framing,
     layout: 'presenter',
     cameraMove: 'static',
     motionPrompt: gesture(GESTURE_CYCLE[i % GESTURE_CYCLE.length]!),
     transitionIn: 'cut',
   }));
   if (!sameWords(shots.map((s) => s.line).join(' '), narration)) return undefined;
-  return { version: 1, shots, intent: alts.length && lines.length >= 3 ? 'Estúdio com zonas: a fala na câmera da cena, com uma troca para outra câmera a cada 3 planos (as cenas alternam entre a 3/4 e as laterais).' : 'Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).', source: 'author' };
+  return { version: 1, shots, intent: 'Estúdio com zonas: a fala inteira numa câmera só (uma tomada); as cenas alternam esquerda e direita.', source: 'author' };
 }
 
 /** Câmeras do estúdio com zonas resolvidas para o importador: ids por zona + enquadramento de cada uma (nativo na tela cheia). */
@@ -936,19 +912,16 @@ export interface ImportZones {
   framing: (cameraId: string) => ShotFraming;
 }
 
-/** Câmeras alternativas (prontas, com zona) para a troca com propósito: a 3/4 primeiro, depois as laterais; sem as `exclude`. */
-export function altCamerasOf(z: ImportZones, ...exclude: string[]): AltCamera[] {
-  return [z.set.center, z.set.left, z.set.right].filter((id): id is string => !!id && !exclude.includes(id)).map((cameraId) => ({ cameraId, framing: z.framing(cameraId) }));
-}
-
 export function importZonesFrom(presentation: Partial<Presentation> | undefined): ImportZones | undefined {
-  const cameras = (presentation?.cameras ?? []) as Camera[];
+  const all = (presentation?.cameras ?? []) as Camera[];
+  // só câmeras frontais e laterais: a 3/4 (zona center / ângulo não frontal) inventa relógio/pulseira e não entra no importador
+  const cameras = all.filter((c) => (c.angle ?? 'front') === 'front' && c.zone !== 'center');
   const set = zoneCamerasOf(cameras);
   if (!set) return undefined;
   return {
     set,
     framing: (id) => {
-      const cam = cameras.find((c) => c.id === id);
+      const cam = all.find((c) => c.id === id);
       return cam && resolveCameraPlacement(presentation ?? null, cam).placement === 'full_frame' ? (cam.nativeFraming ?? 'medium') : 'medium';
     },
   };
@@ -1147,8 +1120,8 @@ function buildLesson(
   const go = (id: string, from: string, to: string, extra: Partial<Edge> = {}): Edge => ({ id, from, to, ...extra });
   let firstVideo = true;
   let videoIndex = 0;
-  // estúdio com zonas: lado das últimas pílulas da aula (o próximo plano de pílulas vai para o outro lado)
-  let chipsSide: 'left' | 'right' | undefined;
+  // estúdio com zonas: nº de cenas dirigidas da aula até aqui (a 1ª = esquerda, a 2ª = direita…; uma câmera por cena)
+  let directedScenes = 0;
 
   scenes.forEach((scene, index) => {
     if (scene.screenFiles?.length && scene.kind !== 'video') warn({ code: 'SCREEN_RECORDING_WRONG_SCENE', lessonId, ...(scene.kind === 'end' ? {} : { nodeId: nodeIdOf(scene.code) }), message: `${scene.code}: "Vídeo próprio:" só vale em cena de vídeo (V..); a linha foi ignorada` });
@@ -1196,11 +1169,10 @@ function buildLesson(
           if (wc(stripBold(scene.card.title)) > CARD_LIMITS.titleWords) warn({ code: 'CARD_TITLE_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: título do cartão com ${wc(stripBold(scene.card.title))} palavras (máximo ${CARD_LIMITS.titleWords})` });
           const variant = ctx.nextVariant();
           const z = opts.zones;
-          const talkId = z ? zoneTalkCamera(z.set, videoIndex - 1) : undefined;
-          const pick = z ? nextChipsCamera(z.set, chipsSide) : undefined;
-          const zone = z && talkId && pick ? { talk: { cameraId: talkId, framing: z.framing(talkId) }, chips: { cameraId: pick.cameraId, framing: z.framing(pick.cameraId) }, alts: altCamerasOf(z, talkId, pick.cameraId) } : undefined;
+          const talkId = z ? sideCameraOf(z.set, directedScenes) : undefined;
+          const zone = z && talkId ? { talk: { cameraId: talkId, framing: z.framing(talkId) } } : undefined;
           direction = opts.direction === false ? undefined : buildCardDirection(scene.narration, scene.card, { ...(opts.mainCameraId ? { cameraId: opts.mainCameraId } : {}), variant, sceneTitle: scene.title, ...(opts.mainCameraFullFrameNative ? { fullFrameNative: opts.mainCameraFullFrameNative } : {}), ...(zone ? { zone } : {}) });
-          if (direction && pick && direction.shots.some((s) => s.layout === 'presenter_chips')) chipsSide = pick.zone;
+          if (direction && zone) directedScenes++;
           if (!direction) {
             // sem recorte possível: o cartão vai para o texto da tela (TODO: montar a direção à mão no estúdio)
             body = doc(paragraph(scene.screenText || scene.title), paragraph(scene.card.title), list(scene.card.bullets));
@@ -1209,8 +1181,9 @@ function buildLesson(
         }
         // estúdio com zonas: as falas sem cartão também ganham direção (câmera da cena; as cenas alternam 3/4 e laterais)
         if (!direction && !scene.card && !screenRecordings && opts.zones && opts.direction !== false) {
-          const talkId = zoneTalkCamera(opts.zones.set, videoIndex - 1);
-          direction = buildTalkDirection(scene.narration, { cameraId: talkId, framing: opts.zones.framing(talkId) }, altCamerasOf(opts.zones, talkId));
+          const talkId = sideCameraOf(opts.zones.set, directedScenes);
+          direction = buildTalkDirection(scene.narration, { cameraId: talkId, framing: opts.zones.framing(talkId) });
+          if (direction) directedScenes++;
         }
         const speech = lengthProfile(opts.format);
         if (wc(scene.narration) > speech.narrationMaxWords) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo ${speech.narrationMaxWords})` });
@@ -1507,10 +1480,12 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
     reactionAt += advance;
     return at;
   };
-  const mainCameraId = opts.mainCameraId ?? opts.presentation?.cameras?.[0]?.id;
+  const zones = importZonesFrom(opts.presentation);
+  // estúdio com zonas: o avatar principal é a câmera FRONTAL da esquerda (nunca a 3/4)
+  const explicitMain = opts.mainCameraId ? opts.presentation?.cameras?.find((c) => c.id === opts.mainCameraId) : undefined;
+  const mainCameraId = zones && (!explicitMain || (explicitMain.angle ?? 'front') !== 'front') ? (zones.set.left ?? zones.set.right) : (opts.mainCameraId ?? opts.presentation?.cameras?.[0]?.id);
   const mainCam = mainCameraId ? opts.presentation?.cameras?.find((c) => c.id === mainCameraId) : undefined;
   const mainCameraFullFrameNative = mainCam && resolveCameraPlacement(opts.presentation ?? null, mainCam).placement === 'full_frame' ? (mainCam.nativeFraming ?? 'medium') : undefined;
-  const zones = importZonesFrom(opts.presentation);
   const lessonOpts: MarkdownCourseOptions = { ...opts, lessonMinutes, ...(format ? { format } : {}), ...(mainCameraId ? { mainCameraId } : {}), ...(mainCameraFullFrameNative ? { mainCameraFullFrameNative } : {}), ...(zones ? { zones } : {}) };
 
   const objectives: Objective[] = [];

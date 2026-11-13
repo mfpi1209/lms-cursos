@@ -1,47 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import { altCameraPlan, buildTalkDirection } from '../src/import/markdown-course';
+import { buildTalkDirection, sideCameraOf } from '../src/import/markdown-course';
 import { MAX_TAKE_WORDS, continuousTakeGroups, type Shot } from '../src/direction';
 
-const ALT_R = { cameraId: 'cam_dir', framing: 'medium' as const };
-const ALT_L = { cameraId: 'cam_esq', framing: 'medium' as const };
-
-describe('altCameraPlan: troca de câmera com propósito', () => {
-  it('cenas de 1 e 2 planos, ou sem câmera alternativa, não trocam', () => {
-    expect(altCameraPlan(1, [ALT_R])).toEqual([undefined]);
-    expect(altCameraPlan(2, [ALT_R])).toEqual([undefined, undefined]);
-    expect(altCameraPlan(8, [])).toEqual(Array(8).fill(undefined));
+describe('sideCameraOf: um lado por cena', () => {
+  it('alterna esquerda/direita na ordem das cenas dirigidas da aula', () => {
+    const z = { left: 'cam_esq', right: 'cam_dir', center: 'cam_34' };
+    expect([0, 1, 2, 3].map((i) => sideCameraOf(z, i))).toEqual(['cam_esq', 'cam_dir', 'cam_esq', 'cam_dir']);
   });
-
-  it('abre com 2 planos na base, troca para outra câmera por 3 planos e volta (no máximo uma troca a cada 2-3 planos)', () => {
-    const plan = altCameraPlan(12, [ALT_R, ALT_L]);
-    expect(plan.map((p) => p?.cameraId ?? 'base')).toEqual(['base', 'base', 'cam_dir', 'cam_dir', 'cam_dir', 'base', 'base', 'base', 'cam_esq', 'cam_esq', 'cam_esq', 'base']);
-    // número de trocas (cortes de câmera) por cena
-    const cams = plan.map((p) => p?.cameraId ?? 'base');
-    const cuts = cams.filter((c, i) => i > 0 && c !== cams[i - 1]).length;
-    expect(cuts).toBeLessThanOrEqual(Math.ceil(12 / 3) + 1);
-  });
-
-  it('3 planos: o terceiro vai para outra câmera', () => {
-    expect(altCameraPlan(3, [ALT_R]).map((p) => p?.cameraId ?? 'base')).toEqual(['base', 'base', 'cam_dir']);
+  it('só um lado no kit: sempre ele', () => {
+    expect([0, 1, 2].map((i) => sideCameraOf({ right: 'cam_dir' }, i))).toEqual(['cam_dir', 'cam_dir', 'cam_dir']);
   });
 });
 
-describe('buildTalkDirection com alternativas: nunca corta para a mesma câmera', () => {
+describe('buildTalkDirection: todos os planos na MESMA câmera', () => {
   const NARRATION = Array.from({ length: 12 }, (_, i) => `Frase número ${i + 1} da fala, com palavras suficientes para formar um plano inteiro sozinha aqui.`).join(' ');
-
-  it('a base continua em todos os planos de abertura; a troca é sempre para uma câmera diferente da base', () => {
-    const d = buildTalkDirection(NARRATION, { cameraId: 'cam_34', framing: 'medium' }, [{ cameraId: 'cam_34', framing: 'medium' }, ALT_R, ALT_L])!;
+  it('cena com vários planos usa uma câmera só, estática, e vira um pedido só', () => {
+    const d = buildTalkDirection(NARRATION, { cameraId: 'cam_esq', framing: 'medium' })!;
     expect(d.shots.length).toBeGreaterThanOrEqual(3);
-    expect(d.shots[0]!.cameraId).toBe('cam_34');
-    expect(d.shots[1]!.cameraId).toBe('cam_34');
-    const alt = d.shots.filter((s) => s.cameraId !== 'cam_34');
-    expect(alt.length).toBeGreaterThan(0);
-    for (const s of alt) expect(['cam_dir', 'cam_esq']).toContain(s.cameraId);
-  });
-
-  it('sem alternativas, tudo na câmera da cena (como antes)', () => {
-    const d = buildTalkDirection(NARRATION, { cameraId: 'cam_34', framing: 'medium' })!;
-    expect(d.shots.every((s) => s.cameraId === 'cam_34')).toBe(true);
+    expect(d.shots.every((s) => s.cameraId === 'cam_esq' && s.cameraMove === 'static')).toBe(true);
+    expect(continuousTakeGroups(d.shots, { hasNarrationAudio: false }).length).toBe(1);
   });
 });
 

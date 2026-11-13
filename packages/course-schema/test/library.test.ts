@@ -98,18 +98,18 @@ describe('biblioteca: peças padrão', () => {
 });
 
 describe('biblioteca: aplicar kit', () => {
-  it('câmeras do estúdio: prontas, 3/4 primeiro, zonas ativas', () => {
+  it('câmeras do estúdio: prontas, frontal esquerda primeiro (a 3/4 por último), zonas ativas', () => {
     const cams = kitCameras(rafael, resolved().studio);
-    expect(cams.map((c) => [c.id, c.zone])).toEqual([['cam_r7_34', 'center'], ['cam_r7_esq', 'left'], ['cam_r7_dir', 'right']]);
+    expect(cams.map((c) => [c.id, c.zone])).toEqual([['cam_r7_esq', 'left'], ['cam_r7_dir', 'right'], ['cam_r7_34', 'center']]);
     expect(zoneCamerasOf(cams)).toEqual({ center: 'cam_r7_34', left: 'cam_r7_esq', right: 'cam_r7_dir' });
   });
 
-  it('apresentação: avatar = 3/4, pronome, voz do kit, câmera única', () => {
+  it('apresentação: avatar = frontal da esquerda (nunca a 3/4), pronome, voz do kit, câmera única', () => {
     const base = emptyCourseDocument('X').presentation;
     const p = presentationFromKit(resolved(), base);
-    expect(p.avatarId).toBe('look_34');
+    expect(p.avatarId).toBe('look_esq');
     expect(p.avatarName).toBe('Rafael');
-    expect(p.avatarPreviewUrl).toBe('https://x/34.webp');
+    expect(p.avatarPreviewUrl).toBeUndefined();
     expect(p.presenterPronoun).toBe('he');
     expect([p.voiceProvider, p.voiceId, p.voiceName]).toEqual(['elevenlabs', 'lvkgCBi6spByiTZMPJEK', 'Gabriel (ElevenLabs)']);
     expect(p.directionStyle.cameraMode).toBe('single');

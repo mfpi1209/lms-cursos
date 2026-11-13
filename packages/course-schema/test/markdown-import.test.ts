@@ -441,7 +441,7 @@ describe('estúdio com zonas: importação', () => {
     expect(r.compile.errors).toEqual([]);
     for (const lesson of allLessons(r.document)) {
       const videos = lesson.graph.nodes.filter((n) => n.type === 'scenario' || n.type === 'content');
-      let prevSide: string | undefined;
+      let sceneNo = 0;
       for (const n of videos) {
         if (n.type !== 'scenario' && n.type !== 'content') continue;
         expect(n.direction, n.id).toBeDefined();
@@ -451,41 +451,39 @@ describe('estúdio com zonas: importação', () => {
           expect(s.cameraMove).toBe('static');
           expect(s.layout).not.toBe('presenter_panel');
         }
-        const chips = n.direction!.shots.filter((s) => s.layout === 'presenter_chips');
-        for (const c of chips) {
-          expect(c.cameraId, `${n.id}: pílulas nunca na 3/4`).not.toBe('cam_estudio_34');
-          expect(c.cameraId, `${n.id}: nunca dois planos de pílulas do mesmo lado`).not.toBe(prevSide);
-          prevSide = c.cameraId;
-          expect(c.slide!.bullets.length).toBeGreaterThanOrEqual(2);
-        }
-        // cortes de câmera só entre frases
-        n.direction!.shots.forEach((s, i) => {
-          const prev = n.direction!.shots[i - 1];
-          if (prev && prev.cameraId !== s.cameraId) expect(prev.line, `${n.id}/${s.id}`).toMatch(/[.!?…]["'”’»)]*$/);
-        });
+        // uma câmera só por cena (tomada contínua), sempre frontal lateral; a 1ª cena dirigida da aula = esquerda, a 2ª = direita…
+        const cams = new Set(n.direction!.shots.map((s) => s.cameraId));
+        expect(cams.size, `${n.id}: uma câmera por cena`).toBe(1);
+        const cam = n.direction!.shots[0]!.cameraId;
+        expect(cam, `${n.id}: nunca a 3/4`).not.toBe('cam_estudio_34');
+        expect(cam, `${n.id}: alterna por cena`).toBe(sceneNo++ % 2 === 0 ? 'cam_estudio_esq' : 'cam_estudio_dir');
+        for (const c of n.direction!.shots.filter((s) => s.layout === 'presenter_chips')) expect(c.slide!.bullets.length).toBeGreaterThanOrEqual(2);
       }
     }
     const chipsShots = nodesOf(r.document).flatMap((n) => ((n.type === 'scenario' || n.type === 'content') && n.direction ? n.direction.shots : [])).filter((s) => s.layout === 'presenter_chips');
     expect(chipsShots).toHaveLength(15);
   });
 
-  it('as falas sem cartão alternam a câmera entre as cenas (3/4 nas pares, laterais nas ímpares)', () => {
+  it('uma câmera por cena; as cenas alternam esquerda/direita; nunca a 3/4; avatar principal = frontal da esquerda', () => {
     const doc = markdownToCourseDocument(parseMarkdownCourse(FIXTURE), { presentation: { avatarId: 'l34', cameras: zoneCams } });
     const lesson1 = allLessons(doc)[0]!;
     const v01 = lesson1.graph.nodes.find((n) => n.id === 'v01');
     const v02 = lesson1.graph.nodes.find((n) => n.id === 'v02');
     if (v01?.type !== 'scenario' || v02?.type !== 'content') throw new Error('fixture');
-    // V01: fala na 3/4 (cena 0); cartão = pílulas na lateral esquerda (primeiras pílulas: apresentadora à esquerda)
-    // (o último plano é a chamada para a pergunta Q01: olho no olho, na câmera frontal)
-    // (com 3+ planos há troca de câmera com propósito: os 2 primeiros ficam na câmera da cena, a troca é sempre para OUTRA câmera)
-    const v01Talk = v01.direction!.shots.filter((s) => s.layout === 'presenter' && s.id !== CALL_SHOT_ID);
-    expect(v01Talk[0]!.cameraId).toBe('cam_estudio_34');
-    expect(v01Talk.every((s) => s.cameraId !== 'cam_estudio_esq')).toBe(true); // a lateral das pílulas fica só para o plano das pílulas
-    expect(v01.direction!.shots.at(-1)).toMatchObject({ id: CALL_SHOT_ID, layout: 'presenter', line: 'Agora é com você: o campeonato do bairro entra no currículo?' });
+    expect(new Set(v01.direction!.shots.map((s) => s.cameraId))).toEqual(new Set(['cam_estudio_esq']));
     expect(v01.direction!.shots.find((s) => s.layout === 'presenter_chips')?.cameraId).toBe('cam_estudio_esq');
-    // V02 (sem cartão): direção só de fala na câmera lateral da cena 1
-    expect(v02.direction!.shots.every((s) => s.layout === 'presenter')).toBe(true);
-    expect(v02.direction!.shots.slice(0, 2).every((s) => s.cameraId === 'cam_estudio_esq')).toBe(true);
+    // a chamada para a pergunta continua na câmera da cena (frontal)
+    expect(v01.direction!.shots.at(-1)).toMatchObject({ id: CALL_SHOT_ID, layout: 'presenter', cameraId: 'cam_estudio_esq' });
+    expect(v02.direction!.shots.every((s) => s.layout === 'presenter' && s.cameraId === 'cam_estudio_dir')).toBe(true);
+    const all = nodesOf(doc).flatMap((n) => ((n.type === 'scenario' || n.type === 'content') && n.direction ? n.direction.shots : []));
+    expect(all.some((s) => s.cameraId === 'cam_estudio_34')).toBe(false);
+  });
+
+  it('câmera lateral com ângulo não frontal nunca é usada (sobra só a frontal)', () => {
+    const cams = zoneCams.map((c) => (c.id === 'cam_estudio_dir' ? { ...c, angle: 'right' as const } : c));
+    const doc = markdownToCourseDocument(parseMarkdownCourse(FIXTURE), { presentation: { avatarId: 'l34', cameras: cams } });
+    const ids = new Set(nodesOf(doc).flatMap((n) => ((n.type === 'scenario' || n.type === 'content') && n.direction ? n.direction.shots.map((s) => s.cameraId) : [])));
+    expect([...ids]).toEqual(['cam_estudio_esq']);
   });
 
   it('sem câmeras de zona: igual a antes (painel, sem direção nas falas sem cartão)', () => {
