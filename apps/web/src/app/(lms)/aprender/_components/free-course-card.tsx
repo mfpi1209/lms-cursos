@@ -55,6 +55,9 @@ export function FreeCourseBadges({ certificate, className }: { certificate: bool
   );
 }
 
+/** Imagens do cartão em ordem: a capa própria do curso (se tiver), a foto do instrutor e o quadro do vídeo. */
+export const freeCardImages = (c: Pick<FreeCourseCardData, 'poster' | 'photo' | 'fallback'>): string[] => [c.poster, c.photo, c.fallback].filter((s): s is string => !!s);
+
 /**
  * Curso livre na vitrine: cartão maior que o das pílulas, com a foto do instrutor num quadro marinho e, ao lado (embaixo
  * no celular), título, instrutor, carga horária, módulos e aulas, o andamento real e as duas ações: a principal leva à
@@ -69,7 +72,7 @@ export function FreeCourseCard({ c, testId, priority = false }: { c: FreeCourseC
     <li className="dna-li" data-status={c.status} data-testid={testId}>
       <article aria-labelledby={headingId} className="dna-free border border-line bg-surface">
         <div className="dna-free__media">
-          <CoverImage fallbacks={[c.photo, c.fallback]} format="wide" title={c.title} priority={priority} />
+          <CoverImage fallbacks={freeCardImages(c)} format="wide" title={c.title} priority={priority} />
           <span aria-hidden="true" className="dna-card__scrim dna-card__scrim--soft" />
           <FreeCourseBadges certificate={c.certificate} className="absolute left-3 top-3 right-3" />
         </div>

@@ -16,6 +16,8 @@ export interface FreeCourseCardData {
   title: string;
   summary?: string;
   presenter?: string;
+  /** capa própria do curso (`courses.poster_asset_id`): vence a foto do instrutor quando existe */
+  poster?: string;
   /** foto do instrutor, sempre do nosso domínio */
   photo?: string;
   /** quadro do vídeo de abertura, se a foto não carregar */

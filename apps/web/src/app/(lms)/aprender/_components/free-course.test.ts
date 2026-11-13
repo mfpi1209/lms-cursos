@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { Catalog, type CatalogItem } from './catalog';
 import type { CourseTileData } from './course-tile';
-import { FreeCourseCard, FreeCoursesSection } from './free-course-card';
+import { FreeCourseCard, FreeCoursesSection, freeCardImages } from './free-course-card';
 import { FreeCourseHeader, FreeCourseModules, FreeCourseRemaining } from './free-course-view';
 import { buildFreeCourseOutline } from '../_lib/free-course';
 import { freeCardFixture, freeCourseDocument } from '../_lib/free-course-fixture';
@@ -29,6 +29,15 @@ describe('cartão do curso livre', () => {
     // foto do instrutor: só do nosso domínio
     expect(h).toContain('src="/api/assets/ast_thiago"');
     expect(h).not.toMatch(/src="https?:/);
+  });
+
+  it('capa própria do curso vence a foto do instrutor no cartão; sem capa, a foto', () => {
+    const withPoster = renderToStaticMarkup(createElement(FreeCourseCard, { c: freeCardFixture({ poster: '/api/assets/ast_capa' }) }));
+    expect(withPoster).toContain('src="/api/assets/ast_capa"');
+    expect(withPoster).not.toContain('src="/api/assets/ast_thiago"');
+    expect(freeCardImages(freeCardFixture({ poster: '/api/assets/ast_capa' }))[0]).toBe('/api/assets/ast_capa');
+    const without = renderToStaticMarkup(createElement(FreeCourseCard, { c: freeCardFixture() }));
+    expect(without).toContain('src="/api/assets/ast_thiago"');
   });
 
   it('selo "Curso livre" sempre; "Com certificado" só com certificado ligado', () => {

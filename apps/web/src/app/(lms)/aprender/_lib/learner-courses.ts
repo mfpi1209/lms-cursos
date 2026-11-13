@@ -186,6 +186,7 @@ export async function loadLearnerCourses(userId: string) {
             title: shortTitle,
             ...(tagline ? { summary: tagline } : {}),
             ...(presenter ? { presenter } : {}),
+            ...(posterArt ? { poster: posterArt } : {}),
             ...(presenterImg ? { photo: presenterImg } : {}),
             ...(thumb && thumb !== presenterImg ? { fallback: thumb } : {}),
             workloadMinutes: freeCourseWorkloadMinutes(doc),

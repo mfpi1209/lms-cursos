@@ -43,7 +43,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../
 type Db = ReturnType<typeof createDb>['db'];
 
 /** Instrutor, kit e estúdio lidos da biblioteca (só leitura). */
-async function loadContext(db: Db, args: RegenArgs) {
+export async function loadContext(db: Db, args: Pick<RegenArgs, 'presenter' | 'workspace'>) {
   const rows = await db.select().from(schema.libraryTemplates).where(and(eq(schema.libraryTemplates.key, args.presenter), eq(schema.libraryTemplates.kind, 'presenter'), isNull(schema.libraryTemplates.archivedAt)));
   const matches = args.workspace ? rows.filter((r) => r.workspaceId === args.workspace) : rows;
   if (matches.length !== 1) throw new Error(`instrutor "${args.presenter}": ${matches.length} encontrados (use --workspace se houver mais de um workspace)`);
@@ -65,7 +65,7 @@ async function loadContext(db: Db, args: RegenArgs) {
 }
 
 /** Imagem de referência do estúdio: o asset do workspace; senão o arquivo do repositório. */
-async function loadReference(db: Db, studio: { imageAssetId?: string | undefined; imagePath?: string | undefined }, workspaceId: string): Promise<ReferenceImage> {
+export async function loadReference(db: Db, studio: { imageAssetId?: string | undefined; imagePath?: string | undefined }, workspaceId: string): Promise<ReferenceImage> {
   if (studio.imageAssetId) {
     const a = await mediaRepo.getAsset(db, studio.imageAssetId);
     if (!a || a.workspaceId !== workspaceId) throw new Error('imagem do estúdio não encontrada neste workspace');
@@ -95,7 +95,7 @@ async function readResult(file: string): Promise<RegenResultFile | undefined> {
   }
 }
 
-function sniffImage(bytes: Uint8Array): { mime: 'image/png' | 'image/jpeg' | 'image/webp'; ext: string } {
+export function sniffImage(bytes: Uint8Array): { mime: 'image/png' | 'image/jpeg' | 'image/webp'; ext: string } {
   if (bytes[0] === 0x89 && bytes[1] === 0x50) return { mime: 'image/png', ext: 'png' };
   if (bytes[0] === 0xff && bytes[1] === 0xd8) return { mime: 'image/jpeg', ext: 'jpg' };
   if (bytes[8] === 0x57 && bytes[9] === 0x45) return { mime: 'image/webp', ext: 'webp' };

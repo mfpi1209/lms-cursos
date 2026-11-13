@@ -15,6 +15,7 @@ interface Row {
   courseSlug: string;
   courseTrail: string | null;
   versionId: string;
+  poster?: string;
   document: CourseDocument;
   attempts?: Array<{ lessonId: string; status: 'in_progress' | 'completed' }>;
 }
@@ -25,7 +26,7 @@ const rows = () => state.rows as Row[];
 vi.mock('@lms/db', () => ({
   getDb: () => ({}),
   learning: {
-    listEnrollmentsForUser: async () => rows().map((r) => ({ id: r.id, status: r.status, createdAt: new Date(0), completedAt: null, optionalLessonIds: [], courseId: r.courseId, courseTitle: r.courseTitle, courseSlug: r.courseSlug, courseTrail: r.courseTrail, coursePosterAssetId: null, versionNumber: 1, versionId: r.versionId })),
+    listEnrollmentsForUser: async () => rows().map((r) => ({ id: r.id, status: r.status, createdAt: new Date(0), completedAt: null, optionalLessonIds: [], courseId: r.courseId, courseTitle: r.courseTitle, courseSlug: r.courseSlug, courseTrail: r.courseTrail, coursePosterAssetId: r.poster ?? null, versionNumber: 1, versionId: r.versionId })),
     listAttemptsForEnrollment: async (_db: unknown, id: string) => (rows().find((r) => r.id === id)?.attempts ?? []).map((a, i) => ({ id: `att_${i}`, enrollmentId: id, lessonId: a.lessonId, status: a.status, attemptNumber: 1, startedAt: new Date(1000 + i), state: { path: [], answers: {} } })),
   },
   publishing: {
@@ -69,6 +70,16 @@ describe('loadLearnerCourses: cursos livres', () => {
       certificate: false,
     });
     expect(courses.find((c) => c.enr.id === 'enr_horario')!.free).toBeUndefined();
+  });
+
+  it('curso com capa própria (poster_asset_id): o cartão usa a capa; sem poster, só a foto do instrutor', async () => {
+    state.rows = [ia({ poster: 'ast_capa' })];
+    let free = (await loadLearnerCourses('usr_1')).courses[0]!.free!;
+    expect(free.poster).toBe('/api/assets/ast_capa');
+    expect(free.photo).toBe('/api/assets/ast_thiago');
+    state.rows = [ia()];
+    free = (await loadLearnerCourses('usr_1')).courses[0]!.free!;
+    expect(free.poster).toBeUndefined();
   });
 
   it('formato EaD gravado e certificado ligado: livre e "com certificado"; pílula com `micro` nunca é livre', async () => {
