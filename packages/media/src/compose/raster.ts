@@ -32,6 +32,8 @@ export interface RasterOptions {
   background?: string;
   /** devolve também os pixels RGBA (para medir caixas de alfa) */
   pixels?: boolean;
+  /** arquivos de fonte TTF/OTF para `<text>` no SVG (família padrão `Inter`); sem isso o resvg não tem fontes (o satori já converte texto em caminhos) */
+  fontFiles?: string[];
 }
 
 export interface Raster {
@@ -116,7 +118,7 @@ function isolationOff(): boolean {
 
 interface Pending {
   id: number;
-  req: { svg: string; background?: string; pixels?: boolean };
+  req: { svg: string; background?: string; pixels?: boolean; fontFiles?: string[] };
   resolve: (r: Raster) => void;
   reject: (e: Error) => void;
   timer?: NodeJS.Timeout;
@@ -246,7 +248,7 @@ export async function rasterizeSvg(svg: string, opts: RasterOptions = {}): Promi
   validateSvg(svg);
   if (isolationOff()) return rasterizeInProcess(svg, opts);
   return new Promise<Raster>((resolve, reject) => {
-    queue.push({ id: nextId++, req: { svg, ...(opts.background ? { background: opts.background } : {}), ...(opts.pixels ? { pixels: true } : {}) }, resolve, reject });
+    queue.push({ id: nextId++, req: { svg, ...(opts.background ? { background: opts.background } : {}), ...(opts.pixels ? { pixels: true } : {}), ...(opts.fontFiles?.length ? { fontFiles: opts.fontFiles } : {}) }, resolve, reject });
     pump();
   });
 }
@@ -254,7 +256,7 @@ export async function rasterizeSvg(svg: string, opts: RasterOptions = {}): Promi
 /** Versão síncrona (um processo por chamada): só para usos raros e em cache (ex.: recorte do logo). */
 export function rasterizeSvgSync(svg: string, opts: RasterOptions = {}): Raster {
   validateSvg(svg);
-  const r = spawnSync(process.execPath, [HELPER, '--once'], { input: JSON.stringify({ svg, background: opts.background, pixels: !!opts.pixels }), maxBuffer: 256 * 1024 * 1024, timeout: RENDER_TIMEOUT_MS, env: { ...process.env, NODE_OPTIONS: '' } });
+  const r = spawnSync(process.execPath, [HELPER, '--once'], { input: JSON.stringify({ svg, background: opts.background, pixels: !!opts.pixels, fontFiles: opts.fontFiles }), maxBuffer: 256 * 1024 * 1024, timeout: RENDER_TIMEOUT_MS, env: { ...process.env, NODE_OPTIONS: '' } });
   if (r.error) throw new SvgRenderError('spawn', `não foi possível iniciar o rasterizador: ${r.error.message}`);
   if (r.status !== 0) {
     const detail = /panicked at[^\n]*(?:\n[^\n]*)?/.exec(r.stderr?.toString('utf8') ?? '')?.[0]?.replace(/\s+/g, ' ').trim();
@@ -266,6 +268,6 @@ export function rasterizeSvgSync(svg: string, opts: RasterOptions = {}): Raster 
 
 async function rasterizeInProcess(svg: string, opts: RasterOptions): Promise<Raster> {
   const { Resvg } = await import('@resvg/resvg-js');
-  const r = new Resvg(svg, { fitTo: { mode: 'original' }, background: opts.background ?? 'rgba(0,0,0,0)', font: { loadSystemFonts: false } }).render();
+  const r = new Resvg(svg, { fitTo: { mode: 'original' }, background: opts.background ?? 'rgba(0,0,0,0)', font: { loadSystemFonts: false, ...(opts.fontFiles?.length ? { fontFiles: opts.fontFiles, defaultFontFamily: 'Inter' } : {}) } }).render();
   return { png: new Uint8Array(r.asPng()), ...(opts.pixels ? { pixels: new Uint8Array(r.pixels) } : {}), width: r.width, height: r.height };
 }
