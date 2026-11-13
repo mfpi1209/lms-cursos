@@ -397,6 +397,9 @@ function drawChat(f: F, ch: Chrome): string {
       if (t >= sa) items.push(bubbleItem(f, 'user', st.text, prog(t, sa, sa + 0.3), view));
     } else if (st.kind === 'message') {
       if (t < s) return;
+      // "usuário: X" logo depois de "digita: X": o texto digitado já virou o balão ao ser enviado — não repete
+      const prev = i > 0 ? f.steps[i - 1] : undefined;
+      if (st.from === 'user' && prev?.kind === 'type' && norm(prev.text) === norm(st.text)) return;
       if (st.from === 'ai') {
         const dots = Math.min(0.6, (e - s) * 0.25);
         if (t < s + dots) {
