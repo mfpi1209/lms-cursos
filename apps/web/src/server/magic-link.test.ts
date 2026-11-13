@@ -15,10 +15,17 @@ let db: Database;
 let close: () => Promise<void>;
 let auth: typeof import('@/lib/auth')['auth'];
 let createMagicLinkUrl: typeof import('./magic-link')['createMagicLinkUrl'];
+let confirmMagicLink: typeof import('./magic-link-confirm')['confirmMagicLink'];
 
 const post = (path: string, body: unknown, headers: Record<string, string> = {}) =>
   auth.handler(new Request(`${BASE}/api/auth${path}`, { method: 'POST', headers: { 'content-type': 'application/json', origin: BASE, 'x-forwarded-for': '203.0.113.9', ...headers }, body: JSON.stringify(body) }));
 const get = (url: string, headers: Record<string, string> = {}) => auth.handler(new Request(url, { headers: { 'x-forwarded-for': '203.0.113.9', ...headers } }));
+/** o "Continuar" da página de confirmação: POST com os parâmetros do link */
+const confirm = (url: string) => {
+  const fd = new FormData();
+  for (const [k, v] of new URL(url).searchParams) fd.set(k, v);
+  return confirmMagicLink(new Request(`${BASE}/api/entrar/confirmar`, { method: 'POST', body: fd, headers: { 'x-forwarded-for': '203.0.113.9' } }));
+};
 const lastEmail = () => getSentEmails().at(-1)!;
 const urlIn = (text: string) => text.match(/https?:\/\/\S+/)![0];
 
@@ -39,6 +46,7 @@ beforeAll(async () => {
   vi.spyOn(console, 'log').mockImplementation(() => {});
   auth = (await import('@/lib/auth')).auth;
   createMagicLinkUrl = (await import('./magic-link')).createMagicLinkUrl;
+  confirmMagicLink = (await import('./magic-link-confirm')).confirmMagicLink;
 });
 afterAll(async () => {
   await close();
@@ -56,13 +64,13 @@ describe('link mágico por e-mail', () => {
     expect(mail.text).toContain('3 dias');
     const url = urlIn(mail.text);
 
-    const ok = await get(url);
-    expect(ok.status).toBe(302);
+    const ok = await confirm(url);
+    expect(ok.status).toBe(303);
     expect(ok.headers.get('location')).toBe(`${BASE}/aprender`);
     expect(ok.headers.get('set-cookie')).toContain('session_token');
 
-    const again = await get(url);
-    expect(again.status).toBe(302);
+    const again = await confirm(url);
+    expect(again.status).toBe(303);
     const loc = new URL(again.headers.get('location')!, BASE);
     expect(loc.pathname).toBe('/login');
     expect(loc.searchParams.get('error')).toBe('INVALID_TOKEN');
@@ -74,7 +82,7 @@ describe('link mágico por e-mail', () => {
     const url = urlIn(lastEmail().text);
     const token = new URL(url).searchParams.get('token')!;
     await db.update(schema.verification).set({ expiresAt: new Date(Date.now() - 1000) }).where(eq(schema.verification.identifier, `magic-link:${token}`));
-    const res = await get(url);
+    const res = await confirm(url);
     expect(new URL(res.headers.get('location')!, BASE).searchParams.get('error')).toBe('INVALID_TOKEN');
     expect(res.headers.get('set-cookie') ?? '').not.toContain('session_token');
   });
@@ -120,17 +128,17 @@ describe('auxiliar createMagicLinkUrl (sem envio)', () => {
     expect(url).toBeTruthy();
     expect(getSentEmails()).toHaveLength(0);
     const u = new URL(url!);
-    expect(u.pathname).toBe('/api/auth/magic-link/verify');
+    expect(u.pathname).toBe('/entrar/confirmar');
     expect(u.searchParams.get('callbackURL')).toBe('/aprender');
     const [row] = await db.select().from(schema.verification).where(eq(schema.verification.identifier, `magic-link:${u.searchParams.get('token')}`));
     const hours = (row!.expiresAt.getTime() - Date.now()) / 3_600_000;
     expect(hours).toBeGreaterThan(71.9);
     expect(hours).toBeLessThanOrEqual(72);
 
-    const ok = await get(url!);
+    const ok = await confirm(url!);
     expect(ok.headers.get('location')).toBe(`${BASE}/aprender`);
     expect(ok.headers.get('set-cookie')).toContain('session_token');
-    const again = await get(url!);
+    const again = await confirm(url!);
     expect(new URL(again.headers.get('location')!, BASE).searchParams.get('error')).toBe('INVALID_TOKEN');
   });
 
@@ -146,6 +154,66 @@ describe('auxiliar createMagicLinkUrl (sem envio)', () => {
     expect(getSentEmails()).toHaveLength(0);
     await post('/sign-in/magic-link', { email: 'revisor@demo.local', callbackURL: '/aprender' });
     expect(getSentEmails()).toHaveLength(1);
+  });
+});
+
+describe('página de confirmação do link (scanners de e-mail não queimam o token)', () => {
+  const rowOf = async (url: string) => {
+    const token = new URL(url).searchParams.get('token')!;
+    return db.select().from(schema.verification).where(eq(schema.verification.identifier, `magic-link:${token}`));
+  };
+
+  it('o e-mail e o auxiliar entregam o endereço da página de confirmação, com os mesmos parâmetros', async () => {
+    await post('/sign-in/magic-link', { email: 'autor@demo.local', callbackURL: '/aprender', errorCallbackURL: '/login?erro=link' });
+    const u = new URL(urlIn(lastEmail().text));
+    expect(u.pathname).toBe('/entrar/confirmar');
+    expect(u.searchParams.get('token')).toBeTruthy();
+    expect(u.searchParams.get('callbackURL')).toBe('/aprender');
+    expect(u.searchParams.get('errorCallbackURL')).toBe('/login?erro=link');
+    expect(new URL((await createMagicLinkUrl(EMAIL))!).pathname).toBe('/entrar/confirmar');
+  });
+
+  it('abrir a página (GET, quantas vezes for) não consome o token; "Continuar" entra uma única vez', async () => {
+    const url = (await createMagicLinkUrl(EMAIL, { callbackURL: '/aprender' }))!;
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const Page = (await import('@/app/entrar/confirmar/page')).default;
+    const q = Object.fromEntries(new URL(url).searchParams);
+    for (let i = 0; i < 3; i++) {
+      const html = renderToStaticMarkup(await Page({ searchParams: Promise.resolve(q) }));
+      expect(html).toContain('Continuar');
+      expect(html).toContain('method="post"');
+      expect(html).toContain('action="/api/entrar/confirmar"');
+      expect(html).toContain(`value="${q.token}"`);
+    }
+    expect(await rowOf(url)).toHaveLength(1);
+
+    const ok = await confirm(url);
+    expect(ok.status).toBe(303);
+    expect(ok.headers.get('location')).toBe(`${BASE}/aprender`);
+    expect(ok.headers.get('set-cookie')).toContain('session_token');
+    expect(await rowOf(url)).toHaveLength(0);
+
+    const again = await confirm(url);
+    expect(new URL(again.headers.get('location')!, BASE).searchParams.get('error')).toBe('INVALID_TOKEN');
+    expect(again.headers.get('set-cookie') ?? '').not.toContain('session_token');
+  });
+
+  it('a rota só aceita POST e recusa token malformado e destino externo', async () => {
+    const route = await import('@/app/api/entrar/confirmar/route');
+    expect((route as Record<string, unknown>).GET).toBeUndefined();
+    const fd = new FormData();
+    fd.set('token', 'x');
+    fd.set('callbackURL', 'https://evil.example/');
+    fd.set('errorCallbackURL', '//evil.example');
+    const res = await confirmMagicLink(new Request(`${BASE}/api/entrar/confirmar`, { method: 'POST', body: fd }));
+    expect(res.headers.get('location')).toBe('/login?erro=link');
+    // destino externo é trocado pelo padrão mesmo com token válido
+    const url = (await createMagicLinkUrl(EMAIL))!;
+    const fd2 = new FormData();
+    fd2.set('token', new URL(url).searchParams.get('token')!);
+    fd2.set('callbackURL', 'https://evil.example/');
+    const ok = await confirmMagicLink(new Request(`${BASE}/api/entrar/confirmar`, { method: 'POST', body: fd2 }));
+    expect(ok.headers.get('location')).toBe(`${BASE}/aprender`);
   });
 });
 
