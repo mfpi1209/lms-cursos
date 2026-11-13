@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { findLesson } from '@lms/course-schema';
+import { findLesson, sceneUsesScreenRecording } from '@lms/course-schema';
 import { Badge } from '@/components/ui/card';
 import { PresenterThumb } from '@/components/studio/presenter-thumb';
 import { cn } from '@/lib/utils';
@@ -47,6 +47,7 @@ export function CourseChrome({ courseId, status, latestVersionNumber }: CourseCh
   const base = `/estudio/cursos/${courseId}`;
   // enquanto a montagem não terminou, o painel continua acessível (só a primeira visita, sem aulas, vai ao assistente)
   const assembling = !document.wizard.finished && latestVersionNumber === 0;
+  const hasScreenRecordings = document.modules.some((m) => m.lessons.some((l) => l.graph.nodes.some((n) => sceneUsesScreenRecording(n))));
   const lessonId = pathname.startsWith(`${base}/aulas/`) ? pathname.slice(`${base}/aulas/`.length).split('/')[0] : undefined;
   const lessonTitle = lessonId ? (findLesson(document, decodeURIComponent(lessonId))?.lesson.title ?? 'Aula') : undefined;
   const tabs = [
@@ -55,6 +56,8 @@ export function CourseChrome({ courseId, status, latestVersionNumber }: CourseCh
     ...(assembling ? [{ href: `${base}/montar`, label: 'Montagem', active: false }] : []),
     { href: `${base}/detalhes`, label: 'Detalhes', active: pathname.startsWith(`${base}/detalhes`) },
     { href: `${base}/producao`, label: 'Produção', active: pathname.startsWith(`${base}/producao`) },
+    // só aparece quando alguma cena tem gravação de tela própria (linha "Vídeo próprio:" do roteiro)
+    ...(hasScreenRecordings ? [{ href: `${base}/gravacoes`, label: 'Gravações de tela', active: pathname.startsWith(`${base}/gravacoes`) }] : []),
     { href: `${base}/revisao`, label: 'Revisão e publicação', active: pathname.startsWith(`${base}/revisao`) },
     { href: `${base}/matriculas`, label: 'Matrículas', active: pathname.startsWith(`${base}/matriculas`) },
     { href: `${base}/entregas`, label: 'Entregas', active: pathname.startsWith(`${base}/entregas`) },

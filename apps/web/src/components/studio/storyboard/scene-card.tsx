@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { AlertCircle, Copy, Flag, Gauge, Info, MoreHorizontal, Trash2 } from 'lucide-react';
-import type { AnyNode, LessonGraph, Objective, Presentation, RichTextDocument } from '@lms/course-schema';
+import { AlertCircle, Copy, Flag, Gauge, Info, MonitorPlay, MoreHorizontal, Trash2 } from 'lucide-react';
+import { sceneUsesScreenRecording, type AnyNode, type LessonGraph, type Objective, type Presentation, type RichTextDocument } from '@lms/course-schema';
 import { markMediaStale, nodeMedia, nodeSupportsMedia, replaceNode, withNodeMedia } from '@/components/studio/graph-ops';
 import { cn } from '@/lib/utils';
 import type { GenerateResult } from './generate';
@@ -177,6 +177,12 @@ export function SceneCard(props: SceneCardProps) {
               {sceneTypeLabel(node.type)}
             </span>
             {isStart && <span className="rounded-full bg-accent-soft px-2 py-0.5 font-medium text-accent">Primeira cena</span>}
+            {sceneUsesScreenRecording(node) && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-paid-soft px-2 py-0.5 font-medium text-paid" data-testid={`scene-screen-recording-${node.id}`}>
+                <MonitorPlay className="h-3 w-3" aria-hidden="true" />
+                Gravação de tela
+              </span>
+            )}
             {!!props.qualityCount && (
               <button
                 type="button"
