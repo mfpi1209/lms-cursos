@@ -43,25 +43,27 @@ describe('upsertStudents', () => {
     expect(await db.select().from(s.user).where(eq(s.user.email, 'ana.souza@teste.local'))).toHaveLength(1);
   });
 
-  it('atualiza nome, RGM e telefone de quem já é aluno; telefone em branco não apaga', async () => {
-    const r = await run([{ nome: 'Ana S. Souza', email: 'ana.souza@teste.local', rgm: '1001-B', telefone: '' }]);
+  it('RGM conhecido atualiza nome e telefone; telefone em branco não apaga', async () => {
+    const r = await run([{ nome: 'Ana S. Souza', email: 'ana.souza@teste.local', rgm: '1001', telefone: '' }]);
     expect(r.results[0]!.status).toBe('updated');
     const [u] = await db.select().from(s.user).where(eq(s.user.email, 'ana.souza@teste.local'));
     expect(u!.name).toBe('Ana S. Souza');
     const [m] = await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, u!.id));
-    expect(m).toMatchObject({ rgm: '1001-B', phone: '(11) 99999-0000' });
+    expect(m).toMatchObject({ rgm: '1001', phone: '(11) 99999-0000' });
+    const again = await run([{ nome: 'Ana S. Souza', email: 'ana.souza@teste.local', rgm: '1001', cursos: [SLUG] }]);
+    expect(again.results[0]!.status).toBe('unchanged');
   });
 
   it('RGM repetido no workspace e no lote vira erro só naquela linha', async () => {
     const r = await run([
       { nome: 'Bia', email: 'bia@teste.local', rgm: '2001' },
       { nome: 'Caio', email: 'caio@teste.local', rgm: '2001' }, // repete a linha acima
-      { nome: 'Duda', email: 'duda@teste.local', rgm: '1001-b' }, // já é da Ana (sem diferença de caixa)
+      { nome: 'Duda', email: 'ana.souza@teste.local', rgm: '2002' }, // e-mail da Ana (RGM 1001): não troca dono de conta
       { nome: 'Edu', email: 'edu@teste.local', rgm: '2003' },
     ]);
     expect(r.results.map((x) => x.status)).toEqual(['created', 'error', 'error', 'created']);
     expect(r.results[1]!.reason).toMatch(/RGM repetido no lote/);
-    expect(r.results[2]!.reason).toMatch(/outro aluno/);
+    expect(r.results[2]).toMatchObject({ code: 'EMAIL_EM_USO_POR_OUTRO_RGM' });
     expect(await db.select().from(s.user).where(eq(s.user.email, 'caio@teste.local'))).toHaveLength(0);
     expect(r.summary).toMatchObject({ created: 2, error: 2 });
   });
@@ -70,11 +72,11 @@ describe('upsertStudents', () => {
     const r = await run([
       { nome: 'X', email: 'sem-arroba', rgm: '3001' },
       { nome: '', email: 'sem-nome@teste.local', rgm: '3002' },
-      { nome: 'Sem RGM', email: 'sem-rgm@teste.local', rgm: '  ' },
+      { nome: 'Rgm Longo', email: 'longo@teste.local', rgm: 'X'.repeat(41) },
       { nome: 'Fa', email: 'fa@teste.local', rgm: '3004' },
       { nome: 'Fa de novo', email: 'FA@teste.local', rgm: '3005' },
     ]);
-    expect(r.results.map((x) => x.reason)).toEqual(['E-mail inválido', 'Nome em branco', 'RGM em branco', undefined, expect.stringMatching(/E-mail repetido/)]);
+    expect(r.results.map((x) => x.reason)).toEqual(['E-mail inválido', 'Nome em branco', 'RGM longo demais', undefined, expect.stringMatching(/E-mail repetido/)]);
   });
 
   it('curso inexistente ou não publicado: erro na linha, nada é criado para ela', async () => {
@@ -176,6 +178,116 @@ describe('upsertStudents', () => {
     const list = await students.listPublishedCourseSlugs(db, seeded.workspaceId);
     expect(list.map((c) => c.slug)).toContain(SLUG);
     expect(list.map((c) => c.slug)).not.toContain('curso-rascunho');
+  });
+});
+
+describe('upsertStudents: idempotência pelo RGM', () => {
+  const emailOf = async (userId: string) => (await db.select().from(s.user).where(eq(s.user.id, userId)))[0]!.email;
+  const idOf = async (email: string) => (await db.select().from(s.user).where(eq(s.user.email, email)))[0]!.id;
+  const sessionFor = async (userId: string) => {
+    await db.insert(s.session).values({ id: newId('ses'), token: newId('tok'), userId, expiresAt: new Date(Date.now() + 3_600_000) });
+  };
+  const countSessions = async (userId: string) => (await db.select().from(s.session).where(eq(s.session.userId, userId))).length;
+
+  it('repetir a mesma chamada dá o mesmo resultado, sem duplicar conta, matrícula nem auditoria', async () => {
+    const row = { nome: 'Rita', email: 'rita@rgm.local', rgm: 'R-1', telefone: '11 1', cursos: [SLUG] };
+    const first = await run([row]);
+    expect(first.results[0]).toMatchObject({ status: 'created', enrolled: [SLUG] });
+    const audits = async () => (await db.select().from(s.auditLogs).where(eq(s.auditLogs.action, 'student.email_changed'))).length;
+    const before = await audits();
+    for (let i = 0; i < 3; i++) {
+      const again = await run([row]);
+      expect(again.results[0]).toMatchObject({ status: 'unchanged', enrolled: [], alreadyEnrolled: [SLUG] });
+    }
+    const id = await idOf('rita@rgm.local');
+    expect(await db.select().from(s.enrollments).where(eq(s.enrollments.userId, id))).toHaveLength(1);
+    expect(await audits()).toBe(before);
+  });
+
+  it('RGM conhecido com e-mail novo troca o e-mail da mesma conta, audita e encerra as sessões', async () => {
+    const id = await idOf('rita@rgm.local');
+    await sessionFor(id);
+    await sessionFor(id);
+    const other = await idOf('ana.souza@teste.local');
+    await sessionFor(other);
+    const r = await run([{ nome: 'Rita Nova', email: 'Rita.Nova@rgm.local', rgm: 'r-1', cursos: [SLUG] }]);
+    expect(r.results[0]).toMatchObject({ status: 'updated', userId: id, emailChanged: true, enrolled: [], alreadyEnrolled: [SLUG] });
+    expect(await emailOf(id)).toBe('rita.nova@rgm.local');
+    expect(await db.select().from(s.user).where(eq(s.user.email, 'rita@rgm.local'))).toHaveLength(0);
+    expect(await countSessions(id)).toBe(0);
+    expect(await countSessions(other)).toBe(1); // sessão de outra pessoa não é tocada
+    expect(await db.select().from(s.enrollments).where(eq(s.enrollments.userId, id))).toHaveLength(1);
+    const [log] = await db.select().from(s.auditLogs).where(and(eq(s.auditLogs.action, 'student.email_changed'), eq(s.auditLogs.entityId, id)));
+    expect(log).toMatchObject({ workspaceId: seeded.workspaceId, actorId: adminId, entityType: 'user', data: { from: 'rita@rgm.local', to: 'rita.nova@rgm.local' } });
+    // repetir não troca nada e não encerra sessões novas
+    await sessionFor(id);
+    const again = await run([{ nome: 'Rita Nova', email: 'rita.nova@rgm.local', rgm: 'R-1' }]);
+    expect(again.results[0]!.status).toBe('unchanged');
+    expect(await countSessions(id)).toBe(1);
+  });
+
+  it('prévia (dryRun) da troca de e-mail avisa, mas não grava nem encerra sessões', async () => {
+    const id = await idOf('rita.nova@rgm.local');
+    const r = await run([{ nome: 'Rita Nova', email: 'rita.previa@rgm.local', rgm: 'R-1' }], { dryRun: true });
+    expect(r.results[0]).toMatchObject({ status: 'updated', emailChanged: true });
+    expect(await emailOf(id)).toBe('rita.nova@rgm.local');
+    expect(await countSessions(id)).toBe(1);
+  });
+
+  it('RGM novo + e-mail que já é de outro RGM: erro só na linha, sem trocar dono de conta', async () => {
+    await run([{ nome: 'Sil', email: 'sil@rgm.local', rgm: 'S-1' }]);
+    const r = await run([
+      { nome: 'Outro', email: 'sil@rgm.local', rgm: 'S-2' },
+      { nome: 'Tom', email: 'tom@rgm.local', rgm: 'T-1' },
+    ]);
+    expect(r.results.map((x) => x.status)).toEqual(['error', 'created']);
+    expect(r.results[0]).toMatchObject({ code: 'EMAIL_EM_USO_POR_OUTRO_RGM' });
+    const [m] = await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, await idOf('sil@rgm.local')));
+    expect(m!.rgm).toBe('S-1');
+    expect((await db.select().from(s.user).where(eq(s.user.id, await idOf('sil@rgm.local'))))[0]!.name).toBe('Sil');
+  });
+
+  it('RGM conhecido + e-mail novo que já é de outro RGM (ou de outra conta): erro, e-mail não troca', async () => {
+    const tom = await idOf('tom@rgm.local');
+    const r = await run([{ nome: 'Tom', email: 'sil@rgm.local', rgm: 'T-1' }]);
+    expect(r.results[0]).toMatchObject({ status: 'error', code: 'EMAIL_EM_USO_POR_OUTRO_RGM' });
+    expect(await emailOf(tom)).toBe('tom@rgm.local');
+    // conta fora do workspace
+    const strangerId = newId('usr');
+    await db.insert(s.user).values({ id: strangerId, email: 'fora@rgm.local', name: 'Fora', emailVerified: true });
+    const r2 = await run([{ nome: 'Tom', email: 'fora@rgm.local', rgm: 'T-1' }]);
+    expect(r2.results[0]).toMatchObject({ status: 'error', code: 'EMAIL_EM_USO_POR_OUTRA_CONTA' });
+    expect(await emailOf(tom)).toBe('tom@rgm.local');
+    // e-mail de membro sem RGM
+    const r3 = await run([{ nome: 'Tom', email: 'sem1@teste.local', rgm: 'T-1' }]);
+    expect(r3.results[0]).toMatchObject({ status: 'error', code: 'EMAIL_EM_USO_POR_OUTRA_CONTA' });
+    // e-mail da equipe
+    const r4 = await run([{ nome: 'Tom', email: 'admin@demo.local', rgm: 'T-1' }]);
+    expect(r4.results[0]).toMatchObject({ status: 'error', code: 'CONTA_DA_EQUIPE' });
+  });
+
+  it('RGM novo + e-mail de membro antigo sem RGM: atribui o RGM a esse membro', async () => {
+    const id = await idOf('sem2@teste.local');
+    const r = await run([{ nome: 'Sem Dois', email: 'sem2@teste.local', rgm: 'N-2', cursos: [SLUG] }]);
+    expect(r.results[0]).toMatchObject({ status: 'updated', userId: id, enrolled: [SLUG] });
+    const [m] = await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, id));
+    expect(m!.rgm).toBe('N-2');
+    const again = await run([{ nome: 'Sem Dois', email: 'sem2@teste.local', rgm: 'N-2', cursos: [SLUG] }]);
+    expect(again.results[0]!.status).toBe('unchanged');
+  });
+
+  it('linha sem RGM segue pelo e-mail: cria sem RGM, atualiza nome e não mexe no RGM existente', async () => {
+    const created = await run([{ nome: 'Sem Rgm', email: 'semrgm@rgm.local' }]);
+    expect(created.results[0]).toMatchObject({ status: 'created' });
+    const id = await idOf('semrgm@rgm.local');
+    expect((await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, id)))[0]!.rgm).toBeNull();
+    const upd = await run([{ nome: 'Sem Rgm Um', email: 'semrgm@rgm.local', cursos: [SLUG] }]);
+    expect(upd.results[0]).toMatchObject({ status: 'updated', enrolled: [SLUG] });
+    // aluno que já tem RGM, enviado sem RGM: RGM preservado
+    await run([{ nome: 'Sil', email: 'sil@rgm.local' }]);
+    const [m] = await db.select().from(s.workspaceMemberships).where(eq(s.workspaceMemberships.userId, await idOf('sil@rgm.local')));
+    expect(m!.rgm).toBe('S-1');
+    expect((await run([{ nome: 'Sil', email: 'sil@rgm.local' }])).results[0]!.status).toBe('unchanged');
   });
 });
 

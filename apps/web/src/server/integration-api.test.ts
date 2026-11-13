@@ -119,8 +119,8 @@ describe('POST /api/integracao/v1/alunos', () => {
     expect(res.status).toBe(200);
     expect(res.headers.get('cache-control')).toBe('no-store');
     const body = await res.json();
-    expect(body.resumo).toEqual({ created: 2, updated: 0, unchanged: 0, error: 0, total: 2 });
-    expect(body.resultados[0]).toMatchObject({ linha: 1, email: 'api.aluno1@teste.local', status: 'created', cursosMatriculados: [SLUG] });
+    expect(body.resumo).toEqual({ created: 2, updated: 0, unchanged: 0, error: 0, total: 2, criado: 2, atualizado: 0, sem_mudanca: 0, erro: 0 });
+    expect(body.resultados[0]).toMatchObject({ linha: 1, email: 'api.aluno1@teste.local', status: 'created', situacao: 'criado', cursosMatriculados: [SLUG] });
     expect(body.resultados[0].userId).toMatch(/^usr_/);
     for (const r of body.resultados) expect('linkAcesso' in r).toBe(false);
     expect(JSON.stringify(body)).not.toContain('/entrar/confirmar');
@@ -205,6 +205,39 @@ describe('POST /api/integracao/v1/alunos', () => {
     // sem pedir link continua funcionando
     expect((await alunos(secret, { alunos: mk('lk9-', 2) })).status).toBe(200);
   }, 120000);
+});
+
+describe('POST /api/integracao/v1/alunos: idempotência pelo RGM', () => {
+  it('RGM conhecido troca o e-mail (situacao atualizado, emailAlterado) e repetir dá sem_mudanca; conflito vira erro com codigo', async () => {
+    const secret = await mkToken(['students:write']);
+    const base = { nome: 'Rgm Um', rgm: 'IDEM1', cursos: [SLUG] };
+    const first = await (await alunos(secret, { alunos: [{ ...base, email: 'idem1@teste.local' }, { nome: 'Rgm Dois', rgm: 'IDEM2', email: 'idem2@teste.local' }] })).json();
+    expect(first.resultados.map((r: { situacao: string }) => r.situacao)).toEqual(['criado', 'criado']);
+
+    const moved = await (await alunos(secret, { alunos: [{ ...base, email: 'idem1.novo@teste.local' }], gerarLink: true })).json();
+    expect(moved.resultados[0]).toMatchObject({ status: 'updated', situacao: 'atualizado', emailAlterado: true, email: 'idem1.novo@teste.local' });
+    expect(moved.resultados[0].linkAcesso).toContain('/entrar/confirmar?token=');
+    expect(moved.resumo).toMatchObject({ atualizado: 1, erro: 0 });
+
+    const same = await (await alunos(secret, { alunos: [{ ...base, email: 'idem1.novo@teste.local' }] })).json();
+    expect(same.resultados[0]).toMatchObject({ status: 'unchanged', situacao: 'sem_mudanca', cursosJaMatriculados: [SLUG] });
+    expect('emailAlterado' in same.resultados[0]).toBe(false);
+
+    const clash = await (await alunos(secret, { alunos: [{ ...base, email: 'idem2@teste.local' }, { nome: 'Novo', rgm: 'IDEM3', email: 'idem2@teste.local' }] })).json();
+    expect(clash.resultados.map((r: { codigo: string }) => r.codigo)).toEqual(['EMAIL_EM_USO_POR_OUTRO_RGM', 'EMAIL_REPETIDO_NO_LOTE']);
+    const clash2 = await (await alunos(secret, { alunos: [{ nome: 'Novo', rgm: 'IDEM3', email: 'idem2@teste.local' }] })).json();
+    expect(clash2.resultados[0]).toMatchObject({ situacao: 'erro', codigo: 'EMAIL_EM_USO_POR_OUTRO_RGM' });
+    expect(clash.resultados[0]).toMatchObject({ status: 'error', situacao: 'erro' });
+    expect(clash.resumo).toMatchObject({ erro: 2 });
+  });
+
+  it('linha sem RGM continua funcionando pelo e-mail', async () => {
+    const secret = await mkToken(['students:write']);
+    const body = await (await alunos(secret, { alunos: [{ nome: 'Legado', email: 'legado@teste.local' }] })).json();
+    expect(body.resultados[0]).toMatchObject({ situacao: 'criado' });
+    const again = await (await alunos(secret, { alunos: [{ nome: 'Legado', email: 'legado@teste.local' }] })).json();
+    expect(again.resultados[0]).toMatchObject({ situacao: 'sem_mudanca' });
+  });
 });
 
 describe('GET /api/integracao/v1/cursos', () => {

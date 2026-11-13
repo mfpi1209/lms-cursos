@@ -12,6 +12,9 @@ export function resetLinkLimit() {
   linkLimiter = new KeyedLimiter(LINK_RATE.max, LINK_RATE.windowMs);
 }
 
+/** Nome em português de cada `status` (o `status` em inglês continua na resposta). */
+const SITUACAO = { created: 'criado', updated: 'atualizado', unchanged: 'sem_mudanca', error: 'erro' } as const;
+
 const rgmField = z.union([z.string(), z.number()]).transform((v) => String(v));
 const studentRow = z.object({
   nome: z.string().default(''),
@@ -27,7 +30,7 @@ export const studentsBody = z.object({
   callbackURL: z.string().max(300).optional(),
 });
 
-/** `POST /api/integracao/v1/alunos`: cadastra/atualiza o lote e, se pedido, devolve o link de acesso de cada linha aceita. */
+/** `POST /api/integracao/v1/alunos`: cadastra/atualiza o lote (idempotente pelo RGM; sem RGM, pelo e-mail) e, se pedido, devolve o link de acesso de cada linha aceita. */
 export async function postStudents(ctx: IntegrationContext, raw: unknown) {
   const body = studentsBody.parse(raw);
   const wantLink = body.gerarLink === true;
@@ -49,7 +52,10 @@ export async function postStudents(ctx: IntegrationContext, raw: unknown) {
       linha: r.index + 1,
       email: r.email,
       status: r.status,
+      situacao: SITUACAO[r.status],
+      ...(r.code ? { codigo: r.code } : {}),
       ...(r.reason ? { motivo: r.reason } : {}),
+      ...(r.emailChanged ? { emailAlterado: true } : {}),
       ...(r.userId ? { userId: r.userId } : {}),
       cursosMatriculados: r.enrolled,
       cursosJaMatriculados: r.alreadyEnrolled,
@@ -65,7 +71,8 @@ export async function postStudents(ctx: IntegrationContext, raw: unknown) {
     }
     resultados.push(item);
   }
-  return { resumo: out.summary, resultados };
+  const resumo = { ...out.summary, criado: out.summary.created, atualizado: out.summary.updated, sem_mudanca: out.summary.unchanged, erro: out.summary.error };
+  return { resumo, resultados };
 }
 
 /** `GET /api/integracao/v1/cursos`: slugs que o integrador pode enviar em `cursos`. */

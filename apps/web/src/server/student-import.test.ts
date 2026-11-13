@@ -88,4 +88,21 @@ describe('importStudentsFromCsv', () => {
     const many = Array.from({ length: 5001 }, (_, i) => ({ linha: i + 2, nome: 'N', email: `n${i}@t.local`, rgm: String(i), telefone: '', cursos: [] }));
     await expect(run(viewer, { rows: many })).rejects.toThrow();
   });
+
+  it('o CSV segue a regra do RGM: e-mail novo no mesmo RGM troca a conta (e manda link), conflito vira erro, repetir não muda', async () => {
+    const mk = (csv: string) => parseStudentsCsv(csv).rows;
+    await run(viewer, { rows: mk('nome,email,rgm\nPedro,pedro.csv@teste.local,P1\nQuita,quita.csv@teste.local,P2'), dryRun: false });
+    const [before] = await db.select().from(schema.user).where(eq(schema.user.email, 'pedro.csv@teste.local'));
+    const csv = mk('nome,email,rgm\nPedro,pedro.novo.csv@teste.local,P1\nRita,quita.csv@teste.local,P3');
+    const prev = await run(viewer, { rows: csv, dryRun: true });
+    expect(prev.results.map((x) => [x.status, x.emailChanged ?? false, x.code ?? null])).toEqual([['updated', true, null], ['error', false, 'EMAIL_EM_USO_POR_OUTRO_RGM']]);
+    clearSentEmails();
+    const r = await run(viewer, { rows: csv, dryRun: false, enviarLink: true });
+    expect(r.summary).toMatchObject({ updated: 1, error: 1 });
+    const [after] = await db.select().from(schema.user).where(eq(schema.user.id, before!.id));
+    expect(after!.email).toBe('pedro.novo.csv@teste.local');
+    expect(getSentEmails().map((m) => m.to)).toEqual(['pedro.novo.csv@teste.local']);
+    const again = await run(viewer, { rows: csv, dryRun: false, enviarLink: false });
+    expect(again.summary).toMatchObject({ unchanged: 1, error: 1 });
+  });
 });

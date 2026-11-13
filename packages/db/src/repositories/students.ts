@@ -7,9 +7,13 @@ import { enrollStudent } from './learning';
 /*
  * Cadastro de alunos em massa (CSV do estúdio e API de integração).
  *
- * - Idempotente pelo e-mail (minúsculo, sem espaços): repetir o mesmo lote não cria nada de novo.
+ * - Idempotente pelo RGM dentro do workspace (recomendado): RGM conhecido atualiza nome, telefone e e-mail daquela pessoa;
+ *   repetir o mesmo lote não cria nada de novo nem repete efeitos. Linha SEM RGM segue a regra antiga, pelo e-mail (compatibilidade).
+ * - RGM novo + e-mail de aluno que já tem OUTRO RGM: erro na linha (`EMAIL_EM_USO_POR_OUTRO_RGM`), sem trocar dono de conta.
+ *   RGM novo + e-mail de membro antigo sem RGM: o RGM é atribuído a esse membro.
+ * - Troca de e-mail só por RGM conhecido; grava auditoria (`student.email_changed`) e encerra as sessões abertas da pessoa.
  * - A conta nasce SEM senha (nenhuma linha em `account`): o aluno entra por link mágico ou define a senha por "esqueci".
- * - RGM é único por workspace (índice parcial no banco) e obrigatório aqui.
+ * - RGM é único por workspace (índice parcial no banco).
  * - Equipe (admin/autor/revisor) nunca é alterada por este caminho: a linha volta com erro.
  * - O lote roda em transações por fatia (`chunkSize`); cada linha tem seu savepoint, então uma linha ruim não derruba as outras.
  */
@@ -17,7 +21,8 @@ import { enrollStudent } from './learning';
 export interface StudentInput {
   nome: string;
   email: string;
-  rgm: string;
+  /** recomendado: é a chave de idempotência. Em branco = compatibilidade, identifica pelo e-mail */
+  rgm?: string;
   telefone?: string | null;
   /** slugs de cursos publicados do workspace */
   cursos?: string[];
@@ -32,12 +37,31 @@ export interface StudentRowResult {
   status: StudentRowStatus;
   /** motivo, quando `status` é `error` */
   reason?: string;
+  /** código estável do erro (ex.: `EMAIL_EM_USO_POR_OUTRO_RGM`), quando `status` é `error` */
+  code?: StudentErrorCode;
+  /** o e-mail da conta foi (ou, na prévia, seria) trocado; `email` é o novo */
+  emailChanged?: boolean;
   userId?: string;
   /** cursos em que o aluno foi matriculado agora */
   enrolled: string[];
   /** cursos em que já estava matriculado */
   alreadyEnrolled: string[];
 }
+
+export type StudentErrorCode =
+  | 'EMAIL_INVALIDO'
+  | 'NOME_EM_BRANCO'
+  | 'RGM_LONGO'
+  | 'EMAIL_REPETIDO_NO_LOTE'
+  | 'RGM_REPETIDO_NO_LOTE'
+  | 'CURSO_INVALIDO'
+  | 'CONTA_DA_EQUIPE'
+  | 'EMAIL_EM_USO_POR_OUTRO_RGM'
+  | 'EMAIL_EM_USO_POR_OUTRA_CONTA'
+  | 'RGM_EM_USO'
+  | 'EMAIL_EM_USO'
+  | 'CADASTRO_SIMULTANEO'
+  | 'FALHA_AO_GRAVAR';
 
 export interface UpsertStudentsResult {
   results: StudentRowResult[];
@@ -69,6 +93,7 @@ interface Prepared {
   phone: string | null;
   slugs: string[];
   error?: string;
+  code?: StudentErrorCode;
 }
 
 function prepare(rows: StudentInput[], extraSlugs: string[]): Prepared[] {
@@ -81,16 +106,17 @@ function prepare(rows: StudentInput[], extraSlugs: string[]): Prepared[] {
     const phone = cleanText(r?.telefone, 40) || null;
     const slugs = [...new Set([...(Array.isArray(r?.cursos) ? r.cursos : []), ...extraSlugs].map((x) => String(x).trim()).filter(Boolean))];
     const base = { index, email, name, rgm, phone, slugs };
-    if (!isValidEmail(email)) return { ...base, error: 'E-mail inválido' };
-    if (!name) return { ...base, error: 'Nome em branco' };
-    if (!rgm) return { ...base, error: 'RGM em branco' };
-    if (rgm.length > 40) return { ...base, error: 'RGM longo demais' };
+    if (!isValidEmail(email)) return { ...base, error: 'E-mail inválido', code: 'EMAIL_INVALIDO' as const };
+    if (!name) return { ...base, error: 'Nome em branco', code: 'NOME_EM_BRANCO' as const };
+    if (rgm.length > 40) return { ...base, error: 'RGM longo demais', code: 'RGM_LONGO' as const };
     const prevEmail = seenEmail.get(email);
-    if (prevEmail !== undefined) return { ...base, error: `E-mail repetido no lote (linha ${prevEmail + 1})` };
+    if (prevEmail !== undefined) return { ...base, error: `E-mail repetido no lote (linha ${prevEmail + 1})`, code: 'EMAIL_REPETIDO_NO_LOTE' as const };
     seenEmail.set(email, index);
-    const prevRgm = seenRgm.get(rgm);
-    if (prevRgm !== undefined) return { ...base, error: `RGM repetido no lote (linha ${prevRgm + 1})` };
-    seenRgm.set(rgm, index);
+    if (rgm) {
+      const prevRgm = seenRgm.get(rgm);
+      if (prevRgm !== undefined) return { ...base, error: `RGM repetido no lote (linha ${prevRgm + 1})`, code: 'RGM_REPETIDO_NO_LOTE' as const };
+      seenRgm.set(rgm, index);
+    }
     return base;
   });
 }
@@ -113,6 +139,8 @@ interface Planned {
   existingMember: boolean;
   patch: Partial<{ rgm: string; phone: string | null }>;
   nameChanged: boolean;
+  /** troca de e-mail de uma conta existente (só por RGM conhecido) */
+  emailChange?: { from: string; to: string };
 }
 
 /**
@@ -130,7 +158,7 @@ export async function upsertStudents(
 
   const valid = prepared.filter((p) => !p.error);
   const emails = valid.map((p) => p.email);
-  const rgms = valid.map((p) => p.rgm);
+  const rgms = valid.map((p) => p.rgm).filter(Boolean);
   const existingUsers = emails.length ? await db.select().from(s.user).where(inArray(s.user.email, emails)) : [];
   const userByEmail = new Map(existingUsers.map((u) => [u.email, u]));
   const memberships = existingUsers.length
@@ -140,13 +168,15 @@ export async function upsertStudents(
         .where(and(eq(s.workspaceMemberships.workspaceId, workspaceId), inArray(s.workspaceMemberships.userId, existingUsers.map((u) => u.id))))
     : [];
   const memberByUser = new Map(memberships.map((m) => [m.userId, m]));
-  const rgmOwners = rgms.length
+  const owners = rgms.length
     ? await db
-        .select({ userId: s.workspaceMemberships.userId, rgm: s.workspaceMemberships.rgm })
+        .select()
         .from(s.workspaceMemberships)
         .where(and(eq(s.workspaceMemberships.workspaceId, workspaceId), isNotNull(s.workspaceMemberships.rgm), inArray(sql`upper(${s.workspaceMemberships.rgm})`, rgms)))
     : [];
-  const ownerOfRgm = new Map(rgmOwners.map((o) => [normalizeRgm(o.rgm), o.userId]));
+  const ownerOfRgm = new Map(owners.map((o) => [normalizeRgm(o.rgm), o]));
+  const ownerUsers = owners.length ? await db.select().from(s.user).where(inArray(s.user.id, owners.map((o) => o.userId))) : [];
+  const ownerUserById = new Map(ownerUsers.map((u) => [u.id, u]));
 
   const results: StudentRowResult[] = [];
   const todo: Planned[] = [];
@@ -154,40 +184,69 @@ export async function upsertStudents(
   for (const p of prepared) {
     const res: StudentRowResult = { index: p.index, email: p.email, status: 'error', enrolled: [], alreadyEnrolled: [] };
     results.push(res);
-    const fail = (reason: string) => {
+    const fail = (code: StudentErrorCode, reason: string) => {
+      res.code = code;
       res.reason = reason;
     };
     if (p.error) {
-      fail(p.error);
+      fail(p.code!, p.error);
       continue;
     }
     const unknown = p.slugs.filter((slug) => !courses.get(slug)?.published);
     if (unknown.length) {
-      fail(`Curso inexistente ou não publicado: ${unknown.join(', ')}`);
+      fail('CURSO_INVALIDO', `Curso inexistente ou não publicado: ${unknown.join(', ')}`);
       continue;
     }
     const u = userByEmail.get(p.email);
-    const member = u ? memberByUser.get(u.id) : undefined;
-    if (member && member.role !== 'student') {
-      fail('Conta da equipe: não pode ser alterada por importação');
+    const uMember = u ? memberByUser.get(u.id) : undefined;
+    const STAFF = 'Conta da equipe: não pode ser alterada por importação';
+    if (uMember && uMember.role !== 'student') {
+      fail('CONTA_DA_EQUIPE', STAFF);
       continue;
     }
-    const owner = ownerOfRgm.get(p.rgm);
-    if (owner && owner !== u?.id) {
-      fail('RGM já pertence a outro aluno do workspace');
+    const phonePatch = (m: { phone: string | null } | undefined) => (p.phone && m?.phone !== p.phone ? { phone: p.phone } : {});
+    const owner = p.rgm ? ownerOfRgm.get(p.rgm) : undefined;
+    if (owner) {
+      // RGM conhecido: é a mesma pessoa, mesmo que o e-mail seja outro
+      if (owner.role !== 'student') {
+        fail('CONTA_DA_EQUIPE', STAFF);
+        continue;
+      }
+      const ownerUser = ownerUserById.get(owner.userId);
+      if (!ownerUser) {
+        fail('FALHA_AO_GRAVAR', 'Falha ao gravar esta linha');
+        continue;
+      }
+      if (u && u.id !== owner.userId) {
+        if (uMember?.rgm) fail('EMAIL_EM_USO_POR_OUTRO_RGM', 'E-mail já pertence a outro RGM neste workspace');
+        else fail('EMAIL_EM_USO_POR_OUTRA_CONTA', 'E-mail já pertence a outra conta; a troca de e-mail não foi feita');
+        continue;
+      }
+      res.status = 'unchanged';
+      todo.push({
+        p,
+        plan: 'update',
+        existingUserId: owner.userId,
+        existingMember: true,
+        patch: phonePatch(owner),
+        nameChanged: ownerUser.name !== p.name,
+        emailChange: u ? undefined : { from: ownerUser.email, to: p.email },
+      });
       continue;
     }
-    res.status = 'unchanged';
     if (!u) {
+      res.status = 'unchanged';
       todo.push({ p, plan: 'create', existingMember: false, patch: {}, nameChanged: false });
-    } else if (!member) {
-      todo.push({ p, plan: 'update', existingUserId: u.id, existingMember: false, patch: { rgm: p.rgm, phone: p.phone }, nameChanged: u.name !== p.name });
+    } else if (!uMember) {
+      res.status = 'unchanged';
+      todo.push({ p, plan: 'update', existingUserId: u.id, existingMember: false, patch: { rgm: p.rgm || undefined, phone: p.phone }, nameChanged: u.name !== p.name });
+    } else if (p.rgm && uMember.rgm) {
+      // RGM novo, mas o e-mail já é de outro RGM: não troca dono de conta
+      fail('EMAIL_EM_USO_POR_OUTRO_RGM', 'E-mail já pertence a outro RGM neste workspace');
     } else {
-      const patch: Planned['patch'] = {};
-      if (member.rgm !== p.rgm) patch.rgm = p.rgm;
-      // telefone em branco na planilha não apaga o que já existe
-      if (p.phone && member.phone !== p.phone) patch.phone = p.phone;
-      todo.push({ p, plan: 'update', existingUserId: u.id, existingMember: true, patch, nameChanged: u.name !== p.name });
+      // membro antigo sem RGM ganha o RGM; linha sem RGM só atualiza nome e telefone
+      res.status = 'unchanged';
+      todo.push({ p, plan: 'update', existingUserId: u.id, existingMember: true, patch: { ...(p.rgm ? { rgm: p.rgm } : {}), ...phonePatch(uMember) }, nameChanged: u.name !== p.name });
     }
   }
   const byIndex = new Map(results.map((r) => [r.index, r]));
@@ -208,7 +267,8 @@ export async function upsertStudents(
         const cid = courses.get(slug)!.id;
         (t.existingUserId && enrolledSet.has(`${t.existingUserId}:${cid}`) ? r.alreadyEnrolled : r.enrolled).push(slug);
       }
-      const changed = !t.existingMember || t.nameChanged || Object.keys(t.patch).length > 0 || r.enrolled.length > 0;
+      r.emailChanged = t.emailChange ? true : undefined;
+      const changed = !t.existingMember || !!t.emailChange || t.nameChanged || Object.keys(t.patch).length > 0 || r.enrolled.length > 0;
       r.status = t.plan === 'create' ? 'created' : changed ? 'updated' : 'unchanged';
     }
     return finish(results);
@@ -221,10 +281,13 @@ export async function upsertStudents(
       for (const t of chunk) {
         const r = byIndex.get(t.p.index)!;
         try {
-          await tx.transaction(async (sp) => applyRow(sp, { workspaceId, actorId, t, r, courses }));
+          await tx.transaction(async (sp) => applyRow(sp, { workspaceId, actorId, source: input.source ?? 'api', t, r, courses }));
         } catch (e) {
           r.status = 'error';
-          r.reason = explain(e);
+          const ex = explain(e);
+          r.code = ex.code;
+          r.reason = ex.reason;
+          r.emailChanged = undefined;
           r.userId = undefined;
           r.enrolled = [];
           r.alreadyEnrolled = [];
@@ -252,35 +315,52 @@ function finish(results: StudentRowResult[]): UpsertStudentsResult {
   return { results, summary };
 }
 
-function explain(e: unknown): string {
+function explain(e: unknown): { code: StudentErrorCode; reason: string } {
   const err = e as { code?: string; constraint_name?: string; cause?: { code?: string; constraint_name?: string } };
   const code = err?.code ?? err?.cause?.code;
   const constraint = String(err?.constraint_name ?? err?.cause?.constraint_name ?? '');
-  if (code === '23505' && constraint.includes('rgm')) return 'RGM já pertence a outro aluno do workspace';
-  if (code === '23505') return 'Cadastro simultâneo do mesmo aluno: tente de novo';
-  if (e instanceof Error && e.name === 'DomainError') return e.message;
-  return 'Falha ao gravar esta linha';
+  if (code === '23505' && constraint.includes('rgm')) return { code: 'RGM_EM_USO', reason: 'RGM já pertence a outro aluno do workspace' };
+  if (code === '23505' && constraint.includes('email')) return { code: 'EMAIL_EM_USO', reason: 'E-mail já pertence a outra conta' };
+  if (code === '23505') return { code: 'CADASTRO_SIMULTANEO', reason: 'Cadastro simultâneo do mesmo aluno: tente de novo' };
+  if (e instanceof Error && e.name === 'DomainError') return { code: 'FALHA_AO_GRAVAR', reason: e.message };
+  return { code: 'FALHA_AO_GRAVAR', reason: 'Falha ao gravar esta linha' };
 }
 
-async function applyRow(tx: Transaction, a: { workspaceId: string; actorId: string; t: Planned; r: StudentRowResult; courses: Map<string, CourseInfo> }) {
+async function applyRow(tx: Transaction, a: { workspaceId: string; actorId: string; source: string; t: Planned; r: StudentRowResult; courses: Map<string, CourseInfo> }) {
   const { t, r } = a;
   let userId = t.existingUserId;
   let changed = false;
   if (t.plan === 'create') {
     userId = newId('usr');
     await tx.insert(s.user).values({ id: userId, email: t.p.email, name: t.p.name, emailVerified: false });
-    await tx.insert(s.workspaceMemberships).values({ workspaceId: a.workspaceId, userId, role: 'student', rgm: t.p.rgm, phone: t.p.phone });
+    await tx.insert(s.workspaceMemberships).values({ workspaceId: a.workspaceId, userId, role: 'student', rgm: t.p.rgm || null, phone: t.p.phone });
     changed = true;
   } else {
     userId = t.existingUserId!;
     if (!t.existingMember) {
-      await tx.insert(s.workspaceMemberships).values({ workspaceId: a.workspaceId, userId, role: 'student', rgm: t.p.rgm, phone: t.p.phone });
+      await tx.insert(s.workspaceMemberships).values({ workspaceId: a.workspaceId, userId, role: 'student', rgm: t.p.rgm || null, phone: t.p.phone });
       changed = true;
     } else if (Object.keys(t.patch).length > 0) {
       await tx
         .update(s.workspaceMemberships)
         .set(t.patch)
         .where(and(eq(s.workspaceMemberships.workspaceId, a.workspaceId), eq(s.workspaceMemberships.userId, userId), eq(s.workspaceMemberships.role, 'student')));
+      changed = true;
+    }
+    if (t.emailChange) {
+      // o e-mail novo ainda não foi confirmado pela pessoa; as sessões abertas caem e ela entra de novo pelo e-mail novo
+      await tx.update(s.user).set({ email: t.emailChange.to, emailVerified: false, updatedAt: new Date() }).where(eq(s.user.id, userId));
+      await tx.delete(s.session).where(eq(s.session.userId, userId));
+      await tx.insert(s.auditLogs).values({
+        id: newId('aud'),
+        workspaceId: a.workspaceId,
+        actorId: a.actorId,
+        action: 'student.email_changed',
+        entityType: 'user',
+        entityId: userId,
+        data: { from: t.emailChange.from, to: t.emailChange.to, source: a.source, sessionsEnded: true },
+      });
+      r.emailChanged = true;
       changed = true;
     }
     if (t.nameChanged) {

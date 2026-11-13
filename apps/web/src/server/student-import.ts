@@ -35,7 +35,7 @@ export function emailState() {
 
 /**
  * Prévia (`dryRun`, não grava) ou aplicação do CSV. Com `enviarLink`, depois de gravar manda o link de acesso por e-mail
- * a quem foi criado ou ganhou matrícula nova (quem só foi conferido, sem mudança, não recebe e-mail de novo).
+ * a quem foi criado, trocou de e-mail ou ganhou matrícula nova (quem só foi conferido, sem mudança, não recebe e-mail de novo).
  */
 export async function importStudentsFromCsv(viewer: Viewer, raw: unknown) {
   const body = importBody.parse(raw);
@@ -52,7 +52,7 @@ export async function importStudentsFromCsv(viewer: Viewer, raw: unknown) {
     const state = emailState();
     emails = { transport: state.transport, sent: 0, failed: 0, skipped: 0 };
     for (const r of results) {
-      if (r.status === 'error' || !(r.status === 'created' || r.enrolled.length > 0)) {
+      if (r.status === 'error' || !(r.status === 'created' || r.emailChanged || r.enrolled.length > 0)) {
         if (r.status !== 'error') emails.skipped += 1;
         continue;
       }

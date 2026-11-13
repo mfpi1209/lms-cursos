@@ -56,7 +56,21 @@ Sempre este formato:
 
 ## 3. Alunos
 
-`POST /alunos` (escopo `students:write`). Cadastra ou atualiza, de forma idempotente pelo e-mail: repetir o mesmo lote não cria nada de novo. O RGM é obrigatório e único no workspace. A conta nasce sem senha; o aluno entra por link de acesso.
+`POST /alunos` (escopo `students:write`). Cadastra ou atualiza, de forma idempotente pelo **RGM** dentro do workspace: repetir o mesmo lote dá o mesmo resultado, sem conta, matrícula ou efeito duplicado. O RGM é único no workspace e **é a chave recomendada**: envie-o sempre. A conta nasce sem senha; o aluno entra por link de acesso.
+
+### Como cada linha é identificada
+
+| Situação da linha | O que acontece |
+|---|---|
+| RGM já existe no workspace | É a mesma pessoa. Atualiza nome, telefone (telefone em branco não apaga) e **e-mail**; a matrícula nos cursos é idempotente (não duplica) |
+| RGM novo, e-mail novo | Cria a conta e o vínculo de aluno |
+| RGM novo, e-mail de membro antigo **sem RGM** | Atribui o RGM a esse membro |
+| RGM novo, e-mail que já pertence a **outro RGM** | Erro só nessa linha (`EMAIL_EM_USO_POR_OUTRO_RGM`). Nunca se troca o dono de uma conta |
+| Sem RGM (compatibilidade) | Identifica pelo e-mail, como antes: cria ou atualiza nome/telefone e matrícula. Não altera nem apaga o RGM que a pessoa já tem. Não use em integrações novas: sem RGM não há como trocar e-mail com segurança |
+
+### Troca de e-mail
+
+Só acontece por RGM conhecido: o mesmo RGM chegando com outro e-mail troca o e-mail daquela conta (a linha volta `atualizado` com `emailAlterado: true`). Na troca, o sistema registra auditoria (`student.email_changed`, com e-mail antigo e novo) e **encerra todas as sessões abertas** da pessoa; o novo e-mail fica como não confirmado e ela entra de novo por link de acesso (use `gerarLink`). Se o e-mail novo já é de outra conta (de outro RGM, de membro sem RGM, de conta fora do workspace), a linha dá erro e nada muda.
 
 ```json
 {
@@ -85,7 +99,20 @@ Sempre este formato:
 }
 ```
 
-- `status`: `created`, `updated`, `unchanged` ou `error` (com `motivo`). Uma linha ruim não derruba as outras.
+- `status`: `created`, `updated`, `unchanged` ou `error`. `situacao` é o mesmo valor em português: `criado`, `atualizado`, `sem_mudanca` ou `erro`. O `resumo` traz as duas contagens (`created`/`criado`, `updated`/`atualizado`, `unchanged`/`sem_mudanca`, `error`/`erro`). Os campos antigos não mudaram.
+- Em `erro` a linha traz `motivo` (texto para pessoas) e `codigo` (estável, para o seu sistema decidir). Uma linha ruim não derruba as outras.
+- `emailAlterado: true` (só quando houve troca de e-mail): `email` é o endereço novo.
+
+| `codigo` | Quando |
+|---|---|
+| `EMAIL_INVALIDO`, `NOME_EM_BRANCO`, `RGM_LONGO` | dado da linha inválido (RGM até 40 caracteres) |
+| `EMAIL_REPETIDO_NO_LOTE`, `RGM_REPETIDO_NO_LOTE` | o mesmo e-mail ou RGM em duas linhas do lote |
+| `CURSO_INVALIDO` | curso inexistente ou não publicado |
+| `CONTA_DA_EQUIPE` | e-mail ou RGM de conta da equipe; não é alterada por esta rota |
+| `EMAIL_EM_USO_POR_OUTRO_RGM` | o e-mail já pertence a um aluno com outro RGM neste workspace |
+| `EMAIL_EM_USO_POR_OUTRA_CONTA` | na troca de e-mail por RGM, o e-mail novo já é de uma conta sem RGM ou de fora do workspace |
+| `RGM_EM_USO`, `EMAIL_EM_USO`, `CADASTRO_SIMULTANEO` | corrida com outro cadastro no mesmo instante; envie a linha de novo |
+| `FALHA_AO_GRAVAR` | falha inesperada ao gravar a linha; envie de novo |
 - `linkAcesso` (só com `gerarLink: true`): vale como senha até vencer e uso único. Entregue só à pessoa certa e nunca registre em log.
 - Matricular o aluno em um curso gera o evento `enrollment.created` (ver webhooks).
 
