@@ -8,6 +8,11 @@
  * crescente; passo sem correspondência é interpolado entre o anterior e o próximo achados (respeitando o peso); antes
  * do primeiro passo achado a tela fica no estado inicial. Sem nenhum passo achado (ou sem alinhamento) vale o
  * agendamento proporcional de `scheduleSteps`.
+ *
+ * Limites de tela vazia/parada (`startsFromCues`): (a) a espera vazia no início é ≤ 3 s — passos antes do primeiro
+ * casamento se distribuem entre 0,4 s e ele; sem passos antes, o primeiro passo começa em no máximo 35% da duração
+ * (salvo `cue` explícito ou `digita` cujo texto é dito na fala, que respeitam a fala); (b) passos depois do último
+ * casamento se espalham até ~90% da duração; (c) o último passo sem casamento não começa depois de `dur - 6 s`.
  */
 
 export interface StepWindow {
@@ -200,7 +205,13 @@ function holdOf(durationSec: number): number {
  * achado a tela fica no estado inicial; passos sem achado são interpolados entre os vizinhos pelo peso. Nenhum achado:
  * proporcional (como `scheduleSteps`).
  */
-export function startsFromCues(cueTimes: ReadonlyArray<number | undefined>, weights: ReadonlyArray<number | undefined>, durationSec: number): number[] {
+export const SCREEN_MOCK_MAX_EMPTY_SEC = 3;
+export const SCREEN_MOCK_FIRST_MAX_FRAC = 0.35;
+export const SCREEN_MOCK_TAIL_FRAC = 0.9;
+export const SCREEN_MOCK_MAX_TAIL_SEC = 6;
+
+/** `pins[i]` = o início do passo `i` vem da fala por inteiro (`cue` explícito ou `digita` dito) e não pode ser adiantado. */
+export function startsFromCues(cueTimes: ReadonlyArray<number | undefined>, weights: ReadonlyArray<number | undefined>, durationSec: number, pins: ReadonlyArray<boolean> = []): number[] {
   const n = cueTimes.length;
   if (cueTimes.every((t) => t === undefined)) return scheduleSteps([...weights], durationSec).windows.map((w) => w.start);
   const ws = weights.map((w) => (w !== undefined && Number.isFinite(w) && w > 0 ? w : 1));
@@ -215,17 +226,29 @@ export function startsFromCues(cueTimes: ReadonlyArray<number | undefined>, weig
   });
   const f0 = found[0]!;
   if (f0 > 0) {
-    // passos sem achado antes do primeiro achado: só logo antes dele (a tela não muda antes da fala chegar)
     const t1 = starts[f0]!;
-    const t0 = Math.max(0, t1 - Math.min(0.5, 0.15 * f0 + 0.2));
-    for (let k = 0; k < f0; k++) starts[k] = t0 + ((t1 - t0) * k) / f0;
+    if (t1 > SCREEN_MOCK_MAX_EMPTY_SEC) {
+      // fala demora a chegar: os passos anteriores ocupam a tela entre 0,4 s e o primeiro casamento
+      const t0 = Math.min(SCREEN_MOCK_LEAD_SEC, t1);
+      for (let k = 0; k < f0; k++) starts[k] = t0 + ((t1 - t0) * k) / f0;
+    } else {
+      // passos sem achado antes do primeiro achado: só logo antes dele (a tela não muda antes da fala chegar)
+      const t0 = Math.max(0, t1 - Math.min(0.5, 0.15 * f0 + 0.2));
+      for (let k = 0; k < f0; k++) starts[k] = t0 + ((t1 - t0) * k) / f0;
+    }
+  } else if (!pins[0]) {
+    // o primeiro passo casou tarde e não há nada antes: não deixa a tela vazia por mais de 35% da duração
+    starts[0] = Math.min(starts[0]!, SCREEN_MOCK_FIRST_MAX_FRAC * durationSec, maxStart);
   }
+  const tailEnd = Math.min(spanEnd, Math.max(SCREEN_MOCK_TAIL_FRAC * durationSec, durationSec - SCREEN_MOCK_MAX_TAIL_SEC));
   found.forEach((from, a) => {
     const to = a + 1 < found.length ? found[a + 1]! : n;
     if (to - from <= 1) return;
     const t0 = starts[from]!;
-    const t1 = a + 1 < found.length ? starts[to]! : spanEnd;
-    const total = ws.slice(from, to).reduce((x, y) => x + y, 0) || 1;
+    const tail = a + 1 >= found.length;
+    const t1 = tail ? Math.max(t0, tailEnd) : starts[to]!;
+    // no trecho final o último passo começa em `t1` (a tela não fica parada depois do último casamento)
+    const total = (ws.slice(from, to).reduce((x, y) => x + y, 0) - (tail ? ws[to - 1]! : 0)) || 1;
     let acc = ws[from]!;
     for (let k = from + 1; k < to; k++) {
       starts[k] = t0 + ((t1 - t0) * acc) / total;
@@ -246,7 +269,9 @@ export function scheduleStepsWithCues(steps: ReadonlyArray<CueStep>, alignmentWo
   if (!(totalSec > 0) || !Number.isFinite(totalSec)) throw new Error('totalSec deve ser positivo');
   const weights = steps.map((s) => s.weight);
   if (!alignmentWords?.length) return scheduleSteps(weights, totalSec).windows.map((w) => w.start);
-  return startsFromCues(matchStepCues(steps, alignmentWords).times, weights, totalSec);
+  // o início de `type` achado e de passo com `cue` explícito vem da fala e não é adiantado
+  const pins = steps.map((s) => s.kind === 'type' || !!s.cue);
+  return startsFromCues(matchStepCues(steps, alignmentWords).times, weights, totalSec, pins);
 }
 
 /** Monta o `StepSchedule` (usado pelo desenho) a partir dos inícios; cada passo vai até o início do próximo. */

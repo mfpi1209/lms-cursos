@@ -4,7 +4,8 @@ import { ELEVENLABS_ADAPTER_VERSION, estimateMediaCostUsd, estimateNarrationSeco
 import type { ResolvedScene, SceneEstimate, SceneProductionRequest } from './media';
 
 /** Versão do montador de gravação de tela (entra no hash: mudar a regra de montagem refaz o vídeo). */
-export const SCREEN_PIPELINE_VERSION = 'screen-3'; // screen-3: passos no ritmo da fala; digitado + usuário igual vira um balão só
+// screen-4: balão do usuário sem duplicata mesmo com passos no meio; início sem espera vazia > 3 s e fim espalhado até ~90%
+export const SCREEN_PIPELINE_VERSION = 'screen-4'; // screen-3: passos no ritmo da fala; digitado + usuário igual vira um balão só
 
 /**
  * Gravações da cena prontas para produzir: todas precisam de arquivo enviado (`assetId`), senão a cena não é

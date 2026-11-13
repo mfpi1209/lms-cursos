@@ -383,12 +383,37 @@ function windowOf(f: F, i: number) {
   return { s: w.start, e: w.end };
 }
 
+/**
+ * Índices de `message from:'user'` que repetem um `type` anterior ainda não "consumido". Regra do chat: todo `type`
+ * vira balão do usuário ao ser enviado (quando o próximo passo é `ia:`/`toca: Enviar`/qualquer outro, o balão nasce no
+ * fim da digitação, não depende de haver um `usuário:` depois); um `usuário:` de texto igual (normalizado) a um `type`
+ * anterior que ainda não casou com outro `usuário:` é a mesma mensagem e não gera balão novo, haja o que houver entre
+ * os dois passos.
+ */
+export function duplicateUserMessages(steps: ReadonlyArray<MockStep>): Set<number> {
+  const out = new Set<number>();
+  const free: Array<{ key: string; used: boolean }> = [];
+  steps.forEach((st, i) => {
+    if (st.kind === 'type') free.push({ key: norm(st.text), used: false });
+    else if (st.kind === 'message' && st.from === 'user') {
+      const k = norm(st.text);
+      const hit = free.find((x) => !x.used && x.key === k);
+      if (hit) {
+        hit.used = true;
+        out.add(i);
+      }
+    }
+  });
+  return out;
+}
+
 function drawChat(f: F, ch: Chrome): string {
   const { t } = f;
   const barH = f.phone ? 112 : 124;
   const view = { x: ch.body.x, y: ch.body.y, w: ch.body.w, h: ch.body.h - barH };
   const items: Item[] = [];
   let typingNow = null as { text: string; done: boolean } | null;
+  const dupUser = duplicateUserMessages(f.steps);
   f.steps.forEach((st, i) => {
     const { s, e } = windowOf(f, i);
     if (st.kind === 'type') {
@@ -397,9 +422,8 @@ function drawChat(f: F, ch: Chrome): string {
       if (t >= sa) items.push(bubbleItem(f, 'user', st.text, prog(t, sa, sa + 0.3), view));
     } else if (st.kind === 'message') {
       if (t < s) return;
-      // "usuário: X" logo depois de "digita: X": o texto digitado já virou o balão ao ser enviado — não repete
-      const prev = i > 0 ? f.steps[i - 1] : undefined;
-      if (st.from === 'user' && prev?.kind === 'type' && norm(prev.text) === norm(st.text)) return;
+      // "usuário: X" depois de "digita: X" (mesmo com passos no meio): o texto digitado já virou o balão — não repete
+      if (dupUser.has(i)) return;
       if (st.from === 'ai') {
         const dots = Math.min(0.6, (e - s) * 0.25);
         if (t < s + dots) {

@@ -54,11 +54,11 @@ describe('scheduleStepsWithCues (V07 do C1)', () => {
     expect(starts[2]!).toBeGreaterThan(starts[1]!);
   });
 
-  it('antes do primeiro passo achado a tela fica no estado inicial', () => {
-    const starts = startsFromCues([undefined, 8, undefined], [1, 1, 1], 20);
-    expect(starts[0]!).toBeGreaterThan(7);
-    expect(starts[0]!).toBeLessThanOrEqual(8);
-    expect(scheduleFromStarts(starts, [1, 1, 1], 20).leadSec).toBeGreaterThan(7);
+  it('antes do primeiro passo achado (≤ 3 s) a tela fica no estado inicial', () => {
+    const starts = startsFromCues([undefined, 2.5, undefined], [1, 1, 1], 20);
+    expect(starts[0]!).toBeGreaterThan(1.8);
+    expect(starts[0]!).toBeLessThanOrEqual(2.5);
+    expect(scheduleFromStarts(starts, [1, 1, 1], 20).leadSec).toBeGreaterThan(1.8);
   });
 
   it('`cue` explícito vence a busca automática', () => {
