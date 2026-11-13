@@ -1,5 +1,6 @@
 # Telas simuladas — IA na prática para estudar e trabalhar
 
+
 ## gravacao_livros_pedido
 Modelo: chat
 Aparelho: celular
@@ -77,7 +78,16 @@ App: Assistente de IA
 - usuário: me faça cinco perguntas sobre juros compostos, uma de cada vez. Espere a minha resposta, corrija e explique o erro antes de passar para a próxima
 - ia: Pergunta 1 de 5: se você aplica R$ 100 a 10% ao mês, quanto terá depois de dois meses?
 
-## gravacao_perguntas_uma_vez
+## gravacao_perguntas_uma_vez (V30)
+Modelo: chat
+Aparelho: celular
+App: Assistente de IA
+- digita: me faça cinco perguntas sobre juros compostos, uma de cada vez. Espere a minha resposta, corrija e explique o erro antes de passar para a próxima (peso 3)
+- usuário: me faça cinco perguntas sobre juros compostos, uma de cada vez. Espere a minha resposta, corrija e explique o erro antes de passar para a próxima
+- ia: Pergunta 1 de 5: se você aplica R$ 100 a 10% ao mês, quanto terá depois de dois meses? (peso 2)
+- destaca: Repare no "uma de cada vez": se as cinco vierem juntas com as respostas, a tentação de olhar é grande demais (peso 3)
+
+## gravacao_perguntas_uma_vez (V31)
 Modelo: chat
 Aparelho: celular
 App: Assistente de IA
@@ -88,42 +98,23 @@ App: Assistente de IA
 - ia: Pergunta 2 de 5: qual a diferença entre juros simples e juros compostos?
 - destaca: Quem pensa sou eu. A IA faz o papel de professora particular
 
-## gravacao_perguntas_uma_vez
-Modelo: chat
-Aparelho: celular
-App: Assistente de IA
-- ia: Pergunta 1 de 5: se você aplica R$ 100 a 10% ao mês, quanto terá depois de dois meses?
-- usuário: R$ 120, porque são 10% duas vezes
-- ia: Quase! Você acertou que são dois meses de 10%, mas o segundo juro incide sobre R$ 110. O certo é R$ 121. Faltou o juro sobre juro. (peso 3)
-- destaca: Ela pergunta, eu respondo com as minhas palavras, e ela diz o que acertei e o que faltou (peso 2)
-- ia: Pergunta 2 de 5: qual a diferença entre juros simples e juros compostos?
-- destaca: Quem pensa sou eu. A IA faz o papel de professora particular
-
-## gravacao_flashcards_simulado
+## gravacao_flashcards_simulado (V31)
 Modelo: chat
 Aparelho: celular
 App: Assistente de IA
 - digita: crie dez flashcards sobre juros compostos, em tabela, com pergunta e resposta curtas (peso 2)
 - usuário: crie dez flashcards sobre juros compostos, em tabela, com pergunta e resposta curtas
 - mostra: Flashcards | 1. O que são juros compostos? Juros calculados sobre o capital mais os juros já acumulados. | 2. Qual a fórmula do montante? M = C x (1 + i) elevado a n. | 3. Em que juros compostos diferem dos simples? No composto, o juro rende juro. (peso 3)
-- destaca: Revise um por um: se a IA errar um cartão, corrigir já é estudar
-- digita: monte cinco questões de múltipla escolha sobre este conteúdo, com quatro alternativas, e só me mostre o gabarito quando eu pedir (peso 3)
-- usuário: monte cinco questões de múltipla escolha sobre este conteúdo, com quatro alternativas, e só me mostre o gabarito quando eu pedir
-- mostra: Questão 1 de 5 | Aplicando R$ 100 a 10% ao mês em juros compostos, o montante após 2 meses é: | A) R$ 110 | B) R$ 120 | C) R$ 121 | D) R$ 130 (peso 3)
-- destaca: Gabarito só no fim, no formato da prova
+- destaca: Revise um por um: a IA pode errar um cartão, e corrigir já é estudar (peso 3)
 
-## gravacao_flashcards_simulado
+## gravacao_flashcards_simulado (V32)
 Modelo: chat
 Aparelho: celular
 App: Assistente de IA
-- digita: crie dez flashcards sobre juros compostos, em tabela, com pergunta e resposta curtas (peso 2)
-- usuário: crie dez flashcards sobre juros compostos, em tabela, com pergunta e resposta curtas
-- mostra: Flashcards | 1. O que são juros compostos? Juros calculados sobre o capital mais os juros já acumulados. | 2. Qual a fórmula do montante? M = C x (1 + i) elevado a n. | 3. Em que juros compostos diferem dos simples? No composto, o juro rende juro. (peso 3)
-- destaca: Revise um por um: se a IA errar um cartão, corrigir já é estudar
 - digita: monte cinco questões de múltipla escolha sobre este conteúdo, com quatro alternativas, e só me mostre o gabarito quando eu pedir (peso 3)
 - usuário: monte cinco questões de múltipla escolha sobre este conteúdo, com quatro alternativas, e só me mostre o gabarito quando eu pedir
 - mostra: Questão 1 de 5 | Aplicando R$ 100 a 10% ao mês em juros compostos, o montante após 2 meses é: | A) R$ 110 | B) R$ 120 | C) R$ 121 | D) R$ 130 (peso 3)
-- destaca: Gabarito só no fim, no formato da prova
+- destaca: Gabarito só no fim: você treina do jeito que vai ser cobrado (peso 3)
 
 ## gravacao_resumo_copiado
 Modelo: chat
@@ -284,23 +275,21 @@ App: Bloco de notas
 - mostra: Pano de fundo | Sou aluna de Administração a distância, trabalho durante o dia e estudo à noite pelo celular, uns quarenta minutos por dia. (peso 4)
 - destaca: Nada de nome, CPF ou dado pessoal: só o que o tutor precisa saber (peso 3)
 
-## gravacao_prompt_pedido_regras
+## gravacao_prompt_pedido_regras (V81)
 Modelo: notes
 Aparelho: celular
 App: Bloco de notas
-- mostra: Pedido | Explicar o conteúdo no meu nível, me fazer perguntas uma por vez e corrigir, montar planos de estudo e gerar flashcards. (peso 3)
-- mostra: Padrão | Respostas curtas, que caibam na tela do celular, sempre com um exemplo do meu dia a dia. (peso 3)
-- mostra: Regras | Se não souber ou não tiver certeza, diga. Avise quando eu devo conferir uma informação. Não faça as minhas atividades avaliadas: me ajude a entender, mas quem escreve sou eu. (peso 4)
-- destaca: Guarde num bloco de notas e cole no começo de cada sessão de estudo (peso 3)
+- mostra: Pedido | Explicar o conteúdo no meu nível, me fazer perguntas uma por vez e corrigir, montar planos de estudo e gerar flashcards. (peso 4)
+- mostra: Padrão | Respostas curtas, que caibam na tela do celular, sempre com um exemplo do meu dia a dia. (peso 4)
+- destaca: Só o que o assistente precisa saber, sem dado pessoal (peso 2)
 
-## gravacao_prompt_pedido_regras
+## gravacao_prompt_pedido_regras (V82)
 Modelo: notes
 Aparelho: celular
 App: Bloco de notas
-- mostra: Pedido | Explicar o conteúdo no meu nível, me fazer perguntas uma por vez e corrigir, montar planos de estudo e gerar flashcards. (peso 3)
-- mostra: Padrão | Respostas curtas, que caibam na tela do celular, sempre com um exemplo do meu dia a dia. (peso 3)
 - mostra: Regras | Se não souber ou não tiver certeza, diga. Avise quando eu devo conferir uma informação. Não faça as minhas atividades avaliadas: me ajude a entender, mas quem escreve sou eu. (peso 4)
 - destaca: Guarde num bloco de notas e cole no começo de cada sessão de estudo (peso 3)
+- destaca: Teste: peça para explicar um tema que você já conhece. Se vier longo, ajuste o Padrão (peso 3)
 
 ## gravacao_plano
 Modelo: chat
