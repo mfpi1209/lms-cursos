@@ -1,6 +1,6 @@
 # Documentos de privacidade e uso do portal DNA Work
 
-Conjunto de rascunhos escritos em 01/11/2026 a partir do código do repositório. Nenhum deles é parecer jurídico e nenhum afirma conformidade; todos prometem só o que o sistema faz hoje e marcam o resto com `[A CONFIRMAR: ...]`, `[PENDENTE ATÉ ESTAR NO AR: ...]` ou placeholders. Controladora: DNA Work Treinamento e Desenvolvimento Profissional Ltda., CNPJ 40.380.163/0001-61. Encarregado informado pelo responsável: Caio Vinicius Pinheiro / Luan Melo Villas Boas, contato@dnawork.ai (ver pendências sobre a forma de indicação).
+MODELO ATUAL (13/11/2026): o cliente (instituição de ensino) é o controlador e a DNA Work é a operadora; ver `pendencias.md`, seção 13, e `dpa-contrato-operacao.md`. Onde este arquivo e os documentos internos ainda dizem "controladora: DNA Work", vale a seção 13. Conjunto de rascunhos escritos em 01/11/2026 a partir do código do repositório. Nenhum deles é parecer jurídico e nenhum afirma conformidade; todos prometem só o que o sistema faz hoje e marcam o resto com `[A CONFIRMAR: ...]`, `[PENDENTE ATÉ ESTAR NO AR: ...]` ou placeholders. Controladora: DNA Work Treinamento e Desenvolvimento Profissional Ltda., CNPJ 40.380.163/0001-61. Encarregado informado pelo responsável: Caio Vinicius Pinheiro / Luan Melo Villas Boas, contato@dnawork.ai (ver pendências sobre a forma de indicação).
 
 | Documento | Público | Status | Falta do responsável | Falta do advogado | Falta do código |
 | --- | --- | --- | --- | --- | --- |
@@ -14,11 +14,12 @@ Conjunto de rascunhos escritos em 01/11/2026 a partir do código do repositório
 | `procedimento-direitos-do-titular.md` | interno | completo, aguardando scripts | quem acessa contato@dnawork.ai; critério para responsável | regra do selo na exclusão; verificação de vínculo | `dados:exportar` e `dados:apagar` |
 | `plano-de-incidentes.md` | interno | completo, não testado | nomes dos papéis; canal interno; exercício de mesa | pequeno porte (prazo em dobro) | e-mail transacional; logs do servidor |
 | `politica-interna-de-acesso.md` | interno (equipe) | completo | forma de aceite; local do registro de consultas | - | perfil "suporte" (opcional) |
+| `dpa-contrato-operacao.md` | interno (minuta de contrato controlador-operadora) | minuta, campos em branco | razão social, CNPJ, endereço e representante das duas partes; prazos | todas as cláusulas marcadas `[revisar jurídico]` | - |
 | `pendencias.md` | interno | vivo | seções 1 e 2 | seções 3, 4, 7, 8 | seção "Para o código" |
 
 ## Onde estão os textos públicos
 
-A fonte da verdade dos quatro textos públicos mudou para dentro do app, porque a imagem do Docker não leva `docs/`: **`apps/web/src/content/legal/`** (`politica-de-privacidade.md` → `/privacidade`; `politica-de-cookies.md` → `/cookies`; `termos-de-uso.md` → `/termos`; `resumo-publico-avaliacao-de-impacto.md` → `/seguranca`). Editar lá; os links `./x.md` entre os textos viram as rotas. O aviso "Rascunho em revisão jurídica" e o `noindex` saem trocando a constante `LEGAL_DRAFT` em `apps/web/src/lib/legal/documents.ts`. Os demais documentos desta pasta são internos e ficam aqui.
+A fonte da verdade dos quatro textos públicos mudou para dentro do app, porque a imagem do Docker não leva `docs/`: **`apps/web/src/content/legal/`** (`politica-de-privacidade.md` → `/privacidade`; `politica-de-cookies.md` → `/cookies`; `termos-de-uso.md` → `/termos`; `resumo-publico-avaliacao-de-impacto.md` → `/seguranca`). Editar lá; os links `./x.md` entre os textos viram as rotas. O aviso "Rascunho em revisão jurídica" e o `noindex` ficam ligados por padrão e saem com `LEGAL_PUBLISHED=1` (ver `.env.example`; não ligar antes de confirmar o controlador). Os dados do controlador (nome, CNPJ, endereço, contato e encarregado) vêm de `LEGAL_CONTROLLER_*` e `LEGAL_DPO_*` e entram nos textos pelos marcadores `{{CONTROLADOR_NOME}}` etc. Os demais documentos desta pasta são internos e ficam aqui.
 
 ## Ordem sugerida
 

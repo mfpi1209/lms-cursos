@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { LegalDoc } from './documents';
+import { applyLegalController, legalControllerFromEnv } from './controller';
 
 /** Só no servidor (usa o disco). As constantes e os links, que também vão ao navegador, ficam em `documents.ts`. */
 /**
@@ -18,4 +19,9 @@ export function readLegalSource(doc: LegalDoc, cwd: string = process.cwd()): str
     }
   }
   throw new Error(`texto legal não encontrado (${doc.file}): ${last instanceof Error ? last.message : String(last)}`);
+}
+
+/** Texto pronto para mostrar: o markdown com os dados do controlador (LEGAL_CONTROLLER_*, LEGAL_DPO_*) no lugar dos marcadores. */
+export function readLegalText(doc: LegalDoc, env: Record<string, string | undefined> = process.env, cwd: string = process.cwd()): string {
+  return applyLegalController(readLegalSource(doc, cwd), legalControllerFromEnv(env));
 }
