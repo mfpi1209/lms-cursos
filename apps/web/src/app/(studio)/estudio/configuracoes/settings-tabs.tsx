@@ -8,6 +8,8 @@ const tab =
 const TABS = [
   { href: '/estudio/configuracoes/alunos', label: 'Alunos › Importar CSV', testId: 'cfg-alunos' },
   { href: '/estudio/configuracoes/integracoes', label: 'Integrações › Tokens', testId: 'cfg-integracoes' },
+  { href: '/estudio/configuracoes/integracoes/webhooks', label: 'Integrações › Webhooks', testId: 'cfg-webhooks' },
+  { href: '/estudio/configuracoes/relatorios', label: 'Relatórios › Progresso', testId: 'cfg-relatorios' },
 ];
 
 export function SettingsTabs() {
