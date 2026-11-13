@@ -125,7 +125,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -145,7 +145,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Seu começo no trabalho",
                           "bullets": [
@@ -421,7 +421,7 @@
                     ]
                   },
                   "narration": "Você não precisa adivinhar o que a outra pessoa espera. Antes de começar, combine a entrega: uma lista organizada por nome, por exemplo. Confirme o prazo com dia e horário. Depois, descubra quem pode orientar se aparecer uma dúvida. Pode falar assim: para confirmar, você precisa dos contatos por nome até as três, certo? Tem algum modelo? Isso demonstra atenção. Se quem pediu estiver ocupado, reúna as dúvidas numa mensagem curta pelo canal combinado. A resposta ajuda você a trabalhar com mais autonomia depois. Agora é com você: escolha como você confirmaria o combinado.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -432,7 +432,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -461,7 +461,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -1078,7 +1078,7 @@
                     ]
                   },
                   "narration": "Para pedir ajuda, dê contexto: estou registrando um atendimento. Conte a tentativa: consultei o guia e encontrei duas categorias. Depois, apresente a dúvida: qual delas se aplica neste caso? Se existe um prazo, avise também. Você não precisa se desculpar várias vezes nem contar cada clique que deu. Se houver informação de cliente, use apenas os canais e acessos autorizados pela equipe. E, quando receber a orientação, anote o critério usado. Assim, a resposta de hoje vira uma referência para uma situação parecida amanhã. Agora é com você: escolha o que você faria com a orientação.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -1089,7 +1089,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -1118,7 +1118,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -1689,7 +1689,7 @@
                     ]
                   },
                   "narration": "Uma boa prioridade considera o prazo, o impacto e a orientação da equipe. Se dois pedidos não cabem juntos, apresente o conflito com uma proposta: consigo terminar a lista agora e começar o relatório depois; essa ordem atende? Talvez a equipe ajuste o prazo ou divida a tarefa. Depois do alinhamento, registre a decisão e reserve um momento para conferir o andamento. Antes de encerrar seu horário, deixe claro o que terminou e o que ficou pendente. Sua organização deve ajudar você a cumprir compromissos dentro da rotina combinada.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -1700,7 +1700,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -1720,7 +1720,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Escolha com a equipe",
                           "bullets": [
@@ -2581,7 +2581,7 @@
                     ]
                   },
                   "narration": "Uma mensagem útil tem fatos, impacto e próximo passo. Você pode dizer: encontrei três datas incorretas na lista enviada; ela será usada na reunião; posso revisar e encaminhar a versão corrigida em dez minutos. Se não souber o alcance, fale que está verificando. Evite afirmar que ninguém foi afetado sem conferir. E respeite seus acessos: não apague registros nem tente resolver sozinho algo que exige autorização. Depois da correção, combine uma prevenção simples, como conferir as datas antes do próximo envio. Sua vez: escolha o que você faria para não repetir a falha.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -2592,7 +2592,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -2621,7 +2621,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -3185,7 +3185,7 @@
                     ]
                   },
                   "narration": "Depois de ouvir, peça um exemplo ligado a uma situação. Se a orientação for incluir pendências nas mensagens, combine a ação: na próxima atualização, vou dizer o que concluí, o que falta e se preciso de apoio. Marque uma revisão para saber se isso ajudou. Se você discordar de algum ponto, explique o contexto e peça para comparar os fatos. Uma conversa respeitosa permite perguntas. Se houver humilhação ou ofensa, você pode buscar apoio de uma pessoa responsável. Aprender exige orientação que você consiga compreender e aplicar. Sua vez: escolha a mudança que você faria.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -3196,7 +3196,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -3216,7 +3216,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Transforme a conversa em prática",
                           "bullets": [
@@ -3775,7 +3775,7 @@
                     ]
                   },
                   "narration": "Para propor seu desenvolvimento, conecte habilidade, prática e evidência. A habilidade é o que quer aprender. A prática é uma atividade pequena, combinada com quem orienta você. A evidência mostra o avanço: você conferiu um exemplo autorizado, identificou diferenças e explicou como revisou. Registre isso sem copiar documentos internos ou dados de clientes. Você pode usar uma descrição geral no seu roteiro pessoal. Com o tempo, esses registros ajudam a conversar sobre novas oportunidades. Crescimento depende também das condições e das vagas disponíveis; seu plano organiza o que você pode praticar agora.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -3786,7 +3786,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -3806,7 +3806,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Seu próximo passo possível",
                           "bullets": [

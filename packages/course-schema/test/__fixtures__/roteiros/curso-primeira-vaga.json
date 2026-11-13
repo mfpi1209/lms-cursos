@@ -161,7 +161,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -190,7 +190,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       }
                     ],
@@ -221,7 +221,7 @@
                     ]
                   },
                   "narration": "Nesta primeira aula, você vai descobrir experiências da escola, da família e do bairro que já cabem no seu currículo. Muita gente trava logo no começo: ‘como vou conseguir meu primeiro emprego se toda vaga pede experiência?’. Calma. Experiência não é só carteira assinada. Ajudar no negócio da família, organizar um evento da escola, cuidar das redes de um projeto, treinar um time do bairro: tudo isso mostra o que você sabe fazer. A pergunta certa é: onde eu já assumi uma responsabilidade? Nesta aula, você vai encontrar essas experiências na sua própria história. Agora é com você: veja esta situação e decida se ela entra no currículo.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -232,7 +232,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -252,7 +252,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Isso também é experiência",
                           "bullets": [
@@ -854,7 +854,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -874,7 +874,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -1047,7 +1047,7 @@
                     ]
                   },
                   "narration": "Outra dica: leia as atividades, não só o nome da vaga. ‘Assistente administrativo’ pode ser atender telefone, organizar planilhas ou cuidar de documentos. As atividades mostram o que você vai fazer de verdade e quais experiências suas combinam. Faça um teste rápido: para cada atividade, pergunte ‘eu já fiz algo parecido?’. Se a resposta for sim em boa parte delas, candidate-se. E o que você ainda não sabe vira assunto para a entrevista: o que você está fazendo para aprender. Sua vez: com pouco tempo, que parte da vaga você leria primeiro?",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q04",
@@ -1487,7 +1487,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -1507,7 +1507,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Onde procurar",
                           "bullets": [
@@ -1670,7 +1670,7 @@
                     ]
                   },
                   "narration": "Agora, um alerta importante: golpe de vaga falsa existe, e mira justamente quem procura o primeiro emprego. Fique de olho em três sinais. Primeiro: pedem dinheiro, seja para cadastro, curso, uniforme ou exame. Empresa séria não cobra para contratar. Segundo: a oferta é boa demais, com salário alto para quase nenhuma exigência. Terceiro: tudo acontece só por aplicativo de mensagem, com pressa e sem nome de empresa. Na dúvida, procure a vaga no site oficial antes de enviar qualquer documento. Sua vez: chegou uma mensagem de vaga. Veja os sinais e decida o que fazer.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -1681,7 +1681,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -1710,7 +1710,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -2511,7 +2511,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -2531,7 +2531,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -2704,7 +2704,7 @@
                     ]
                   },
                   "narration": "Para escrever cada linha, use uma receita simples: um verbo de ação, o que você fazia e, se der, um número. Em vez de ‘responsável pelo estoque’, escreva ‘organizei o estoque da loja toda semana’. Em vez de ‘participei da feira’, escreva ‘ajudei a montar uma feira com quarenta expositores’. Números chamam atenção, mas só use números verdadeiros. Se não sabe a quantidade exata, diga ‘cerca de’. E revise duas vezes: erro de português pode derrubar um currículo bom. Sua vez: seu currículo passou de uma página. Escolha o que você tiraria.",
-                  "motionPrompt": "opens both palms, honest",
+                  "motionPrompt": "nods slightly, warm smile",
                   "direction": {
                     "version": 1,
                     "shots": [
@@ -2715,7 +2715,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -2744,7 +2744,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -3199,7 +3199,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -3219,7 +3219,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Perfil em 4 passos",
                           "bullets": [
@@ -3495,7 +3495,7 @@
                     ]
                   },
                   "narration": "O ‘Sobre’ é onde muita gente trava. Use três frases. Na primeira, diga o que você faz hoje: estudo, curso, cidade. Na segunda, conte uma experiência de que você se orgulha. Na terceira, diga o que procura agora. Olha o exemplo da Júlia: ‘Estudo Administração em Belém. Organizei a feira de empreendedorismo da faculdade e cuidei do orçamento. Busco meu primeiro estágio em finanças.’ Simples, direto e verdadeiro. Depois, conecte-se com dez pessoas que você conhece.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "m04",
@@ -3831,7 +3831,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -3851,7 +3851,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Mensagem em 3 partes",
                           "bullets": [
@@ -4835,7 +4835,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -4855,7 +4855,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "O que cada etapa observa",
                           "bullets": [
@@ -5028,7 +5028,7 @@
                     ]
                   },
                   "narration": "Na hora do teste, três cuidados ajudam muito. Primeiro: leia as instruções até o fim, inclusive quanto tempo você tem. Segundo: não trave numa questão. Se ela está difícil, marque a opção que parece melhor e siga. Uma questão não vale o teste inteiro. Terceiro: faça sozinho. Copiar respostas pode aparecer depois, numa entrevista ou num teste presencial. E se você for mal? Faz parte. Anote o que foi difícil e treine com testes gratuitos de lógica antes do próximo. Sua vez: o tempo está acabando e você travou. Escolha o que fazer.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q14",
@@ -5446,7 +5446,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -5466,7 +5466,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -5639,7 +5639,7 @@
                     ]
                   },
                   "narration": "Se você é mais tímido, tenho uma boa notícia: não precisa liderar a dinâmica para se destacar. Existem papéis discretos e muito valorizados. Quem cuida do tempo avisa quanto falta. Quem resume organiza as ideias que já apareceram. Quem convida pergunta para quem ainda não falou: ‘e você, o que acha?’. Cada um desses papéis mostra colaboração e escuta. Escolha um antes de entrar e use pelo menos uma vez. Uma boa participação vale mais do que muita fala.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "m07",
@@ -6332,7 +6332,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -6352,7 +6352,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Apresentação em um minuto",
                           "bullets": [
@@ -6521,7 +6521,7 @@
                     ]
                   },
                   "narration": "Agora, um cuidado: não decore palavra por palavra. Resposta decorada soa robótica e, se você esquece uma palavra, trava tudo. Decore só a ordem: hoje, orgulho, busco. O resto, fale do seu jeito. Treine em voz alta umas cinco vezes, de formas um pouco diferentes. Se puder, grave no celular e ouça. Você vai perceber onde enrolou e onde ficou claro. E lembre: a pessoa do outro lado quer que você vá bem. Ela também precisa contratar alguém. Agora é com você: deu branco no meio da fala. O que você faz?",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q18",
@@ -6951,7 +6951,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -6971,7 +6971,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -7010,7 +7010,7 @@
                         "framing": "close",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "brings both hands together, focused",
+                        "motionPrompt": "tilts head, thoughtful",
                         "transitionIn": "cut"
                       },
                       {
@@ -7154,7 +7154,7 @@
                     ]
                   },
                   "narration": "Três erros derrubam histórias boas. O primeiro é falar só ‘nós’. A empresa vai contratar você, não o grupo, então diga o que você fez. O segundo é não terminar: a história para na ação e ninguém sabe o que aconteceu. O terceiro é inventar ou exagerar. Basta uma pergunta a mais e a história desmonta. Use experiências pequenas e verdadeiras: um trabalho da escola, um problema na loja da família, um campeonato que quase não aconteceu. Pequeno e verdadeiro funciona. Agora é com você: escolha a frase que mostra melhor a sua parte.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q20",
@@ -7582,7 +7582,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -7602,7 +7602,7 @@
                         "framing": "medium",
                         "layout": "presenter_panel",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "slide": {
                           "title": "Ponto fraco",
                           "bullets": [
@@ -7825,7 +7825,7 @@
                     ]
                   },
                   "narration": "Duas perguntas costumam aparecer. A primeira: ‘por que você quer trabalhar aqui?’. Antes da entrevista, veja o que a empresa faz e o que você vai aprender ali. Responda ligando as duas coisas, com uma razão verdadeira. A segunda é sobre bolsa ou salário. Muitas vagas já informam o valor. Se não informam, pesquise vagas parecidas e, na entrevista, pergunte qual é a faixa prevista. Mostre interesse também no aprendizado, não só no valor. Agora é com você: por que você quer trabalhar aqui? Escolha a melhor resposta.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q22",
@@ -8331,7 +8331,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "opens both palms, honest",
+                        "motionPrompt": "nods slightly, warm smile",
                         "transitionIn": "cut"
                       },
                       {
@@ -8360,7 +8360,7 @@
                         "framing": "medium",
                         "layout": "presenter",
                         "cameraMove": "static",
-                        "motionPrompt": "moves both hands gently while explaining, calm",
+                        "motionPrompt": "relaxed shoulders, calm",
                         "transitionIn": "cut"
                       },
                       {
@@ -8524,7 +8524,7 @@
                     ]
                   },
                   "narration": "No final, quase sempre perguntam: ‘você tem alguma pergunta?’. Tenha duas prontas. Por exemplo: ‘como é um dia normal nessa vaga?’ ou ‘o que vou aprender nos primeiros meses?’. Isso mostra interesse de verdade. Depois da entrevista, mande uma mensagem curta agradecendo, no mesmo dia. E se a resposta for não? Dói, mas faz parte. Pergunte, com educação, o que você pode melhorar. Anote, ajuste e siga para a próxima. Cada entrevista é um treino para a vaga que vai dar certo. Sua vez: a recrutadora pergunta se você tem alguma pergunta. Escolha a resposta.",
-                  "motionPrompt": "opens both palms, honest"
+                  "motionPrompt": "nods slightly, warm smile"
                 },
                 {
                   "id": "q25",
