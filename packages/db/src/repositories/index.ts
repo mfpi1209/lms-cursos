@@ -11,3 +11,5 @@ export * as recognition from './recognition';
 export * as privacy from './privacy';
 export * as access from './access';
 export * as retention from './retention';
+export * as students from './students';
+export * as integrationTokens from './integration-tokens';
