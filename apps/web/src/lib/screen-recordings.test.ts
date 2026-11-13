@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { CourseDocumentSchema, richTextFromPlain } from '@lms/course-schema';
 import {
   applyRecordingAsset,
+  describeMock,
+  previewMockSteps,
   checkRecordingMeta,
   hasMp4Signature,
   isPendingRecording,
@@ -78,7 +80,7 @@ describe('lista e estado', () => {
     expect(isPendingRecording({ assetId: 'a', fit: 'ok' })).toBe(false);
   });
   it('resumo: X de Y enviados e cenas prontas para montar', () => {
-    expect(summarizeScreenRecordings(rows)).toEqual({ total: 3, uploaded: 2, missing: 1, attention: 2, scenes: 2, scenesReady: 1 });
+    expect(summarizeScreenRecordings(rows)).toEqual({ total: 3, uploaded: 2, missing: 1, attention: 2, scenes: 2, scenesReady: 1, simulated: 0, simulatedPending: 0, simulatedReady: 0 });
     expect(summarizeScreenRecordings([])).toMatchObject({ total: 0, uploaded: 0, scenes: 0, scenesReady: 0 });
   });
 });
@@ -158,5 +160,58 @@ describe('aplicar o assetId no documento', () => {
     const r = applyRecordingAsset(doc, 'nada.mp4', 'ast_x');
     expect(r.linked).toBe(0);
     expect(r.document).toBe(doc);
+  });
+});
+
+describe('telas simuladas', () => {
+  const mock = { model: 'chat' as const, device: 'phone' as const, app: 'Assistente de IA', steps: [{ kind: 'type' as const, text: 'me explica marketing' }, { kind: 'message' as const, from: 'ai' as const, text: 'Marketing é o conjunto de ações', weight: 2 }, { kind: 'toggle' as const, label: 'Wi-Fi', on: false }, { kind: 'cell' as const, ref: 'B2', value: '10' }, { kind: 'tap' as const, label: 'Enviar' }] };
+
+  it('estados: será gerada, gerada, e envio manual substitui', () => {
+    expect(recordingState({ mock })).toBe('mock_pending');
+    expect(recordingState({ mock, assetId: 'a', source: 'mock' })).toBe('mock_ready');
+    expect(recordingState({ mock, assetId: 'a', source: 'upload' })).toBe('uploaded');
+    expect(recordingState({ assetId: 'a', source: 'mock' })).toBe('uploaded');
+    expect(isPendingRecording({ mock })).toBe(true);
+    expect(isPendingRecording({ mock, assetId: 'a', source: 'mock' })).toBe(false);
+  });
+
+  it('resumo conta as simuladas à parte', () => {
+    const base = { moduleId: 'm', lessonId: 'l', lessonTitle: 'L', nodeTitle: 'N', index: 0 };
+    const rows = [
+      { ...base, nodeId: 'a', fileName: 'a.mp4', mock },
+      { ...base, nodeId: 'b', fileName: 'b.mp4', mock, assetId: 'x', source: 'mock' as const },
+      { ...base, nodeId: 'c', fileName: 'c.mp4', assetId: 'y' },
+      { ...base, nodeId: 'd', fileName: 'd.mp4' },
+    ];
+    expect(summarizeScreenRecordings(rows)).toMatchObject({ total: 2, uploaded: 1, missing: 1, simulated: 2, simulatedPending: 1, simulatedReady: 1, scenes: 4, scenesReady: 2 });
+  });
+
+  it('lista traz mock/source; descrição e prévia dos passos', () => {
+    const d = CourseDocumentSchema.parse({
+      schemaVersion: 1,
+      title: 'C',
+      modules: [{ id: 'm1', title: 'M', lessons: [{ id: 'a1', title: 'A', graph: { schemaVersion: 1, startNodeId: 'v', nodes: [{ id: 'v', type: 'content', body: richTextFromPlain('x'), screenRecordings: [{ fileName: 'g.mp4', mock, source: 'mock' }] }, { id: 'f', type: 'end', summary: richTextFromPlain('F') }], edges: [{ id: 'e', from: 'v', to: 'f' }] } }] }],
+    });
+    const [row] = listScreenRecordings(d);
+    expect(row!.mock?.app).toBe('Assistente de IA');
+    expect(recordingState(row!)).toBe('mock_pending');
+    expect(describeMock(mock)).toBe('chat · Assistente de IA');
+    const pv = previewMockSteps(mock, 3);
+    expect(pv.lines).toEqual(['digita: me explica marketing', 'ia: Marketing é o conjunto de ações', 'desliga: Wi-Fi']);
+    expect(pv.more).toBe(2);
+  });
+
+  it('envio manual sobre uma tela simulada marca source upload e mantém a tela', () => {
+    const d = CourseDocumentSchema.parse({
+      schemaVersion: 1,
+      title: 'C',
+      modules: [{ id: 'm1', title: 'M', lessons: [{ id: 'a1', title: 'A', graph: { schemaVersion: 1, startNodeId: 'v', nodes: [{ id: 'v', type: 'content', body: richTextFromPlain('x'), screenRecordings: [{ fileName: 'g.mp4', mock, source: 'mock', assetId: 'old', fit: 'ok', durationSec: 5 }] }, { id: 'f', type: 'end', summary: richTextFromPlain('F') }], edges: [{ id: 'e', from: 'v', to: 'f' }] } }] }],
+    });
+    const out = applyRecordingAsset(d, 'G.MP4', 'ast_new');
+    const rec = listScreenRecordings(out.document)[0]!;
+    expect(rec).toMatchObject({ assetId: 'ast_new', source: 'upload' });
+    expect(rec.fit).toBeUndefined();
+    expect(rec.mock).toBeDefined();
+    expect(recordingState(rec)).toBe('uploaded');
   });
 });

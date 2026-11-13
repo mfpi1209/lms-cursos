@@ -7,6 +7,8 @@ import { compileCourse, type CompileIssue, type CourseCompileResult } from '../c
 import { courseLengthReport, lengthProfile, type CourseFormat } from '../length';
 import { parseDurationMinutes } from '../duration';
 import { applyCallsToGraph, callFromSituation } from '../bridge';
+import { screenMockLookupKey, type ScreenMockIssue } from './screen-mocks-markdown';
+import type { ScreenMock } from '../screen-mock';
 import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
 
 /*
@@ -39,6 +41,15 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  *      (nomes sem `.mp4`), a lista é comparada com as cenas que têm `Vídeo próprio:`; divergência de cena ou
  *      de arquivos gera SCREEN_LIST_MISMATCH. Sem a linha nas notas, não há conferência.
  *      Exemplo em docs/roteiros/exemplos/exemplo-video-proprio.md;
+ *      TELAS SIMULADAS (sem gravação humana): um arquivo `docs/roteiros/telas/<nome-do-roteiro>.telas.md` ao lado
+ *      do roteiro (pasta `telas/` irmã), com uma seção `## gravacao_x` por arquivo (sintaxe em `screen-mock.ts`,
+ *      leitor `parseScreenMocksMarkdown`). O CLI o carrega sozinho (`--telas <arquivo>` troca o caminho,
+ *      `--sem-telas` desliga) e passa `screenMocks` ao importador. Com o mapa: a gravação cujo nome tem tela
+ *      ganha `mock` e `source: 'mock'` (o MP4 é gerado depois, sem provedor pago); cena `V..` listada nas notas
+ *      (`Cenas com gravação de tela …`) SEM linha `Vídeo próprio:` ganha as gravações da lista, na ordem (sem
+ *      SCREEN_LIST_MISMATCH). Avisos: SCREEN_MOCK_PENDING (uma vez por curso: "N telas simuladas a gerar"),
+ *      SCREEN_MOCK_MISSING (gravação sem tela simulada e sem mídia), SCREEN_MOCK_UNUSED (tela que nenhuma cena
+ *      usa) e SCREEN_MOCK_INVALID (problema do arquivo de telas, com chave e linha). Sem `screenMocks`, nada muda;
  *    - `Q..` decisão: `Situação:`, `Voz opcional: sim|não`, `Chamada:` (frase
  *      com que a instrutora chama o aluno no FIM do vídeo anterior; ausente =
  *      `callFromSituation` — fato + pergunta do enunciado —, com aviso) e a tabela
@@ -944,6 +955,14 @@ export interface MarkdownCourseOptions {
    * vira pílulas numa câmera lateral alternando o lado).
    */
   zones?: ImportZones;
+  /**
+   * Telas simuladas por nome de gravação (sem `.mp4`; ver `parseScreenMocksMarkdown`). Com o mapa: gravação de
+   * `Vídeo próprio:` cujo nome tem tela ganha `mock` e `source: 'mock'`; cena `V..` da lista das notas sem linha
+   * `Vídeo próprio:` ganha as gravações da lista (fallback). Sem o mapa, nada muda.
+   */
+  screenMocks?: Map<string, ScreenMock>;
+  /** problemas lidos do arquivo de telas; viram avisos SCREEN_MOCK_INVALID */
+  screenMockIssues?: ScreenMockIssue[];
 }
 
 export interface MarkdownImportReport {
@@ -1034,9 +1053,29 @@ interface LessonBuild {
   edgeCount: number;
 }
 
+/** Tela da gravação para a cena: primeiro `nome@CENA`, depois `nome` (sem caixa, sem `.mp4`). Devolve a chave achada. */
+function findMock(mocks: Map<string, ScreenMock> | undefined, fileName: string, sceneCode: string): { mock: ScreenMock; key: string } | undefined {
+  if (!mocks) return undefined;
+  const base = screenMockLookupKey(fileName);
+  for (const want of [`${base}@${sceneCode.toLowerCase()}`, base]) {
+    for (const [name, mock] of mocks) if (screenMockLookupKey(name) === want) return { mock, key: want };
+  }
+  return undefined;
+}
+
+/** Uso das telas simuladas no curso inteiro (preenchido por `buildLesson`). */
+interface ScreenUse {
+  /** cena `V..` → arquivos da lista das notas */
+  notes: Map<string, string[]>;
+  used: Set<string>;
+  pending: number;
+  /** cenas que ganharam gravações só pela lista das notas */
+  fallback: Set<string>;
+}
+
 function buildLesson(
   parsed: ParsedLesson,
-  ctx: { moduleObjectiveIds: string[]; lessonId: string; objectiveId: string; lastOfCourse: boolean; opts: MarkdownCourseOptions; warn: (i: CompileIssue) => void; nextVariant: () => SlideVariant; allCodes: Map<string, string>; reactionIndex: (advance?: number) => number },
+  ctx: { moduleObjectiveIds: string[]; lessonId: string; objectiveId: string; lastOfCourse: boolean; opts: MarkdownCourseOptions; warn: (i: CompileIssue) => void; nextVariant: () => SlideVariant; allCodes: Map<string, string>; reactionIndex: (advance?: number) => number; screens: ScreenUse },
 ): LessonBuild {
   const { lessonId, objectiveId, opts, warn } = ctx;
   const endId = `fim_${lessonId}`;
@@ -1085,9 +1124,33 @@ function buildLesson(
         let body = paragraphs(scene.screenText || scene.title);
         let direction: SceneDirection | undefined;
         // gravação de tela própria: tela cheia, sem avatar → nenhuma direção/câmera de avatar; o cartão (se houver) vai para o texto da tela
-        const screenRecordings: ScreenRecording[] | undefined = scene.screenFiles?.length ? scene.screenFiles.map((fileName) => ({ fileName })) : undefined;
+        const mocks = opts.screenMocks;
+        const mockOf = (fileName: string): ScreenMock | undefined => findMock(mocks, fileName, scene.code)?.mock;
+        let screenFiles = scene.screenFiles;
+        if (!screenFiles?.length && mocks) {
+          // sem "Vídeo próprio:": vale a lista das notas, se alguma tem tela simulada
+          const listed = ctx.screens.notes.get(scene.code)?.map((f) => (/\.mp4$/i.test(f) ? f : `${f}.mp4`));
+          if (listed?.length && listed.some((f) => mockOf(f))) {
+            screenFiles = listed;
+            ctx.screens.fallback.add(scene.code);
+          }
+        }
+        const screenRecordings: ScreenRecording[] | undefined = screenFiles?.length
+          ? screenFiles.map((fileName) => {
+              const found = findMock(mocks, fileName, scene.code);
+              if (!found) return { fileName };
+              const mock = found.mock;
+              ctx.screens.used.add(found.key);
+              ctx.screens.pending++;
+              return { fileName, mock, source: 'mock' as const };
+            })
+          : undefined;
         if (screenRecordings) {
-          warn({ code: 'SCREEN_MEDIA_MISSING', lessonId, nodeId: id, message: `${scene.code}: falta mídia (${screenRecordings.map((r) => r.fileName).join(', ')})` });
+          const semTela = screenRecordings.filter((r) => !r.mock).map((r) => r.fileName);
+          if (semTela.length) {
+            if (mocks) warn({ code: 'SCREEN_MOCK_MISSING', lessonId, nodeId: id, message: `${scene.code}: sem tela simulada nem mídia (${semTela.join(', ')})` });
+            else warn({ code: 'SCREEN_MEDIA_MISSING', lessonId, nodeId: id, message: `${scene.code}: falta mídia (${semTela.join(', ')})` });
+          }
           if (scene.card) body = doc(paragraph(scene.screenText || scene.title), paragraph(scene.card.title), list(scene.card.bullets));
         } else if (scene.card) {
           if (scene.card.bullets.length > CARD_LIMITS.bullets) warn({ code: 'CARD_TOO_MANY_BULLETS', lessonId, nodeId: id, message: `${scene.code}: cartão com ${scene.card.bullets.length} tópicos (recomendado até ${CARD_LIMITS.bullets})` });
@@ -1416,13 +1479,14 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const modules: Module[] = [];
   const lessonIds: string[] = [];
   const screenScenes = new Map<string, { lessonId: string; files: string[] }>();
+  const screens: ScreenUse = { notes: new Map((parsed.screenList ?? []).map((e) => [e.code, e.files])), used: new Set(), pending: 0, fallback: new Set() };
   const lastLesson = parsed.modules[parsed.modules.length - 1]?.lessons.slice(-1)[0];
   for (const m of parsed.modules) {
     const moduleObjectiveIds = m.lessons.map((l) => `obj_aula_${pad2(l.number)}`);
     const lessons: Lesson[] = [];
     for (const l of m.lessons) {
       const lessonId = `aula_${pad2(l.number)}`;
-      const built = buildLesson(l, { moduleObjectiveIds, lessonId, objectiveId: `obj_aula_${pad2(l.number)}`, lastOfCourse: l === lastLesson, opts: lessonOpts, warn, nextVariant, allCodes, reactionIndex });
+      const built = buildLesson(l, { moduleObjectiveIds, lessonId, objectiveId: `obj_aula_${pad2(l.number)}`, lastOfCourse: l === lastLesson, opts: lessonOpts, warn, nextVariant, allCodes, reactionIndex, screens });
       for (const sc of l.scenes) if (sc.kind === 'video' && sc.screenFiles?.length) screenScenes.set(sc.code, { lessonId, files: sc.screenFiles });
       lessons.push(built.lesson);
       objectives.push(built.objective);
@@ -1441,7 +1505,14 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
       if (!inNotes) mismatch(code, lessonId, 'tem "Vídeo próprio:" mas não está na lista das notas');
       else if (files.map(base).join('|') !== inNotes.map(base).join('|')) mismatch(code, lessonId, `arquivos diferentes das notas (cena: ${files.join(', ')}; notas: ${inNotes.join(', ')})`);
     }
-    for (const code of listed.keys()) if (!screenScenes.has(code)) mismatch(code, undefined, 'está na lista das notas mas a cena não tem "Vídeo próprio:"');
+    for (const code of listed.keys()) if (!screenScenes.has(code) && !screens.fallback.has(code)) mismatch(code, undefined, 'está na lista das notas mas a cena não tem "Vídeo próprio:"');
+  }
+
+  // telas simuladas: avisos do arquivo de telas, a gerar e sem uso
+  if (opts.screenMocks) {
+    for (const i of opts.screenMockIssues ?? []) warn({ code: 'SCREEN_MOCK_INVALID', message: `telas${i.key ? ` ${i.key}` : ''}${i.line ? ` (linha ${i.line})` : ''}: ${i.message}` });
+    for (const name of opts.screenMocks.keys()) if (!screens.used.has(screenMockLookupKey(name))) warn({ code: 'SCREEN_MOCK_UNUSED', message: `a tela simulada "${name}" não é usada por nenhuma cena` });
+    if (screens.pending) warn({ code: 'SCREEN_MOCK_PENDING', message: `${screens.pending} telas simuladas a gerar` });
   }
 
   const h = parsed.header;
