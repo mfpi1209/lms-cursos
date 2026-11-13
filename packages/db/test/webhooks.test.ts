@@ -175,6 +175,9 @@ describe('entregas por evento', () => {
     expect(new Set(rows.map((r) => r.endpointId)).size).toBe(rows.length);
     const ids = rows.map((r) => r.endpointId);
     expect(ids).toContain(yes.id);
+    const view = await wh.listEndpoints(db, seeded.workspaceId);
+    expect(view.find((e) => e.id === yes.id)!.pending).toBeGreaterThanOrEqual(1);
+    expect(view.find((e) => e.id === other.id)!.pending).toBe(0);
     expect(ids).not.toContain(other.id);
     expect(ids).not.toContain(off.id);
     expect(ids).not.toContain(foreign.id);

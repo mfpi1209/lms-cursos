@@ -75,7 +75,7 @@ export async function listEndpoints(db: DbOrTx, workspaceId: string): Promise<En
       createdAt: s.webhookEndpoints.createdAt,
       lastSuccessAt: s.webhookEndpoints.lastSuccessAt,
       lastFailureAt: s.webhookEndpoints.lastFailureAt,
-      pending: sql<number>`(select count(*)::int from ${s.webhookDeliveries} d where d.endpoint_id = ${s.webhookEndpoints.id} and d.status = 'pending')`,
+      pending: sql<number>`(select count(*)::int from ${s.webhookDeliveries} d where d.endpoint_id = webhook_endpoints.id and d.status = 'pending')`,
     })
     .from(s.webhookEndpoints)
     .where(eq(s.webhookEndpoints.workspaceId, workspaceId))

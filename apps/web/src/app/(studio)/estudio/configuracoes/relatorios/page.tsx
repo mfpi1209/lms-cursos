@@ -10,7 +10,7 @@ export default async function RelatoriosPage() {
   const viewer = await requireViewer();
   const db = getDb();
   const courses = await db
-    .select({ slug: s.courses.slug, title: s.courses.title, enrollments: sql<number>`(select count(*)::int from ${s.enrollments} e where e.course_id = ${s.courses.id})` })
+    .select({ slug: s.courses.slug, title: s.courses.title, enrollments: sql<number>`(select count(*)::int from ${s.enrollments} e where e.course_id = courses.id)` })
     .from(s.courses)
     .where(and(eq(s.courses.workspaceId, viewer.workspace.id), eq(s.courses.status, 'published'), isNull(s.courses.archivedAt)))
     .orderBy(s.courses.title);
