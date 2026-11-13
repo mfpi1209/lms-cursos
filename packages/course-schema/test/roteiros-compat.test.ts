@@ -48,9 +48,21 @@ const CLI_DEFAULT_OPTIONS: MarkdownCourseOptions = {
   direction: true,
 };
 
+/*
+ * Roteiros de referência (com snapshot). A lista é fixa: roteiros de cliente (ex.: os da Cruzeiro,
+ * c1-…c5-…) mudam a cada versão do conversor e não viram snapshot; eles passam pelo teste
+ * "importam com 0 erros" no fim deste arquivo.
+ */
+const BASELINE = ['curso-comece-bem.md', 'curso-primeira-vaga.md'];
+
 function roteiros(): string[] {
+  return BASELINE.filter((f) => existsSync(path.join(ROTEIROS_DIR, f))).sort();
+}
+
+/** Os demais roteiros do topo de docs/roteiros (fora da lista de referência). */
+function roteirosDeCliente(): string[] {
   return readdirSync(ROTEIROS_DIR, { withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.md'))
+    .filter((e) => e.isFile() && e.name.endsWith('.md') && !BASELINE.includes(e.name))
     .map((e) => e.name)
     .sort();
 }
@@ -86,6 +98,16 @@ describe('roteiros de docs/roteiros: compatibilidade do importador', () => {
       expect(existsSync(snapshotPath(file)), `snapshot ausente: ${snapshotPath(file)} (gere com UPDATE_ROTEIROS_SNAPSHOTS=1)`).toBe(true);
       const expected = JSON.parse(readFileSync(snapshotPath(file), 'utf8'));
       expect(actual).toEqual(expected);
+    });
+  }
+});
+
+describe('roteiros de cliente em docs/roteiros: importam com 0 erros', () => {
+  for (const file of roteirosDeCliente()) {
+    it(`${file} compila sem erros`, () => {
+      const md = readFileSync(path.join(ROTEIROS_DIR, file), 'utf8');
+      const r = importMarkdownCourse(md, CLI_DEFAULT_OPTIONS);
+      expect(r.compile.errors.map((e) => `${e.code}${e.lessonId ? ` (${e.lessonId})` : ''}: ${e.message}`)).toEqual([]);
     });
   }
 });
