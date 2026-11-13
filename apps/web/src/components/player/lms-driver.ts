@@ -24,6 +24,7 @@ interface EventResponse {
   lessonCompleted: boolean;
   courseCompleted: boolean;
   mission?: { status: 'later' | 'done'; note: string | null };
+  task?: PlayerStepResult['task'];
 }
 
 /**
@@ -88,6 +89,7 @@ export function createLmsDriver({ enrollmentId, lessonId, fresh = false }: { enr
         lessonCompleted: res.lessonCompleted,
         courseCompleted: res.courseCompleted,
         ...(res.mission ? { mission: res.mission } : {}),
+        ...(res.task ? { task: res.task } : {}),
       };
     },
   };

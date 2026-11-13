@@ -57,6 +57,7 @@ export function CourseChrome({ courseId, status, latestVersionNumber }: CourseCh
     { href: `${base}/producao`, label: 'Produção', active: pathname.startsWith(`${base}/producao`) },
     { href: `${base}/revisao`, label: 'Revisão e publicação', active: pathname.startsWith(`${base}/revisao`) },
     { href: `${base}/matriculas`, label: 'Matrículas', active: pathname.startsWith(`${base}/matriculas`) },
+    { href: `${base}/entregas`, label: 'Entregas', active: pathname.startsWith(`${base}/entregas`) },
   ];
   const crumb = 'inline-flex min-h-11 items-center rounded-md hover:text-fg hover:underline';
 
