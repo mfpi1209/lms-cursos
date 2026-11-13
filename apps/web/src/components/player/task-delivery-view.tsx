@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useRef } from 'react';
-import { Check, CircleCheck, Clock3, ExternalLink, FileText, Paperclip, Undo2, X } from 'lucide-react';
+import { Check, CircleCheck, Clock3, ExternalLink, FileText, Undo2, X } from 'lucide-react';
 import { TASK_LABELS, TASK_LINK_MAX, type TaskStatus } from '@lms/course-schema';
 import { cn } from '@/lib/utils';
 import { TASK_PRIVACY_HINT, TASK_STATUS_LABEL, acceptedFileNames, formatBytes, type TaskDraft, type TaskRecordView } from './task-delivery';
@@ -46,10 +46,13 @@ export function TaskDeliveryFields({ draft, acceptedMime, disabled, preview }: {
   const linkHint = useId();
   const linkErr = useId();
   const fileId = useId();
+  const fileTitle = useId();
   const fileHint = useId();
+  const fileName = useId();
   const fileErr = useId();
   const fileInput = useRef<HTMLInputElement>(null);
   const busy = !!disabled || draft.uploading;
+  const chosenFile = draft.file && !draft.fileError ? draft.file : null;
   return (
     <div className="space-y-5">
       <div>
@@ -86,29 +89,36 @@ export function TaskDeliveryFields({ draft, acceptedMime, disabled, preview }: {
 
       {acceptedMime.length > 0 && (
         <div>
-          <label htmlFor={fileId} className="block text-[16px] font-semibold text-fg">
+          <span id={fileTitle} className="block text-[16px] font-semibold text-fg">
             {TASK_LABELS.file}
-          </label>
-          <input
-            id={fileId}
-            ref={fileInput}
-            data-testid="task-file"
-            type="file"
-            accept={acceptedMime.join(',')}
-            disabled={busy || preview}
-            onChange={(e) => draft.chooseFile(e.target.files?.[0] ?? null)}
-            aria-invalid={draft.fileError ? true : undefined}
-            aria-describedby={`${fileHint}${draft.fileError ? ` ${fileErr}` : ''}`}
-            className="mt-2 block w-full cursor-pointer rounded-[14px] border border-dashed border-line-strong p-2 text-[15px] text-fg/85 outline-none file:mr-3 file:min-h-11 file:cursor-pointer file:rounded-[10px] file:border-0 file:bg-fg/10 file:px-4 file:text-[15px] file:font-semibold file:text-fg focus-visible:shadow-[0_0_0_3px_var(--im-accent-ink,var(--t-accent))] disabled:cursor-not-allowed disabled:opacity-60"
-          />
-          <p id={fileHint} className="mt-2 text-[14px] leading-snug text-fg/75">
-            {preview ? 'Na prévia, o arquivo não é enviado.' : `${acceptedFileNames(acceptedMime)}, até 10 MB.`}
-          </p>
-          {draft.file && !draft.fileError && (
-            <p data-testid="task-file-chosen" className="mt-2 flex flex-wrap items-center gap-2 text-[15px] text-fg">
-              <Paperclip aria-hidden="true" className="size-4 shrink-0" />
-              <span className="min-w-0 break-all">{draft.file.name}</span>
-              <span className="text-fg/70">({formatBytes(draft.file.size)})</span>
+          </span>
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            {/* o campo nativo fica escondido, mas focável: Tab chega nele, Enter/Espaço abre o seletor e o rótulo acompanha o foco */}
+            <input
+              id={fileId}
+              ref={fileInput}
+              data-testid="task-file"
+              type="file"
+              accept={acceptedMime.join(',')}
+              disabled={busy || preview}
+              onChange={(e) => draft.chooseFile(e.target.files?.[0] ?? null)}
+              aria-labelledby={fileTitle}
+              aria-invalid={draft.fileError ? true : undefined}
+              aria-describedby={`${fileHint} ${fileName}${draft.fileError ? ` ${fileErr}` : ''}`}
+              className="peer sr-only"
+            />
+            <label
+              htmlFor={fileId}
+              aria-hidden="true"
+              data-testid="task-file-picker"
+              className="inline-flex min-h-11 cursor-pointer items-center rounded-[14px] border border-line-strong bg-fg/10 px-4 text-[15px] font-semibold text-fg hover:bg-fg/15 peer-focus-visible:shadow-[0_0_0_3px_var(--im-accent-ink,var(--t-accent))] peer-disabled:cursor-not-allowed peer-disabled:opacity-60"
+            >
+              Escolher arquivo
+            </label>
+            <span id={fileName} data-testid="task-file-name" className="min-w-0 break-all text-[15px] text-fg/85">
+              {chosenFile ? `${chosenFile.name} (${formatBytes(chosenFile.size)})` : 'Nenhum arquivo escolhido'}
+            </span>
+            {chosenFile && (
               <button
                 type="button"
                 disabled={busy}
@@ -116,13 +126,16 @@ export function TaskDeliveryFields({ draft, acceptedMime, disabled, preview }: {
                   draft.chooseFile(null);
                   if (fileInput.current) fileInput.current.value = '';
                 }}
-                className="inline-flex min-h-11 items-center gap-1 rounded px-2 font-semibold underline underline-offset-4 hover:no-underline"
+                className="inline-flex min-h-11 items-center gap-1 rounded px-2 text-[15px] font-semibold underline underline-offset-4 hover:no-underline disabled:opacity-60"
               >
                 <X aria-hidden="true" className="size-4" />
-                Tirar o arquivo
+                Remover
               </button>
-            </p>
-          )}
+            )}
+          </div>
+          <p id={fileHint} className="mt-2 text-[14px] leading-snug text-fg/75">
+            {preview ? 'Na prévia, o arquivo não é enviado.' : `${acceptedFileNames(acceptedMime)}, até 10 MB.`}
+          </p>
           {draft.fileError && (
             <p id={fileErr} role="alert" data-testid="task-file-error" className="mt-2 text-[15px] font-medium text-danger">
               {draft.fileError}
