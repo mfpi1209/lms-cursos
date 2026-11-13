@@ -13,3 +13,4 @@ export * as access from './access';
 export * as retention from './retention';
 export * as students from './students';
 export * as integrationTokens from './integration-tokens';
+export * as reports from './reports';
