@@ -208,7 +208,10 @@ export function directedPartialReuse(
  * orientadora · DNA Work"). Fora do modo de zonas, nada (o hash das cenas de
  * antes não muda). Cada campo só existe quando se aplica.
  */
-export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string; screenTopics?: Array<{ text: string; cue?: string }> } {
+/** Versão do desenho do painel do lado vazio (zone-panel.ts). Subir quando o desenho mudar: remonta só as cenas com painel. */
+export const ZONE_PANEL_VERSION = 'zone-panel-1';
+
+export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string; screenTopics?: Array<{ text: string; cue?: string }>; panelVersion?: string } {
   if (!directed || !zoneCamerasOf(doc.presentation.cameras)) return {};
   const nextQuestion = nextDecisionQuestion(graph, nodeId);
   const name = doc.branding?.presenterName?.trim();
@@ -217,7 +220,9 @@ export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | '
   const lowerThird = name && firstNarratedNodeId(graph) === nodeId ? { name, ...(role ? { role } : {}), ...(brand ? { brand } : {}) } : undefined;
   const screenText = sceneScreenText(doc, graph, nodeId, direction);
   const screenTopics = sceneScreenTopics(doc, graph, nodeId, direction);
-  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}), ...(screenTopics ? { screenTopics } : {}) };
+  // versão do painel do lado vazio: entra no hash só das cenas com painel, para remontar quando o desenho muda
+  const panel = screenText || screenTopics ? { panelVersion: ZONE_PANEL_VERSION } : {};
+  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}), ...(screenTopics ? { screenTopics } : {}), ...panel };
 }
 
 /** Limite do texto na tela que vai para o painel (o resto é cortado na montagem em até 3 linhas). */
