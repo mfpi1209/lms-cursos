@@ -155,6 +155,13 @@
       "when": 1794529607269,
       "tag": "0021_alunos_academico_e_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1794530638440,
+      "tag": "0022_webhooks",
+      "breakpoints": true
     }
   ]
 }

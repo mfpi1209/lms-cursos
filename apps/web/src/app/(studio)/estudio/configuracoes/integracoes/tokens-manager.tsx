@@ -20,8 +20,8 @@ interface TokenRow {
 
 const SCOPES: Array<{ id: string; label: string; hint: string }> = [
   { id: 'students:write', label: 'Cadastrar alunos', hint: 'students:write — POST /api/integracao/v1/alunos e GET /cursos' },
-  { id: 'progress:read', label: 'Ler progresso', hint: 'progress:read — reservado: ainda sem rotas' },
-  { id: 'webhooks:manage', label: 'Gerenciar webhooks', hint: 'webhooks:manage — reservado: ainda sem rotas' },
+  { id: 'progress:read', label: 'Ler progresso', hint: 'progress:read — GET /api/integracao/v1/progresso' },
+  { id: 'webhooks:manage', label: 'Gerenciar webhooks', hint: 'webhooks:manage — GET, POST e DELETE /api/integracao/v1/webhooks' },
 ];
 
 export function TokensManager({ initial }: { initial: TokenRow[] }) {
