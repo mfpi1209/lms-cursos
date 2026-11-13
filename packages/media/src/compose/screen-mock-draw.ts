@@ -104,6 +104,8 @@ interface F {
   defs: string[];
   /** quadro de fundo da área de conteúdo (cor do corpo) */
   pad: number;
+  /** altura fixa embaixo (barra de digitação, botões) que as faixas não podem cobrir */
+  inset: number;
   col: { x: number; w: number };
 }
 
@@ -203,7 +205,7 @@ interface Item {
   draw: (y: number) => string;
 }
 
-function flow(f: F, items: Item[], view: Rect, o: { padTop?: number; padBottom?: number } = {}): string {
+function flow(f: F, items: Item[], view: Rect, o: { padTop?: number; padBottom?: number; fade?: string } = {}): string {
   const padTop = o.padTop ?? 16;
   const padBottom = o.padBottom ?? 24;
   const placed: Array<{ it: Item; y: number; e: number }> = [];
@@ -220,9 +222,18 @@ function flow(f: F, items: Item[], view: Rect, o: { padTop?: number; padBottom?:
   f.defs.push(`<clipPath id="${id}"><rect x="${num(view.x)}" y="${num(view.y)}" width="${num(view.w)}" height="${num(view.h)}"/></clipPath>`);
   const parts = placed.map(({ it, y: iy, e }) => {
     const ay = view.y + iy - scroll + (1 - e) * 26;
-    return `<g opacity="${num(e)}">${it.draw(ay)}</g>`;
+    const svg = it.draw(ay); // desenha sempre (registra realces e alvos de toque)...
+    // ...mas só emite o que cruza a área visível: elemento inteiro fora do clipPath derruba o resvg (geom.rs unwrap)
+    if (ay + it.h * e < view.y - 4 || ay > view.y + view.h + 4) return '';
+    return `<g opacity="${num(e)}">${svg}</g>`;
   });
-  return `<g clip-path="url(#${id})">${parts.join('')}</g>`;
+  // degradê sob a barra do topo: o que rola não aparece com uma linha cortada de repente
+  const fid = `fd${f.defs.length}`;
+  const fh = Math.min(44, view.h / 4);
+  const fc = o.fade ?? C.screen;
+  f.defs.push(`<linearGradient id="${fid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${fc}" stop-opacity="1"/><stop offset="1" stop-color="${fc}" stop-opacity="0"/></linearGradient>`);
+  const fade = scroll > 0 ? `<rect x="${num(view.x)}" y="${num(view.y)}" width="${num(view.w)}" height="${num(fh)}" fill="url(#${fid})"/>` : '';
+  return `<g clip-path="url(#${id})">${parts.join('')}${fade}</g>`;
 }
 
 function addTarget(f: F, label: string, r: Rect, tap?: { x: number; y: number }) {
@@ -649,8 +660,9 @@ function banner(f: F, ch: Chrome, b: Banner): string {
   const lines = [...tl.map((l) => ({ ...l, bold: true })), ...bl.map((l) => ({ ...l, bold: false }))].slice(0, 6);
   const h = lines.length * S.lh + 36;
   const e = ez(b.p);
-  const y = ch.body.y + ch.body.h - h - 26 + (1 - e) * 40;
-  const out = [`<g opacity="${num(e)}">`, rect({ x: x + 4, y: y + 8, w, h }, 26, 'rgba(11,20,36,0.18)'), rect({ x, y, w, h }, 26, '#FFF6CC', `stroke="${C.hl}" stroke-width="3"`)];
+  const y = ch.body.y + ch.body.h - f.inset - h - 26 + (1 - e) * 40;
+  const backdrop = f.phone ? rect({ x: ch.body.x, y: y - 14, w: ch.body.w, h: ch.body.y + ch.body.h - f.inset - y + 14 }, 0, C.screen, `stroke="${C.line}" stroke-width="2"`) : '';
+  const out = [`<g opacity="${num(e)}">${backdrop}`, rect({ x: x + 4, y: y + 8, w, h }, 26, 'rgba(11,20,36,0.18)'), rect({ x, y, w, h }, 26, '#FFF6CC', `stroke="${C.hl}" stroke-width="3"`)];
   let cy = y + 18;
   const full = lines.map((l) => l.text).join(' ');
   void full;
@@ -692,7 +704,7 @@ function drawCalendar(f: F, ch: Chrome): string {
   const labelW = f.phone ? 96 : 110;
   const focus = first ? first.start : 9;
   const total = (hours1 - hours0 + 1) * rh;
-  const scrollY = Math.max(0, Math.min(total - gridView.h, (focus - hours0) * rh - gridView.h * 0.3));
+  const scrollY = Math.max(0, Math.min(Math.ceil((total + 56 - gridView.h) / rh) * rh, Math.round(((focus - hours0) * rh - gridView.h * 0.3) / rh) * rh));
   // cabeçalho dos dias
   parts.push(rect({ x: ch.body.x, y: ch.body.y, w: ch.body.w, h: headH }, 0, C.white), `<path d="M${ch.body.x} ${ch.body.y + headH} H${ch.body.x + ch.body.w}" stroke="${C.line}" stroke-width="2"/>`);
   const colW = f.phone ? (ch.body.w - 2 * f.pad) / 7 : (ch.body.w - labelW - 40) / 7;
@@ -716,7 +728,8 @@ function drawCalendar(f: F, ch: Chrome): string {
   f.defs.push(`<clipPath id="${id}"><rect x="${num(gridView.x)}" y="${num(gridView.y)}" width="${num(gridView.w)}" height="${num(gridView.h)}"/></clipPath>`);
   const g: string[] = [];
   for (let h = hours0; h <= hours1; h++) {
-    const y = gridView.y + (h - hours0) * rh - scrollY;
+    const y = gridView.y + 28 + (h - hours0) * rh - scrollY;
+    if (y < gridView.y + 14 || y > gridView.y + gridView.h + 14) continue;
     g.push(`<path d="M${num(ch.body.x + (f.phone ? labelW : labelW - 10))} ${num(y)} H${num(ch.body.x + ch.body.w - (f.phone ? f.pad : 40))}" stroke="${C.line}" stroke-width="2"/>`);
     g.push(`<text x="${num(ch.body.x + (f.phone ? labelW - 14 : labelW - 22))}" y="${num(y + 12)}" font-size="26" fill="${C.muted}" text-anchor="end">${String(h).padStart(2, '0')}:00</text>`);
   }
@@ -730,7 +743,7 @@ function drawCalendar(f: F, ch: Chrome): string {
   const evW = f.phone ? ch.body.w - labelW - 10 - f.pad : colW - 12;
   for (const ev of evs) {
     if (!f.phone ? false : ev.day !== sel) continue;
-    const slotY = gridView.y + (ev.start - hours0) * rh - scrollY;
+    const slotY = gridView.y + 28 + (ev.start - hours0) * rh - scrollY;
     const eh = Math.max(rh, (ev.end - ev.start) * rh) - 6;
     const x = evX(ev.day);
     if (t >= ev.s - 0.0 && t < ev.e + 0.0) {
@@ -828,7 +841,7 @@ export function evalCell(raw: string, cells: Map<string, string>): string {
 function drawSheet(f: F, ch: Chrome): string {
   const { t } = f;
   const parts: string[] = [];
-  const colW = f.phone ? 200 : 250;
+  const colW = f.phone ? 200 : 290;
   const rowH = f.phone ? 68 : 72;
   const hdrH = 56;
   const rhW = f.phone ? 56 : 84;
@@ -904,6 +917,7 @@ function drawSheet(f: F, ch: Chrome): string {
   const gy = view.y - sy;
   for (let r = 0; r < nRows; r++) {
     const y = gy + r * rowH;
+    if (y + rowH < view.y || y > view.y + view.h) continue;
     if (sel && sel.row === r) g.push(rect({ x: view.x, y, w: view.w, h: rowH }, 0, '#F1F5C8', 'opacity="0.55"'));
     g.push(`<path d="M${view.x} ${num(y + rowH)} H${view.x + view.w}" stroke="${C.line}" stroke-width="2"/>`);
   }
@@ -913,6 +927,7 @@ function drawSheet(f: F, ch: Chrome): string {
     if (!sh) continue;
     const x = gx + c.col * colW;
     const y = gy + c.row * rowH;
+    if (y + rowH < view.y || y > view.y + view.h) continue;
     const isNum = parseNumber(sh.text) !== null;
     const tx = ellipsize(sh.text, colW - 24, size, isNum ? 600 : 400);
     const hl = f.hls.find((h) => sh.text.toLowerCase().includes(h.needle));
@@ -939,6 +954,7 @@ function drawSheet(f: F, ch: Chrome): string {
   g.push(rect({ x: view.x, y: view.y, w: rhW, h: view.h }, 0, '#E7EBF1'));
   for (let r = 0; r < nRows; r++) {
     const y = gy + r * rowH;
+    if (y + rowH < view.y || y > view.y + view.h) continue;
     if (sel?.row === r) g.push(rect({ x: view.x, y, w: rhW, h: rowH }, 0, '#CBD5E1'));
     g.push(`<text x="${view.x + rhW / 2}" y="${num(y + rowH / 2 + 10)}" font-size="26" font-weight="600" fill="${C.ink}" text-anchor="middle">${r + 1}</text>`);
   }
@@ -1008,7 +1024,7 @@ function drawNotes(f: F, ch: Chrome): string {
       });
     }
   });
-  parts.push(flow(f, items, { ...view, x: view.x, w: view.w }, { padTop: f.phone ? 28 : 40 }));
+  parts.push(flow(f, items, { ...view, x: view.x, w: view.w }, { padTop: f.phone ? 28 : 40, fade: C.white }));
   f.col = saved;
   return parts.join('');
 }
@@ -1066,6 +1082,7 @@ export function buildFrameSvg(mock: MockInput, sch: StepSchedule, t: number): st
     targets: [],
     defs: [],
     pad: phone ? 22 : 56,
+    inset: mock.model === "chat" ? (phone ? 112 : 124) : mock.model === "form" && mock.steps.some((s) => s.kind === "tap") ? (phone ? 150 : 140) : 0,
     col: { x: 0, w: 0 },
   };
   // realces ativos

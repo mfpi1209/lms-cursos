@@ -122,3 +122,38 @@ describe('renderScreenMock: um MP4 por modelo', () => {
     expect([probe.streams[0]!.width, probe.streams[0]!.height]).toEqual([1920, 1080]);
   }, 120_000);
 });
+
+describe('regressão: chat longo com muita rolagem (resvg geom.rs unwrap)', () => {
+  const T1 = 'Aja como um professor de marketing para iniciantes. Sou caloura de Administração e trabalho numa loja de roupa. Explique os quatro Ps do marketing com exemplos da minha loja. Responda em até dez linhas, com um exemplo por item.';
+  const long = {
+    model: 'chat' as const,
+    device: 'phone' as const,
+    app: 'Assistente de IA',
+    steps: [
+      { kind: 'type' as const, text: T1, weight: 4 },
+      { kind: 'message' as const, from: 'user' as const, text: T1 },
+      { kind: 'message' as const, from: 'ai' as const, text: T1 + ' ' + T1, weight: 4 },
+      { kind: 'show' as const, title: 'Resposta com os 4 P', lines: ['Produto: a coleção nova que chegou esta semana.', 'Preço: a promoção de fim de mês nas camisetas.', 'Praça: a vitrine e o ponto da loja.', 'Promoção: o post nas redes e o cartaz na porta.'], weight: 4 },
+      { kind: 'message' as const, from: 'other' as const, text: T1, weight: 2 },
+      { kind: 'highlight' as const, text: 'Papel, pano de fundo, pedido e padrão: curto, claro, com exemplos da loja', weight: 2 },
+    ],
+  };
+  it('nenhum SVG tem dimensão ≤ 0, NaN ou balão inteiro fora da área rolada', () => {
+    const sch = scheduleSteps(long.steps.map((s) => s.weight), 32);
+    for (let f = 0; f < 32 * 30; f += 2) {
+      const svg = buildFrameSvg(long, sch, (f + 0.001) / 30);
+      expect(svg).not.toMatch(/(?:width|height)="(?:0|-[\d.]+)"/);
+      expect(svg).not.toMatch(/NaN|Infinity|undefined/);
+      for (const m of svg.matchAll(/<rect x="[\d.]+" y="(-[\d.]+)" width="[\d.]+" height="([\d.]+)" rx="28"/g)) expect(Number(m[1]) + Number(m[2])).toBeGreaterThan(-8);
+    }
+  });
+  it('renderiza 32 s sem derrubar o resvg', async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'screen-mock-long-'));
+    try {
+      const r = await renderScreenMock(long, { outPath: path.join(dir, 'long.mp4'), durationSec: 32, workDir: path.join(dir, 'w') });
+      expect(r.durationSec).toBe(32);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }, 240_000);
+});
