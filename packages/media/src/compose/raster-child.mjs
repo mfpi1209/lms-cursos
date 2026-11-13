@@ -10,8 +10,8 @@ import { Resvg } from '@resvg/resvg-js';
 
 // Sem fontes do sistema: os SVG daqui vêm do satori (texto já em caminhos) ou são só imagens. Carregar as
 // fontes do sistema custa ~50 ms por desenho (macOS) e não é usado.
-function render({ svg, background, pixels }) {
-  const r = new Resvg(svg, { fitTo: { mode: 'original' }, background: background ?? 'rgba(0,0,0,0)', font: { loadSystemFonts: false } }).render();
+function render({ svg, background, pixels, fontFiles }) {
+  const r = new Resvg(svg, { fitTo: { mode: 'original' }, background: background ?? 'rgba(0,0,0,0)', font: { loadSystemFonts: false, ...(fontFiles && fontFiles.length ? { fontFiles, defaultFontFamily: 'Inter' } : {}) } }).render();
   const png = r.asPng();
   return { png, width: r.width, height: r.height, ...(pixels ? { pixels: r.pixels } : {}) };
 }
