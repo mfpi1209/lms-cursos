@@ -20,11 +20,15 @@
  *     [--closing-line "…"] [--cameras cam_principal,cam_cenario_34] [--source-course crs_…] [--no-direction]
  *     [--zone-cameras cam_estudio_esq,cam_estudio_dir,cam_estudio_34]
  *     [--voice <voice_id ElevenLabs>] [--voice-name "…"] [--avatar-name "…"] [--presenter-pronoun she|he|they] [--watermark]
- *     [--kit estudio7-marina] [--workspace wsp_…] [--telas <arquivo.telas.md>] [--sem-telas]
+ *     [--kit estudio7-marina] [--workspace wsp_…] [--telas <arquivo.telas.md>] [--sem-telas] [--topicos <arquivo.topicos.md>] [--sem-topicos]
  *
  * Telas simuladas: se existir `telas/<nome-do-roteiro>.telas.md` ao lado do roteiro (pasta `telas/` irmã), ele é
  * carregado sozinho e as gravações de tela viram telas geradas pela plataforma (ver o cabeçalho do importador em
  * course-schema); `--telas` troca o arquivo, `--sem-telas` desliga.
+ *
+ * Tópicos do painel dinâmico: `telas/<nome-do-roteiro>.topicos.md` (`## V07` + `- tópico (na fala: "trecho")`) é carregado
+ * sozinho da mesma forma (`--topicos <arquivo>` troca, `--sem-topicos` desliga) e vira `topics` nas cenas V..; para
+ * um rascunho que já existe, sem reimportar, use `aplicar-topicos.ts`.
  *
  * `--kit` (biblioteca de modelos, ver `biblioteca-modelos.ts`): em vez de copiar
  * a apresentação de outro curso, monta tudo a partir de um KIT da biblioteca do
@@ -45,7 +49,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { and, eq, inArray } from 'drizzle-orm';
-import { applyKitToDocument, brandingFromKit, emptyCourseDocument, importMarkdownCourse, KitError, parseScreenMocksMarkdown, type ScreenMock, type ScreenMockIssue, presentationFromKit, type ResolvedKit, type Camera, type CameraZone, type ScreenRecording, type CompileIssue, type CourseDocument, type MarkdownCourseOptions, type Presentation } from '@lms/course-schema';
+import { applyKitToDocument, brandingFromKit, emptyCourseDocument, importMarkdownCourse, KitError, parseScreenMocksMarkdown, parseSceneTopicsMarkdown, type SceneTopic, type SceneTopicsIssue, type ScreenMock, type ScreenMockIssue, presentationFromKit, type ResolvedKit, type Camera, type CameraZone, type ScreenRecording, type CompileIssue, type CourseDocument, type MarkdownCourseOptions, type Presentation } from '@lms/course-schema';
 import { createDb, type Database } from '../client';
 import * as s from '../schema';
 import { createCourse, getDraft, saveDraft } from '../repositories/authoring';
@@ -90,6 +94,10 @@ export interface CliArgs {
   telas?: string;
   /** `--sem-telas`: não carrega o arquivo de telas (nem o irmão) */
   semTelas: boolean;
+  /** arquivo de tópicos do painel (padrão: `telas/<roteiro>.topicos.md` ao lado do roteiro) */
+  topicos?: string;
+  /** `--sem-topicos`: não carrega o arquivo de tópicos (nem o irmão) */
+  semTopicos: boolean;
 }
 
 export function parseArgs(argv: readonly string[]): CliArgs {
@@ -143,12 +151,40 @@ export function parseArgs(argv: readonly string[]): CliArgs {
     ...(str('workspace') ? { workspace: str('workspace') } : {}),
     ...(str('telas') ? { telas: str('telas') } : {}),
     semTelas: flags.has('sem-telas'),
+    ...(str('topicos') ? { topicos: str('topicos') } : {}),
+    semTopicos: flags.has('sem-topicos'),
   };
 }
 
 /** Caminho do arquivo de telas irmão do roteiro: `<pasta do roteiro>/telas/<nome-do-roteiro>.telas.md`. */
 export function siblingScreensPath(roteiro: string): string {
   return path.join(path.dirname(roteiro), 'telas', `${path.basename(roteiro).replace(/\.md$/i, '')}.telas.md`);
+}
+
+/** Caminho do arquivo de tópicos irmão do roteiro: `<pasta do roteiro>/telas/<nome-do-roteiro>.topicos.md`. */
+export function siblingTopicsPath(roteiro: string): string {
+  return path.join(path.dirname(roteiro), 'telas', `${path.basename(roteiro).replace(/\.md$/i, '')}.topicos.md`);
+}
+
+export interface LoadedSceneTopics {
+  file: string;
+  topics: Map<string, SceneTopic[]>;
+  issues: SceneTopicsIssue[];
+}
+
+/**
+ * Acha e lê o arquivo de tópicos do painel: `--sem-topicos` desliga; `--topicos <arquivo>` (obrigatório existir);
+ * senão o irmão `telas/<roteiro>.topicos.md` se existir. Sem arquivo: `undefined` (importação como sempre).
+ */
+export function loadSceneTopics(args: Pick<CliArgs, 'file' | 'topicos' | 'semTopicos'>, read: (f: string) => string = (f) => readFileSync(f, 'utf8'), exists: (f: string) => boolean = existsSync): LoadedSceneTopics | undefined {
+  if (args.semTopicos) return undefined;
+  const file = args.topicos ?? siblingTopicsPath(args.file);
+  if (!exists(file)) {
+    if (args.topicos) throw new Error(`arquivo de tópicos não encontrado: ${args.topicos}`);
+    return undefined;
+  }
+  const { topics, issues } = parseSceneTopicsMarkdown(read(file));
+  return { file, topics, issues };
 }
 
 export interface LoadedScreenMocks {
@@ -402,6 +438,11 @@ export async function run(db: Database, args: CliArgs) {
   if (screens) {
     options = { ...options, screenMocks: screens.mocks, screenMockIssues: screens.issues };
     console.log(`${tag} telas simuladas: ${screens.mocks.size} carregadas (${path.basename(screens.file)})${screens.issues.length ? `, ${screens.issues.length} problema(s) no arquivo` : ''}`);
+  }
+  const sceneTopics = loadSceneTopics(args);
+  if (sceneTopics) {
+    options = { ...options, sceneTopics: sceneTopics.topics, sceneTopicIssues: sceneTopics.issues };
+    console.log(`${tag} tópicos do painel: ${sceneTopics.topics.size} cena(s) (${path.basename(sceneTopics.file)})${sceneTopics.issues.length ? `, ${sceneTopics.issues.length} problema(s) no arquivo` : ''}`);
   }
   const r = importMarkdownCourse(md, options);
   let doc = r.document;

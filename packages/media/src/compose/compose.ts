@@ -9,6 +9,7 @@ import { renderWatermarkToFile, watermarkPlacementFor } from './watermark';
 import { skipIfUnrenderable } from './raster';
 import { PANEL_SHIFT, panelRevealTimes, panelSpecFromSlide, renderPanelStatesToFiles } from './panel';
 import { LOWER_THIRD_WINDOW, SCREEN_TEXT_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, parseScreenText, renderChipsGraphics, renderLowerThirdSprite, renderScreenTextSprite, renderTeaserSprite, screenTextWindow, teaserWindow, type ChipsGraphics, type PlacedSprite, type ScreenTextSprite, type Zone, type ZonePaletteInput } from './zones';
+import { renderScreenTopicsPlan, scheduleScreenTopics, type ScreenTopicsPlan, type TopicInput } from './screen-topics';
 import type { WatermarkCorner } from '../brand-tokens';
 
 /**
@@ -235,6 +236,8 @@ export interface ComposePlan {
   teaser?: PlacedSprite;
   /** texto na tela (painel no lado livre), de 0,6 s até o fim da cena (`screenTextWindow`) */
   screenText?: ScreenTextSprite;
+  /** texto na tela DINÂMICO (título + tópicos que entram no tempo da fala); vale no lugar de `screenText` */
+  screenTopics?: ScreenTopicsPlan;
 }
 
 export interface ShotTimelineEntry {
@@ -596,8 +599,32 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     v = 'ltv';
     overlays.lowerThird = lt;
   }
-  const stw = plan.screenText ? screenTextWindow(acc, teaserWin?.from) : null;
-  if (plan.screenText && stw) {
+  const stw = plan.screenText || plan.screenTopics ? screenTextWindow(acc, teaserWin?.from) : null;
+  if (plan.screenTopics && stw) {
+    // painel dinâmico: segmentos consecutivos (imagem parada ou sequência de quadros da entrada de cada tópico)
+    const tp = plan.screenTopics;
+    const fd = SCREEN_TEXT_WINDOW.fade;
+    const fadeOutAt = stw.to < acc - 1e-6 ? stw.to - 0.25 : null;
+    const segs = tp.segments.map((sg) => ({ ...sg, from: Math.max(sg.from, stw.from), to: Math.min(sg.to, stw.to) })).filter((sg) => sg.to - sg.from > 0.02);
+    segs.forEach((sg, j) => {
+      const label = `tpk${j}`;
+      const isLast = j === segs.length - 1;
+      const fadeOut = isLast && fadeOutAt !== null ? `,fade=t=out:st=${sec(fadeOutAt - sg.from)}:d=0.25:alpha=1` : '';
+      if (sg.seq) {
+        const qi = addInput(['-framerate', String(fps), '-start_number', '0', '-i', sg.seq.pattern]);
+        chains.push(`[${qi}:v]format=rgba,setpts=PTS-STARTPTS+${sec(sg.from)}/TB[${label}]`);
+      } else {
+        const ii = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(sg.to - sg.from), '-i', sg.still!]);
+        const fadeIn = sg.intro ? `,fade=t=in:st=0:d=${sec(fd)}:alpha=1` : '';
+        chains.push(`[${ii}:v]format=rgba${fadeIn}${fadeOut},setpts=PTS-STARTPTS+${sec(sg.from)}/TB[${label}]`);
+      }
+      const slide = `${Math.round(40 * k)}*pow(1-min(1,max(0,(t-${sec(sg.from)})/${sec(fd)})),3)`;
+      const x = sg.intro ? `'${tp.x}${tp.side === 'left' ? '-' : '+'}${slide}'` : String(tp.x);
+      chains.push(`[${v}][${label}]overlay=x=${x}:y=${tp.y}${sg.intro ? ':eval=frame' : ''}:format=auto:eof_action=pass:enable='between(t,${sec(sg.from)},${sec(sg.to)})'[tpv${j}]`);
+      v = `tpv${j}`;
+    });
+    overlays.screenText = stw;
+  } else if (plan.screenText && stw) {
     // entra em 0,6 s (fade + desliza 40 px da borda do lado livre) e fica até o fim (ou até a pergunta a seguir)
     const fd = SCREEN_TEXT_WINDOW.fade;
     const si = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(stw.to), '-i', plan.screenText.path]);
@@ -665,6 +692,12 @@ export interface ComposeSceneInput {
    * TODOS os planos são `presenter` (sem pílulas, painel, cartão ou slide) numa câmera de zona esquerda/direita.
    */
   screenText?: string | null;
+  /**
+   * Tópicos do painel DINÂMICO (mesma regra de zona do `screenText`): o `screenText` vira o título e os tópicos entram
+   * um a um no tempo da fala (`scheduleScreenTopics`). `words` = palavras da narração por plano, com tempo RELATIVO ao
+   * início do plano (o mesmo alinhamento das legendas/pílulas); sem elas, os tópicos se distribuem igualmente.
+   */
+  screenTopics?: { topics: TopicInput[]; words?: Map<string, Array<{ text: string; start: number }>> } | null;
   /** cores dos gráficos (pergunta a seguir, letreiro); ausente = as da marca */
   palette?: ZonePaletteInput | null;
   /**
@@ -883,8 +916,25 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
     : undefined;
   const stSpec = parseScreenText(input.screenText);
   const stZone = screenTextZone(input.shots.map((x) => ({ id: x.id, layout: x.layout })), input.clips);
-  const screenText = stSpec && stZone ? await skipIfUnrenderable('texto na tela', () => renderScreenTextSprite(path.join(outDir, 'screen-text.png'), stSpec, { width, height, zone: stZone, palette: input.palette })) : undefined;
-  const cmd = buildComposeCommand({ width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}) });
+  const topicsIn = input.screenTopics?.topics?.length && stZone ? input.screenTopics : undefined;
+  const scenePlan = { width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}) };
+  let screenTopics: ScreenTopicsPlan | undefined;
+  if (topicsIn && stZone) {
+    // 1ª passada (só planejamento): tempos dos planos na cena montada, para pôr as palavras (relativas ao plano) no tempo da cena
+    const pre = buildComposeCommand(scenePlan);
+    const win = screenTextWindow(pre.totalDuration, teaser ? teaserWindow(pre.totalDuration).from : undefined);
+    if (win) {
+      const trim = new Map(joinInfo.map((j) => [j.id, j.headTrim]));
+      const words = pre.timeline.flatMap((t) => (topicsIn.words?.get(t.id) ?? []).map((w) => ({ text: w.text, start: t.start + t.audioDelay + w.start - (trim.get(t.id) ?? 0) }))).sort((a, b) => a.start - b.start);
+      const starts = scheduleScreenTopics(topicsIn.topics, words, win, fps);
+      // título = o "Texto na tela" (o que vem antes dos dois-pontos numa lista "Título: a, b, c"; frase corrida vira o título inteiro)
+      const parsed = stSpec;
+      const title = parsed ? (parsed.title ?? (parsed.items ? undefined : parsed.text)) : undefined;
+      screenTopics = await skipIfUnrenderable('texto na tela (tópicos)', () => renderScreenTopicsPlan(path.join(outDir, 'screen-topics'), { ...(title ? { title } : {}), topics: topicsIn.topics.map((t) => t.text) }, starts, win, { width, height, fps, zone: stZone, palette: input.palette }));
+    }
+  }
+  const screenText = !screenTopics && stSpec && stZone ? await skipIfUnrenderable('texto na tela', () => renderScreenTextSprite(path.join(outDir, 'screen-text.png'), stSpec, { width, height, zone: stZone, palette: input.palette })) : undefined;
+  const cmd = buildComposeCommand({ ...scenePlan, ...(screenText ? { screenText } : {}), ...(screenTopics ? { screenTopics } : {}) });
   // DIAGNÓSTICO, só quando a variável de ambiente COMPOSE_DUMP=<arquivo.json> está definida (nunca em produção):
   // grava o comando da montagem (entradas, filter_complex, duração, transições) para investigar imagem e som
   // desencontrados. Não altera a montagem; sem a variável, não faz nada. Mantido de propósito: foi o que achou o

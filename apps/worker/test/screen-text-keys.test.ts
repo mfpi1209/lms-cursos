@@ -35,6 +35,21 @@ describe('texto na tela não muda as chaves de reaproveitamento', () => {
     expect(keyFor(ctx, base, clip)).toMatch(/^[0-9a-f]{64}$/);
   });
 
+  it('tópicos do painel dinâmico (screenTopics) também não mudam as chaves do clipe nem do vídeo transparente', () => {
+    const base = input();
+    const dyn = input({
+      screenText: 'Onde ela erra',
+      screenTopics: [{ text: 'Fatos recentes', cue: 'fatos muito recentes' }, { text: 'Contas longas' }, { text: 'Fontes inventadas' }, { text: 'Citações falsas' }],
+    });
+    expect(keyFor(ctx, dyn, clip)).toBe(keyFor(ctx, base, clip));
+    expect(alphaKeyFor(ctx, dyn, clip)).toBe(alphaKeyFor(ctx, base, clip));
+    // e trocar os tópicos também não
+    const other = input({ screenTopics: [{ text: 'Outro' }] });
+    expect(keyFor(ctx, other, clip)).toBe(keyFor(ctx, base, clip));
+    // nenhuma chave de item (clipe, vídeo transparente) de nenhuma unidade muda
+    for (const u of units) expect(keyFor(ctx, dyn, u)).toBe(keyFor(ctx, base, u));
+  });
+
   it('controle: a fala (o que gera o avatar) muda a chave', () => {
     const other = { ...clip, script: `${clip.script} Outra frase.` };
     expect(keyFor(ctx, input(), other)).not.toBe(keyFor(ctx, input(), clip));

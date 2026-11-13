@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { allLessons, markdownToCourseDocument, parseMarkdownCourse, type CourseDocument } from '@lms/course-schema';
 import { mediaConfigFromEnv } from '@lms/media';
-import { resolveSceneProduction, sceneRequestFromPresentation, sceneScreenText, studioSceneOverlays } from './media';
+import { resolveSceneProduction, sceneRequestFromPresentation, sceneScreenText, sceneScreenTopics, studioSceneOverlays } from './media';
 
 /* Uma aula: vídeo com cartão (vai para a decisão), decisão e vídeo sem cartão. */
 const MD = `# Curso zonas
@@ -150,5 +150,49 @@ describe('estúdio com zonas: texto na tela no lado vazio', () => {
     // câmera 3/4 (centro): sem lado vazio
     expect(sceneScreenText(doc, graph, 'v02', dir('presenter', 'cam_estudio_34'))).toBeUndefined();
     expect(sceneScreenText(doc, graph, 'v02', undefined)).toBeUndefined();
+  });
+});
+
+describe('estúdio com zonas: painel dinâmico (tópicos)', () => {
+  const lessonOf = (doc: CourseDocument) => allLessons(doc)[0]!;
+  const withTopics = (doc: CourseDocument, id: string, topics: unknown) => {
+    const edited = structuredClone(doc);
+    (lessonOf(edited).graph.nodes.find((n) => n.id === id) as { topics?: unknown }).topics = topics;
+    return edited;
+  };
+  const TOPICS = [{ text: 'Fatos recentes', cue: 'fatos muito recentes' }, { text: 'Contas longas' }];
+
+  it('os tópicos da cena vão no job e no hash (remonta), com o título (screenText) intacto; sem tópicos nada muda', () => {
+    const doc = docWith(zoneCams);
+    const lesson = lessonOf(doc);
+    const plain = resolveSceneProduction(doc, sceneRequestFromPresentation(doc, lesson.id, 'v02'), cfg, env);
+    expect(plain.jobInput.screenTopics).toBeUndefined();
+    const edited = withTopics(doc, 'v02', TOPICS);
+    const dyn = resolveSceneProduction(edited, sceneRequestFromPresentation(edited, lesson.id, 'v02'), cfg, env);
+    expect(dyn.jobInput.screenTopics).toEqual(TOPICS);
+    expect(dyn.jobInput.screenText).toBe('Habilidade');
+    expect(dyn.sceneHash).not.toBe(plain.sceneHash);
+    // só montagem: fala, direção e roteiro iguais (o clipe do HeyGen é o mesmo)
+    expect(dyn.script).toBe(plain.script);
+    expect(dyn.jobInput.direction).toEqual(plain.jobInput.direction);
+    expect(dyn.jobInput.avatarId).toBe(plain.jobInput.avatarId);
+    // mudar um tópico remonta de novo
+    const other = withTopics(doc, 'v02', [{ text: 'Outro' }]);
+    expect(resolveSceneProduction(other, sceneRequestFromPresentation(other, lesson.id, 'v02'), cfg, env).sceneHash).not.toBe(dyn.sceneHash);
+  });
+
+  it('cena com cartão (pílulas) ou câmera sem lado vazio: sem tópicos mesmo que o nó os tenha', () => {
+    const doc = docWith(zoneCams);
+    const edited = withTopics(doc, 'v01', TOPICS);
+    expect(resolveSceneProduction(edited, sceneRequestFromPresentation(edited, lessonOf(edited).id, 'v01'), cfg, env).jobInput.screenTopics).toBeUndefined();
+    const graph = lessonOf(withTopics(doc, 'v02', TOPICS)).graph;
+    const dir = (layout: string, cameraId = 'cam_estudio_esq', slide?: unknown) => ({ shots: [{ id: 's1', line: 'x', layout, cameraId, ...(slide ? { slide } : {}) }] }) as never;
+    expect(sceneScreenTopics(doc, graph, 'v02', dir('presenter'))).toEqual(TOPICS);
+    expect(sceneScreenTopics(doc, graph, 'v02', dir('presenter', 'cam_estudio_dir'))).toEqual(TOPICS);
+    expect(sceneScreenTopics(doc, graph, 'v02', dir('presenter_chips'))).toBeUndefined();
+    expect(sceneScreenTopics(doc, graph, 'v02', dir('presenter', 'cam_estudio_esq', { title: 'x', bullets: [] }))).toBeUndefined();
+    expect(sceneScreenTopics(doc, graph, 'v02', dir('presenter', 'cam_estudio_34'))).toBeUndefined();
+    expect(sceneScreenTopics(doc, graph, 'v02', undefined)).toBeUndefined();
+    expect(sceneScreenTopics(doc, graph, 'v01', dir('presenter'))).toBeUndefined();
   });
 });
