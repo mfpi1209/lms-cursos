@@ -49,6 +49,8 @@ describe('importStudentsFromCsv', () => {
     const r = await run(viewer, { rows: rows(), dryRun: true, enviarLink: true });
     expect(r.results.map((x) => [x.linha, x.status])).toEqual([[2, 'created'], [3, 'created'], [4, 'error'], [5, 'error']]);
     expect(r.results[2]!.reason).toBe('E-mail inválido');
+    const semRgm = await run(viewer, { rows: parseStudentsCsv('nome,email,rgm\nSem Rgm,semrgm.csv@teste.local,').rows, dryRun: true });
+    expect(semRgm.results[0]).toMatchObject({ status: 'error', code: 'RGM_EM_BRANCO', reason: 'RGM em branco' });
     expect(r.results[3]!.reason).toContain('nao-existe');
     expect(await db.select().from(schema.user).where(eq(schema.user.email, 'ana.csv@teste.local'))).toHaveLength(0);
     expect(getSentEmails()).toHaveLength(0);

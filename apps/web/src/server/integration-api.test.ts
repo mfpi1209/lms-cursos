@@ -231,12 +231,11 @@ describe('POST /api/integracao/v1/alunos: idempotência pelo RGM', () => {
     expect(clash.resumo).toMatchObject({ erro: 2 });
   });
 
-  it('linha sem RGM continua funcionando pelo e-mail', async () => {
+  it('linha sem RGM: erro RGM_EM_BRANCO só nessa linha', async () => {
     const secret = await mkToken(['students:write']);
-    const body = await (await alunos(secret, { alunos: [{ nome: 'Legado', email: 'legado@teste.local' }] })).json();
-    expect(body.resultados[0]).toMatchObject({ situacao: 'criado' });
-    const again = await (await alunos(secret, { alunos: [{ nome: 'Legado', email: 'legado@teste.local' }] })).json();
-    expect(again.resultados[0]).toMatchObject({ situacao: 'sem_mudanca' });
+    const body = await (await alunos(secret, { alunos: [{ nome: 'Legado', email: 'legado@teste.local' }, { nome: 'Ok', email: 'ok60@teste.local', rgm: 'API60' }] })).json();
+    expect(body.resultados[0]).toMatchObject({ situacao: 'erro', codigo: 'RGM_EM_BRANCO', motivo: 'RGM em branco' });
+    expect(body.resultados[1]).toMatchObject({ situacao: 'criado' });
   });
 });
 
