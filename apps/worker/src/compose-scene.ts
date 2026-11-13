@@ -110,8 +110,9 @@ export interface DirectedInput {
    */
   screenText?: string;
   /**
-   * painel DINÂMICO: tópicos que entram um a um no tempo da fala (o `screenText` vira o título). Mesma regra de zona
-   * e mesma natureza (só montagem: muda o hash da cena, nunca as chaves dos itens pagos).
+   * painel da cena (o painel aprovado do `presenter_panel` no lado livre; ver `zone-panel.ts` em @lms/media): tópicos
+   * que acendem um a um no tempo da fala, em páginas de 3 (o `screenText` vira o título). Mesma regra de zona e mesma
+   * natureza (só montagem: muda o hash da cena, nunca as chaves dos itens pagos).
    */
   screenTopics?: Array<{ text: string; cue?: string }>;
   // ---- estado persistido ----
@@ -1253,6 +1254,7 @@ export async function renderDirectedScene(
       if (src.words?.length) topicWords.set(id, src.words.map((w) => ({ text: w.text, start: w.start - src.sourceStart })).filter((w) => w.start >= -0.05));
     }
   }
+  const screenEyebrow = input.screenText?.trim() || input.screenTopics?.length ? await lessonEyebrow(job) : undefined;
   const output = path.join(dir, 'scene.mp4');
   await renew();
   const result = await composeScene({
@@ -1263,7 +1265,9 @@ export async function renderDirectedScene(
     ...(input.nextQuestion?.trim() ? { teaser: { question: input.nextQuestion } } : {}),
     ...(input.lowerThird?.name?.trim() ? { lowerThird: input.lowerThird } : {}),
     ...(input.screenText?.trim() ? { screenText: input.screenText } : {}),
-    ...(input.screenTopics?.length ? { screenTopics: { topics: input.screenTopics, words: topicWords } } : {}),
+    // painel da cena: ícone de cada tópico por palavra-chave e a linha de cima "Aula N · título" (só remontagem: fora das chaves do clipe)
+    ...(input.screenTopics?.length ? { screenTopics: { topics: input.screenTopics.map((t) => ({ ...t, icon: panelIconFor(t.text) })), words: topicWords } } : {}),
+    ...(screenEyebrow ? { screenEyebrow } : {}),
     ...(input.videoPalette ? { palette: input.videoPalette } : {}),
     ...(watermark ? { watermark: { brand: watermark.brand, position: watermark.position, opacity: watermark.opacity, accent: input.directionStyle?.slideAccent ?? '#1a66d1' } } : {}),
   });

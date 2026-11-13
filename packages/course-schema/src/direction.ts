@@ -126,7 +126,7 @@ export function nextChipsCamera(z: ZoneCameraSet, previous: 'left' | 'right' | u
  * automática é por palavra-chave em pt-BR (`panelIconFor`); `slide.icons[i]`
  * fixa o ícone do tópico i.
  */
-export const PANEL_ICONS = ['house', 'calendar', 'heart', 'book', 'briefcase', 'users', 'message', 'message-circle', 'phone', 'clock', 'map-pin', 'search', 'star', 'check', 'file', 'user-circle'] as const;
+export const PANEL_ICONS = ['house', 'calendar', 'heart', 'book', 'briefcase', 'users', 'message', 'message-circle', 'phone', 'clock', 'map-pin', 'search', 'star', 'check', 'file', 'user-circle', 'sparkles', 'alert', 'shield', 'lightbulb', 'pencil', 'gift', 'help', 'list', 'eye', 'zap', 'target', 'repeat'] as const;
 export type PanelIcon = (typeof PANEL_ICONS)[number];
 
 const PANEL_ICON_RULES: Array<[RegExp, PanelIcon]> = [
@@ -145,6 +145,20 @@ const PANEL_ICON_RULES: Array<[RegExp, PanelIcon]> = [
   [/pesquis|procur|busca/i, 'search'],
   [/perfil|voc[eê] mesm|identidade/i, 'user-circle'],
   [/destaque|conquista|resultado|melhor/i, 'star'],
+  // cursos sobre IA, estudo e segurança (painel das cenas dirigidas): depois das regras acima, que continuam valendo
+  [/\bIA\b|intelig[eê]ncia artificial|chatgpt|gemini|prompt|assistente|tutor/, 'sparkles'],
+  [/gratuit|gr[aá]tis|de gra[çc]a/i, 'gift'],
+  [/\berr[oa]s?\b|alucina|fals[oa]|cuidado|risco|golpe|nunca|perig|\bmedo|\bcolar?\b|reprova/i, 'alert'],
+  [/\bdados?\b|sens[ií]ve|privacidade|senha|segur|proteg|guardad/i, 'shield'],
+  [/d[uú]vida|pergunt|\?/i, 'help'],
+  [/consult/i, 'search'],
+  [/confer|verific|\bchec|origem|fonte|verdade|prov[aá]vel/i, 'eye'],
+  [/objetivo|\bfoco|\bmetas?\b|regra|princ[ií]pio|importante|essencial/i, 'target'],
+  [/ajust|de novo|trocar|repet|\bvezes\b|revis|retomada/i, 'repeat'],
+  [/r[aá]pid|segundos|poupa|atalho|pressa/i, 'zap'],
+  [/t[oó]pico|lista|tabela|formato|padr[aã]o|estrutura|passo|m[eé]todo|plano/i, 'list'],
+  [/ideia|dica|truque|exemplo|entend|explic|mist[eé]rio/i, 'lightbulb'],
+  [/rascunho|escrev|reescrev|texto|resum|anota|digita|palavra|frase/i, 'pencil'],
 ];
 
 /** Ícone do tópico: o explícito, senão o da primeira regra que casa (negrito primeiro), senão `check`. */
