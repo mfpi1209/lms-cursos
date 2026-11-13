@@ -103,6 +103,12 @@ export interface DirectedInput {
    * Entra no hash da cena só quando presente.
    */
   lowerThird?: { name: string; role?: string; brand?: string };
+  /**
+   * estúdio com zonas: "Texto na tela" do roteiro (≤ ~140 caracteres) para o painel no lado livre, de 0,6 s até o
+   * fim da cena. Resolvido no pedido (`studioSceneOverlays`) só em cena sem pílulas/cartão/slide; é só montagem:
+   * muda o hash da cena (remonta) mas NÃO as chaves dos itens (o clipe pago do HeyGen é reaproveitado).
+   */
+  screenText?: string;
   // ---- estado persistido ----
   units?: RenderUnit[];
   mergedShots?: string[];
@@ -278,7 +284,7 @@ async function findPaidNarration(job: media.MediaJobRow, narrationKey: string): 
 
 // ---------------- contexto ----------------
 
-interface Ctx {
+export interface Ctx {
   cfg: MediaProviderConfig;
   sim: boolean;
   /** há áudio de narração próprio (ElevenLabs ou simulado) para cortar */
@@ -360,7 +366,7 @@ function plateSourceKey(input: DirectedInput): string | undefined {
  * Chave do item. Clipe com fundo de continuidade: `plate:<videoKey>` (sem a
  * videoKey ainda, devolve undefined — a chave é atribuída assim que ela existe).
  */
-function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefined {
+export function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefined {
   const p = input.params ?? {};
   // cena em movimento: `key` é a do trecho de áudio (o clipe tem `videoKey`, calculada após o corte)
   if (u.kind === 'audio' || u.kind === 'cinematic') return itemKey({ kind: 'audio', text: u.script, voice: ctx.voice, adapterVersion: ctx.adapterVersion, simulated: ctx.sim });
@@ -392,7 +398,7 @@ function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefin
 }
 
 /** Chave do vídeo TRANSPARENTE do item (sem fundo nem posição): o mesmo vídeo pago serve a qualquer posição/fundo. */
-function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
+export function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
   const p = input.params ?? {};
   return itemKey({
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
@@ -1244,6 +1250,7 @@ export async function renderDirectedScene(
     // estúdio com zonas: pergunta da decisão seguinte no fim e letreiro com o nome na abertura da aula
     ...(input.nextQuestion?.trim() ? { teaser: { question: input.nextQuestion } } : {}),
     ...(input.lowerThird?.name?.trim() ? { lowerThird: input.lowerThird } : {}),
+    ...(input.screenText?.trim() ? { screenText: input.screenText } : {}),
     ...(input.videoPalette ? { palette: input.videoPalette } : {}),
     ...(watermark ? { watermark: { brand: watermark.brand, position: watermark.position, opacity: watermark.opacity, accent: input.directionStyle?.slideAccent ?? '#1a66d1' } } : {}),
   });

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { allLessons, markdownToCourseDocument, parseMarkdownCourse, type CourseDocument } from '@lms/course-schema';
 import { mediaConfigFromEnv } from '@lms/media';
-import { resolveSceneProduction, sceneRequestFromPresentation, studioSceneOverlays } from './media';
+import { resolveSceneProduction, sceneRequestFromPresentation, sceneScreenText, studioSceneOverlays } from './media';
 
 /* Uma aula: vídeo com cartão (vai para a decisão), decisão e vídeo sem cartão. */
 const MD = `# Curso zonas
@@ -101,5 +101,54 @@ describe('estúdio com zonas: pedido de produção', () => {
     const ha = resolveSceneProduction(a, sceneRequestFromPresentation(a, lesson.id, 'v01'), cfg, env).sceneHash;
     const hb = resolveSceneProduction(b, sceneRequestFromPresentation(b, lesson.id, 'v01'), cfg, env).sceneHash;
     expect(ha).not.toBe(hb);
+  });
+});
+
+describe('estúdio com zonas: texto na tela no lado vazio', () => {
+  const lessonOf = (doc: CourseDocument) => allLessons(doc)[0]!;
+
+  it('cena sem pílulas leva o "Texto na tela" do roteiro (body do nó) no job e no hash; cena com cartão não', () => {
+    const doc = docWith(zoneCams);
+    const lesson = lessonOf(doc);
+    const v02 = resolveSceneProduction(doc, sceneRequestFromPresentation(doc, lesson.id, 'v02'), cfg, env);
+    expect(v02.jobInput.screenText).toBe('Habilidade');
+    // com pílulas (cartão) o texto já aparece nelas: não duplica
+    const v01 = resolveSceneProduction(doc, sceneRequestFromPresentation(doc, lesson.id, 'v01'), cfg, env);
+    expect(v01.jobInput.screenText).toBeUndefined();
+    // o hash muda com o texto (dispara a remontagem), mas só por ele
+    const edited = structuredClone(doc);
+    const node = lessonOf(edited).graph.nodes.find((n) => n.id === 'v02') as { body: { content: Array<{ content?: Array<{ text?: string }> }> } };
+    node.body.content[0]!.content![0]!.text = 'Outra coisa';
+    const v02b = resolveSceneProduction(edited, sceneRequestFromPresentation(edited, lesson.id, 'v02'), cfg, env);
+    expect(v02b.jobInput.screenText).toBe('Outra coisa');
+    expect(v02b.sceneHash).not.toBe(v02.sceneHash);
+    // o que gera o avatar (fala, câmera, voz) é igual: mesma direção e mesmo roteiro
+    expect(v02b.script).toBe(v02.script);
+    expect(v02b.jobInput.direction).toEqual(v02.jobInput.direction);
+  });
+
+  it('sem "Texto na tela" (o corpo é só o título da cena) ou sem zonas: nada', () => {
+    const doc = docWith(zoneCams);
+    const lesson = lessonOf(doc);
+    const edited = structuredClone(doc);
+    const node = lessonOf(edited).graph.nodes.find((n) => n.id === 'v02') as { title: string; body: { content: Array<{ content?: Array<{ text?: string }> }> } };
+    node.body.content[0]!.content![0]!.text = node.title;
+    expect(resolveSceneProduction(edited, sceneRequestFromPresentation(edited, lesson.id, 'v02'), cfg, env).jobInput.screenText).toBeUndefined();
+    const plain = docWith([{ id: 'cam_principal', name: 'P', lookId: 'look', nativeFraming: 'medium', angle: 'front', status: 'ready' }]);
+    expect(resolveSceneProduction(plain, sceneRequestFromPresentation(plain, lessonOf(plain).id, 'v02'), cfg, env).jobInput.screenText).toBeUndefined();
+  });
+
+  it('só com a apresentadora num lado e todos os planos presenter (sem slide/pílulas/painel)', () => {
+    const doc = docWith(zoneCams);
+    const graph = lessonOf(doc).graph;
+    const dir = (layout: string, cameraId = 'cam_estudio_esq', slide?: unknown) => ({ shots: [{ id: 's1', line: 'x', layout, cameraId, ...(slide ? { slide } : {}) }] }) as never;
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter'))).toBe('Habilidade');
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter', 'cam_estudio_dir'))).toBe('Habilidade');
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter_chips'))).toBeUndefined();
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter_panel'))).toBeUndefined();
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter', 'cam_estudio_esq', { title: 'x', bullets: [] }))).toBeUndefined();
+    // câmera 3/4 (centro): sem lado vazio
+    expect(sceneScreenText(doc, graph, 'v02', dir('presenter', 'cam_estudio_34'))).toBeUndefined();
+    expect(sceneScreenText(doc, graph, 'v02', undefined)).toBeUndefined();
   });
 });

@@ -8,7 +8,7 @@ import { renderBrandCardToFile, renderCaptionToFile, renderSlideToFile, slideTon
 import { renderWatermarkToFile, watermarkPlacementFor } from './watermark';
 import { skipIfUnrenderable } from './raster';
 import { PANEL_SHIFT, panelRevealTimes, panelSpecFromSlide, renderPanelStatesToFiles } from './panel';
-import { LOWER_THIRD_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, renderChipsGraphics, renderLowerThirdSprite, renderTeaserSprite, teaserWindow, type ChipsGraphics, type PlacedSprite, type Zone, type ZonePaletteInput } from './zones';
+import { LOWER_THIRD_WINDOW, SCREEN_TEXT_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, parseScreenText, renderChipsGraphics, renderLowerThirdSprite, renderScreenTextSprite, renderTeaserSprite, screenTextWindow, teaserWindow, type ChipsGraphics, type PlacedSprite, type ScreenTextSprite, type Zone, type ZonePaletteInput } from './zones';
 import type { WatermarkCorner } from '../brand-tokens';
 
 /**
@@ -233,6 +233,8 @@ export interface ComposePlan {
   lowerThird?: PlacedSprite;
   /** pergunta a seguir (sprite posicionado), nos últimos ≈ 3 s da cena */
   teaser?: PlacedSprite;
+  /** texto na tela (painel no lado livre), de 0,6 s até o fim da cena (`screenTextWindow`) */
+  screenText?: ScreenTextSprite;
 }
 
 export interface ShotTimelineEntry {
@@ -263,7 +265,7 @@ export interface ComposeCommand {
   /** layout efetivamente usado (cai para `presenter` se faltar slide/letreiro) */
   layouts: Layout[];
   /** janelas das camadas da cena (s, tempo final): letreiro e pergunta a seguir */
-  overlays: { lowerThird?: { from: number; to: number }; teaser?: { from: number; to: number } };
+  overlays: { lowerThird?: { from: number; to: number }; teaser?: { from: number; to: number }; screenText?: { from: number; to: number } };
 }
 
 /** x do recorte de largura `cw` centrado em `fx` (fração), dentro do quadro */
@@ -594,6 +596,18 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     v = 'ltv';
     overlays.lowerThird = lt;
   }
+  const stw = plan.screenText ? screenTextWindow(acc, teaserWin?.from) : null;
+  if (plan.screenText && stw) {
+    // entra em 0,6 s (fade + desliza 40 px da borda do lado livre) e fica até o fim (ou até a pergunta a seguir)
+    const fd = SCREEN_TEXT_WINDOW.fade;
+    const si = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(stw.to), '-i', plan.screenText.path]);
+    const fadeOut = stw.to < acc - 1e-6 ? `,fade=t=out:st=${sec(stw.to - 0.25)}:d=0.25:alpha=1` : '';
+    chains.push(`[${si}:v]format=rgba,fade=t=in:st=${sec(stw.from)}:d=${sec(fd)}:alpha=1${fadeOut}[stw]`);
+    const slide = `${Math.round(40 * k)}*pow(1-min(1,max(0,(t-${sec(stw.from)})/${sec(fd)})),3)`;
+    chains.push(`[${v}][stw]overlay=x='${plan.screenText.x}${plan.screenText.side === 'left' ? '-' : '+'}${slide}':y=${plan.screenText.y}:eval=frame:format=auto:enable='between(t,${sec(stw.from)},${sec(stw.to)})'[stv]`);
+    v = 'stv';
+    overlays.screenText = stw;
+  }
   if (plan.teaser && teaserWin && teaserWin.to - teaserWin.from > 0.3) {
     const ti = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(teaserWin.to - teaserWin.from), '-i', plan.teaser.path]);
     chains.push(`[${ti}:v]format=rgba,setpts=PTS-STARTPTS+${sec(teaserWin.from)}/TB,fade=t=in:st=${sec(teaserWin.from)}:d=${sec(TEASER_FADE)}:alpha=1[tzw]`);
@@ -646,6 +660,11 @@ export interface ComposeSceneInput {
   teaser?: { question: string } | null;
   /** letreiro com o nome (primeira cena narrada da aula): 0,6–4,5 s, canto inferior esquerdo */
   lowerThird?: { name: string; role?: string; brand?: string } | null;
+  /**
+   * "Texto na tela" da cena: painel no lado livre (o oposto à apresentadora), de 0,6 s até o fim. Só vale quando
+   * TODOS os planos são `presenter` (sem pílulas, painel, cartão ou slide) numa câmera de zona esquerda/direita.
+   */
+  screenText?: string | null;
   /** cores dos gráficos (pergunta a seguir, letreiro); ausente = as da marca */
   palette?: ZonePaletteInput | null;
   /**
@@ -686,6 +705,17 @@ export async function watermarkFilesFor(shots: Array<Pick<ComposeShot, 'id' | 'l
     if (file) out.set(s.id, file);
   }
   return out;
+}
+
+/**
+ * Zona (esquerda/direita) em que o painel do texto na tela vale: todos os planos `presenter` (sem pílulas, painel,
+ * cartão ou slide) e a MESMA câmera de zona lateral em todos; senão undefined (a cena não ganha painel).
+ */
+export function screenTextZone(shots: Array<{ id: string; layout?: Layout }>, clips: Map<string, { zone?: Zone }>): 'left' | 'right' | undefined {
+  if (!shots.length || shots.some((s) => (s.layout ?? 'presenter') !== 'presenter')) return undefined;
+  const zones = new Set(shots.map((s) => clips.get(s.id)?.zone));
+  const z = [...zones][0];
+  return zones.size === 1 && (z === 'left' || z === 'right') ? z : undefined;
 }
 
 export interface ComposeSceneResult {
@@ -851,7 +881,10 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   const lowerThird = input.lowerThird?.name?.trim()
     ? await skipIfUnrenderable('letreiro com o nome', () => renderLowerThirdSprite(path.join(outDir, 'lower-third.png'), input.lowerThird!, { width, height, watermarkSide: input.watermark ? (input.watermark.position === 'bottom-left' ? 'left' : 'right') : null, palette: input.palette }))
     : undefined;
-  const cmd = buildComposeCommand({ width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}) });
+  const stSpec = parseScreenText(input.screenText);
+  const stZone = screenTextZone(input.shots.map((x) => ({ id: x.id, layout: x.layout })), input.clips);
+  const screenText = stSpec && stZone ? await skipIfUnrenderable('texto na tela', () => renderScreenTextSprite(path.join(outDir, 'screen-text.png'), stSpec, { width, height, zone: stZone, palette: input.palette })) : undefined;
+  const cmd = buildComposeCommand({ width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}) });
   // DIAGNÓSTICO, só quando a variável de ambiente COMPOSE_DUMP=<arquivo.json> está definida (nunca em produção):
   // grava o comando da montagem (entradas, filter_complex, duração, transições) para investigar imagem e som
   // desencontrados. Não altera a montagem; sem a variável, não faz nada. Mantido de propósito: foi o que achou o
