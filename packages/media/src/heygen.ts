@@ -128,6 +128,19 @@ export function motionPromptWithSafety(prompt?: string | null): string {
   return `${base.slice(0, MOTION_PROMPT_MAX - MOTION_SAFETY_SUFFIX.length - 2).trimEnd()}, ${MOTION_SAFETY_SUFFIX}`;
 }
 
+/**
+ * Câmera que não é de frente (3/4, lateral): o pulso de trás não aparece na imagem-base e o HeyGen inventa
+ * relógio/pulseira quando o apresentador gesticula. Nessas câmeras ele mantém as mãos juntas na cintura.
+ */
+export const HANDS_CLASPED_MOTION = 'keeps both hands loosely clasped together in front of the waist the whole time, no hand gestures';
+
+/** Gesto do item conforme o ângulo da câmera: de frente = o gesto pedido; outro ângulo = mãos juntas + o gesto (rosto/tronco). */
+export function motionPromptForAngle(prompt: string | null | undefined, angle: string | null | undefined): string | undefined {
+  const g = (prompt ?? '').trim();
+  if (!angle || angle === 'front') return g || undefined;
+  return g ? `${HANDS_CLASPED_MOTION}; ${g}` : HANDS_CLASPED_MOTION;
+}
+
 export class HeyGenError extends Error {
   constructor(public readonly status: number, public readonly code: string, message: string, public readonly retryAfterSeconds?: number) {
     super(message);
@@ -198,9 +211,9 @@ export class HeyGenAdapter {
       output_format: input.transparent ? 'webm' : 'mp4',
     };
     if (input.engine) body.engine = { type: input.engine };
-    if (input.expressiveness && input.engine !== 'avatar_v') body.expressiveness = input.expressiveness;
-    // só quando há pedido de movimento (sem ele, o motor não recebe o campo, como antes)
-    if (input.motionPrompt?.trim()) body.motion_prompt = motionPromptWithSafety(input.motionPrompt);
+    if (input.expressiveness && input.engine !== 'avatar_v' && input.engine !== 'avatar_iii') body.expressiveness = input.expressiveness;
+    // só quando há pedido de movimento (sem ele, o motor não recebe o campo, como antes); avatar_iii não usa gesto
+    if (input.motionPrompt?.trim() && input.engine !== 'avatar_iii') body.motion_prompt = motionPromptWithSafety(input.motionPrompt);
     if (input.removeBackground && !input.transparent && !input.keepLookBackground) body.remove_background = true;
     if (input.audioAssetId) body.audio_asset_id = input.audioAssetId;
     else {

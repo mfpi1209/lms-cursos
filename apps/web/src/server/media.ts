@@ -270,8 +270,10 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
     backgroundColor: body.backgroundColor,
     backgroundAssetId: body.backgroundAssetId,
     resolution: '1080p',
-    engine: 'avatar_iv' as const,
-    expressiveness: isPhoto ? pres.expressiveness : undefined,
+    engine: (pres.avatarEngine ?? 'avatar_iv') as 'avatar_iii' | 'avatar_iv',
+    expressiveness: isPhoto && (pres.avatarEngine ?? 'avatar_iv') === 'avatar_iv' ? pres.expressiveness : undefined,
+    // só presente quando ligado (não muda o hash das cenas sem ele)
+    ...(pres.handsStill ? { handsStill: true } : {}),
     motionPrompt: motionPrompt || undefined,
     removeBackground: pres.removeBackground,
     elevenLabsModelId: body.voiceProvider === 'elevenlabs' ? cfg.elevenLabsModelId : undefined,

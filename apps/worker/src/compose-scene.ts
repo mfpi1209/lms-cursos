@@ -5,7 +5,7 @@ import path from 'node:path';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { authoring, getDb, media, schema, newId } from '@lms/db';
 import { SceneDirectionSchema, allLessons, chipLabel, panelIconFor, buildCinematicPrompt, cinematicClipSeconds, directionNarration, type Camera, type CameraZone, type PresenterPronoun, type SceneDirection } from '@lms/course-schema';
-import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
+import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, motionPromptForAngle, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
 import {
   CHROMA_KEY_COLOR, ShotLineNotFoundError, appendBumperToVideo, approxWords, composeScene, cutAudioSegments, mapWordsToTimeline, wordsFromAlignment, extractScenePlate, ffprobe, generateMotionStandInClip, generateStandInClip, generateTestClip, generateToneMp3, mapShotTimings, renderCornerTagToFile, renderShotGraphics, syntheticAlignment,
   type CaptionWord, type CharAlignment, type ChipsGraphics, type LoudnessResult, type ShotClip, type ShotTiming, type TimelineShotWords,
@@ -308,6 +308,13 @@ function unitCamera(input: DirectedInput, u: RenderUnit) {
   return resolveCamera(input.cameras, u.cameraId, input.avatarId);
 }
 
+/** Gesto enviado ao HeyGen para o item: câmera que não é de frente mantém as mãos juntas (evita acessório inventado). */
+function unitMotion(input: DirectedInput, u: RenderUnit, p: { motionPrompt?: string; handsStill?: boolean }) {
+  // mãos paradas no curso todo: trata toda câmera como "não de frente" (mãos juntas)
+  const angle = p.handsStill ? 'all' : (unitCamera(input, u) as { angle?: string } | undefined)?.angle;
+  return motionPromptForAngle(u.motionPrompt?.trim() || p.motionPrompt, angle);
+}
+
 /** Zona da câmera do item (estúdio com zonas): a da câmera dele, ou a da principal; ausente = câmera comum. */
 export function unitZone(input: Pick<DirectedInput, 'cameras' | 'avatarId'>, u: Pick<RenderUnit, 'cameraId'>): CameraZone | undefined {
   const list = input.cameras ?? [];
@@ -373,7 +380,7 @@ function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefin
   }
   return itemKey({
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
-    motionPrompt: u.motionPrompt?.trim() || p.motionPrompt, expressiveness: p.expressiveness, removeBackground,
+    motionPrompt: unitMotion(input, u, p), expressiveness: p.expressiveness, removeBackground,
     background,
     engine: p.engine, resolution: '1080p', aspectRatio: '16:9', adapterVersion: ctx.sim ? `${ctx.adapterVersion}+sim-standin-2` : ctx.adapterVersion, simulated: ctx.sim,
     // posição resolvida do item: direita/esquerda (+ tamanho; o fundo já está em `background`) ou tela cheia; centro sem rótulo
@@ -388,7 +395,7 @@ function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
   const p = input.params ?? {};
   return itemKey({
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
-    motionPrompt: u.motionPrompt?.trim() || p.motionPrompt, expressiveness: p.expressiveness, background: 'transparent',
+    motionPrompt: unitMotion(input, u, p), expressiveness: p.expressiveness, background: 'transparent',
     engine: p.engine, resolution: '1080p', aspectRatio: '16:9', adapterVersion: ctx.sim ? `${ctx.adapterVersion}+sim-standin-2` : ctx.adapterVersion, simulated: ctx.sim,
   });
 }
@@ -1035,7 +1042,7 @@ async function submitWindow(jobId: string, ctx: Ctx, heygen: HeyGenAdapter) {
       backgroundAssetId: background.assetId,
       engine: p.engine,
       expressiveness: p.expressiveness,
-      motionPrompt: u.motionPrompt?.trim() || p.motionPrompt,
+      motionPrompt: unitMotion(input, u, p),
       removeBackground: background.removeBackground,
       callbackUrl: ctx.cfg.heygenCallbackUrl,
       callbackId: job.id,

@@ -206,6 +206,10 @@ export const PresentationSchema = z.object({
   avatarType: z.string().max(40).optional(),
   /** expressividade facial (HeyGen Avatar IV, apenas photo_avatar) */
   expressiveness: z.enum(['low', 'medium', 'high']).default('high'),
+  /** motor do HeyGen (padrão avatar_iv). avatar_iii anima rosto e cabeça; o corpo quase não se mexe (sem gesto de mão). */
+  avatarEngine: z.enum(['avatar_iii', 'avatar_iv']).optional(),
+  /** mãos juntas e paradas em todas as câmeras (evita relógio/pulseira inventados nos gestos) */
+  handsStill: z.boolean().optional(),
   /** recorta o fundo da foto para aplicar o ambiente escolhido */
   removeBackground: z.boolean().default(true),
   /**
