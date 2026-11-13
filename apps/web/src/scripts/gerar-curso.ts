@@ -7,6 +7,7 @@
  *   set -a; . ../../.env; set +a
  *   tsx src/scripts/gerar-curso.ts --course crs_xxx --max-usd 55            # a seco (padrão): calcula e imprime, NÃO grava
  *   ALLOW_PAID_PROVIDERS=1 tsx src/scripts/gerar-curso.ts --course crs_xxx --max-usd 55 --confirmar
+ *   tsx src/scripts/gerar-curso.ts --course crs_xxx --max-usd 10 --cenas v01,v02,q01~a   # só essas cenas (ids de nó), mesmo com vídeo atualizado
  *
  * Modo --confirmar: cria o orçamento e o lote de jobs (outbox `media_job.queued`) e anexa os reaproveitados.
  * Recusa (nada gravado) se: simulação ativa (provedores pagos não liberados NESTE processo), total > --max-usd,
@@ -43,7 +44,7 @@ async function main() {
     if (!bg || bg.workspaceId !== workspaceId || bg.kind !== 'image') throw new Error('a imagem de fundo da apresentação é inválida');
   }
 
-  const { items, errors } = await buildQuoteItems(db, { doc, workspaceId, courseId: args.course, includeStale: true, cfg });
+  const { items, errors } = await buildQuoteItems(db, { doc, workspaceId, courseId: args.course, ...(args.cenas ? { nodeIds: args.cenas } : {}), includeStale: true, cfg });
   const totals = media.quoteTotals(items);
   const prices = mediaPriceTable();
   const live = items.filter((i) => !i.reused && !i.open);
@@ -53,6 +54,7 @@ async function main() {
   const openJobs = (await media.listJobsForCourse(db, args.course)).filter((j) => j.status === 'queued' || j.status === 'running');
 
   console.log(`Curso ${course.id} "${course.title}" (workspace ${workspaceId}); aprovador = autor ${maskEmail(author.email)}`);
+  if (args.cenas) console.log(`Só as cenas: ${args.cenas.join(', ')} (entram mesmo com vídeo atualizado)`);
   console.log(`Modo de mídia: ${cfg.mode} (simulação: ${cfg.simulation}); revisão do rascunho ${draft.revision}`);
   console.log(`Cenas: ${items.length} resolvidas; a produzir ${totals.toProduce}; reaproveitadas ${totals.reused}; com job aberto ${totals.open}; erros ${errors.length}`);
   console.log(`Minutos a produzir: ${(totals.seconds / 60).toFixed(2)} (${totals.chars} caracteres)`);
@@ -71,7 +73,7 @@ async function main() {
   media.assertWithinBudget(budget);
   const quote = await media.createQuote(db, {
     workspaceId, courseId: args.course, draftRevision: draft.revision, draftHash: draftFingerprint(doc), simulated: cfg.simulation, items,
-    params: { lessonIds: null, nodeIds: null, includeStale: true, errors: 0, origin: 'cli', maxUsd: args.maxUsd }, createdBy: author.id,
+    params: { lessonIds: null, nodeIds: args.cenas ?? null, includeStale: true, errors: 0, origin: 'cli', maxUsd: args.maxUsd }, createdBy: author.id,
   });
   const result = await media.createJobsFromQuote(db, {
     quoteId: quote.id, workspaceId, courseId: args.course, userId: author.id,

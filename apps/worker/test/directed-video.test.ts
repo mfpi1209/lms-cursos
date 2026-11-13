@@ -89,7 +89,7 @@ afterEach(() => {
 });
 
 describe('planejamento de itens (puro)', () => {
-  const shots = [shot('a', 'Primeira fala bem longa para o teste.'), shot('b', 'Certo.'), shot('c', 'Terceira fala também longa o bastante.')] as never[];
+  const shots = [shot('a', 'Primeira fala bem longa para o teste.', { cameraId: 'x' }), shot('b', 'Certo.', { cameraId: 'y' }), shot('c', 'Terceira fala também longa o bastante.', { cameraId: 'z' })] as never[];
   const timings = [
     { shotId: 'a', charStart: 0, charEnd: 0, speechStart: 0, speechEnd: 2.9, start: 0, end: 3, duration: 3 },
     { shotId: 'b', charStart: 0, charEnd: 0, speechStart: 3.05, speechEnd: 3.5, start: 3, end: 3.6, duration: 0.6 },
@@ -218,7 +218,10 @@ describe('vídeo dirigido — modo de demonstração (banco real, ffmpeg real)',
     const input = done.input as any;
     expect(input.voiceAssetId).toBeTruthy();
     expect(input.alignment.characters.join('')).toBe(narration);
-    expect(Object.keys(input.shots).sort()).toEqual(['abertura', 'fecho', 'regra']);
+    // tomada contínua: os 3 planos (mesma câmera) são UM clipe; a montagem recorta nos tempos de cada plano
+    expect(Object.keys(input.shots).sort()).toEqual(['abertura']);
+    expect(input.units.map((u: any) => u.shotIds)).toEqual([['abertura', 'regra', 'fecho']]);
+    expect(Object.keys(input.shots.abertura.offsets).sort()).toEqual(['abertura', 'fecho', 'regra']);
     expect(Object.values(input.shots).every((s: any) => s.clipAssetId)).toBe(true);
     expect(input.leaseUntil).toBeUndefined();
     const { asset, file } = await storageFile(done.outputAssetId!);
@@ -417,7 +420,7 @@ describe('vídeo dirigido — provedores falsos (sem chamadas pagas reais)', () 
     expect(calls.tts).toHaveLength(1);
     j = (await media.getJob(db, job.id))!;
     const input = j.input as any;
-    expect(input.mergedShots).toEqual(['p2']);
+    expect(input.mergedShots).toEqual([]); // p1+p2: mesma câmera = tomada contínua (um pedido), não fusão de plano curto
     expect(input.units.map((u: any) => [u.shotIds, u.kind])).toEqual([[['p1', 'p2'], 'clip'], [['p3'], 'clip'], [['p4'], 'audio'], [['p5'], 'clip'], [['p6'], 'clip']]);
     // 4 itens de apresentador enviados; o slide (p4) ficou no nosso storage, sem clipe
     expect(calls.uploads).toBe(4);

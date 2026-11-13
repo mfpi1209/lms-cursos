@@ -293,7 +293,7 @@ export function validateDirectionScene(
     if (single && s.layout === 'slide_with_pip') problems.push(`PIP_IN_SINGLE_MODE: ${shot}: slide_with_pip não existe em câmera única; use o layout presenter_panel (a apresentadora com o painel de tópicos) e volte a presenter`);
     prevShotLayout = s.layout;
     if (s.motionPrompt.length > 200) problems.push(`${shot}: motionPrompt com ${s.motionPrompt.length} caracteres (máximo 200); um gesto + uma emoção`);
-    if (isHandSignGesture(s.motionPrompt)) problems.push(`${shot}: motionPrompt "${s.motionPrompt.slice(0, 80)}" usa dedos, sinal com a mão ou aceno (o avatar erra); troque por cabeça, olhar, expressão ou mãos abertas (ex.: "nods slowly, warm")`);
+    if (isHandSignGesture(s.motionPrompt)) problems.push(`${shot}: motionPrompt "${s.motionPrompt.slice(0, 80)}" usa dedos, sinal com a mão ou aceno (o avatar erra); troque por cabeça, olhar, expressão ou ombros (ex.: "nods slowly, warm")`);
     const prevShot = i > 0 ? scene.shots[i - 1]! : null;
     if (prevShot && gestureKey(s.motionPrompt) && gestureKey(s.motionPrompt) === gestureKey(prevShot.motionPrompt)) problems.push(`${shot}: mesmo gesto do plano anterior ("${gestureKey(s.motionPrompt)}"); varie o gesto entre planos seguidos`);
     if ((s.caption?.length ?? 0) > 80) problems.push(`${shot}: caption com ${s.caption!.length} caracteres (máximo 80); encurte o letreiro`);
@@ -431,7 +431,7 @@ export function chipsLabelsOf(bullets: readonly string[]): string[] {
 export function directionGestureWarnings(shots: ReadonlyArray<{ id: string; layout: string; motionPrompt?: string | null }>): Array<{ shotId: string; message: string }> {
   return shots
     .filter((s) => layoutShowsPresenter(s.layout) && !(s.motionPrompt ?? '').trim())
-    .map((s) => ({ shotId: s.id, message: `${MISSING_GESTURE}: plano "${s.id}" com apresentador sem gesto; acrescente um gesto natural (ex.: "moves both hands gently while explaining, calm")` }));
+    .map((s) => ({ shotId: s.id, message: `${MISSING_GESTURE}: plano "${s.id}" com apresentador sem gesto; acrescente um gesto natural (ex.: "nods slightly, warm smile")` }));
 }
 
 /**

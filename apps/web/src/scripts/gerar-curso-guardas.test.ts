@@ -30,5 +30,11 @@ describe('gerar-curso: argumentos', () => {
     expect(() => parseArgs(['--course', 'x', '--max-usd', '5', '--seco', '--confirmar'])).toThrow();
     expect(() => parseArgs(['--course', 'x', '--max-usd', '5', '--foo'])).toThrow(/desconhecido/);
   });
+  it('--cenas lista ids de nó (inclui reações "q01~a"), sem repetir; sem a opção, todas as pendentes', () => {
+    expect(parseArgs(['--course', 'x', '--max-usd', '5', '--cenas', 'v01, v02,q01~a,v01']).cenas).toEqual(['v01', 'v02', 'q01~a']);
+    expect(parseArgs(['--course', 'x', '--max-usd', '5']).cenas).toBeUndefined();
+    expect(() => parseArgs(['--course', 'x', '--max-usd', '5', '--cenas'])).toThrow(/cenas/);
+    expect(() => parseArgs(['--course', 'x', '--max-usd', '5', '--cenas', ' , '])).toThrow(/cenas/);
+  });
   it('mascara e-mail', () => expect(maskEmail('marcelo@x.com')).toBe('ma*****@x.com'));
 });

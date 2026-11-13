@@ -30,22 +30,28 @@ export function maskEmail(email: string): string {
   return `${u.slice(0, 2)}${'*'.repeat(Math.max(1, u.length - 2))}@${d}`;
 }
 
-export type Args = { course: string; maxUsd: number; confirmar: boolean };
+export type Args = { course: string; maxUsd: number; confirmar: boolean; /** ids de nó (v01,q01~a…): só essas cenas, mesmo com vídeo atualizado; ausente = todas as pendentes */ cenas?: string[] };
 
 export function parseArgs(argv: string[]): Args {
   let course = '';
   let max = NaN;
   let confirmar = false;
+  let cenas: string[] | undefined;
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
     if (a === '--course') course = argv[++i] ?? '';
     else if (a === '--max-usd') max = Number(argv[++i]);
     else if (a === '--confirmar') confirmar = true;
+    else if (a === '--cenas') {
+      const ids = (argv[++i] ?? '').split(',').map((x) => x.trim()).filter(Boolean);
+      if (!ids.length) throw new Error('--cenas precisa de ids de cena separados por vírgula (ex.: v01,v02,q01~a)');
+      cenas = [...new Set(ids)];
+    }
     else if (a === '--seco') { /* padrão */ }
     else throw new Error(`argumento desconhecido: ${a}`);
   }
   if (argv.includes('--seco') && confirmar) throw new Error('use --seco OU --confirmar, não os dois');
   if (!course) throw new Error('--course <id> é obrigatório');
   if (!Number.isFinite(max) || max <= 0) throw new Error('--max-usd <n> é obrigatório (número > 0)');
-  return { course, maxUsd: max, confirmar };
+  return { course, maxUsd: max, confirmar, ...(cenas ? { cenas } : {}) };
 }

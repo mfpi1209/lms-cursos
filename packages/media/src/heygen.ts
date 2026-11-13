@@ -113,6 +113,21 @@ export function cinematicPrompt(prompt: string, pronoun: CinematicPronoun = 'she
   return `${head}${/[.!?]$/.test(head) ? '' : '.'} ${suffix}`;
 }
 
+/**
+ * Sufixo fixo de TODO pedido de movimento do apresentador: o avatar às vezes inventa relógio, pulseira ou
+ * objeto na mão quando o gesto envolve as mãos. Aplicado no envio (vale também para documentos já importados).
+ */
+export const MOTION_SAFETY_SUFFIX = 'hands relaxed and mostly still, bare wrists, no watch, no bracelet, no objects in hands';
+/** Limite do campo `motion_prompt` enviado (o pedido do autor/IA tem até 200; o sufixo cabe junto). */
+export const MOTION_PROMPT_MAX = 300;
+
+/** Pedido de movimento final: gesto do autor/IA (se houver) + sufixo fixo, em até {@link MOTION_PROMPT_MAX} caracteres. */
+export function motionPromptWithSafety(prompt?: string | null): string {
+  const base = (prompt ?? '').trim().replace(/\s+/g, ' ').replace(/[.,;:\s]+$/u, '');
+  if (!base) return MOTION_SAFETY_SUFFIX;
+  return `${base.slice(0, MOTION_PROMPT_MAX - MOTION_SAFETY_SUFFIX.length - 2).trimEnd()}, ${MOTION_SAFETY_SUFFIX}`;
+}
+
 export class HeyGenError extends Error {
   constructor(public readonly status: number, public readonly code: string, message: string, public readonly retryAfterSeconds?: number) {
     super(message);
@@ -184,7 +199,8 @@ export class HeyGenAdapter {
     };
     if (input.engine) body.engine = { type: input.engine };
     if (input.expressiveness && input.engine !== 'avatar_v') body.expressiveness = input.expressiveness;
-    if (input.motionPrompt?.trim()) body.motion_prompt = input.motionPrompt.trim().slice(0, 300);
+    // só quando há pedido de movimento (sem ele, o motor não recebe o campo, como antes)
+    if (input.motionPrompt?.trim()) body.motion_prompt = motionPromptWithSafety(input.motionPrompt);
     if (input.removeBackground && !input.transparent && !input.keepLookBackground) body.remove_background = true;
     if (input.audioAssetId) body.audio_asset_id = input.audioAssetId;
     else {

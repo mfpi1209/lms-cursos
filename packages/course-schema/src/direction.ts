@@ -415,6 +415,46 @@ export const ShotSchema = z.object({
 });
 export type Shot = z.infer<typeof ShotSchema>;
 
+/** Plano que precisa do apresentador renderizado (os layouts `slide` e `card` com slide não precisam). */
+export function shotNeedsPresenter(shot: Pick<Shot, 'layout' | 'slide'>, hasNarrationAudio: boolean): boolean {
+  if (!hasNarrationAudio) return true; // voz do HeyGen: o áudio só existe dentro do clipe
+  return !((shot.layout === 'slide' || shot.layout === 'card') && shot.slide);
+}
+
+/**
+ * Teto de uma tomada contínua (palavras): acima disso a tomada é cortada num limite de plano
+ * (≈ 2 min a 2,5 palavras/s; mantém o roteiro do HeyGen e o áudio em tamanhos seguros).
+ */
+export const MAX_TAKE_WORDS = 300;
+
+/**
+ * Tomada contínua: agrupa planos CONSECUTIVOS de apresentador na MESMA câmera (`cameraId`
+ * igual; ausente = principal) em grupos de índices — cada grupo é UM pedido ao HeyGen, um
+ * clipe contínuo com a fala inteira do trecho. A direção salva não muda: os planos seguem
+ * mandando em cartões, pílulas, painéis e enquadramentos (a montagem recorta o clipe nos
+ * tempos de cada plano). Corte de vídeo só existe quando a câmera muda (ou aparece um plano
+ * sem apresentador / cena em movimento no meio). Pura e determinística (usa só o texto).
+ */
+export function continuousTakeGroups(shots: ReadonlyArray<Pick<Shot, 'line' | 'cameraId' | 'layout' | 'slide'>>, opts: { hasNarrationAudio: boolean }): number[][] {
+  const words = (i: number) => shots[i]!.line.trim().split(/\s+/).filter(Boolean).length;
+  const groups: number[][] = [];
+  let words0 = 0;
+  shots.forEach((s, i) => {
+    const clip = s.layout !== 'cinematic' && shotNeedsPresenter(s, opts.hasNarrationAudio);
+    const last = groups[groups.length - 1];
+    const prev = last ? shots[last[last.length - 1]!]! : undefined;
+    const joins = clip && !!last && !!prev && prev.layout !== 'cinematic' && shotNeedsPresenter(prev, opts.hasNarrationAudio) && (prev.cameraId ?? '') === (s.cameraId ?? '') && words0 + words(i) <= MAX_TAKE_WORDS;
+    if (joins) {
+      last!.push(i);
+      words0 += words(i);
+    } else {
+      groups.push([i]);
+      words0 = words(i);
+    }
+  });
+  return groups;
+}
+
 /** Plano de cena em movimento (layout `cinematic` com pedido de câmera preenchido). */
 export function shotIsCinematic(shot: Pick<Shot, 'layout'> & { cinematic?: { prompt?: string } | null }): boolean {
   return shot.layout === 'cinematic' && !!shot.cinematic?.prompt?.trim();
@@ -745,20 +785,21 @@ export type GestureMood = (typeof GESTURE_MOODS)[number];
 
 /**
  * Vocabulário de gestos seguros (um gesto + uma emoção, em inglês), por clima
- * da fala. Usado pelos modelos de demonstração, recomendado à IA diretora e
+ * da fala. Só movimentos de ROSTO e TRONCO (aceno, sobrancelhas, cabeça, ombros): gestos de
+ * mão fazem o avatar inventar relógio, pulseira ou objeto na mão. Usado pelos modelos de demonstração, recomendado à IA diretora e
  * oferecido como exemplo no editor.
  */
 export const SAFE_GESTURES: ReadonlyArray<{ id: string; prompt: string; mood: GestureMood }> = [
   { id: 'smile_welcoming', prompt: 'smiles softly, welcoming', mood: 'welcoming' },
   { id: 'nod_warm', prompt: 'nods slowly, warm', mood: 'welcoming' },
-  { id: 'open_palms_honest', prompt: 'opens both palms, honest', mood: 'explaining' },
-  { id: 'hands_explaining', prompt: 'moves both hands gently while explaining, calm', mood: 'explaining' },
-  { id: 'hands_together_focused', prompt: 'brings both hands together, focused', mood: 'explaining' },
+  { id: 'nod_slightly_smile', prompt: 'nods slightly, warm smile', mood: 'explaining' },
+  { id: 'relaxed_shoulders_calm', prompt: 'relaxed shoulders, calm', mood: 'explaining' },
+  { id: 'tilt_head_thoughtful', prompt: 'tilts head, thoughtful', mood: 'explaining' },
   { id: 'lean_in_curious', prompt: 'leans in slightly, curious', mood: 'question' },
   { id: 'tilt_head_inviting', prompt: 'tilts the head slightly, inviting', mood: 'question' },
   { id: 'look_lens_serious', prompt: 'looks straight into the lens, serious', mood: 'serious' },
   { id: 'nod_once_firm', prompt: 'nods once firmly, confident', mood: 'serious' },
-  { id: 'hand_on_chest_sincere', prompt: 'places a hand on the chest, sincere', mood: 'reassuring' },
+  { id: 'raise_brows_curious', prompt: 'raises eyebrows, curious', mood: 'question' },
   { id: 'relaxed_shoulders_reassuring', prompt: 'relaxes the shoulders and smiles, reassuring', mood: 'reassuring' },
   { id: 'bright_smile_pleased', prompt: 'smiles broadly, pleased', mood: 'positive' },
   { id: 'raise_brows_impressed', prompt: 'raises the eyebrows, impressed', mood: 'positive' },

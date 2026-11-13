@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { DomainError, media } from '@lms/db';
-import { mediaSceneOf, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection } from '@lms/course-schema';
+import { mediaSceneOf, continuousTakeGroups, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection, type Shot } from '@lms/course-schema';
 import { resolveScreenScene } from './media-screen';
 import { COMPOSE_PIPELINE_VERSION, ELEVENLABS_ADAPTER_VERSION, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, describeMediaMode, directionLinesMatchSpoken, estimateMediaCostUsd, estimateNarrationSeconds, mediaConfigFromEnv, platformBrandName, resolveWatermark, sceneHashSync, singleShotAlphaKey, type MediaProviderConfig } from '@lms/media';
 
@@ -143,8 +143,14 @@ export interface PartialReuse {
   estimatedUsd: number;
 }
 
-type ShotLike = { line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null };
-const shotReuseKey = (s: ShotLike) => JSON.stringify([s.line.replace(/\s+/g, ' ').trim(), s.cameraId ?? '', s.motionPrompt?.trim() ?? '', s.layout ?? 'presenter']);
+type ShotLike = { line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null; slide?: unknown };
+/**
+ * Tomadas contínuas: o worker gera UM clipe por grupo de planos vizinhos na mesma câmera (`continuousTakeGroups`),
+ * então o reaproveitamento é por GRUPO (a chave do clipe vem da fala inteira do grupo, a câmera e o gesto do primeiro plano).
+ */
+const takeGroups = (shots: ShotLike[], ownAudio: boolean): ShotLike[][] =>
+  continuousTakeGroups(shots.map((s) => ({ line: s.line, cameraId: s.cameraId ?? undefined, layout: (s.layout ?? 'presenter') as Shot['layout'], slide: s.slide as Shot['slide'] })), { hasNarrationAudio: ownAudio }).map((g) => g.map((i) => shots[i]!));
+const takeReuseKey = (g: ShotLike[]) => JSON.stringify([g.map((s) => s.line.replace(/\s+/g, ' ').trim()).join(' '), g[0]!.cameraId ?? '', g[0]!.motionPrompt?.trim() ?? '', g.length === 1 ? (g[0]!.layout ?? 'presenter') : 'take']);
 /** Menos palavras que isto e o worker funde o plano ao vizinho (MIN_UNIT_SECONDS 1,2 s a 2,5 palavras/s), mudando a chave do item pago. */
 const MIN_FRESH_SHOT_WORDS = 4;
 
@@ -165,18 +171,23 @@ export function directedPartialReuse(
   if ((prev.input.voiceId ?? null) !== (next.jobInput.voiceId ?? null) || prev.input.voiceProvider !== next.jobInput.voiceProvider || prev.input.avatarId !== next.jobInput.avatarId) return null;
   const fp = fingerprintForPrevCameras ?? next.jobInput.presentationFingerprint;
   if (!fp || prev.input.presentationFingerprint !== fp) return null;
+  const ownAudio = next.jobInput.voiceProvider === 'elevenlabs';
   const pool = new Map<string, number>();
-  for (const s of prevDir.shots) pool.set(shotReuseKey(s), (pool.get(shotReuseKey(s)) ?? 0) + 1);
+  for (const g of takeGroups(prevDir.shots, ownAudio)) pool.set(takeReuseKey(g), (pool.get(takeReuseKey(g)) ?? 0) + 1);
   const fresh: ShotLike[] = [];
-  for (const s of nextDir.shots) {
-    const k = shotReuseKey(s);
+  const freshGroups: ShotLike[][] = [];
+  for (const g of takeGroups(nextDir.shots, ownAudio)) {
+    const k = takeReuseKey(g);
     const left = pool.get(k) ?? 0;
     if (left > 0) pool.set(k, left - 1);
-    else fresh.push(s);
+    else {
+      fresh.push(...g);
+      freshGroups.push(g);
+    }
   }
   const reusedShots = nextDir.shots.length - fresh.length;
   if (reusedShots === 0) return null;
-  if (fresh.some((s) => s.layout === 'cinematic' || s.line.trim().split(/\s+/).filter(Boolean).length < MIN_FRESH_SHOT_WORDS)) return null;
+  if (freshGroups.some((g) => g.some((s) => s.layout === 'cinematic') || g.map((s) => s.line).join(' ').trim().split(/\s+/).filter(Boolean).length < MIN_FRESH_SHOT_WORDS)) return null;
   const text = fresh.map((s) => s.line.trim()).join(' ');
   const seconds = fresh.length ? estimateNarrationSeconds(text) : 0;
   const chars = text.length;

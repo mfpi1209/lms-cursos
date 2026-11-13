@@ -1,13 +1,15 @@
 import { createHash } from 'node:crypto';
-import { CINEMATIC_MAX_SECONDS, clampShotToNativeFraming, resolveCameraPlacement, shotIsCinematic, type Camera, type CinematicAction, type ResolvedPlacement, type Shot } from '@lms/course-schema';
+import { CINEMATIC_MAX_SECONDS, clampShotToNativeFraming, continuousTakeGroups, shotNeedsPresenter, resolveCameraPlacement, shotIsCinematic, type Camera, type CinematicAction, type ResolvedPlacement, type Shot } from '@lms/course-schema';
 import type { ShotTiming } from '@lms/media/compose';
 
 /**
  * Planejamento puro do vídeo dirigido (sem banco nem provedores).
  *
  * Itens de produção:
- * - `clip`: um vídeo de avatar no HeyGen (um plano, ou planos curtos vizinhos
- *   fundidos — a montagem recorta o clipe nos tempos originais);
+ * - `clip`: um vídeo de avatar no HeyGen — TOMADA CONTÍNUA: planos vizinhos na
+ *   mesma câmera viram UM pedido (a montagem recorta o clipe nos tempos de cada
+ *   plano, então cartões/pílulas/painéis ficam onde estavam e o apresentador não
+ *   reinicia a pose); também funde planos curtos vizinhos de câmeras diferentes;
  * - `audio`: plano `slide` (apresentador invisível) — só o trecho de áudio da
  *   narração, SEM clipe pago; a montagem usa o PNG do slide + esse áudio;
  * - `cinematic`: cena em movimento (HeyGen `cinematic_avatar`, por prompt): o
@@ -94,11 +96,7 @@ export function estimateLineSeconds(text: string) {
   return text.trim().split(/\s+/).filter(Boolean).length / 2.5;
 }
 
-/** Plano que precisa do apresentador renderizado (os layouts `slide` e `card` com slide não precisam). */
-export function shotNeedsPresenter(shot: Pick<Shot, 'layout' | 'slide'>, hasNarrationAudio: boolean): boolean {
-  if (!hasNarrationAudio) return true; // voz do HeyGen: o áudio só existe dentro do clipe
-  return !((shot.layout === 'slide' || shot.layout === 'card') && shot.slide);
-}
+export { shotNeedsPresenter };
 
 /** Velocidade usada para checar falas de cena em movimento antes de pagar (mesma da IA diretora). */
 const CINEMATIC_WORDS_PER_SECOND = 2.6;
@@ -134,7 +132,8 @@ export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolea
   const cine = shots.map((s) => s.layout === 'cinematic');
   // cena em movimento nunca é fundida (nem recebe fusão): conta como não-clipe aqui
   const clipShot = shots.map((s, i) => !cine[i] && shotNeedsPresenter(s, opts.hasNarrationAudio));
-  let groups: number[][] = shots.map((_, i) => [i]);
+  // tomada contínua: planos vizinhos de apresentador na mesma câmera = UM pedido ao HeyGen
+  let groups: number[][] = continuousTakeGroups(shots, { hasNarrationAudio: opts.hasNarrationAudio });
   const gdur = (g: number[]) => g.reduce((a, i) => a + dur(i), 0);
   const isClip = (g: number[] | undefined) => !!g && clipShot[g[0]!]!;
   const merged: string[] = [];
@@ -157,15 +156,17 @@ export function planRenderUnits(shots: Shot[], opts: { hasNarrationAudio: boolea
     if (groups.length === 1) break;
   }
   const units = groups.map((g): RenderUnit => {
-    // câmera/gesto do plano mais longo do item
+    // câmera do plano mais longo do item; gesto: tomada contínua (mesma câmera) = o do PRIMEIRO plano
+    // (um só pedido de movimento para o clipe todo); item que fundiu câmeras diferentes = o do mais longo
     const main = g.reduce((best, i) => (dur(i) > dur(best) ? i : best), g[0]!);
+    const sameCamera = g.every((i) => (shots[i]!.cameraId ?? '') === (shots[g[0]!]!.cameraId ?? ''));
     return {
       id: shots[g[0]!]!.id,
       kind: cine[g[0]!] ? 'cinematic' : clipShot[g[0]!] ? 'clip' : 'audio',
       shotIds: g.map((i) => shots[i]!.id),
       script: g.map((i) => shots[i]!.line.trim()).join(' '),
       cameraId: shots[main]!.cameraId,
-      motionPrompt: shots[main]!.motionPrompt,
+      motionPrompt: (sameCamera ? shots[g[0]!]! : shots[main]!).motionPrompt,
       ...(cine[g[0]!] ? { cinematicPrompt: shots[g[0]!]!.cinematic?.prompt?.trim(), cinematicAction: shots[g[0]!]!.cinematic?.action } : {}),
     };
   });

@@ -477,11 +477,15 @@ describe('estúdio com zonas: importação', () => {
     if (v01?.type !== 'scenario' || v02?.type !== 'content') throw new Error('fixture');
     // V01: fala na 3/4 (cena 0); cartão = pílulas na lateral esquerda (primeiras pílulas: apresentadora à esquerda)
     // (o último plano é a chamada para a pergunta Q01: olho no olho, na câmera frontal)
-    expect(v01.direction!.shots.filter((s) => s.layout === 'presenter' && s.id !== CALL_SHOT_ID).every((s) => s.cameraId === 'cam_estudio_34')).toBe(true);
-    expect(v01.direction!.shots.at(-1)).toMatchObject({ id: CALL_SHOT_ID, layout: 'presenter', cameraId: 'cam_estudio_esq', line: 'Agora é com você: o campeonato do bairro entra no currículo?' });
+    // (com 3+ planos há troca de câmera com propósito: os 2 primeiros ficam na câmera da cena, a troca é sempre para OUTRA câmera)
+    const v01Talk = v01.direction!.shots.filter((s) => s.layout === 'presenter' && s.id !== CALL_SHOT_ID);
+    expect(v01Talk[0]!.cameraId).toBe('cam_estudio_34');
+    expect(v01Talk.every((s) => s.cameraId !== 'cam_estudio_esq')).toBe(true); // a lateral das pílulas fica só para o plano das pílulas
+    expect(v01.direction!.shots.at(-1)).toMatchObject({ id: CALL_SHOT_ID, layout: 'presenter', line: 'Agora é com você: o campeonato do bairro entra no currículo?' });
     expect(v01.direction!.shots.find((s) => s.layout === 'presenter_chips')?.cameraId).toBe('cam_estudio_esq');
     // V02 (sem cartão): direção só de fala na câmera lateral da cena 1
-    expect(v02.direction!.shots.every((s) => s.layout === 'presenter' && s.cameraId === 'cam_estudio_esq')).toBe(true);
+    expect(v02.direction!.shots.every((s) => s.layout === 'presenter')).toBe(true);
+    expect(v02.direction!.shots.slice(0, 2).every((s) => s.cameraId === 'cam_estudio_esq')).toBe(true);
   });
 
   it('sem câmeras de zona: igual a antes (painel, sem direção nas falas sem cartão)', () => {

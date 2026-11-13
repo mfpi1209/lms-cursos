@@ -57,23 +57,25 @@ describe('orçamento: reaproveitamento parcial de cena dirigida (chamada acresce
   const prevInput = { ...now.jobInput, direction: { ...(now.jobInput.direction as object), shots: shots.filter((s) => s.id !== CALL_SHOT_ID) } };
   const prev = { jobId: 'mjb_old', input: prevInput, adapterVersion: now.adapterVersion, simulated: false };
 
-  it('cobra só o plano novo da chamada', () => {
+  it('cobra só a tomada que ganhou a chamada (o plano final na mesma câmera passa a fazer parte do mesmo clipe contínuo)', () => {
     expect(shots.at(-1)?.id).toBe(CALL_SHOT_ID);
     const p = directedPartialReuse(prev, now, false)!;
-    expect(p).toMatchObject({ fromJobId: 'mjb_old', reusedShots: shots.length - 1, newShots: 1 });
-    expect(p.chars).toBe('Agora é com você: o campeonato do bairro entra no currículo?'.length);
+    // a chamada fica na câmera do plano anterior: os dois formam UMA tomada (um pedido ao HeyGen); as demais tomadas são reaproveitadas
+    expect(shots.at(-1)!.cameraId).toBe(shots.at(-2)!.cameraId);
+    expect(p).toMatchObject({ fromJobId: 'mjb_old', reusedShots: shots.length - 2, newShots: 2 });
+    expect(p.chars).toBe(`${shots.at(-2)!.line} Agora é com você: o campeonato do bairro entra no currículo?`.length);
     expect(p.estimatedUsd).toBeGreaterThan(0);
-    expect(p.estimatedUsd).toBeLessThan(now.estimate.estimatedUsd / 3);
+    expect(p.estimatedUsd).toBeLessThan(now.estimate.estimatedUsd);
   });
 
   it('na dúvida, custo cheio: voz, apresentação ou adaptador diferentes, plano novo curto demais ou nada em comum', () => {
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, voiceId: 'outra' } }, now, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'x' } }, now, false)).toBeNull();
     // plano novo numa câmera que o vídeo não usava: compara a impressão restrita às câmeras dos planos pagos
-    expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'antes' } }, now, false, 'antes')?.newShots).toBe(1);
+    expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'antes' } }, now, false, 'antes')?.newShots).toBe(2);
     expect(directedPartialReuse({ ...prev, adapterVersion: 'v0' }, now, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, simulated: true }, now, false)).toBeNull();
-    const short = { ...now, jobInput: { ...now.jobInput, direction: { shots: [...shots.slice(0, -1), { ...shots.at(-1)!, line: 'Sua vez.' }] } } };
+    const short = { ...now, jobInput: { ...now.jobInput, direction: { shots: [...shots.slice(0, -1), { ...shots.at(-1)!, line: 'Sua vez.', cameraId: 'cam_34' }] } } };
     expect(directedPartialReuse(prev, short, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, direction: { shots: [{ id: 's1', line: 'Outra fala qualquer aqui.' }] } } }, now, false)).toBeNull();
   });
