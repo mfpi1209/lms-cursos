@@ -4,7 +4,7 @@ import { csvCell } from './alunos-csv';
 /*
  * CSV do relatório de progresso (exportação do estúdio). Formato pensado para abrir no Excel em português:
  * BOM UTF-8, separador `;`, quebra de linha CRLF, células à prova de injeção de fórmula (`csvCell`: `= + - @` ganham apóstrofo).
- * Datas em horário de Brasília (`dd/mm/aaaa hh:mm`). Sem telefone e sem nome de arquivo ou link de entrega.
+ * Datas em horário de Brasília (`dd/mm/aaaa hh:mm`). Sem telefone e sem nome de arquivo ou link de entrega da tarefa. As respostas das reflexões (texto livre do aluno) saem em colunas próprias.
  */
 
 type Row = reports.ProgressRow;
@@ -48,6 +48,21 @@ export function assessmentColumns(rows: Row[]): AssessmentColumn[] {
   });
 }
 
+const reflKey = (r: Row, x: Row['reflexoes'][number]) => `${r.curso.id}\u0000${x.aula_id}\u0000${x.cena}`;
+
+/**
+ * Uma coluna por cena de reflexão, na ordem do curso (aula, depois cena), logo depois das avaliações. Cabeçalho:
+ * `Resposta: <aula> · <cena>`; com mais de um curso no arquivo, `Resposta: <curso> › <aula> · <cena>`. Curso sem reflexão: nenhuma coluna.
+ * A célula é o texto da resposta mais recente (vazia se não respondeu); `csvCell` cuida de aspas, quebras de linha e fórmulas.
+ */
+export function reflectionColumns(rows: Row[]): AssessmentColumn[] {
+  const seen = new Map<string, { curso: string; cursoId: string; aula: string; titulo: string }>();
+  for (const r of rows) for (const x of r.reflexoes ?? []) if (!seen.has(reflKey(r, x))) seen.set(reflKey(r, x), { curso: r.curso.titulo, cursoId: r.curso.id, aula: x.aula, titulo: x.titulo });
+  const items = [...seen.entries()];
+  const multiCourse = new Set(items.map(([, v]) => v.cursoId)).size > 1;
+  return items.map(([key, v]) => ({ key, header: `Resposta: ${multiCourse ? `${v.curso} › ` : ''}${v.aula} · ${v.titulo}` }));
+}
+
 /** `2/3 aprovado`, `1/3 reprovado`, `1/3 em andamento`; vazio se ainda não respondeu nada. O texto depois da fração evita que o Excel leia `2/3` como data. */
 export function assessmentCell(a: Row['avaliacoes'][number] | undefined): string {
   if (!a || a.respondidas === 0) return '';
@@ -72,10 +87,12 @@ export const TAIL_HEADERS = ['Tarefa obrigatória', 'Tarefas aprovadas', 'Tarefa
 
 export function progressToCsv(rows: Row[]): string {
   const cols = assessmentColumns(rows);
-  const header = [...FIXED_HEADERS, ...cols.map((c) => c.header), ...TAIL_HEADERS];
+  const rcols = reflectionColumns(rows);
+  const header = [...FIXED_HEADERS, ...cols.map((c) => c.header), ...rcols.map((c) => c.header), ...TAIL_HEADERS];
   const lines = [header.map((c) => csvCell(c, SEP)).join(SEP)];
   for (const r of rows) {
     const byKey = new Map(r.avaliacoes.map((a) => [colKey(r, a), a]));
+    const reflBy = new Map((r.reflexoes ?? []).map((x) => [reflKey(r, x), x]));
     const cells = [
       r.aluno.nome,
       r.aluno.email,
@@ -89,6 +106,7 @@ export function progressToCsv(rows: Row[]): string {
       String(r.aulas_concluidas),
       String(r.aulas_total),
       ...cols.map((c) => assessmentCell(byKey.get(c.key))),
+      ...rcols.map((c) => reflBy.get(c.key)?.resposta ?? ''),
       r.tarefa.status ? TASK_LABEL[r.tarefa.status]! : 'Sem tarefa',
       String(r.tarefa.aprovadas),
       String(r.tarefa.total),

@@ -40,6 +40,21 @@ export interface AssessmentSummary {
   aprovado: boolean | null;
 }
 
+export interface ReflectionSummary {
+  aula_id: string;
+  aula: string;
+  /** id da cena de reflexão no roteiro */
+  cena: string;
+  /** título da cena (ou o id, se a cena não tem título) */
+  titulo: string;
+  /** a cena é obrigatória para concluir a aula (`required` do nó) */
+  obrigatoria: boolean;
+  /** texto da resposta MAIS RECENTE do aluno (texto livre, dado pessoal); `null` se nunca respondeu */
+  resposta: string | null;
+  /** quando a resposta mais recente foi dada (ISO 8601); `null` se nunca respondeu */
+  respondida_em: string | null;
+}
+
 export interface TaskSummary {
   /** `null` = o curso não tem tarefa obrigatória nas aulas obrigatórias desta matrícula */
   status: TaskOverallStatus | null;
@@ -63,6 +78,8 @@ export interface ProgressRow {
   aulas_concluidas: number;
   aulas_total: number;
   avaliacoes: AssessmentSummary[];
+  /** uma entrada por cena de reflexão do curso, na ordem do curso (vazio se o curso não tem reflexão) */
+  reflexoes: ReflectionSummary[];
   tarefa: TaskSummary;
   curso_concluido: boolean;
   concluido_em: string | null;
@@ -165,6 +182,53 @@ export function summarizeAssessments(groups: AssessmentGroup[], attempts: Attemp
     let aprovado: boolean | null = null;
     if (respondidas > 0) aprovado = acertos >= limiar ? true : respondidas >= total ? false : null;
     return { aula_id: g.lessonId, aula: g.lessonTitle, grupo_id: g.groupId, titulo: g.title, acertos, total, respondidas, aprovado };
+  });
+}
+
+export interface ReflectionSlot {
+  lessonId: string;
+  lessonTitle: string;
+  nodeId: string;
+  title: string;
+  required: boolean;
+}
+
+/** Cenas de reflexão do curso (`type: 'reflection'`), na ordem das aulas e das cenas. A missão (`mission`) não entra. */
+export function reflectionSlotsOf(doc: CourseDocument): ReflectionSlot[] {
+  const out: ReflectionSlot[] = [];
+  for (const lesson of allLessons(doc)) {
+    for (const node of lesson.graph.nodes) {
+      if (node.type !== 'reflection') continue;
+      out.push({ lessonId: lesson.id, lessonTitle: lesson.title, nodeId: node.id, title: node.title?.trim() || node.id, required: node.required });
+    }
+  }
+  return out;
+}
+
+/**
+ * Resposta mais recente de cada cena de reflexão para UMA matrícula: entre todas as tentativas da aula (em andamento,
+ * concluídas ou abandonadas) vale a de maior `answeredAt`; empate, a tentativa de maior número. Resposta vazia conta como não respondida.
+ */
+export function summarizeReflections(slots: ReflectionSlot[], attempts: AttemptLike[]): ReflectionSummary[] {
+  return slots.map((slot) => {
+    let best: { text: string; at: number; n: number } | null = null;
+    for (const a of attempts) {
+      if (a.lessonId !== slot.lessonId) continue;
+      const ans = a.state.answers?.[slot.nodeId];
+      if (!ans || typeof ans.text !== 'string' || ans.text.trim() === '') continue;
+      const at = Date.parse(ans.answeredAt);
+      const when = Number.isNaN(at) ? 0 : at;
+      if (!best || when > best.at || (when === best.at && a.attemptNumber > best.n)) best = { text: ans.text, at: when, n: a.attemptNumber };
+    }
+    return {
+      aula_id: slot.lessonId,
+      aula: slot.lessonTitle,
+      cena: slot.nodeId,
+      titulo: slot.title,
+      obrigatoria: slot.required,
+      resposta: best ? best.text : null,
+      respondida_em: best && best.at ? new Date(best.at).toISOString() : null,
+    };
   });
 }
 
@@ -323,17 +387,17 @@ export async function progressRows(db: DbOrTx, q: ProgressQuery): Promise<Progre
     db.select({ id: s.courseVersions.id, document: s.courseVersions.document }).from(s.courseVersions).where(inArray(s.courseVersions.id, versionIds)),
   ]);
 
-  const docs = new Map<string, { doc: CourseDocument; groups: AssessmentGroup[] }>();
+  const docs = new Map<string, { doc: CourseDocument; groups: AssessmentGroup[]; reflections: ReflectionSlot[] }>();
   for (const v of versions) {
     const doc = migrateCourseDocument(v.document);
-    docs.set(v.id, { doc, groups: assessmentGroupsOf(doc) });
+    docs.set(v.id, { doc, groups: assessmentGroupsOf(doc), reflections: reflectionSlotsOf(doc) });
   }
   const attemptsBy = groupBy(attempts, (a) => a.enrollmentId);
   const submissionsBy = groupBy(submissions, (a) => a.enrollmentId);
   const accessBy = new Map(access.map((a) => [a.userId, a]));
 
   const itens = rows.map<ProgressRow>((r) => {
-    const { doc, groups } = docs.get(r.versionId)!;
+    const { doc, groups, reflections } = docs.get(r.versionId)!;
     const myAttempts = attemptsBy.get(r.id) ?? [];
     const mySubs = submissionsBy.get(r.id) ?? [];
     const acc = accessBy.get(r.userId);
@@ -362,6 +426,7 @@ export async function progressRows(db: DbOrTx, q: ProgressQuery): Promise<Progre
       aulas_concluidas: required.filter((id) => completed.has(id)).length,
       aulas_total: required.length,
       avaliacoes: summarizeAssessments(groups, myAttempts),
+      reflexoes: summarizeReflections(reflections, myAttempts),
       tarefa: summarizeTasks(doc, r.optionalLessonIds, mySubs, lastPath),
       curso_concluido: r.status === 'completed',
       concluido_em: iso(r.completedAt),

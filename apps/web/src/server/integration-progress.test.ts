@@ -113,9 +113,10 @@ describe('GET /progresso: parâmetros e conteúdo', () => {
     expect(body.itens.length).toBeGreaterThanOrEqual(2);
     const item = body.itens[0];
     expect(Object.keys(item).sort()).toEqual(
-      ['atualizado_em', 'aluno', 'aulas_concluidas', 'aulas_total', 'avaliacoes', 'certificado_codigo', 'concluido_em', 'curso', 'curso_concluido', 'matricula_id', 'matriculado_em', 'primeiro_acesso', 'status_matricula', 'tarefa', 'ultimo_acesso'].sort(),
+      ['atualizado_em', 'aluno', 'aulas_concluidas', 'aulas_total', 'avaliacoes', 'certificado_codigo', 'concluido_em', 'curso', 'curso_concluido', 'matricula_id', 'matriculado_em', 'primeiro_acesso', 'reflexoes', 'status_matricula', 'tarefa', 'ultimo_acesso'].sort(),
     );
     expect(item.certificado_codigo).toBeNull();
+    expect(Array.isArray(item.reflexoes)).toBe(true);
     expect(item.curso.slug).toBe('comunicacao-no-primeiro-emprego');
     expect(item.tarefa).toEqual({ status: null, total: 0, pendentes: 0, enviadas: 0, aprovadas: 0, devolvidas: 0 });
   });
