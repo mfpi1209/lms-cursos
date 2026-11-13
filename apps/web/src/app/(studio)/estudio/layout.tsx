@@ -54,6 +54,11 @@ export default async function StudioLayout({ children }: { children: React.React
                   </span>
                 )}
               </Link>
+              {identity.canEnroll(viewer.role) && (
+                <Link href="/estudio/configuracoes/alunos" className={`${navLink} max-[520px]:hidden`} data-testid="nav-configuracoes">
+                  Configurações
+                </Link>
+              )}
               <Link href="/aprender" className={navLink}>
                 <span className="sm:hidden">Como aluno</span>
                 <span className="hidden sm:inline">Ver como aluno</span>

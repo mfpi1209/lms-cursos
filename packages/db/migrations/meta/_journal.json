@@ -148,6 +148,13 @@
       "when": 1794527752551,
       "tag": "0020_entregas",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1794529607269,
+      "tag": "0021_alunos_academico_e_tokens",
+      "breakpoints": true
     }
   ]
 }

@@ -77,3 +77,26 @@ export const authRateLimit = {
     '/reset-password': { window: 60, max: 20 },
   },
 } as const;
+
+/** Página que o aluno abre pelo link: não consome o token (ver `toConfirmationUrl`). */
+export const MAGIC_LINK_CONFIRM_PAGE = '/entrar/confirmar';
+/** Rota que de fato confere o token (só aceita POST). */
+export const MAGIC_LINK_CONFIRM_ACTION = '/api/entrar/confirmar';
+
+/**
+ * O link mágico que sai do plugin (`/api/auth/magic-link/verify?token=…`) consome o token no primeiro GET. Filtros de
+ * e-mail corporativos (Outlook Safe Links, Proofpoint…) abrem os links antes do aluno e queimariam o token de uso único.
+ * Por isso o que é enviado ou devolvido é o mesmo endereço trocado pela página de confirmação, que só mostra o botão
+ * "Continuar"; quem confere o token é um POST (que scanner não faz). Os parâmetros (token, callbackURL, errorCallbackURL) seguem iguais.
+ */
+export function toConfirmationUrl(pluginUrl: string): string {
+  const u = new URL(pluginUrl);
+  u.pathname = MAGIC_LINK_CONFIRM_PAGE;
+  return u.toString();
+}
+
+/** Só caminhos do próprio site (começam com uma barra, sem `//` nem `\`), para o destino depois do login. */
+export function safeLocalPath(p: unknown, fallback: string): string {
+  if (typeof p !== 'string' || !p.startsWith('/') || p.startsWith('//') || p.includes('\\') || /[\u0000-\u001f]/.test(p) || p.length > 300) return fallback;
+  return p;
+}

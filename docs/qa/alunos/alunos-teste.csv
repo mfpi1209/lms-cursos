@@ -1,0 +1,4 @@
+nome;email;rgm;telefone;cursos
+Ana Álvares;alunos-teste-ana@demo.local;QA1001;(11) 99999-0001;primeira-vaga;parece-verdade-sera
+Bruno Çelik;alunos-teste-bruno@demo.local;QA1002;;primeira-vaga
+Linha Ruim;alunos-teste-ruim;QA1003;;primeira-vaga

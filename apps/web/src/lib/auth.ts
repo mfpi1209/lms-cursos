@@ -7,7 +7,7 @@ import { magicLinkEmail, resetPasswordEmail, sendEmail } from '@lms/email';
 import { access, getDb, schema } from '@lms/db';
 import { createAccessLogHooks } from './access-log';
 import { clientIpConfigFromEnv, invalidTrustedProxies } from './client-ip';
-import { authRateLimit, emailLimits, magicLinkCapture, magicLinkTtlHours, RESET_TOKEN_TTL_SECONDS } from './auth-access';
+import { authRateLimit, emailLimits, magicLinkCapture, magicLinkTtlHours, RESET_TOKEN_TTL_SECONDS, toConfirmationUrl } from './auth-access';
 
 /**
  * Better Auth com sessão em banco (Drizzle/PostgreSQL). Papéis não ficam no
@@ -66,7 +66,9 @@ export const auth = betterAuth({
       expiresIn: magicLinkTtlHours() * 3600,
       // só quem já tem conta: o link de um e-mail desconhecido é recusado na conferência (sem cadastro pelo login)
       disableSignUp: true,
-      sendMagicLink: async ({ email, url }, ctx) => {
+      sendMagicLink: async ({ email, url: pluginUrl }, ctx) => {
+        // o aluno recebe a página de confirmação, não o endereço que consome o token (scanners de e-mail abrem links)
+        const url = toConfirmationUrl(pluginUrl);
         // auxiliar para a API de integração: guarda a URL e não envia nada (ver server/magic-link.ts)
         const capture = magicLinkCapture.getStore();
         if (capture) {

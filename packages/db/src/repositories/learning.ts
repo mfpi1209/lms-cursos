@@ -24,7 +24,7 @@ import * as s from '../schema';
 import { getLatestVersion } from './publishing';
 import { saveTaskSubmission, taskRecordOf, type TaskRecord, type TaskSubmitOutcome } from './submissions';
 
-export async function enrollStudent(db: Database, input: { courseId: string; userId: string; createdBy: string }) {
+export async function enrollStudent(db: DbOrTx, input: { courseId: string; userId: string; createdBy: string }) {
   return db.transaction(async (tx) => {
     const [existing] = await tx.select().from(s.enrollments).where(and(eq(s.enrollments.courseId, input.courseId), eq(s.enrollments.userId, input.userId))).limit(1);
     if (existing) return { enrollment: existing, created: false };
