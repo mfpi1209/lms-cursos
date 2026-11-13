@@ -50,7 +50,9 @@ async function loadContext(db: Db, args: RegenArgs) {
   const row = matches[0]!;
   const workspaceId = row.workspaceId;
   const p = parseTemplateData('presenter', row.data);
-  const baseLookId = p.baseLookId ?? p.creation?.base?.lookId;
+  // instrutor antigo sem look-base registrado: usa o `sourceLookId` comum às câmeras do kit (o mesmo personagem)
+  const kitSources = [...new Set(p.cameraKits.flatMap((k) => k.cameras.map((c) => c.sourceLookId)).filter((x): x is string => !!x))];
+  const baseLookId = p.baseLookId ?? p.creation?.base?.lookId ?? (kitSources.length === 1 ? kitSources[0] : undefined);
   if (!baseLookId) throw new Error(`"${args.presenter}" não tem look-base (baseLookId) na biblioteca; sem ele não dá para manter o mesmo personagem`);
   const studioKey = p.creation?.studioKey ?? p.cameraKits[0]?.studioKey;
   if (!studioKey) throw new Error(`"${args.presenter}" não tem estúdio (cameraKits vazio)`);
