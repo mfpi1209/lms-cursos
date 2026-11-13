@@ -27,6 +27,7 @@ export const dynamic = 'force-dynamic';
  * - curso em andamento: "Continue de onde parou", com o curso e a aula reais e o botão Continuar (sem um segundo botão equivalente);
  * - algo concluído e nada em andamento: "Seu próximo passo começa aqui.";
  * - tudo concluído: "Seu próximo passo começa aqui." com "Reveja uma situação…" e o destaque "Para rever e praticar".
+ * Cursos livres (EaD, horas de carga) ficam numa seção própria logo abaixo do destaque, acima dos filtros de trilha.
  * A ordem do DOM é a ordem visual em todas as larguras.
  */
 export default async function ExplorePage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
@@ -84,7 +85,9 @@ async function Home({ userId, name, q }: { userId: string; name?: string | null;
       },
     ];
   });
-  const items: CatalogItem[] = courses.map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started }));
+  // cursos livres têm seção própria: não entram nas trilhas de pílulas nem em "Mais cursos"
+  const free = courses.flatMap((c) => (c.free ? [c.free] : []));
+  const items: CatalogItem[] = courses.filter((c) => !c.free).map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started }));
 
   const hl = 'text-[var(--im-accent-ink)]';
   return (
@@ -123,7 +126,7 @@ async function Home({ userId, name, q }: { userId: string; name?: string | null;
         {slides.length > 0 && <HeroCarousel slides={slides} />}
       </section>
 
-      <Catalog items={items} series={series} trails={trails.map((name) => ({ name, slug: trailSlug(name) }))} {...(q ? { query: q } : {})} />
+      <Catalog items={items} free={free} series={series} trails={trails.map((name) => ({ name, slug: trailSlug(name) }))} {...(q ? { query: q } : {})} />
 
       {courses.length === 0 && (
         <div className="mt-8 rounded-[16px] border border-line bg-surface p-6 sm:p-8" data-testid="enrollment-empty">

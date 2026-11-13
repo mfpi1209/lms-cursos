@@ -6,6 +6,8 @@ import { seriesForTrail, sortBySeriesOrder } from '@lms/course-schema';
 import { CourseRail, type RailLayout } from './course-rail';
 import { CourseTile, type CourseTileData } from './course-tile';
 import { SeriesTile } from './series-tile';
+import { FREE_COURSES_HREF, FREE_SECTION_TITLE, FreeCoursesSection } from './free-course-card';
+import { freeCourseMatches, type FreeCourseCardData } from '../_lib/free-course';
 import type { SeriesCardData } from '../_lib/series';
 import { orderInTrail, trailProgressCopy } from '../_lib/trail-order';
 
@@ -37,9 +39,17 @@ export const SERIES_ROW_TITLE = 'Aprofunde suas habilidades';
  *   trilha escolhida (ou achada na busca) a seção mostra o cartão da trilha e os cursos das suas partes; na busca,
  *   cada curso que combina aparece com o seu cartão, e o cartão da trilha só quando é a própria trilha que combina.
  * - Escolher um filtro mostra só a seção daquela trilha; seção sem resultado some.
+ * - Cursos livres (EaD): seção própria ACIMA dos filtros, com cartões maiores; nunca entram nas trilhas nem em "Mais
+ *   cursos". O filtro "Cursos livres" deixa só essa seção; os filtros de trilha não mexem nela (nada acima dos filtros
+ *   muda de lugar quando a pessoa toca num deles). A busca também acha cursos livres.
  */
-export function Catalog({ items, trails, series = {}, query }: { items: CatalogItem[]; trails: CatalogTrail[]; /** cartão da série, por nome de trilha */ series?: Record<string, SeriesCardData>; query?: string }) {
-  const [trail, setTrail] = React.useState<string | null>(null);
+export function Catalog({ items, trails, series = {}, free = [], query }: { items: CatalogItem[]; trails: CatalogTrail[]; /** cartão da série, por nome de trilha */ series?: Record<string, SeriesCardData>; /** cursos livres (seção própria, acima dos filtros) */ free?: FreeCourseCardData[]; query?: string }) {
+  const [trail, setTrailState] = React.useState<string | null>(null);
+  const [onlyFree, setOnlyFree] = React.useState(false);
+  const setTrail = (name: string | null) => {
+    setOnlyFree(false);
+    setTrailState(name);
+  };
   const [more, setMore] = React.useState(false);
   const moreRef = React.useRef<HTMLButtonElement>(null);
   const q = norm(query?.trim() ?? '');
@@ -48,7 +58,8 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
   const trailMatches = (s: SeriesCardData) => !q || norm(`${s.trail} ${s.instructor ?? ''}`).includes(q);
   const visibleItems = items.filter((i) => (!trail || i.trail === trail) && matches(i));
   const visibleSeriesCards = Object.values(series).filter((s) => (!trail || s.trail === trail) && !!q && trailMatches(s));
-  const found = new Set([...visibleItems.map((i) => i.tile.id), ...visibleSeriesCards.map((s) => `s:${s.key}`)]).size;
+  const visibleFree = free.filter((c) => freeCourseMatches(c, query));
+  const found = new Set([...visibleFree.map((c) => `f:${c.id}`), ...visibleItems.map((i) => i.tile.id), ...visibleSeriesCards.map((s) => `s:${s.key}`)]).size;
 
   const hasLoose = items.some((i) => !i.trail);
   const baseTrails = trails.filter((t) => !series[t.name]);
@@ -73,7 +84,7 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
   const collapse = !trail && !q;
   const seriesGroups = collapse ? groups.filter((g) => g.card) : [];
   type Row = { type: 'group'; g: Group } | { type: 'series'; cards: SeriesCardData[] };
-  const rows: Row[] = groups.flatMap<Row>((g) => {
+  const rows: Row[] = (onlyFree ? [] : groups).flatMap<Row>((g) => {
     if (collapse && g.card) return g === seriesGroups[0] ? [{ type: 'series', cards: seriesGroups.map((x) => x.card!) }] : [];
     if (g.card) return g.courses.length > 0 || (g.card && trailMatches(g.card) && !!q) ? [{ type: 'group', g }] : [];
     return g.courses.length > 0 ? [{ type: 'group', g }] : [];
@@ -85,11 +96,26 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
 
   return (
     <div id="cursos" tabIndex={-1} aria-label="Catálogo de cursos" role="region" className="scroll-mt-24 outline-none" data-testid="catalog">
-      <div className="mt-6">
+      <FreeCoursesSection courses={visibleFree} href={FREE_COURSES_HREF} />
+      <div className={items.length === 0 ? 'hidden' : 'mt-6'}>
         <div role="group" aria-label="Filtrar por trilha" className="dna-filters">
-          <button type="button" aria-pressed={!trail} onClick={() => setTrail(null)} className={chip(!trail)}>
+          <button type="button" aria-pressed={!trail && !onlyFree} onClick={() => setTrail(null)} className={chip(!trail && !onlyFree)}>
             Todos
           </button>
+          {free.length > 0 && (
+            <button
+              type="button"
+              aria-pressed={onlyFree}
+              onClick={() => {
+                setTrailState(null);
+                setOnlyFree((o) => !o);
+              }}
+              className={chip(onlyFree)}
+              data-testid="filter-free"
+            >
+              {FREE_SECTION_TITLE}
+            </button>
+          )}
           {baseTrails.map((t) => (
             <button key={t.slug} type="button" aria-pressed={trail === t.name} onClick={() => pick(t.name)} className={chip(trail === t.name)}>
               {t.name}
@@ -181,7 +207,15 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
           </CourseRail>
         );
       })}
-      {rows.length === 0 && (
+      {onlyFree && (
+        <p className="mt-6 text-fg-muted" role="status" data-testid="catalog-only-free">
+          Mostrando só os cursos livres.{' '}
+          <button type="button" onClick={() => setTrail(null)} className="font-semibold text-fg underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[var(--dna-focus)]">
+            Ver todos
+          </button>
+        </p>
+      )}
+      {rows.length === 0 && !onlyFree && !(visibleFree.length > 0 && !trail) && (
         <div className="dna-section" data-testid="catalog-empty">
           {!q && (
             <p className="text-fg-muted">

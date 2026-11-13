@@ -24,8 +24,10 @@ export default async function MyTrailsPage() {
     const inTrail = courses.filter((c) => c.trail === trail);
     return { trail, done: inTrail.filter((c) => c.isDone).length, total: inTrail.length, badge: badges.has(trailSlug(trail)), href: `/aprender/trilhas/${trailSlug(trail)}` };
   });
-  const groups = [...trails, ...(courses.some((c) => !c.trail) ? ['Mais cursos'] : [])].map((t) => {
-    const all = courses.filter((c) => (c.trail ?? 'Mais cursos') === t);
+  // cursos livres não são pílulas de trilha: ficam em "Cursos livres" (vitrine e /aprender/cursos-livres), fora de "Mais cursos"
+  const pills = courses.filter((c) => !c.free);
+  const groups = [...trails, ...(pills.some((c) => !c.trail) ? ['Mais cursos'] : [])].map((t) => {
+    const all = pills.filter((c) => (c.trail ?? 'Mais cursos') === t);
     const card = series.get(t);
     return { title: t, done: card ? card.partsDone : all.filter((c) => c.isDone).length, total: card ? card.total : all.length, series: card, items: card ? [] : orderInTrail(all, (c) => ({ done: c.isDone, started: c.started, title: c.shortTitle })) };
   });
