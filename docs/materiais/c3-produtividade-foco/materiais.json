@@ -1,0 +1,11 @@
+{
+  "curso": "crs_jkfzh199gekcu2hy",
+  "titulo": "Produtividade e foco para quem estuda e trabalha",
+  "materiais": [
+    {"id":"diario-de-7-dias","titulo":"Diário de tempo de 7 dias","descricao":"Modelo para anotar em três paradas por dia para onde vai o seu tempo e fechar o diagnóstico no 7º dia.","categoria":"modelo","modulo":1,"fonte":"diario-de-7-dias.html","formato":"pdf"},
+    {"id":"quadro-semana-tipo","titulo":"Quadro da semana-tipo","descricao":"Grade para pintar o tempo fixo, as obrigações e encaixar blocos de estudo de 25 a 50 minutos, cada um com tarefa.","categoria":"modelo","modulo":2,"fonte":"quadro-semana-tipo.html","formato":"pdf"},
+    {"id":"checklist-celular-foco","titulo":"Checklist: celular a favor do foco","descricao":"Passo a passo de 20 minutos para calar notificações, programar o modo foco e combinar com a casa.","categoria":"checklist","modulo":4,"fonte":"checklist-celular-foco.html","formato":"pdf"},
+    {"id":"tecnicas-de-estudo","titulo":"Técnicas de estudo que funcionam","descricao":"Infográfico com recuperação ativa, repetição espaçada, intercalação e um bloco de 50 minutos que junta as três.","categoria":"infografico","modulo":5,"fonte":"tecnicas-de-estudo.html","formato":"png"},
+    {"id":"plano-b-vida-aperta","titulo":"Plano B: quando a vida aperta","descricao":"Resumo para replanejar a semana difícil sem desistir: plano B, regra dos dois dias e revisão de domingo.","categoria":"resumo","modulo":6,"fonte":"plano-b-vida-aperta.html","formato":"pdf"}
+  ]
+}

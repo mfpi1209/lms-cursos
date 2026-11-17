@@ -1,0 +1,50 @@
+{
+  "curso": "crs_jjixvm66gvte13uh",
+  "titulo": "LinkedIn e currículo com IA",
+  "materiais": [
+    {
+      "id": "checklist-12-itens",
+      "titulo": "Checklist da missão: os 12 itens do perfil",
+      "descricao": "A lista dos doze itens da missão, com o que conferir em cada um, para você riscar conforme avança e revisar antes de entregar.",
+      "categoria": "checklist",
+      "fonte": "checklist-12-itens.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "foto-perfil-celular",
+      "titulo": "Foto de perfil com o celular em 5 passos",
+      "descricao": "Luz, fundo, câmera, enquadramento e roupa: o passo a passo para uma foto reconhecível sem gastar nada.",
+      "categoria": "infografico",
+      "modulo": 2,
+      "fonte": "foto-perfil-celular.html",
+      "formato": "png"
+    },
+    {
+      "id": "biblioteca-titulos-sobre",
+      "titulo": "Biblioteca de exemplos: título, Sobre e mensagens",
+      "descricao": "Títulos e primeiras linhas do Sobre bons e fracos, descrições de experiência e mensagens de convite e de pedido de recomendação para adaptar.",
+      "categoria": "exemplos",
+      "modulo": 3,
+      "fonte": "biblioteca-titulos-sobre.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "atalhos-vagas-alertas",
+      "titulo": "Atalhos para achar vaga: alerta, filtros e golpes",
+      "descricao": "Como montar a busca com as suas palavras, ligar o alerta, candidatar-se com critério, ensaiar a entrevista com IA e reconhecer vaga com taxa.",
+      "categoria": "atalhos",
+      "modulo": 6,
+      "fonte": "atalhos-vagas-alertas.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "modelo-curriculo-1-pagina",
+      "titulo": "Modelo de currículo de 1 página",
+      "descricao": "Um modelo em uma coluna, só texto, que o filtro automático consegue ler: veja o exemplo da Bia e preencha o seu.",
+      "categoria": "modelo",
+      "modulo": 7,
+      "fonte": "modelo-curriculo-1-pagina.html",
+      "formato": "pdf"
+    }
+  ]
+}

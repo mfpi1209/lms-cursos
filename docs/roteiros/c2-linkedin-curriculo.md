@@ -392,7 +392,7 @@ Texto na tela: A lista da Bia: atendimento, vendas, caixa, estoque, Excel. Regra
 
 **Fala para gravação**
 
-"Agora, um erro comum. Escrevo no título o que muita gente escreve: 'Estudante', ou então 'Em busca de novas oportunidades'. Parece razoável. Olha o que acontece: o recrutador digita 'estágio administrativo, atendimento', e o meu perfil não aparece, porque nenhuma dessas palavras está lá. Corrigindo: 'Estudante de Administração na Cruzeiro do Sul, atendimento ao cliente e vendas, em busca de estágio administrativo'. Agora o título diz quem eu sou, o que sei fazer e o que quero. E aparece."
+"Agora, um erro comum. Escrevo no título o que muita gente escreve: 'Estudante', ou então 'Em busca de novas oportunidades'. Parece razoável. Olha o que acontece: o recrutador digita 'estágio administrativo, atendimento', e o meu perfil não aparece, porque nenhuma dessas palavras está lá. Corrigindo: 'Estudante de Administração na sua faculdade, atendimento ao cliente e vendas, em busca de estágio administrativo'. Agora o título diz quem eu sou, o que sei fazer e o que quero. E aparece."
 
 Texto na tela: Erro comum: título 'Estudante'. Na busca, ninguém digita isso, e o perfil some.
 
@@ -454,7 +454,7 @@ Texto na tela: Sobre em 3 parágrafos: quem sou, o que já fiz, o que busco. A p
 
 **Fala para gravação**
 
-"Se você tiver números reais, use: 'bati a meta de vendas da loja em vários meses', 'treinei quatro colegas novos'. Números chamam atenção, mas só se forem verdade. Se não lembrar, descreva sem número. Olha o Sobre da Bia pronto na tela: estudante de Administração na Cruzeiro do Sul, atende clientes e vende no varejo de moda, fecha o caixa e treina novos colegas, busca estágio administrativo ou comercial. As palavras-chave estão destacadas, todas verdadeiras."
+"Se você tiver números reais, use: 'bati a meta de vendas da loja em vários meses', 'treinei quatro colegas novos'. Números chamam atenção, mas só se forem verdade. Se não lembrar, descreva sem número. Olha o Sobre da Bia pronto na tela: estudante de Administração a distância, atende clientes e vende no varejo de moda, fecha o caixa e treina novos colegas, busca estágio administrativo ou comercial. As palavras-chave estão destacadas, todas verdadeiras."
 
 Texto na tela: Use números reais, se tiver. Nunca invente. Veja o Sobre da Bia pronto.
 
@@ -524,7 +524,7 @@ Aprovação: 3 de 4
 2. Qual destes títulos tem mais chance de aparecer na busca?
 
    - Estudante
-   - Estudante de Administração na Cruzeiro do Sul | Atendimento ao cliente e vendas | Estágio administrativo (correta)
+   - Estudante de Administração na sua faculdade | Atendimento ao cliente e vendas | Estágio administrativo (correta)
    - Em busca de novas oportunidades
 
    Explicação: Curso, faculdade, palavras-chave e o que você busca. 'Estudante' sozinho não é digitado por ninguém.
@@ -617,17 +617,17 @@ Texto na tela: Sem experiência de escritório? Caixa, estoque e escala já são
 ### FIM — O que você levou
 
 - Experiência descrita com verbo, tarefa e resultado.
-- Formação ligada à página oficial da Cruzeiro do Sul.
+- Formação ligada à página oficial da sua faculdade.
 
 ### Aula 11 — Erro comum: faculdade digitada à mão
 
-Objetivo: Formação ligada à página oficial da Cruzeiro do Sul.
+Objetivo: Formação ligada à página oficial da sua faculdade.
 
 ### V42 — Erro comum: faculdade digitada à mão
 
 **Fala para gravação**
 
-"Agora, um erro comum na formação. Eu digito o nome da faculdade do meu jeito, abreviado, e salvo sem escolher nada na lista. Olha o resultado: aparece um quadradinho cinza no lugar do logotipo, e o meu perfil não fica ligado à página da instituição. Quem procura alunos da faculdade não me acha. Corrigindo: começo a digitar Cruzeiro do Sul e escolho na lista a página oficial, com o logotipo."
+"Agora, um erro comum na formação. Eu digito o nome da faculdade do meu jeito, abreviado, e salvo sem escolher nada na lista. Olha o resultado: aparece um quadradinho cinza no lugar do logotipo, e o meu perfil não fica ligado à página da instituição. Quem procura alunos da faculdade não me acha. Corrigindo: começo a digitar o nome completo da faculdade e escolho na lista a página oficial, com o logotipo."
 
 Texto na tela: Erro comum: digitar o nome da faculdade sem escolher a página oficial. Fica sem logotipo.
 
@@ -635,7 +635,7 @@ Texto na tela: Erro comum: digitar o nome da faculdade sem escolher a página of
 
 **Fala para gravação**
 
-"Depois, o tipo de diploma, que pode ser bacharelado, licenciatura ou tecnólogo, conforme o seu curso. O nome do curso, a data de início e a data prevista de término. O ano previsto mostra que você está cursando. Na descrição, escreva algo como: 'Cursando Administração na Cruzeiro do Sul, modalidade a distância'. E estudar a distância trabalhando não é algo para esconder: mostra que você se organiza sozinho e cumpre prazo."
+"Depois, o tipo de diploma, que pode ser bacharelado, licenciatura ou tecnólogo, conforme o seu curso. O nome do curso, a data de início e a data prevista de término. O ano previsto mostra que você está cursando. Na descrição, escreva algo como: 'Cursando Administração, modalidade a distância'. E estudar a distância trabalhando não é algo para esconder: mostra que você se organiza sozinho e cumpre prazo."
 
 Texto na tela: Diploma, curso, início e previsão de término. Na descrição: 'Cursando ... a distância'.
 
@@ -666,7 +666,7 @@ Texto na tela: Edite a URL do perfil: troque os números pelo seu nome. Esse lin
 ### FIM — O que você levou
 
 - Experiência descrita com verbo, tarefa e resultado.
-- Formação ligada à página oficial da Cruzeiro do Sul.
+- Formação ligada à página oficial da sua faculdade.
 
 ### Aula 12 — Prática: o miolo do perfil
 
@@ -676,7 +676,7 @@ Objetivo: Competências verdadeiras, certificado cadastrado e link personalizado
 
 **Fala para gravação**
 
-"Hora da prática, uns trinta minutos. Primeiro, cadastre pelo menos uma experiência, com descrição no formato verbo, tarefa e resultado. Segundo, a formação na página oficial da Cruzeiro do Sul, com a previsão de término. Terceiro, pelo menos cinco competências, ligadas à experiência ou à formação. Quarto, um certificado que você já tenha. Quinto, a URL personalizada e a sua cidade. Feito isso, risque os itens cinco a nove da missão e copie o link do perfil."
+"Hora da prática, uns trinta minutos. Primeiro, cadastre pelo menos uma experiência, com descrição no formato verbo, tarefa e resultado. Segundo, a formação na página oficial da sua faculdade, com a previsão de término. Terceiro, pelo menos cinco competências, ligadas à experiência ou à formação. Quarto, um certificado que você já tenha. Quinto, a URL personalizada e a sua cidade. Feito isso, risque os itens cinco a nove da missão e copie o link do perfil."
 
 Texto na tela: Prática, 30 min: experiência, formação, 5 competências, certificado e URL. Itens 5 a 9.
 
@@ -722,7 +722,7 @@ Aprovação: 3 de 4
 
    - Escrever só 'faculdade' no campo da instituição
    - Não cadastrar até se formar
-   - Escolher a página oficial da Cruzeiro do Sul na lista e informar curso, início e previsão de término (correta)
+   - Escolher a página oficial da sua faculdade na lista e informar curso, início e previsão de término (correta)
 
    Explicação: A página oficial liga o seu perfil à faculdade, e o ano previsto mostra que você está cursando.
 
@@ -739,7 +739,7 @@ Destino: FIM
 ### FIM — O que você levou
 
 - Experiência descrita com verbo, tarefa e resultado.
-- Formação ligada à página oficial da Cruzeiro do Sul.
+- Formação ligada à página oficial da sua faculdade.
 - Competências verdadeiras, certificado cadastrado e link personalizado.
 
 ## Módulo 5 — Rede: conexões, recomendações e o primeiro post
@@ -1075,7 +1075,7 @@ Texto na tela: Prática, 20 min: alerta, aberto a trabalho, 3 vagas salvas, ensa
 
 **Fala para gravação**
 
-"Duas dúvidas. Posso me candidatar se não tenho todos os requisitos? Pode. Descrição de vaga costuma ser uma lista de desejos. Se você tem a maior parte do obrigatório, candidate-se e mostre o que tem. E quando eu conseguir o estágio, o que faço com o termo de compromisso? A empresa ou o agente de integração costuma enviar o documento, e a faculdade precisa assinar. Procure o canal oficial da Cruzeiro do Sul assim que receber."
+"Duas dúvidas. Posso me candidatar se não tenho todos os requisitos? Pode. Descrição de vaga costuma ser uma lista de desejos. Se você tem a maior parte do obrigatório, candidate-se e mostre o que tem. E quando eu conseguir o estágio, o que faço com o termo de compromisso? A empresa ou o agente de integração costuma enviar o documento, e a faculdade precisa assinar. Procure o canal oficial da sua faculdade assim que receber."
 
 Texto na tela: Dúvidas: sem todos os requisitos? Candidate-se. Termo de compromisso? Canal oficial da faculdade.
 
@@ -1185,7 +1185,7 @@ Texto na tela: Corrigido: uma coluna, só texto, títulos simples. No topo: nome
 
 **Fala para gravação**
 
-"Depois vem a formação: o seu curso, a Cruzeiro do Sul e a previsão de conclusão. Em seguida, a experiência, da mais recente para a mais antiga, com verbo e resultado, igual ao perfil. Inclua o trabalho informal, se for o caso, como a Bia fez com os doces. Por fim, competências e cursos com certificado, incluindo este, quando sair. Tudo isso cabe numa página para quem está começando a carreira."
+"Depois vem a formação: o seu curso, a sua faculdade e a previsão de conclusão. Em seguida, a experiência, da mais recente para a mais antiga, com verbo e resultado, igual ao perfil. Inclua o trabalho informal, se for o caso, como a Bia fez com os doces. Por fim, competências e cursos com certificado, incluindo este, quando sair. Tudo isso cabe numa página para quem está começando a carreira."
 
 Texto na tela: Depois: formação, experiência (mais recente primeiro), competências e cursos.
 
@@ -1264,7 +1264,7 @@ Objetivo: Missão entregue: perfil com 12 itens e currículo.
 
 **Fala para gravação**
 
-"Agora, a missão. A lista tem doze itens, e você já riscou quase todos ao longo do curso. Do um ao seis: foto nítida de rosto, só você, com fundo simples. Capa personalizada. Título com curso, faculdade e duas ou três palavras-chave. Sobre em três parágrafos curtos. URL personalizada e cidade preenchida. E formação na página oficial da Cruzeiro do Sul, com o curso e a previsão de término."
+"Agora, a missão. A lista tem doze itens, e você já riscou quase todos ao longo do curso. Do um ao seis: foto nítida de rosto, só você, com fundo simples. Capa personalizada. Título com curso, faculdade e duas ou três palavras-chave. Sobre em três parágrafos curtos. URL personalizada e cidade preenchida. E formação na página oficial da sua faculdade, com o curso e a previsão de término."
 
 Texto na tela: Missão, itens 1 a 6: foto, capa, título, Sobre, URL e cidade, formação.
 
@@ -1383,4 +1383,4 @@ Carga horária: as aulas incluem a prática guiada feita com o vídeo pausado; o
 
 Cenas com gravação de tela (anexar o MP4 na cena): V07 (gravacao_perfil_tour) · V18 (gravacao_canva_capa) · V19 (gravacao_subir_foto_capa) · V24 (gravacao_vagas_palavras) · V32 (gravacao_ia_titulo) · V38 (gravacao_adicionar_experiencia) · V43 (gravacao_formacao_campos) · V45 (gravacao_licencas_certificados) · V46 (gravacao_url_personalizada) · V56 (gravacao_pedir_recomendacao) · V64 (gravacao_busca_vagas) · V65 (gravacao_alerta_vaga) · V72 (gravacao_ia_entrevista) · V84 (gravacao_ia_curriculo)
 
-A conferir antes de gravar: c2m1_5_01: Lei 11.788 de 2008 em vigor e sem alterações relevantes · c2m1_5_01: caminho oficial na Cruzeiro do Sul para assinar o termo de compromisso · c2m1_6_01: limite de jornada do estágio no ensino superior · c2m1_6_01: onde o aluno consulta a matriz curricular e a regra de estágio · c2m1_10_01: caminho atual da verificação em duas etapas no LinkedIn · c2m2_9_01: nome do modelo no Canva e tamanho recomendado da capa no LinkedIn · c2m2_10_01: caminho e opção de visibilidade da foto no app e no navegador · c2m3_5_01: limite atual de caracteres do título no LinkedIn · c2m3_9_01: quantas linhas do Sobre aparecem antes de 'ver mais' no app · c2m4_2_01: nome atual do botão de adicionar seção e da seção Experiência no app · c2m4_7_01: nome exato da página oficial da instituição no LinkedIn para alunos EaD · c2m4_8_01: como o LinkedIn exibe formação com término futuro · c2m4_9_01: se o app ainda pede para associar competência a experiência ou formação · c2m4_10_01: nome atual da seção Licenças e certificados · c2m4_11_01: caminho atual para editar a URL personalizada · c2m5_2_01: como a rede influencia a busca e o alcance no LinkedIn · c2m5_5_01: limite de caracteres da nota e de convites personalizados na conta gratuita · c2m5_7_01: caminho atual para pedir recomendação no app e no navegador · c2m6_2_01: nomes atuais dos filtros de vagas no app · c2m6_3_01: onde fica a opção de criar alerta de vagas · c2m6_6_01: nome atual da área de vagas salvas e candidaturas · c2m6_7_01: caminho atual da opção aberto a trabalho · c2m6_7_01: opções de visibilidade e texto do LinkedIn sobre a empresa atual · c2m6_8_03: onde fica a opção de denunciar vaga ou perfil · c2m6_14_01: canal e prazo oficiais para assinatura do termo de compromisso
+A conferir antes de gravar: c2m1_5_01: Lei 11.788 de 2008 em vigor e sem alterações relevantes · c2m1_5_01: caminho oficial na faculdade para assinar o termo de compromisso · c2m1_6_01: limite de jornada do estágio no ensino superior · c2m1_6_01: onde o aluno consulta a matriz curricular e a regra de estágio · c2m1_10_01: caminho atual da verificação em duas etapas no LinkedIn · c2m2_9_01: nome do modelo no Canva e tamanho recomendado da capa no LinkedIn · c2m2_10_01: caminho e opção de visibilidade da foto no app e no navegador · c2m3_5_01: limite atual de caracteres do título no LinkedIn · c2m3_9_01: quantas linhas do Sobre aparecem antes de 'ver mais' no app · c2m4_2_01: nome atual do botão de adicionar seção e da seção Experiência no app · c2m4_7_01: nome exato da página oficial da instituição no LinkedIn para alunos EaD · c2m4_8_01: como o LinkedIn exibe formação com término futuro · c2m4_9_01: se o app ainda pede para associar competência a experiência ou formação · c2m4_10_01: nome atual da seção Licenças e certificados · c2m4_11_01: caminho atual para editar a URL personalizada · c2m5_2_01: como a rede influencia a busca e o alcance no LinkedIn · c2m5_5_01: limite de caracteres da nota e de convites personalizados na conta gratuita · c2m5_7_01: caminho atual para pedir recomendação no app e no navegador · c2m6_2_01: nomes atuais dos filtros de vagas no app · c2m6_3_01: onde fica a opção de criar alerta de vagas · c2m6_6_01: nome atual da área de vagas salvas e candidaturas · c2m6_7_01: caminho atual da opção aberto a trabalho · c2m6_7_01: opções de visibilidade e texto do LinkedIn sobre a empresa atual · c2m6_8_03: onde fica a opção de denunciar vaga ou perfil · c2m6_14_01: canal e prazo oficiais para assinatura do termo de compromisso

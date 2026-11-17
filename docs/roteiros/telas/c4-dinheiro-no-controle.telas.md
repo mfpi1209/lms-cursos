@@ -37,8 +37,7 @@ App: Planilha
 - célula: A5 = Celular e internet
 - célula: B5 = 80
 - célula: A6 = Total (na fala: "clique na célula do total")
-- digita: =SOMA(B2:B5) (peso 3) (na fala: "digite igual")
-- célula: B6 = =SOMA(B2:B5) (na fala: "Pronto")
+- célula: B6 = =SOMA(B2:B5) (peso 3) (na fala: "digite igual")
 - destaca: A planilha faz a conta por você e refaz sozinha quando um valor muda (na fala: "a planilha faz a conta por você")
 
 ## gravacao_calculadora_mes_a_mes
@@ -78,7 +77,7 @@ App: Planilha
 - célula: B1 = 1000
 - destaca: 10% ao mês não é 120% ao ano: é mais de 200% (na fala: "é mais de duzentos")
 - célula: A2 = Depois de 1 ano (na fala: "Para conferir na planilha")
-- digita: =1000*1,1^12 (peso 3) (na fala: "digite igual")
+- célula: B2 = =1000*1,1^12 (peso 3) (na fala: "digite igual")
 - destaca: O circunflexo quer dizer elevado a (na fala: "O circunflexo quer dizer")
 - célula: B2 = 3138,43 (na fala: "Aparece o valor")
 - destaca: Teste com outros números (na fala: "Faça o teste")
@@ -115,7 +114,7 @@ App: Banco
 - toca: Limites (na fala: "ajustar o limite de valor")
 - mostra: Limite do Pix | Dia: R$ 1.000 | Noite: R$ 1.000 (na fala: "no período da noite")
 - toca: Alterar limite noturno (na fala: "Deixe um limite baixo")
-- mostra: Limite alterado | Noite: R$ 200 (na fala: "Se um dia precisar")
+- mostra: Novo limite noturno | Noite: R$ 200 (era R$ 1.000) (na fala: "do tamanho do seu dia a dia")
 - destaca: Se precisar de mais, aumente com antecedência (na fala: "você aumenta com antecedência")
 - destaca: Dica: salve como contato quem você paga sempre (na fala: "Outra dica")
 
@@ -143,6 +142,6 @@ App: Planilha
 - célula: A6 = Documento (na fala: "a renovação de um documento")
 - célula: B6 = Outubro
 - célula: A7 = Férias (na fala: "as férias")
-- célula: B7 = Janeiro (na fala: "as férias")
+- célula: B7 = Janeiro
 - destaca: Uma aba com os 12 meses: anote os gastos que você já sabe que vêm (na fala: "crie uma aba")
 - destaca: Em dez minutos, o ano fica à vista (na fala: "Em dez minutos")
