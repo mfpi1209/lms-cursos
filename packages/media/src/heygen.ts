@@ -141,6 +141,23 @@ export function motionPromptForAngle(prompt: string | null | undefined, angle: s
   return g ? `${HANDS_CLASPED_MOTION}; ${g}` : HANDS_CLASPED_MOTION;
 }
 
+/**
+ * Variação de retomada: o HeyGen devolve o MESMO vídeo para o mesmo pedido (mesma imagem, áudio e movimento), então
+ * refazer uma tomada sem mudar nada no pedido sai idêntico. A retomada N acrescenta uma frase curta e neutra ao
+ * movimento (só nas tomadas refeitas; as demais chaves ficam iguais), o bastante para o HeyGen gerar outra versão.
+ */
+const RETAKE_VARIATIONS = [
+  'calm natural posture, both wrists bare and plain',
+  'relaxed stance, plain shirt cuffs, bare skin on both wrists',
+  'steady and composed, empty hands, no jewelry at all',
+  'gentle natural breathing, arms relaxed, bare forearms and wrists',
+  'composed presenter posture, clean wrists with no accessories',
+];
+export function retakeVariation(n: number | null | undefined): string | undefined {
+  if (!n || n <= 0) return undefined;
+  return `${RETAKE_VARIATIONS[(n - 1) % RETAKE_VARIATIONS.length]}, bare fingers with no rings (take ${n + 1})`;
+}
+
 export class HeyGenError extends Error {
   constructor(public readonly status: number, public readonly code: string, message: string, public readonly retryAfterSeconds?: number) {
     super(message);

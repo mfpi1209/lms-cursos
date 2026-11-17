@@ -23,7 +23,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ScreenMock } from '@lms/course-schema';
+import { screenMockStepLine, type ScreenMock } from '@lms/course-schema';
 import { ffprobe, renderStoryboard, storyboardClock, type StoryboardSource } from '@lms/media/compose';
 
 export interface QaArgs {
@@ -71,23 +71,9 @@ export function sceneSources(file: string, totalSec: number, recs: ReadonlyArray
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-/** Um passo da tela em uma linha, na sintaxe do arquivo de telas (para ler ao lado do storyboard). */
+/** Um passo da tela em uma linha, na sintaxe do arquivo de telas (mesma função do estúdio: `screenMockStepLine`). */
 export function stepLine(st: ScreenMock['steps'][number]): string {
-  const side = st.side ? `[${st.side === 'left' ? 'esq' : 'dir'}] ` : '';
-  const tail = `${st.weight !== undefined ? ` (peso ${st.weight})` : ''}${st.cue ? ` (na fala: "${st.cue}")` : ''}`;
-  const body = (() => {
-    switch (st.kind) {
-      case 'type': return `digita: ${st.text}`;
-      case 'message': return `${st.from === 'user' ? 'usuário' : st.from === 'ai' ? 'ia' : 'outro'}: ${st.text}`;
-      case 'show': return `mostra: ${[st.title ?? '', ...st.lines].join(' | ')}`;
-      case 'toggle': return `${st.on ? 'liga' : 'desliga'}: ${st.label}`;
-      case 'tap': return `toca: ${st.label}`;
-      case 'cell': return `célula: ${st.ref} = ${st.value}`;
-      case 'event': return `evento: ${[st.title, st.day, st.time, st.color].filter(Boolean).join(' | ')}`;
-      case 'highlight': return `destaca: ${st.text}`;
-    }
-  })();
-  return `${side}${body}${tail}`;
+  return screenMockStepLine(st);
 }
 
 export interface QaSceneEntry {

@@ -1,5 +1,5 @@
 import { Readable } from 'node:stream';
-import { getDb, media, identity, submissions } from '@lms/db';
+import { getDb, media, identity, submissions, materials } from '@lms/db';
 import { getStorage } from '@lms/media';
 import { handleError } from '@/server/http';
 import { HttpError, requireViewer } from '@/server/viewer';
@@ -25,7 +25,13 @@ export async function GET(req: Request, ctx: { params: Promise<{ assetId: string
     // Legendas (WebVTT) são texto pequeno que o aluno precisa ler junto do vídeo; outros documentos só para a equipe.
     const isCaptions = /^text\/vtt\b/i.test(asset.mimeType);
     const taskFile = !!asset.metadata?.taskUpload;
-    if (asset.kind === 'document' && !isCaptions && !identity.isStaff(viewer.role) && !submissions.isOwnTaskFile(asset, viewer.user.id)) throw new HttpError(404, 'Mídia não encontrada');
+    // material de apoio (PDF do curso): quem tem matrícula numa versão que lista o arquivo (materials.materialReadableBy)
+    const material = materials.isCourseMaterialAsset(asset);
+    if (asset.kind === 'document' && !isCaptions && !identity.isStaff(viewer.role) && !submissions.isOwnTaskFile(asset, viewer.user.id)) {
+      const ok = material && (await materials.materialReadableBy(getDb(), { assetId: asset.id, courseId: asset.metadata!.courseMaterial!.courseId, userId: viewer.user.id }));
+      if (!ok) throw new HttpError(404, 'Mídia não encontrada');
+    }
+    const download = new URL(req.url).searchParams.get('download') === '1';
     const storage = await getStorage();
     if (storage.provider !== asset.storageProvider) throw new HttpError(500, 'Storage do asset indisponível neste ambiente');
     const info = await storage.head(asset.storageKey);
@@ -37,7 +43,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ assetId: string
       // arquivo de entrega (enviado por aluno): sem cache; PDF sempre como download (nunca aberto dentro da plataforma)
       'cache-control': taskFile ? 'private, no-store' : 'private, max-age=3600',
       'x-content-type-options': 'nosniff',
-      'content-disposition': taskFile && asset.mimeType === 'application/pdf' ? `attachment; filename="entrega-${asset.id}.pdf"` : `inline; filename="${asset.id}"`,
+      'content-disposition': taskFile && asset.mimeType === 'application/pdf' ? `attachment; filename="entrega-${asset.id}.pdf"` : contentDisposition(asset, download),
     });
     if (taskFile) headers.set('content-security-policy', "default-src 'none'; sandbox");
     const rangeHeader = req.headers.get('range');
@@ -62,4 +68,13 @@ export async function GET(req: Request, ctx: { params: Promise<{ assetId: string
   } catch (e) {
     return handleError(e);
   }
+}
+
+/** Nome do arquivo no download: o nome original (material de apoio: "checklist-perfil.pdf"), sem caracteres de controle. */
+function contentDisposition(asset: { id: string; originalName: string | null; mimeType: string }, download: boolean): string {
+  const ext = asset.mimeType === 'application/pdf' ? '.pdf' : asset.mimeType === 'image/png' ? '.png' : asset.mimeType === 'image/jpeg' ? '.jpg' : '';
+  const raw = (asset.originalName ?? '').replace(/[\x00-\x1f"\\/]/g, '').trim() || `${asset.id}${ext}`;
+  const ascii = raw.normalize('NFD').replace(/[^\x20-\x7e]/g, '');
+  const type = download ? 'attachment' : 'inline';
+  return `${type}; filename="${ascii || asset.id + ext}"; filename*=UTF-8''${encodeURIComponent(raw)}`;
 }

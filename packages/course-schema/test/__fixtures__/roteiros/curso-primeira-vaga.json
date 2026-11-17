@@ -9338,7 +9338,8 @@
       "finished": true,
       "trailVersion": 2
     },
-    "sourceIds": []
+    "sourceIds": [],
+    "materials": []
   },
   "errors": [],
   "warnings": [

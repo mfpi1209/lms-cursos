@@ -162,6 +162,20 @@
       "when": 1794530638440,
       "tag": "0022_webhooks",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794670800742,
+      "tag": "0023_video_review_marks",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794673158510,
+      "tag": "0024_video_review_fix",
+      "breakpoints": true
     }
   ]
 }

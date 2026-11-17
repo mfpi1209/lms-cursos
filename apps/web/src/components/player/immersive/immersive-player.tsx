@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Award, BookOpen, Check, CircleCheck, Copy, FileText, Flag, Footprints, ListChecks, ListVideo, Maximize, Mic, Minimize, MousePointerClick, Pause, Pencil, Play, RotateCcw, Send, Target, Undo2 } from 'lucide-react';
+import { ArrowLeft, Award, BookOpen, Check, CircleCheck, Copy, FileText, Flag, Footprints, ListChecks, ListVideo, Maximize, Mic, Minimize, MousePointerClick, Paperclip, Pause, Pencil, Play, RotateCcw, Send, Target, Undo2 } from 'lucide-react';
 import { resolveReview, type AttemptState, type ProgressSummary, type ReviewSummary } from '@lms/course-engine';
 import {
   MISSION_LABELS,
@@ -40,6 +40,7 @@ import { ImmersiveFullscreenProvider, useImmersiveFullscreen, useImmersiveFullsc
 import { OptionCards } from './option-cards';
 import { RecordAnswer, WriteAnswer, useMicAvailable, type OpenAnswerDraft } from './open-answer';
 import { RecapDrawer, useCourseRecap, type CourseRecap } from './recap-drawer';
+import { MaterialsDrawer } from '@/components/materials/materials-drawer';
 import { BRIDGE_BUTTON, BRIDGE_EYEBROW, BRIDGE_LINE, CLOSING_LABEL, LAST_PRACTICE_CHIP, closingCardTitle, closingNodeId as closingNodeIdOf, farewellAfter, isCourseEnd, isLastLessonOfCourse, isLastPractice, missionAckText, missionAfter, missionContinueLabel } from './scene-flow';
 import { chipFor, clock, headingSize, isTipScene, resolveBrand, splitPrompt, type ResolvedBrand } from './theme';
 import { ImButton, ImCard, ImLink, StatusChip } from './ui';
@@ -93,6 +94,7 @@ export function ImmersivePlayer({
 }) {
   const brand = useMemo(() => resolveBrand(platform), [platform]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [materialsOpen, setMaterialsOpen] = useState(false);
   // tela cheia no raiz do player (não desmonta entre cenas, reações, decisões, missão e despedida): ela segue pela aula toda
   const rootRef = useRef<HTMLDivElement>(null);
   const fullscreen = useImmersiveFullscreen(rootRef, platform.enrollmentId ?? lesson.id);
@@ -211,7 +213,7 @@ export function ImmersivePlayer({
       )}
     >
       {/* tela cheia: só o palco (cabeçalho e rodapé saem; "Meu roteiro" e o tema voltam ao sair) */}
-      {!fullscreen.active && <PlatformHeader brand={brand} homeHref={homeHref} {...(platform.series ? { seriesLabel: seriesHeaderLabel(platform.series) } : {})} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} />}
+      {!fullscreen.active && <PlatformHeader brand={brand} homeHref={homeHref} {...(platform.series ? { seriesLabel: seriesHeaderLabel(platform.series) } : {})} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} {...(platform.materials ? { materialsCount: platform.materials.items.length, onOpenMaterials: () => setMaterialsOpen(true), materialsOpen } : {})} />}
 
       <p className="sr-only" role="status" aria-live="polite">
         {announce}
@@ -295,6 +297,15 @@ export function ImmersivePlayer({
       )}
 
       <RecapDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} recap={recap} {...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {})} />
+      {platform.materials && (
+        <MaterialsDrawer
+          open={materialsOpen}
+          onClose={() => setMaterialsOpen(false)}
+          materials={platform.materials.items}
+          {...(platform.materials.moduleLabel ? { moduleLabel: platform.materials.moduleLabel } : {})}
+          {...(platform.enrollmentId ? { courseHref: `/aprender/${platform.enrollmentId}` } : {})}
+        />
+      )}
       <LessonMapDrawer
         platform
         open={nav.mapOpen}
@@ -319,7 +330,7 @@ export function ImmersivePlayer({
 /* Cabeçalho                                                                 */
 /* ------------------------------------------------------------------------ */
 
-function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen }: { brand: ResolvedBrand; homeHref: string; /** curso que é parte de uma série: "{trilha} · Parte N de 3" no lugar do nome do curso */ seriesLabel?: string; onOpenRecap: () => void; drawerOpen: boolean }) {
+function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen, materialsCount, onOpenMaterials, materialsOpen }: { brand: ResolvedBrand; homeHref: string; /** curso que é parte de uma série: "{trilha} · Parte N de 3" no lugar do nome do curso */ seriesLabel?: string; onOpenRecap: () => void; drawerOpen: boolean; /** materiais de apoio do módulo da aula: botão "Materiais" (ausente = sem botão) */ materialsCount?: number; onOpenMaterials?: () => void; materialsOpen?: boolean }) {
   return (
     <header className="mx-auto flex h-16 w-full max-w-[1920px] items-center justify-between gap-3 px-4 md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:px-10">
       {brand.mark ? (
@@ -355,6 +366,20 @@ function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen 
       )}
       <div className="flex items-center justify-end gap-2 md:gap-3">
         <ThemeSwitch />
+        {onOpenMaterials && materialsCount ? (
+          <button
+            type="button"
+            onClick={onOpenMaterials}
+            aria-haspopup="dialog"
+            aria-expanded={!!materialsOpen}
+            data-testid="open-materials"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 rounded-[12px] border border-line-strong px-3 text-[15px] font-medium text-fg hover:border-fg/40 hover:bg-fg/5 md:px-5"
+          >
+            <Paperclip className="size-5" aria-hidden="true" />
+            <span className="max-md:sr-only">Materiais</span>
+            <span className="sr-only">({materialsCount})</span>
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={onOpenRecap}

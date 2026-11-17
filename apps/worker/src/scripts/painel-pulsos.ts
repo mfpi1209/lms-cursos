@@ -17,13 +17,13 @@ import { existsSync } from 'node:fs';
 import { mkdir, symlink, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { allLessons, continuousTakeGroups, shotNeedsPresenter, type Camera, type CourseDocument, type Shot, type ShotFraming } from '@lms/course-schema';
+import { TAKE_PERCENTS, allLessons, planTakes, type Camera, type CourseDocument, type Shot, type ShotFraming, type TakePlan } from '@lms/course-schema';
 import { authoring, getDb, media } from '@lms/db';
 import { ffprobe, runFfmpeg } from '@lms/media/compose';
 import { readAsset } from '../media';
 
-/** instantes recortados dentro de cada TOMADA (fração do tempo dela) */
-export const TAKE_PERCENTS = [40, 75] as const;
+// tempos das tomadas: `planTakes` (@lms/course-schema), o mesmo cálculo da revisão "Assistir e marcar" do estúdio
+export { TAKE_PERCENTS, planTakes, type TakeFrame, type TakePlan } from '@lms/course-schema';
 /** linhas (tomadas) por imagem do painel (24 × 360 px = 8.640 px de altura) */
 export const ROWS_PER_PAGE = 24;
 const TILE_W = 640;
@@ -81,57 +81,6 @@ export function cropExpr(r: HandsRegion): string {
 
 export function frameTime(durationSeconds: number, percent: number): number {
   return +(durationSeconds * (percent / 100)).toFixed(3);
-}
-
-export interface TakeFrame {
-  percent: number;
-  /** instante no vídeo (s) */
-  time: number;
-  /** plano falado nesse instante (enquadramento/câmera do recorte) */
-  shot: Pick<Shot, 'id' | 'line' | 'cameraId' | 'framing'> | undefined;
-}
-
-export interface TakePlan {
-  /** id do 1º plano da tomada (o que `refazer-tomadas` espera) */
-  firstShotId: string;
-  shotIds: string[];
-  cameraId: string | undefined;
-  start: number;
-  end: number;
-  frames: TakeFrame[];
-}
-
-/**
- * Tomadas de apresentador da cena com o trecho do vídeo de cada uma (proporcional ao tamanho da fala; `dropped` = planos
- * tirados no ajuste fino, que não estão no vídeo) e os instantes dos recortes. Cena sem direção: uma tomada só.
- */
-export function planTakes<T extends Pick<Shot, 'id' | 'line' | 'cameraId' | 'framing' | 'layout' | 'slide'>>(shots: readonly T[], opts: { hasNarrationAudio: boolean; durationSeconds: number; dropped?: readonly string[] }): TakePlan[] {
-  const dropped = new Set(opts.dropped ?? []);
-  const kept = shots.filter((s) => !dropped.has(s.id));
-  if (!kept.length) return [];
-  const total = kept.reduce((a, s) => a + s.line.length, 0) || 1;
-  const start = new Map<string, number>();
-  let acc = 0;
-  for (const s of kept) {
-    start.set(s.id, (acc / total) * opts.durationSeconds);
-    acc += s.line.length;
-  }
-  const endOf = (s: T) => ((start.get(s.id)! / opts.durationSeconds) * total + s.line.length) / total * opts.durationSeconds;
-  const out: TakePlan[] = [];
-  for (const g of continuousTakeGroups(kept, { hasNarrationAudio: opts.hasNarrationAudio })) {
-    const first = kept[g[0]!]!;
-    if (first.layout === 'cinematic' || !shotNeedsPresenter(first, opts.hasNarrationAudio)) continue;
-    const a = start.get(first.id)!;
-    const b = endOf(kept[g[g.length - 1]!]!);
-    const members = g.map((i) => kept[i]!);
-    const frames = TAKE_PERCENTS.map((percent): TakeFrame => {
-      const time = +(a + (b - a) * (percent / 100)).toFixed(3);
-      const shot = members.find((m) => time <= endOf(m) + 1e-6) ?? members[members.length - 1];
-      return { percent, time, shot };
-    });
-    out.push({ firstShotId: first.id, shotIds: members.map((m) => m.id), cameraId: first.cameraId, start: +a.toFixed(3), end: +b.toFixed(3), frames });
-  }
-  return out;
 }
 
 interface Row {

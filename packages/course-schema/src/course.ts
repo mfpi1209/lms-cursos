@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CourseMaterialsSchema } from './materials';
 import { NodeIdSchema } from './nodes';
 import { ExperienceFamilySchema, LessonGraphSchema, ObjectiveSchema, SCHEMA_VERSION } from './graph';
 import { CameraSchema, DirectionStyleSchema, PresenterPronounSchema } from './direction';
@@ -396,6 +397,8 @@ export const CourseDocumentSchema = z.object({
   wizard: WizardStateSchema.prefault({}),
   /** fontes vinculadas (source_documents) */
   sourceIds: z.array(z.string().max(64)).default([]),
+  /** materiais de apoio (PDF, imagem, link) para a aluna baixar; ver materials.ts */
+  materials: CourseMaterialsSchema,
 });
 export type CourseDocument = z.infer<typeof CourseDocumentSchema>;
 

@@ -26,3 +26,5 @@ export * from './screen-mock';
 export * from './import/screen-mocks-markdown';
 export * from './import/scene-topics-markdown';
 export * from './free-course';
+export * from './takes';
+export * from './materials';

@@ -1,5 +1,6 @@
 import { DomainError, media, type Database } from '@lms/db';
 import { allLessons, findLesson, mediaSceneOf, reactionScenes, isRichTextEmpty, mediaPresentationStale, type CourseDocument, type MediaRef } from '@lms/course-schema';
+import { sceneInputChanged } from '@/server/media-drift';
 import { MEDIA_NODE_TYPES, backgroundExtras, directedPartialReuse, scenePresentationFingerprint, getMediaConfig, recomposeAlphaKey, recomposeJobInput, resolveSceneProduction, sceneRequestFromPresentation, spokenTextOfNode } from '@/server/media';
 
 export type QuoteSceneError = { lessonId: string; nodeId: string; title: string; message: string };
@@ -33,7 +34,9 @@ export async function buildQuoteItems(
         const m = (n as { media?: MediaRef }).media;
         if (!nodeFilter) {
           // desatualizado = pelo texto (`stale`) ou pela apresentação (impressão diferente; auditoria P1-1)
-          const stale = !!m && (m.stale === true || mediaPresentationStale(m, doc.presentation, n));
+          let stale = !!m && (m.stale === true || mediaPresentationStale(m, doc.presentation, n));
+          // ou editada fora do formulário (script, telas, tomada) sem marcar `stale`: ver media-drift.ts
+          if (m && !stale && body.includeStale) stale = await editedSinceGenerated(db, doc, l.id, n.id, m, cfg);
           if (m && !stale) continue;
           if (m && stale && !body.includeStale) continue;
         }
@@ -112,4 +115,23 @@ export async function buildQuoteItems(
       };
     });
   return { items, errors };
+}
+
+/**
+ * A cena mudou desde o vídeo anexado? Hash atual (no mesmo modo em que o vídeo foi feito, real ou simulado) diferente
+ * de `generatedFrom.sceneHash` E entrada de conteúdo diferente da do job que o gerou (troca só de versão do motor não
+ * conta). Só lê; na dúvida (sem job, cena que não resolve) responde `false`, como antes.
+ */
+export async function editedSinceGenerated(db: Database, doc: CourseDocument, lessonId: string, nodeId: string, m: MediaRef, cfg: ReturnType<typeof getMediaConfig>): Promise<boolean> {
+  const gf = m.generatedFrom;
+  if (!gf?.sceneHash || !gf.jobId) return false;
+  let resolved: ReturnType<typeof resolveSceneProduction>;
+  try {
+    resolved = resolveSceneProduction(doc, sceneRequestFromPresentation(doc, lessonId, nodeId), { ...cfg, simulation: gf.simulated === true });
+  } catch {
+    return false;
+  }
+  if (resolved.sceneHash === gf.sceneHash) return false;
+  const job = await media.getJob(db, gf.jobId);
+  return !!job && sceneInputChanged(job.input as Record<string, unknown> | null, resolved.jobInput as Record<string, unknown>);
 }

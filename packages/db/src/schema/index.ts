@@ -8,3 +8,4 @@ export * from './agent';
 export * from './library';
 export * from './recognition';
 export * from './webhooks';
+export * from './review';

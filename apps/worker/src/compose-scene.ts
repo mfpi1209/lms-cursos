@@ -5,7 +5,7 @@ import path from 'node:path';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { authoring, getDb, media, schema, newId } from '@lms/db';
 import { SceneDirectionSchema, allLessons, chipLabel, panelIconFor, buildCinematicPrompt, cinematicClipSeconds, directionNarration, type Camera, type CameraZone, type PresenterPronoun, type SceneDirection } from '@lms/course-schema';
-import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, motionPromptForAngle, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
+import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, motionPromptForAngle, retakeVariation, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
 import {
   CHROMA_KEY_COLOR, ShotLineNotFoundError, appendBumperToVideo, approxWords, composeScene, cutAudioSegments, mapWordsToTimeline, wordsFromAlignment, extractScenePlate, ffprobe, generateMotionStandInClip, generateStandInClip, generateTestClip, generateToneMp3, mapShotTimings, renderCornerTagToFile, renderShotGraphics, syntheticAlignment,
   type CaptionWord, type CharAlignment, type ChipsGraphics, type LoudnessResult, type ShotClip, type ShotTiming, type TimelineShotWords,
@@ -324,7 +324,10 @@ function unitCamera(input: DirectedInput, u: RenderUnit) {
 function unitMotion(input: DirectedInput, u: RenderUnit, p: { motionPrompt?: string; handsStill?: boolean }) {
   // mãos paradas no curso todo: trata toda câmera como "não de frente" (mãos juntas)
   const angle = p.handsStill ? 'all' : (unitCamera(input, u) as { angle?: string } | undefined)?.angle;
-  return motionPromptForAngle(u.motionPrompt?.trim() || p.motionPrompt, angle);
+  const m = motionPromptForAngle(u.motionPrompt?.trim() || p.motionPrompt, angle);
+  // retomada: o HeyGen repete o vídeo para o mesmo pedido; a variação muda o pedido só da tomada refeita
+  const v = retakeVariation(u.retake);
+  return v ? (m ? `${m}; ${v}` : v) : m;
 }
 
 /** Zona da câmera do item (estúdio com zonas): a da câmera dele, ou a da principal; ausente = câmera comum. */

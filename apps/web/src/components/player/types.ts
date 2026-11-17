@@ -1,4 +1,4 @@
-import type { Branding, BumperPlayOn, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
+import type { Branding, BumperPlayOn, CourseMaterial, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
 import type { BrandMark } from '@/config/brand';
 import type { AttemptState, Intent, NavigationTarget, ProgressSummary, AssessmentOutcome } from '@lms/course-engine';
 import type { TaskRecordView } from './task-delivery';
@@ -124,6 +124,8 @@ export interface PlatformContext {
   series?: PlatformSeries;
   /** matrícula (LMS): habilita as respostas do curso inteiro no roteiro */
   enrollmentId?: string;
+  /** materiais de apoio do módulo desta aula (botão "Materiais" no cabeçalho); ausente = sem botão */
+  materials?: { items: CourseMaterial[]; moduleLabel?: string };
   /** encerramento com roteiro do curso (de qualquer aula) e os nós que ele cita */
   recap?: { lessonId: string; endNode: EndNode; nodes: Record<string, RecapNodeRef> };
   /**

@@ -1,4 +1,4 @@
-import { allLessons, ownImageUrl, type CourseDocument, type EndNode } from '@lms/course-schema';
+import { allLessons, ownImageUrl, type CourseDocument, type EndNode, materialsForModule } from '@lms/course-schema';
 import type { BrandMark } from '@/config/brand';
 import type { LessonRunStatus, PlatformBumper, PlatformContext, RecapNodeRef } from './types';
 
@@ -119,7 +119,18 @@ export function buildPlatformContext({
     enrollmentId,
     recap,
     ...(bumper ? { bumper } : {}),
+    ...lessonMaterials(document, lessonId),
   };
+}
+
+/** Materiais de apoio do módulo da aula (botão "Materiais" no cabeçalho do player); nenhum = sem botão. */
+function lessonMaterials(document: CourseDocument, lessonId: string): Pick<PlatformContext, 'materials'> {
+  const index = document.modules.findIndex((m) => m.lessons.some((l) => l.id === lessonId));
+  const mod = document.modules[index];
+  if (!mod) return {};
+  const items = materialsForModule(document.materials ?? [], mod.id);
+  if (!items.length) return {};
+  return { materials: { items, moduleLabel: document.modules.length > 1 ? `Módulo ${index + 1} · ${mod.title}` : mod.title } };
 }
 
 const PRESENTER_ROLE = /apresentador|apresentadora|mentor|mentora|entrevistador|entrevistadora|anfitri/i;

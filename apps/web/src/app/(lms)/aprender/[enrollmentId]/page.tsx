@@ -16,6 +16,7 @@ import { CourseMenu } from '../_components/course-menu';
 import { CourseTrailCard } from '../_components/course-trail-card';
 import { PendingMissions } from '../_components/pending-missions';
 import { TaskDeliveries } from '../_components/task-deliveries';
+import { CourseMaterials } from '../_components/course-materials';
 import { shortTitleFor } from '../_lib/short-titles';
 import { buildFreeCourseOutline, freeCourseCta } from '../_lib/free-course';
 import { FreeCourseHeader, FreeCourseModules, FreeCourseRemaining } from '../_components/free-course-view';
@@ -264,6 +265,8 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
         ))}
       </section>
       )}
+
+      <CourseMaterials materials={document.materials ?? []} modules={document.modules} />
 
       {report && (
         <section aria-labelledby="objectives-heading" className="space-y-4">

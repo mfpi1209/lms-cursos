@@ -15,3 +15,5 @@ export * as students from './students';
 export * as integrationTokens from './integration-tokens';
 export * as reports from './reports';
 export * as webhooks from './webhooks';
+export * as reviewMarks from './review-marks';
+export * as materials from './materials';

@@ -67,7 +67,14 @@ export interface TaskUploadMetadata {
   nodeId: string;
 }
 
+/** Arquivo de MATERIAL DE APOIO de um curso (PDF enviado pela equipe): quem está matriculado numa versão publicada
+ * que lista o asset em `materials` também lê; ver `materials.materialReadableBy`. */
+export interface CourseMaterialMetadata {
+  courseId: string;
+}
+
 export interface AssetMetadata {
+  courseMaterial?: CourseMaterialMetadata;
   scenery?: SceneryMetadata;
   bumper?: BumperMetadata;
   loudness?: LoudnessMetadata;

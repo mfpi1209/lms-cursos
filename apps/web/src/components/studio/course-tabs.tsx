@@ -56,8 +56,10 @@ export function CourseChrome({ courseId, status, latestVersionNumber }: CourseCh
     ...(assembling ? [{ href: `${base}/montar`, label: 'Montagem', active: false }] : []),
     { href: `${base}/detalhes`, label: 'Detalhes', active: pathname.startsWith(`${base}/detalhes`) },
     { href: `${base}/producao`, label: 'Produção', active: pathname.startsWith(`${base}/producao`) },
+    { href: `${base}/materiais`, label: 'Materiais', active: pathname.startsWith(`${base}/materiais`) },
     // só aparece quando alguma cena tem gravação de tela própria (linha "Vídeo próprio:" do roteiro)
     ...(hasScreenRecordings ? [{ href: `${base}/gravacoes`, label: 'Gravações de tela', active: pathname.startsWith(`${base}/gravacoes`) }] : []),
+    { href: `${base}/assistir`, label: 'Assistir e marcar', active: pathname.startsWith(`${base}/assistir`) },
     { href: `${base}/revisao`, label: 'Revisão e publicação', active: pathname.startsWith(`${base}/revisao`) },
     { href: `${base}/matriculas`, label: 'Matrículas', active: pathname.startsWith(`${base}/matriculas`) },
     { href: `${base}/entregas`, label: 'Entregas', active: pathname.startsWith(`${base}/entregas`) },

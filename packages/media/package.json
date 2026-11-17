@@ -9,7 +9,8 @@
     ".": "./src/index.ts",
     "./compose": "./src/compose/index.ts",
     "./layout": "./src/compose/layout.ts",
-    "./adjust": "./src/adjust.ts"
+    "./adjust": "./src/adjust.ts",
+    "./timing": "./src/compose/timing.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
