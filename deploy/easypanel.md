@@ -29,6 +29,7 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
   - `WEBHOOK_SECRET_KEY` = chave que cifra os segredos dos webhooks de saída (`openssl rand -hex 32`, 64 caracteres hexadecimais). **Obrigatória em produção e igual no web e no worker**: sem ela o estúdio recusa cadastrar webhooks e o worker não assina as entregas. Guarde uma cópia da chave fora do servidor: perdê-la ou trocá-la invalida os segredos já guardados (é preciso recadastrar os webhooks). Detalhes em `docs/integracao/api-v1.md`.
   - `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_PRIMARY` (opcionais)
   - `AI_PROVIDER=fake` (até a fase B)
+  - `LMS_ACCESS_TOKEN` (segredo do `POST /api/integracao/acessos`, usado pelo sistema de recrutamento; sem ele a rota responde 503)
 - Réplicas: 1 (sessões ficam no banco, então pode escalar horizontalmente depois).
 
 ## 3. Serviço `worker` (App → Dockerfile)

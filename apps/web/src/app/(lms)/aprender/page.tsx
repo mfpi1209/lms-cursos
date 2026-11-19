@@ -8,11 +8,11 @@ import { Catalog, type CatalogItem } from './_components/catalog';
 import { CoverImage } from './_components/course-tile';
 import { ExploreButton } from './_components/explore-button';
 import { HomeSkeleton } from './_components/home-skeleton';
-import { loadLearnerCourses, type LearnerCourse } from './_lib/learner-courses';
+import { loadLearnerCourses, loadOpenCourses, type LearnerCourse } from './_lib/learner-courses';
 import { HERO_BANNER_COURSE_IDS } from './_lib/short-titles';
 import { heroArtFor } from './_lib/course-art';
 import { HeroCarousel, type HeroSlide } from './_components/hero-carousel';
-import { formatLessonVideo, trailCheckFor, trailSlug } from '@lms/course-schema';
+import { formatLessonVideo, sortTrails, trailCheckFor, trailSlug } from '@lms/course-schema';
 import { getDb, recognition } from '@lms/db';
 import { buildSeriesCards, partLabel, seriesInfoFor, type SeriesCardData } from './_lib/series';
 import { seriesCardCta } from './_components/series-tile';
@@ -35,15 +35,17 @@ export default async function ExplorePage({ searchParams }: { searchParams: Prom
   const { q } = await searchParams;
   return (
     <Suspense fallback={<HomeSkeleton />}>
-      <Home userId={viewer.user.id} name={viewer.user.name} {...(q ? { q } : {})} />
+      <Home userId={viewer.user.id} workspaceId={viewer.workspace.id} name={viewer.user.name} {...(q ? { q } : {})} />
     </Suspense>
   );
 }
 
 type Mode = 'new' | 'progress' | 'next' | 'done';
 
-async function Home({ userId, name, q }: { userId: string; name?: string | null; q?: string }) {
-  const { courses, trails } = await loadLearnerCourses(userId);
+async function Home({ userId, workspaceId, name, q }: { userId: string; workspaceId: string; name?: string | null; q?: string }) {
+  const { courses, trails: enrolledTrails } = await loadLearnerCourses(userId);
+  const open = await loadOpenCourses(workspaceId, userId);
+  const trails = sortTrails([...new Set([...enrolledTrails, ...open.map((c) => c.trail).filter((t): t is string => !!t)])]);
   const firstName = name?.trim().split(/\s+/)[0];
 
   // continuar: o curso em andamento mais recente
@@ -85,9 +87,12 @@ async function Home({ userId, name, q }: { userId: string; name?: string | null;
       },
     ];
   });
-  // cursos livres têm seção própria: não entram nas trilhas de pílulas nem em "Mais cursos"
+  // cursos livres matriculados têm seção própria: não entram nas trilhas de pílulas nem em "Mais cursos"
   const free = courses.flatMap((c) => (c.free ? [c.free] : []));
-  const items: CatalogItem[] = courses.filter((c) => !c.free).map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started }));
+  const items: CatalogItem[] = [
+    ...courses.filter((c) => !c.free).map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started })),
+    ...open.map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: false, started: false, open: true })),
+  ];
 
   const hl = 'text-[var(--im-accent-ink)]';
   return (
@@ -128,10 +133,10 @@ async function Home({ userId, name, q }: { userId: string; name?: string | null;
 
       <Catalog items={items} free={free} series={series} trails={trails.map((name) => ({ name, slug: trailSlug(name) }))} {...(q ? { query: q } : {})} />
 
-      {courses.length === 0 && (
+      {courses.length === 0 && open.length === 0 && (
         <div className="mt-8 rounded-[16px] border border-line bg-surface p-6 sm:p-8" data-testid="enrollment-empty">
-          <p className="text-lg font-medium text-fg">Você ainda não está matriculado em nenhum curso.</p>
-          <p className="mt-1 text-base text-fg-muted">Quando a equipe liberar um curso para você, ele aparece aqui.</p>
+          <p className="text-lg font-medium text-fg">Nenhum curso publicado no momento.</p>
+          <p className="mt-1 text-base text-fg-muted">Quando houver um curso disponível, ele aparece aqui para você se inscrever.</p>
         </div>
       )}
     </div>
