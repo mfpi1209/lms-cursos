@@ -19,6 +19,8 @@ export interface PlayerStepResult {
   mission?: { status: 'later' | 'done'; note: string | null };
   /** só na tarefa com entrega: a entrega que ficou valendo no servidor (ausente na prévia, que não grava nada) */
   task?: { outcome: 'created' | 'resubmitted' | 'kept'; record: TaskRecordView };
+  /** o servidor emitiu o certificado do curso com esta conclusão de aula (só no LMS) */
+  certificate?: { code: string };
 }
 
 export interface PlayerStart {
@@ -124,6 +126,8 @@ export interface PlatformContext {
   series?: PlatformSeries;
   /** matrícula (LMS): habilita as respostas do curso inteiro no roteiro */
   enrollmentId?: string;
+  /** o curso oferece certificado de conclusão (só LMS): `code` se já emitido; `courseHref` é a página do curso, onde está o que falta */
+  certificate?: { code?: string; courseHref: string };
   /** materiais de apoio do módulo desta aula (botão "Materiais" no cabeçalho); ausente = sem botão */
   materials?: { items: CourseMaterial[]; moduleLabel?: string };
   /** encerramento com roteiro do curso (de qualquer aula) e os nós que ele cita */

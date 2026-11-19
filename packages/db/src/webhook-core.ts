@@ -7,7 +7,7 @@ import { isIP } from 'node:net';
  * Contrato público em docs/integracao/api-v1.md.
  */
 
-/** Tipos que um endereço pode assinar. `certificate.issued` já é conhecido, mas ainda não tem quem o produza. */
+/** Tipos que um endereço pode assinar. */
 export const WEBHOOK_EVENT_TYPES = ['enrollment.created', 'lesson.completed', 'course.completed', 'task.submitted', 'task.reviewed', 'certificate.issued'] as const;
 export type WebhookEventType = (typeof WEBHOOK_EVENT_TYPES)[number];
 /** Evento do "Enviar teste": sempre entregue ao endereço escolhido, nunca assinado como tipo. */

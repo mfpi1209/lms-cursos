@@ -160,7 +160,7 @@ export async function badgeWorkloadMinutes(db: DbOrTx, badge: Pick<TrailBadge, '
   return badge.workloadMinutes ?? (await trailWorkloadMinutes(db, { workspaceId: badge.workspaceId, trail: badge.trailName }));
 }
 
-function badgeCode(): string {
+export function badgeCode(): string {
   const b = randomBytes(8);
   const ch = (i: number) => BADGE_CODE_ALPHABET[b[i]! % BADGE_CODE_ALPHABET.length];
   return `DNA-${ch(0)}${ch(1)}${ch(2)}${ch(3)}-${ch(4)}${ch(5)}${ch(6)}${ch(7)}`;

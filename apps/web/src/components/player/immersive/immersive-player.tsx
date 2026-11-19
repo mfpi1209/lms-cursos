@@ -177,6 +177,7 @@ export function ImmersivePlayer({
     ...(platform.courseTrail ? { courseTrail: platform.courseTrail } : {}),
     ...(platform.series ? { series: platform.series } : {}),
     ...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {}),
+    ...(platform.certificate ? { certificate: platform.certificate } : {}),
     exitHref,
     ...(driver.mode === 'lms' && lessons[0]?.href ? { courseRestartHref: `${lessons[0].href}?reiniciar=1` } : {}),
     shortLabel: shortLessonLabel(lesson),
@@ -436,6 +437,8 @@ interface FrameInfo {
   series?: PlatformSeries;
   /** matrícula (LMS): habilita registrar a missão e o roteiro com as missões do curso */
   enrollmentId?: string;
+  /** o curso oferece certificado (código se já emitido ao abrir a aula) */
+  certificate?: { code?: string; courseHref: string };
 }
 
 type StepKind = 'video' | 'choice' | 'mission' | 'real' | 'task' | 'review' | 'closing';
@@ -1196,6 +1199,7 @@ function Scene({
         hasRecap={!!recap}
         onOpenRecap={onOpenRecap}
         achievements={lessonAchievements(lesson.graph.nodes, state, missionStatusMap)}
+        {...(frame.certificate ? { certificate: { ...frame.certificate, ...(player.certificateCode || frame.certificate.code ? { code: (player.certificateCode ?? frame.certificate.code)! } : {}) } } : {})}
         {...(frame.series ? { series: frame.series } : {})}
         {...(frame.courseEnd ? { courseEnd: { course: seriesEndsTrail(frame.series) ? frame.series!.trail : frame.courseTitle, ...((endNode?.closingLine?.trim() || recap?.closingLine) ? { closingLine: (endNode?.closingLine?.trim() || recap?.closingLine)! } : {}) } } : {})}
         {...(!nextLesson && frame.achievement && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { conquest: { name: frame.achievement, ...(frame.courseTrail ? { trail: frame.courseTrail } : {}) } } : {})}
@@ -2759,7 +2763,10 @@ export function EndPanel({
   conquest,
   courseEnd,
   series,
+  certificate,
 }: {
+  /** o curso oferece certificado: com `code`, a ação para vê-lo; sem, o aviso de que sai quando tudo estiver concluído (só no fim do curso) */
+  certificate?: { code?: string; courseHref: string };
   /** o curso é parte de uma trilha em série: chip "Parte N concluída", botão para a próxima parte e, na última, o fim da trilha */
   series?: PlatformSeries;
   /** o CURSO acaba aqui: título "Você concluiu …", chip "Curso concluído", a frase de fecho logo abaixo e o selo em destaque */
@@ -2839,6 +2846,21 @@ export function EndPanel({
       {node && <RichText doc={node.summary} className={cn(BODY, 'mt-5')} />}
       {!ownRecap && !courseEnd && node?.closingLine && <p className="mt-6 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[32px]">{node.closingLine}</p>}
       {ownRecap && <p className="mt-5 text-base text-fg/75">Seu roteiro está logo abaixo: copie ou imprima quando quiser.</p>}
+      {certificate?.code ? (
+        <div data-testid="end-certificate" className="mt-6 flex flex-col gap-3 rounded-2xl border border-line-strong bg-fg/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[16px] font-medium leading-snug text-fg">Seu certificado de conclusão está pronto.</p>
+          <ImLink href={`/certificado/${certificate.code}/imprimir`} data-testid="end-certificate-link">
+            Ver meu certificado
+          </ImLink>
+        </div>
+      ) : certificate && courseEnd ? (
+        <p data-testid="end-certificate-pending" className="mt-6 text-[16px] leading-snug text-fg/85">
+          Seu certificado sai quando tudo estiver concluído.{' '}
+          <a href={certificate.courseHref} className="inline-flex min-h-11 items-center font-semibold text-[var(--im-accent-ink)] underline underline-offset-2">
+            Veja o que falta na página do curso.
+          </a>
+        </p>
+      ) : null}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         {nextLesson ? (
           <ImLink href={nextLesson.href} data-testid="next-lesson-link">

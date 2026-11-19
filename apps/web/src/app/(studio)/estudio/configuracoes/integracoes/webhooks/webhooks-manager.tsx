@@ -39,7 +39,7 @@ const EVENT_LABEL: Record<string, string> = {
   'course.completed': 'Curso concluído',
   'task.submitted': 'Tarefa enviada',
   'task.reviewed': 'Tarefa corrigida',
-  'certificate.issued': 'Certificado emitido (ainda sem emissão)',
+  'certificate.issued': 'Certificado emitido',
   ping: 'Teste',
 };
 const STATUS: Record<DeliveryRow['status'], { label: string; tone: BadgeTone }> = {

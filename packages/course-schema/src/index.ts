@@ -28,3 +28,4 @@ export * from './import/scene-topics-markdown';
 export * from './free-course';
 export * from './takes';
 export * from './materials';
+export * from './certificate';

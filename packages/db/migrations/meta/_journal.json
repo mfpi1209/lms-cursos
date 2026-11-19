@@ -176,6 +176,13 @@
       "when": 1794673158510,
       "tag": "0024_video_review_fix",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795003673914,
+      "tag": "0025_certificados",
+      "breakpoints": true
     }
   ]
 }

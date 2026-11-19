@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TASK_COMMENT_MAX, TASK_CRITERIA_MAX } from '@lms/course-schema';
-import { getDb, submissions } from '@lms/db';
+import { getDb, certificates, submissions } from '@lms/db';
 import { parseBody, route } from '@/server/http';
 import { requireStaff } from '@/server/viewer';
 
@@ -31,6 +31,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ submissionId: 
       comment: body.comment ?? null,
       expectedRevision: body.expectedRevision,
     });
+    // tarefa aprovada pode fechar a regra do certificado
+    if (row.status === 'approved' && row.enrollmentId) await certificates.tryIssue(getDb(), row.enrollmentId);
     return { submission: { id: row.id, status: row.status, revision: row.revision, reviewedAt: row.reviewedAt?.toISOString() ?? null } };
   });
 }

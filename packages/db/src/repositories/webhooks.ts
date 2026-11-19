@@ -1,4 +1,4 @@
-import { and, desc, eq, lt, sql } from 'drizzle-orm';
+import { and, desc, eq, isNull, lt, sql } from 'drizzle-orm';
 import type { DbOrTx } from '../client';
 import { newId } from '../ids';
 import { DomainError } from '../errors';
@@ -234,7 +234,8 @@ export async function buildEventEnvelope(db: DbOrTx, ev: OutboxEventLike): Promi
       data = { ...base, aula_id: str(p.lessonId) };
       break;
     case 'course.completed':
-      data = { ...base, concluido_em: r.completedAt?.toISOString() ?? null, certificado_codigo: null };
+      // o certificado costuma sair junto com a conclusão; se a regra ainda não fechou, chega depois em `certificate.issued`
+      data = { ...base, concluido_em: r.completedAt?.toISOString() ?? null, certificado_codigo: await activeCertificateCode(db, enrollmentId) };
       break;
     case 'task.submitted':
       data = { ...base, tarefa: { aula_id: str(p.lessonId), no_id: str(p.nodeId), status: 'enviada', reenvio: p.resubmission === true } };
@@ -363,3 +364,11 @@ export async function purgeDeliveries(db: DbOrTx, days: number, now = new Date()
 }
 
 export { WEBHOOK_EVENT_TYPES };
+
+async function activeCertificateCode(db: DbOrTx, enrollmentId: string): Promise<string | null> {
+  const [c] = await db
+    .select({ code: s.courseCertificates.code })
+    .from(s.courseCertificates)
+    .where(and(eq(s.courseCertificates.enrollmentId, enrollmentId), isNull(s.courseCertificates.revokedAt)));
+  return c?.code ?? null;
+}

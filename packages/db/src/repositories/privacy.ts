@@ -69,6 +69,7 @@ export interface UserDataExport {
   arquivosDeEntrega: Array<Record<string, unknown>>;
   checagensDeTrilha: Array<Record<string, unknown>>;
   selos: Array<Record<string, unknown>>;
+  certificados: Array<Record<string, unknown>>;
   auditoria: Array<Record<string, unknown>>;
   registrosDeAcesso: Array<Record<string, unknown>>;
   eventosPendentes: Array<Record<string, unknown>>;
@@ -114,6 +115,7 @@ export async function collectUserData(db: DbOrTx, email: string, now: Date = new
     .where(taskUploadsOf(uid));
   const checks = await db.select().from(s.trailCheckAttempts).where(eq(s.trailCheckAttempts.userId, uid)).orderBy(asc(s.trailCheckAttempts.createdAt));
   const badges = await db.select().from(s.trailBadges).where(eq(s.trailBadges.userId, uid)).orderBy(asc(s.trailBadges.issuedAt));
+  const certs = await db.select().from(s.courseCertificates).where(eq(s.courseCertificates.userId, uid)).orderBy(asc(s.courseCertificates.issuedAt));
   const audit = await db
     .select()
     .from(s.auditLogs)
@@ -140,6 +142,7 @@ export async function collectUserData(db: DbOrTx, email: string, now: Date = new
     arquivosDeEntrega: taskFiles.map((f) => ({ ...f, entrega: f.entrega?.taskUpload ?? null })),
     checagensDeTrilha: checks,
     selos: badges,
+    certificados: certs,
     auditoria: audit,
     registrosDeAcesso: access,
     eventosPendentes: outbox,
@@ -172,6 +175,7 @@ export function summarizeUserData(d: UserDataExport): string {
     `- ${plural(d.entregas.length, 'entrega de tarefa enviada', 'entregas de tarefa enviadas')}, com ${plural(d.arquivosDeEntrega.length, 'arquivo', 'arquivos')}.`,
     `- ${plural(d.checagensDeTrilha.length, 'checagem final de trilha feita', 'checagens finais de trilha feitas')}.`,
     `- ${plural(d.selos.length, 'selo', 'selos')}${d.selos.length ? ': ' + d.selos.map((b) => `${String(b.trailName)} (${b.revokedAt ? 'cancelado' : 'válido'}, código ${String(b.code)})`).join('; ') : ''}.`,
+    `- ${plural(d.certificados.length, 'certificado de curso', 'certificados de curso')}${d.certificados.length ? ': ' + d.certificados.map((c) => `${String(c.courseTitle)} (${c.revokedAt ? 'cancelado' : 'válido'}, código ${String(c.code)})`).join('; ') : ''}.`,
     '',
     'Registros técnicos',
     `- ${plural(d.sessoesAtivas.length, 'sessão ativa (entrada em um aparelho)', 'sessões ativas (entradas em aparelhos)')}, com endereço de IP e navegador.`,
@@ -358,6 +362,7 @@ export interface ErasureCounts {
   arquivosDeEntrega: number;
   checagensDeTrilha: number;
   selosParaCancelarEAnonimizar: number;
+  certificadosParaCancelarEAnonimizar: number;
   eventosPendentesDoOutbox: number;
   /** ficam, sem chave para a pessoa (obrigação legal / prestação de contas) */
   registrosDeAcessoMantidos: number;
@@ -386,6 +391,7 @@ export async function countFootprint(db: DbOrTx, userId: string): Promise<Erasur
     arquivosDeEntrega: await n(db.select({ n: sql<number>`count(*)` }).from(s.assets).where(taskUploadsOf(userId))),
     checagensDeTrilha: await n(db.select({ n: sql<number>`count(*)` }).from(s.trailCheckAttempts).where(eq(s.trailCheckAttempts.userId, userId))),
     selosParaCancelarEAnonimizar: await n(db.select({ n: sql<number>`count(*)` }).from(s.trailBadges).where(eq(s.trailBadges.userId, userId))),
+    certificadosParaCancelarEAnonimizar: await n(db.select({ n: sql<number>`count(*)` }).from(s.courseCertificates).where(eq(s.courseCertificates.userId, userId))),
     eventosPendentesDoOutbox: await n(db.select({ n: sql<number>`count(*)` }).from(s.outboxEvents).where(outboxOf(userId, enrollmentIds))),
     registrosDeAcessoMantidos: await n(db.select({ n: sql<number>`count(*)` }).from(s.accessLogs).where(eq(s.accessLogs.userId, userId))),
     registrosDeAuditoriaMantidos: await n(db.select({ n: sql<number>`count(*)` }).from(s.auditLogs).where(or(eq(s.auditLogs.actorId, userId), eq(s.auditLogs.entityId, userId), sql`${s.auditLogs.data}->>'userId' = ${userId}`))),
@@ -442,6 +448,15 @@ export async function eraseUser(db: Database, input: { email: string; apply: boo
     for (const b of badges) {
       await tx.update(s.trailBadges).set({ revokedAt: b.revokedAt ?? now, holderName: REMOVED_HOLDER_NAME }).where(eq(s.trailBadges.id, b.id));
       await tx.insert(s.auditLogs).values({ id: newId('aud'), actorId: input.actorId ?? null, action: 'badge.revoke', entityType: 'trail_badge', entityId: b.id, data: { userId: u.id, motivo: 'exclusão da conta a pedido do titular', via: input.via ?? 'dados:apagar' } });
+    }
+    // certificados de curso: cancelados e sem nome nem RGM (o código continua consultável e diz que foi cancelado)
+    const certs = await tx.select({ id: s.courseCertificates.id, revokedAt: s.courseCertificates.revokedAt }).from(s.courseCertificates).where(eq(s.courseCertificates.userId, u.id));
+    for (const c of certs) {
+      await tx
+        .update(s.courseCertificates)
+        .set({ revokedAt: c.revokedAt ?? now, revokedReason: 'exclusão da conta a pedido do titular', holderName: REMOVED_HOLDER_NAME, holderRgm: null })
+        .where(eq(s.courseCertificates.id, c.id));
+      await tx.insert(s.auditLogs).values({ id: newId('aud'), actorId: input.actorId ?? null, action: 'certificate.revoke', entityType: 'course_certificate', entityId: c.id, data: { userId: u.id, motivo: 'exclusão da conta a pedido do titular', via: input.via ?? 'dados:apagar' } });
     }
     await tx.delete(s.outboxEvents).where(outboxOf(u.id, enrollmentIds));
     // entregas de webhook ainda guardadas: o corpo tem o e-mail e o RGM da pessoa

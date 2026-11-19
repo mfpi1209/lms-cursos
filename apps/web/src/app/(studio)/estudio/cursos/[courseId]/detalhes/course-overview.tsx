@@ -7,6 +7,8 @@ import {
   EXPERIENCE_FAMILIES,
   EXPERIENCE_FAMILY_LABELS,
   compileCourse,
+  formatWorkload,
+  freeCourseWorkloadMinutes,
   type CourseDocument,
   type Lesson,
   type Module,
@@ -120,6 +122,8 @@ export function CourseOverview({ courseId }: { courseId: string }) {
             )}
           </Card>
 
+          <CertificateSection />
+
           <Card className="space-y-4">
             <div className="flex items-start justify-between gap-3">
               <h2 className="text-2xl">Pendências</h2>
@@ -146,6 +150,46 @@ export function CourseOverview({ courseId }: { courseId: string }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function CertificateSection() {
+  const { document: doc, update } = useDraft();
+  const enabled = doc.certificate?.enabled ?? false;
+  const minutes = doc.certificate?.workloadMinutes;
+  const auto = formatWorkload(freeCourseWorkloadMinutes({ ...doc, certificate: { enabled, workloadMinutes: undefined } }));
+  const setCert = (patch: { enabled?: boolean; workloadMinutes?: number | undefined }) =>
+    update((d) => ({ ...d, certificate: { enabled: d.certificate?.enabled ?? false, workloadMinutes: d.certificate?.workloadMinutes, ...patch } }), { coalesce: 'course.certificate' });
+  return (
+    <Card className="space-y-4">
+      <h2 className="text-2xl">Certificado de conclusão</h2>
+      <label className="flex min-h-11 items-center gap-3 text-sm text-fg">
+        <Checkbox checked={enabled} onChange={(e) => setCert({ enabled: e.target.checked })} />
+        <span>Oferecer certificado ao concluir</span>
+      </label>
+      <p className="text-sm text-fg-muted">
+        Emitido quando a aluna conclui as aulas obrigatórias, passa em todas as avaliações e responde as reflexões e tarefas obrigatórias. Vale para quem estiver na versão publicada depois desta mudança.
+      </p>
+      {enabled && (
+        <Field label="Carga horária no certificado (horas)" htmlFor="cert-workload" hint={minutes === undefined ? `Automática: ${auto}.` : `Deixe em branco para usar o valor automático (${auto}).`}>
+          <Input
+            id="cert-workload"
+            aria-describedby={fieldHintId('cert-workload')}
+            type="number"
+            inputMode="decimal"
+            min={0.5}
+            max={1666}
+            step={0.5}
+            placeholder="Automática"
+            value={minutes === undefined ? '' : String(minutes / 60)}
+            onChange={(e) => {
+              const h = Number(e.target.value.replace(',', '.'));
+              setCert({ workloadMinutes: e.target.value.trim() === '' || !Number.isFinite(h) || h <= 0 ? undefined : Math.min(100000, Math.max(1, Math.round(h * 60))) });
+            }}
+          />
+        </Field>
+      )}
+    </Card>
   );
 }
 

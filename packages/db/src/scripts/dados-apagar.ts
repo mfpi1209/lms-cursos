@@ -30,6 +30,7 @@ await runScript(async ({ db }) => {
     }
     console.log(`  outbox: ${c.eventosPendentesDoOutbox} evento(s) apagado(s)`);
     console.log(`  selos: ${c.selosParaCancelarEAnonimizar} cancelado(s) e sem o nome ("Titular removido a pedido")`);
+    console.log(`  certificados de curso: ${c.certificadosParaCancelarEAnonimizar} cancelado(s), sem nome e sem RGM`);
     console.log(`  mantém (obrigação legal, sem ligação com a pessoa): ${c.registrosDeAcessoMantidos} registro(s) de acesso, ${c.registrosDeAuditoriaMantidos} de auditoria`);
   } else console.log('  marca a conta como encerrada (nada é apagado agora)');
   console.log(apply ? 'Concluído. Registre no log de pedidos e responda pelo modelo E.' : 'Para executar, repita com --apply.');

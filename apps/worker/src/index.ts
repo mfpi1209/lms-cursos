@@ -23,6 +23,7 @@ const handlers: Record<string, Handler> = {
   'enrollment.created': async (p) => console.log('[outbox] enrollment.created', p),
   'lesson.completed': async (p) => console.log('[outbox] lesson.completed', p),
   'course.completed': async (p) => console.log('[outbox] course.completed', p),
+  'certificate.issued': async (p) => console.log('[outbox] certificate.issued', p),
   'media_job.queued': async () => void (await dispatchQueuedJobs()),
   'media_job.reconcile': async (p) => reconcileJob(String(p.jobId)),
   'media_job.succeeded': async (p) => console.log('[outbox] media_job.succeeded', p),

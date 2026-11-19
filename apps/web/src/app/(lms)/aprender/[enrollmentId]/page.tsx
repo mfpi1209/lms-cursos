@@ -3,7 +3,7 @@ import { versionRuntime } from '@/server/lesson-runtime';
 import { LESSON_RANGE_MIN_DIFF_S, formatCourseVideo, formatLessonVideo, seriesPartOf, spokenClock } from '@lms/course-schema';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, Play, RotateCcw, Sparkles } from 'lucide-react';
-import { getDb, learning, recognition, submissions, DomainError } from '@lms/db';
+import { getDb, learning, recognition, submissions, certificates, DomainError } from '@lms/db';
 import { allLessons, freeCourseWorkloadMinutes, hasCertificate, isFreeCourse, ownImageUrl, type Lesson } from '@lms/course-schema';
 import { computeProgress } from '@lms/course-engine';
 import { requireViewer, HttpError } from '@/server/viewer';
@@ -17,6 +17,7 @@ import { CourseTrailCard } from '../_components/course-trail-card';
 import { PendingMissions } from '../_components/pending-missions';
 import { TaskDeliveries } from '../_components/task-deliveries';
 import { CourseMaterials } from '../_components/course-materials';
+import { CourseCertificate } from '../_components/course-certificate';
 import { shortTitleFor } from '../_lib/short-titles';
 import { buildFreeCourseOutline, freeCourseCta } from '../_lib/free-course';
 import { FreeCourseHeader, FreeCourseModules, FreeCourseRemaining } from '../_components/free-course-view';
@@ -119,6 +120,15 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
         completed: isCompleted,
       })
     : null;
+  // Certificado de conclusão: emite o que já cumpria a regra antes (idempotente, nunca lança) e lê a situação
+  let certificateCard: React.ReactNode = null;
+  if (hasCertificate(document)) {
+    await certificates.tryIssue(db, enrollmentId);
+    const cs = await certificates.statusForEnrollment(db, enrollmentId);
+    if (cs.offered) {
+      certificateCard = <CourseCertificate enrollmentId={enrollmentId} issued={cs.certificate ? { code: cs.certificate.code, issuedAt: cs.certificate.issuedAt } : null} pending={cs.rule.pending} {...(primaryHref ? { resumeHref: primaryHref } : {})} />;
+    }
+  }
   const restartHref = firstLesson && (completedCount > 0 || attempts.length > 0) && !(nextStatus?.kind === 'in_progress' && nextIdx === 0) ? `/aprender/${enrollmentId}/aulas/${firstLesson.id}?reiniciar=1` : undefined;
   const courseMenu = (
     <CourseMenu
@@ -221,6 +231,8 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
       </header>
       )}
 
+      {isCompleted && certificateCard}
+
       {taskDeliveries.length > 0 && <TaskDeliveries enrollmentId={enrollmentId} items={taskDeliveries} />}
 
       {pendingMissions.length > 0 && <PendingMissions enrollmentId={enrollmentId} items={pendingMissions} />}
@@ -265,6 +277,8 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
         ))}
       </section>
       )}
+
+      {!isCompleted && certificateCard}
 
       <CourseMaterials materials={document.materials ?? []} modules={document.modules} />
 

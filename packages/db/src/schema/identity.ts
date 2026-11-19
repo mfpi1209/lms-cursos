@@ -1,3 +1,4 @@
+import type { CertificateIssuer } from '@lms/course-schema';
 import { pgTable, text, timestamp, pgEnum, primaryKey, index, jsonb, uniqueIndex } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { user } from './auth';
@@ -14,6 +15,8 @@ export const workspaces = pgTable('workspaces', {
   branding: jsonb('branding').$type<{ name?: string; primaryColor?: string; logoAssetId?: string }>().notNull().default({}),
   /** teto diário de gasto (USD) por workspace; ausente = padrão do ambiente (MEDIA_DAILY_BUDGET_USD / AI_DAILY_BUDGET_USD) */
   spendLimits: jsonb('spend_limits').$type<{ mediaDailyUsd?: number; aiDailyUsd?: number }>(),
+  /** emissor do certificado de curso (instituição, CNPJ, quem assina, logo, assinatura); ausente = marca da plataforma. Ver `CertificateIssuerSchema` */
+  certificateIssuer: jsonb('certificate_issuer').$type<CertificateIssuer>(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 

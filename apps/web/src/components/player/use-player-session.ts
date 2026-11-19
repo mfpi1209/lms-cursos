@@ -114,6 +114,8 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
   const [saved, setSaved] = useState<SavedComposition | null>(null);
   const [missions, setMissions] = useState<MissionResults>({});
   const [announce, setAnnounce] = useState('');
+  /** código do certificado emitido nesta sessão (a conclusão da aula acabou de fechar a regra) */
+  const [certificateCode, setCertificateCode] = useState<string | null>(null);
   /** o aluno já clicou para avançar: o vídeo da próxima cena pode tocar sozinho */
   const [gesture, setGesture] = useState(false);
 
@@ -166,6 +168,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
     (sub: Submission, res: PlayerStepResult) => {
       setSession((prev) => ({ state: res.state, revision: res.revision, progress: res.progress, attemptNumber: prev?.attemptNumber ?? 1 }));
       setConflict(false);
+      if (res.certificate?.code) setCertificateCode(res.certificate.code);
       const node = findNode(lesson, sub.nodeId);
       const intent = sub.intent;
       if (intent.kind === 'choose' && node?.type === 'choice') {
@@ -359,6 +362,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
     saved,
     /** o que o servidor deixou valendo em cada missão registrada nesta sessão */
     missions,
+    certificateCode,
     /** "Continuar aula": tira a confirmação e mostra a cena seguinte */
     dismissSaved: () => setSaved(null),
     announce,

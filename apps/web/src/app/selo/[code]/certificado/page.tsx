@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import QRCode from 'qrcode';
 import { CircleAlert } from 'lucide-react';
-import { getDb, recognition } from '@lms/db';
+import { redirect } from 'next/navigation';
+import { certificates, getDb, recognition } from '@lms/db';
 import { describeCompetencies, formatWorkload } from '@lms/course-schema';
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/ui/skip-link';
 import { BrandLogo } from '@/components/brand-logo';
@@ -34,6 +35,11 @@ export default async function BadgeCertificatePage({ params }: { params: Promise
   const { code } = await params;
   const db = getDb();
   const b = await recognition.getBadgeByCode(db, code);
+  if (!b) {
+    // o mesmo formato de código serve aos certificados de curso: quem digitou aqui vai para a página certa
+    const cc = await certificates.getByCode(db, code);
+    if (cc) redirect(`/certificado/${cc.code}/imprimir`);
+  }
   const brand = getBrand(b?.workspaceId);
   const valid = !!b && !b.revokedAt;
   const date = (d: Date) => new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeZone: 'America/Sao_Paulo' }).format(d);

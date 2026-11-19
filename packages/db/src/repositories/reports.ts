@@ -83,7 +83,7 @@ export interface ProgressRow {
   tarefa: TaskSummary;
   curso_concluido: boolean;
   concluido_em: string | null;
-  /** reservado: sempre `null` até a emissão de certificados existir */
+  /** código do certificado de conclusão ativo (`null` sem certificado) */
   certificado_codigo: string | null;
 }
 
@@ -361,6 +361,13 @@ export async function progressRows(db: DbOrTx, q: ProgressQuery): Promise<Progre
   const userIds = [...new Set(rows.map((r) => r.userId))];
   const versionIds = [...new Set(rows.map((r) => r.versionId))];
 
+  const certRows = enrollmentIds.length
+    ? await db
+        .select({ enrollmentId: s.courseCertificates.enrollmentId, code: s.courseCertificates.code })
+        .from(s.courseCertificates)
+        .where(and(inArray(s.courseCertificates.enrollmentId, enrollmentIds), sql`${s.courseCertificates.revokedAt} is null`))
+    : [];
+  const certBy = new Map(certRows.map((c) => [c.enrollmentId, c.code]));
   const [attempts, submissions, access, versions] = await Promise.all([
     db
       .select({
@@ -430,7 +437,7 @@ export async function progressRows(db: DbOrTx, q: ProgressQuery): Promise<Progre
       tarefa: summarizeTasks(doc, r.optionalLessonIds, mySubs, lastPath),
       curso_concluido: r.status === 'completed',
       concluido_em: iso(r.completedAt),
-      certificado_codigo: null,
+      certificado_codigo: certBy.get(r.id) ?? null,
     };
   });
 
