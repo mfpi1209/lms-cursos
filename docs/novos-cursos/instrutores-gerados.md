@@ -134,3 +134,13 @@ Não foram editados `packages/media`, `apps/worker/src/adjust.ts` nem `compose-s
 1. Ver as 4 folhas e ouvir as 4 amostras; trocar voz ou rosto só se reprovar (reservas na seção 2; regerar um rosto custa US$ 1 e as 3 câmeras US$ 3).
 2. Se aprovado, gravar as aulas (`media-jobs/batch`, ~US$ 67,73 reais), sem mexer nos rascunhos.
 3. Os 4 kits novos devem entrar em `docs/biblioteca-de-modelos.md` quando a lista de kits for atualizada (não editei esse arquivo, que tem alterações do outro agente em andamento).
+
+## Refazer as câmeras de um instrutor (pulsos no quadro)
+
+Script `apps/worker/src/scripts/regerar-cameras-instrutor.ts` (lógica pura em `apps/worker/src/regerar-cameras.ts`). Refaz as câmeras de um instrutor da biblioteca a partir do MESMO personagem base (`baseLookId`) e da imagem do estúdio, com um trecho fixo que pede cintura/coxa para cima, antebraços e pulsos limpos (sem relógio, pulseira ou anéis) e mãos juntas. Ids novos com sufixo (`cam_thiago8v2_esq|dir|34`); as antigas não são tocadas. Custo: US$ 1 por imagem, `--max-usd` obrigatório (máx. US$ 5). Ajustes no pedido de `buildSceneLookPrompt`: sai o enquadramento "waist up" e a frase "hands relaxed" (contradizem o trecho dos pulsos) e, para caber em 1.000 caracteres, frases redundantes são compactadas e, se preciso, o texto do estúdio é encurtado; o trecho dos pulsos nunca é cortado.
+
+Três passos (raiz do monorepo, com o `.env` carregado e `STORAGE_DIR` do ambiente):
+
+1. `--seco` (padrão): só leitura da biblioteca; mostra prompts, Idempotency-Keys e custo.
+2. `--confirmar` (PAGO; exige `ALLOW_PAID_PROVIDERS=1` e `HEYGEN_API_KEY`): gera, espera, guarda a prévia como asset e grava `<out>/cameras-<presenter>-<sufixo>.json`. Não altera kit, biblioteca nem curso. Rodar de novo continua do JSON (generationId já gravado) e não paga de novo. Para uma refação use outro `--sufixo` (v3), que é nova cobrança.
+3. `--aplicar --course <id> --de-arquivo <json>` (sem custo): no RASCUNHO, entram as câmeras novas prontas (antes das antigas), a direção troca cada `cam_thiago8_X` pela `cam_thiago8v2_X` (mesma zona) e a 3/4 nova vira o avatar principal. Com `--kit <chave>` também troca as câmeras do instrutor na biblioteca: só afeta FUTURAS importações do kit; cursos já montados não mudam.

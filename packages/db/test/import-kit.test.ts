@@ -45,10 +45,10 @@ describe('importador: --kit', () => {
     expect(() => parseArgs(['--file', 'x.md', '--kit', 'k1', '--source-course', 'crs_x'])).toThrow(/não combine/);
   });
 
-  it('opções: estúdio com zonas, 3/4 principal, voz, letreiro e marca do kit', () => {
+  it('opções: estúdio com zonas, frontal da esquerda principal (sem 3/4), voz, letreiro e marca do kit', () => {
     const o = optionsFromKit(parseArgs(['--file', 'x.md', '--kit', 'estudio7-marina', '--wordmark', 'Primeira Vaga']), resolved);
-    expect(o.presentation?.cameras?.map((c) => c.id)).toEqual(['cam_j7_34', 'cam_j7_esq', 'cam_j7_dir']);
-    expect(o.presentation?.avatarId).toBe('l_34');
+    expect(o.presentation?.cameras?.map((c) => c.id)).toEqual(['cam_j7_esq', 'cam_j7_dir', 'cam_j7_34']);
+    expect(o.presentation?.avatarId).toBe('l_esq');
     expect(o.presentation?.voiceId).toBe('MZxV5lN3cv7hi1376O0m');
     expect(o.presenter).toMatchObject({ name: 'Marina', role: 'Sua orientadora' });
     expect(o.branding?.watermark).toEqual({ enabled: true, position: 'bottom-right', opacity: 0.7 });

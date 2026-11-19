@@ -3,15 +3,15 @@ import { MAIN_CONTENT_ID, SkipLink } from '@/components/ui/skip-link';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { BrandLogo } from '@/components/brand-logo';
 import { getBrand } from '@/config/brand';
-import { LEGAL_DOCS, LEGAL_DRAFT, LEGAL_DRAFT_LABEL, LEGAL_DRAFT_NOTE, type LegalDocId } from '@/lib/legal/documents';
-import { readLegalSource } from '@/lib/legal/source';
+import { LEGAL_DOCS, isLegalDraft, LEGAL_DRAFT_LABEL, LEGAL_DRAFT_NOTE, type LegalDocId } from '@/lib/legal/documents';
+import { readLegalText } from '@/lib/legal/source';
 import { LegalDocument } from './legal-document';
 import { LegalLinks } from './legal-links';
 
 /** Metadados das páginas legais: título da aba e `noindex` enquanto for rascunho. */
 export function legalMetadata(id: LegalDocId) {
   const d = LEGAL_DOCS[id];
-  return { title: d.title, ...(LEGAL_DRAFT ? { robots: { index: false, follow: false } } : {}) };
+  return { title: d.title, ...(isLegalDraft() ?{ robots: { index: false, follow: false } } : {}) };
 }
 
 /**
@@ -21,7 +21,8 @@ export function legalMetadata(id: LegalDocId) {
 export function LegalPage({ id }: { id: LegalDocId }) {
   const doc = LEGAL_DOCS[id];
   const brand = getBrand();
-  const source = readLegalSource(doc);
+  const source = readLegalText(doc);
+  const draft = isLegalDraft();
   return (
     <div className="theme-platform flex min-h-dvh flex-col bg-bg text-fg">
       <SkipLink />
@@ -34,7 +35,7 @@ export function LegalPage({ id }: { id: LegalDocId }) {
         </div>
       </header>
       <main id={MAIN_CONTENT_ID} tabIndex={-1} className="mx-auto w-full max-w-[820px] flex-1 px-4 py-8 outline-none sm:px-8 sm:py-12">
-        {LEGAL_DRAFT ? (
+        {draft ? (
           <p role="note" data-testid="legal-draft-notice" className="mb-8 rounded-xl border border-line bg-fg/5 px-4 py-3 text-sm leading-relaxed text-fg-muted">
             <strong className="font-semibold text-fg">{LEGAL_DRAFT_LABEL}.</strong> {LEGAL_DRAFT_NOTE}
           </p>

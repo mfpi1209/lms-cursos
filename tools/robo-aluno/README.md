@@ -109,6 +109,22 @@ O cache do travamento fica em `docs/qa/lancamento/robo/cache-trava.json`, indexa
 
 Quando a aula tem a missão, o robô trata os dois estados: nos caminhos 3 e 4 toca "Vou fazer depois"; nos caminhos 1 e 2 toca "Já experimentei" (o 1 escreve "O que você percebeu?", o 2 deixa em branco) e salva. Em todos confere que a confirmação ("Missão registrada…" ou "Anotado…") só aparece depois do servidor, que "Continuar aula" segue e que a aula termina. Registra no bruto `missao` (estado, nota, medidas dos botões em 390 px, confirmação e capturas). Achados: `missao-sem-confirmacao` e `missao-rolagem-horizontal`. A missão não conta como "atividade no meio".
 
+## Tarefa com entrega (nó `task`)
+
+Quando a aula tem uma tarefa com entrega, o robô envia a entrega e segue:
+
+- **Sem entrega, ou devolvida:** preenche o link (`https://example.com/entrega-robo-caminho-N`) e toca "Enviar entrega". Nos caminhos 1 e 3, se a tarefa aceita PDF, anexa um PDF pequeno gerado na hora. No caminho 2, antes do envio certo, tenta um link sem `https` e confere que a tela recusa.
+- **Em correção ou aprovada** (a conta já enviou em outra rodada): toca "Continuar", sem enviar de novo.
+- Em todos os casos confere que a confirmação ("Entrega enviada. Em correção." ou "Entrega aprovada") só aparece depois do servidor, que "Continuar aula" segue e que a aula termina.
+
+Registra no bruto `tarefa` (link, arquivo, situação devolvida pelo servidor, se foi reenvio, critérios mostrados, medidas e capturas). Achados: `tarefa-sem-confirmacao` e `tarefa-aceitou-sem-https` (bloqueantes), `tarefa-rolagem-horizontal` e `tarefa-sem-criterios` (importantes). Uma aula só com tarefa (sem vídeo e sem pergunta) não é mais tomada por "abriu no fim".
+
+O robô não corrige: a correção é feita no estúdio, por uma conta da equipe. O fluxo completo, com devolução, reenvio e aprovação, está em `docs/qa/tarefa/fluxo.mjs`.
+
+### Aula avulsa (`aula-avulsa.mjs`)
+
+`node tools/robo-aluno/aula-avulsa.mjs --base http://localhost:3010 --matricula <enr_…> --aula <id da aula> [--caminhos 1,2] [--saida pasta]` roda uma aula de qualquer curso em que a conta de teste tenha matrícula, mesmo fora da numeração C01…C26 (um roteiro de exemplo, por exemplo). Imprime um resumo por caminho e grava o bruto e as capturas na pasta de saída.
+
 ## Varredura de privacidade (`externos.mjs`)
 
 `node tools/robo-aluno/externos.mjs [--curso C02] [--saida arquivo.json]` abre `/login`, `/aprender`, a página do curso, a aula (vídeo, pergunta, missão, fim da aula e do curso, pelo robô), `/aprender/trilhas`, a página da trilha e `/selo/<código>` (e o certificado), em desktop e celular, e lista todo pedido para fora do nosso domínio. Tem de dar zero (é o que a política de privacidade afirma).

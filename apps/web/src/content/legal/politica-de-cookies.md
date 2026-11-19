@@ -1,4 +1,4 @@
-# Política de cookies do portal DNA Work
+# Política de cookies da plataforma de cursos
 
 Rascunho para revisão jurídica. Vigência: [DATA DE VIGÊNCIA]. Portal: [URL DO PORTAL].
 
@@ -20,9 +20,9 @@ Os navegadores também têm dois "armários" onde um site pode guardar preferên
 - localStorage: fica guardado até você apagar;
 - sessionStorage: some quando você fecha a aba.
 
-A ANPD (a agência do governo que cuida da proteção de dados) chama tudo isso de tecnologias similares. Por isso, explicamos aqui o que o portal guarda em cada um.
+A ANPD (a agência do governo que cuida da proteção de dados) chama tudo isso de tecnologias similares. Por isso, explicamos aqui o que a plataforma guarda em cada um.
 
-## Cookies que o portal usa
+## Cookies que a plataforma usa
 
 | Nome | Para que serve | Quanto tempo dura | Quem cria |
 | --- | --- | --- | --- |
@@ -33,7 +33,7 @@ Detalhes técnicos do cookie de sessão: ele é "HttpOnly" (scripts da página n
 
 O cookie `lms-theme` guarda só a sua escolha: claro, escuro ou seguir o sistema.
 
-## O que o portal guarda no seu navegador
+## O que a plataforma guarda no seu navegador
 
 Esses itens não são cookies. Ficam só no seu aparelho e não são enviados ao servidor.
 
@@ -58,7 +58,7 @@ Se um dia isso mudar, atualizamos esta página antes e pedimos seu consentimento
 
 A lei de proteção de dados (LGPD) e o guia da ANPD sobre cookies separam os cookies "necessários" dos "não necessários". Os necessários são os que o site precisa para funcionar e prestar o serviço que você pediu. O cookie de sessão é desse tipo: sem ele, não há login. O cookie de tema só existe porque você escolheu um tema.
 
-Para cookies necessários, a lei não exige consentimento, mas exige transparência. Esta página é a nossa transparência. Base legal proposta: [A CONFIRMAR: legítimo interesse ou execução de contrato].
+Para cookies necessários, a lei não exige consentimento, mas exige transparência. Esta página é a nossa transparência. Base legal proposta: [A CONFIRMAR: legítimo interesse ou execução de contrato]. Quem escolhe é a instituição ({{CONTROLADOR_NOME}}), como controladora; a DNA Work opera a plataforma em nome dela.
 
 ## Como apagar ou bloquear cookies
 
@@ -77,13 +77,13 @@ Dentro do portal, a forma direta de encerrar o cookie de sessão é clicar em Sa
 ## O que acontece se você bloquear
 
 - Cookie de sessão bloqueado: o login não funciona. Você consegue abrir a página de entrada, mas não consegue entrar nem ver os cursos.
-- Cookie de tema apagado: o portal volta ao tema do seu sistema. Nada mais muda.
-- localStorage ou sessionStorage bloqueados: o portal continua funcionando, mas não lembra as legendas, o tema ou a vinheta entre uma aula e outra.
+- Cookie de tema apagado: a plataforma volta ao tema do seu sistema. Nada mais muda.
+- localStorage ou sessionStorage bloqueados: a plataforma continua funcionando, mas não lembra as legendas, o tema ou a vinheta entre uma aula e outra.
 
 ## Mudanças nesta política
 
-Se o portal passar a usar qualquer cookie ou armazenamento novo, atualizamos a tabela acima antes. Se o cookie novo não for necessário, pedimos seu consentimento antes de ativá-lo.
+Se a plataforma passar a usar qualquer cookie ou armazenamento novo, atualizamos a tabela acima antes. Se o cookie novo não for necessário, pedimos seu consentimento antes de ativá-lo.
 
 ## Fale com a gente
 
-Dúvidas sobre cookies ou sobre seus dados: Caio Vinicius Pinheiro / Luan Melo Villas Boas, contato@dnawork.ai. Veja também a [Política de privacidade](./politica-de-privacidade.md) e os [Termos de uso](./termos-de-uso.md).
+Dúvidas sobre cookies ou sobre seus dados: fale com o encarregado da instituição que oferece o curso ({{ENCARREGADO_NOME}}, {{ENCARREGADO_CONTATO}}). Os cookies são criados pela plataforma, operada pela DNA Work (contato@dnawork.ai). Veja também a [Política de privacidade](./politica-de-privacidade.md) e os [Termos de uso](./termos-de-uso.md).

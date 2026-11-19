@@ -73,6 +73,12 @@ export async function findBumperByHash(db: DbOrTx, workspaceId: string, hash: st
   return row ?? null;
 }
 
+/** Assets do workspace com este conteúdo (sha256), do mais novo para o mais antigo: reaproveitar em vez de duplicar. */
+export async function findAssetsBySha256(db: DbOrTx, workspaceId: string, sha256: string, kind?: AssetKind) {
+  const where = kind ? and(eq(s.assets.workspaceId, workspaceId), eq(s.assets.sha256, sha256), eq(s.assets.kind, kind)) : and(eq(s.assets.workspaceId, workspaceId), eq(s.assets.sha256, sha256));
+  return db.select().from(s.assets).where(where).orderBy(desc(s.assets.createdAt)).limit(20);
+}
+
 export async function listAssets(db: DbOrTx, workspaceId: string, kind?: AssetKind) {
   const where = kind ? and(eq(s.assets.workspaceId, workspaceId), eq(s.assets.kind, kind)) : eq(s.assets.workspaceId, workspaceId);
   return db.select().from(s.assets).where(where).orderBy(desc(s.assets.createdAt)).limit(200);

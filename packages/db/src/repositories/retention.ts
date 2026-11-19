@@ -52,6 +52,8 @@ export interface RetentionReport {
   outbox: number;
   audit: number;
   accessLogs: number;
+  /** entregas de webhook (com e-mail e RGM do aluno no corpo) já resolvidas há mais de `outboxDays` dias */
+  webhookDeliveries?: number;
   /** `null` = desligado */
   closedAccounts: number | null;
   badgesExpired: number | null;
@@ -88,6 +90,14 @@ export async function runRetention(db: Database, cfg: RetentionConfig, now: Date
   });
   await step('outbox', async () => {
     report.outbox = await countOrDelete(s.outboxEvents, and(isNotNull(s.outboxEvents.processedAt), lt(s.outboxEvents.processedAt, daysBefore(now, cfg.outboxDays))), s.outboxEvents.id);
+  });
+  await step('webhookDeliveries', async () => {
+    const cutoff = daysBefore(now, cfg.outboxDays);
+    const where = and(lt(s.webhookDeliveries.createdAt, cutoff), sql`${s.webhookDeliveries.status} <> 'pending'`);
+    if (dry) {
+      const [r] = await db.select({ n: sql<number>`count(*)` }).from(s.webhookDeliveries).where(where);
+      report.webhookDeliveries = Number(r?.n ?? 0);
+    } else report.webhookDeliveries = (await db.delete(s.webhookDeliveries).where(where).returning({ id: s.webhookDeliveries.id })).length;
   });
   await step('audit', async () => {
     report.audit = await countOrDelete(s.auditLogs, lt(s.auditLogs.createdAt, daysBefore(now, cfg.auditDays)), s.auditLogs.id);

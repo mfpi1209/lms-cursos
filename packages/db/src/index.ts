@@ -6,3 +6,4 @@ export * from './errors';
 export * from './test-guard';
 export * from './repositories';
 export { seed, SEED_PASSWORD, SEED_USERS, type SeedResult } from './seed/seed';
+export * from './webhook-core';

@@ -914,6 +914,25 @@ button.dna-card__link { font: inherit; text-align: inherit; background: none; bo
   .dna-rail--portrait5 > li { flex: initial; }
 }
 @media (min-width: 1360px) { .dna-rail--trails { --dna-w: calc((100% - 2 * var(--dna-gap)) / 3); } }
+
+/* cursos livres (EaD): cartão maior que o das pílulas. Foto do instrutor num quadro marinho + ficha clara; em coluna no
+   celular (foto 16:9 em cima), lado a lado a partir de 640 px; dois cartões por linha no computador quando há mais de um */
+.dna-rail--free { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; margin-inline: 0; padding: 0 0 8px; scroll-snap-type: none; }
+.dna-rail--free > li { flex: initial; }
+.dna-free { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; overflow: hidden; border-radius: var(--dna-radius); box-shadow: 0 6px 20px rgb(29 30 76 / 0.08); }
+.dna-free__media { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 16 / 9; background: #1d1e4c; }
+.dna-free__body { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 14px; padding: 16px; }
+@media (min-width: 640px) {
+  .dna-free { grid-template-columns: minmax(220px, 40%) minmax(0, 1fr); }
+  .dna-free__media { aspect-ratio: auto; min-height: 280px; }
+  .dna-free__body { gap: 16px; padding: 24px; }
+}
+@media (min-width: 1100px) {
+  .dna-rail--free:has(> li:nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); }
+  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free__media { min-height: 340px; }
+  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free__body { padding: 32px 40px; }
+}
 @media (prefers-reduced-motion: reduce) { .dna-card { transition: none !important; transform: none !important; } }
 
 /* filtros */

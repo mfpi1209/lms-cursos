@@ -5,7 +5,7 @@ import path from 'node:path';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import { authoring, getDb, media, schema, newId } from '@lms/db';
 import { SceneDirectionSchema, allLessons, chipLabel, panelIconFor, buildCinematicPrompt, cinematicClipSeconds, directionNarration, type Camera, type CameraZone, type PresenterPronoun, type SceneDirection } from '@lms/course-schema';
-import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
+import { ELEVENLABS_ADAPTER_VERSION, ElevenLabsError, HEYGEN_ADAPTER_VERSION, type WatermarkSpec, HeyGenAdapter, HeyGenError, isTransparentUnsupportedError, motionPromptForAngle, retakeVariation, mediaConfigFromEnv, type HeyGenCreateInput, type MediaProviderConfig } from '@lms/media';
 import {
   CHROMA_KEY_COLOR, ShotLineNotFoundError, appendBumperToVideo, approxWords, composeScene, cutAudioSegments, mapWordsToTimeline, wordsFromAlignment, extractScenePlate, ffprobe, generateMotionStandInClip, generateStandInClip, generateTestClip, generateToneMp3, mapShotTimings, renderCornerTagToFile, renderShotGraphics, syntheticAlignment,
   type CaptionWord, type CharAlignment, type ChipsGraphics, type LoudnessResult, type ShotClip, type ShotTiming, type TimelineShotWords,
@@ -103,6 +103,18 @@ export interface DirectedInput {
    * Entra no hash da cena só quando presente.
    */
   lowerThird?: { name: string; role?: string; brand?: string };
+  /**
+   * estúdio com zonas: "Texto na tela" do roteiro (≤ ~140 caracteres) para o painel no lado livre, de 0,6 s até o
+   * fim da cena. Resolvido no pedido (`studioSceneOverlays`) só em cena sem pílulas/cartão/slide; é só montagem:
+   * muda o hash da cena (remonta) mas NÃO as chaves dos itens (o clipe pago do HeyGen é reaproveitado).
+   */
+  screenText?: string;
+  /**
+   * painel da cena (o painel aprovado do `presenter_panel` no lado livre; ver `zone-panel.ts` em @lms/media): tópicos
+   * que acendem um a um no tempo da fala, em páginas de 3 (o `screenText` vira o título). Mesma regra de zona e mesma
+   * natureza (só montagem: muda o hash da cena, nunca as chaves dos itens pagos).
+   */
+  screenTopics?: Array<{ text: string; cue?: string }>;
   // ---- estado persistido ----
   units?: RenderUnit[];
   mergedShots?: string[];
@@ -278,7 +290,7 @@ async function findPaidNarration(job: media.MediaJobRow, narrationKey: string): 
 
 // ---------------- contexto ----------------
 
-interface Ctx {
+export interface Ctx {
   cfg: MediaProviderConfig;
   sim: boolean;
   /** há áudio de narração próprio (ElevenLabs ou simulado) para cortar */
@@ -306,6 +318,16 @@ function context(job: media.MediaJobRow, input: DirectedInput, cfg: MediaProvide
 
 function unitCamera(input: DirectedInput, u: RenderUnit) {
   return resolveCamera(input.cameras, u.cameraId, input.avatarId);
+}
+
+/** Gesto enviado ao HeyGen para o item: câmera que não é de frente mantém as mãos juntas (evita acessório inventado). */
+function unitMotion(input: DirectedInput, u: RenderUnit, p: { motionPrompt?: string; handsStill?: boolean }) {
+  // mãos paradas no curso todo: trata toda câmera como "não de frente" (mãos juntas)
+  const angle = p.handsStill ? 'all' : (unitCamera(input, u) as { angle?: string } | undefined)?.angle;
+  const m = motionPromptForAngle(u.motionPrompt?.trim() || p.motionPrompt, angle);
+  // retomada: o HeyGen repete o vídeo para o mesmo pedido; a variação muda o pedido só da tomada refeita
+  const v = retakeVariation(u.retake);
+  return v ? (m ? `${m}; ${v}` : v) : m;
 }
 
 /** Zona da câmera do item (estúdio com zonas): a da câmera dele, ou a da principal; ausente = câmera comum. */
@@ -353,7 +375,7 @@ function plateSourceKey(input: DirectedInput): string | undefined {
  * Chave do item. Clipe com fundo de continuidade: `plate:<videoKey>` (sem a
  * videoKey ainda, devolve undefined — a chave é atribuída assim que ela existe).
  */
-function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefined {
+export function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefined {
   const p = input.params ?? {};
   // cena em movimento: `key` é a do trecho de áudio (o clipe tem `videoKey`, calculada após o corte)
   if (u.kind === 'audio' || u.kind === 'cinematic') return itemKey({ kind: 'audio', text: u.script, voice: ctx.voice, adapterVersion: ctx.adapterVersion, simulated: ctx.sim });
@@ -373,23 +395,25 @@ function keyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string | undefin
   }
   return itemKey({
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
-    motionPrompt: u.motionPrompt?.trim() || p.motionPrompt, expressiveness: p.expressiveness, removeBackground,
+    motionPrompt: unitMotion(input, u, p), expressiveness: p.expressiveness, removeBackground,
     background,
     engine: p.engine, resolution: '1080p', aspectRatio: '16:9', adapterVersion: ctx.sim ? `${ctx.adapterVersion}+sim-standin-2` : ctx.adapterVersion, simulated: ctx.sim,
     // posição resolvida do item: direita/esquerda (+ tamanho; o fundo já está em `background`) ou tela cheia; centro sem rótulo
     ...(placementKeyTag(pl) ? { placement: placementKeyTag(pl) } : {}),
     // harmonização de cor (só na montagem nossa, direita/esquerda)
     ...(pl.transparent && gradeFromParams(p) ? { grade: gradeFromParams(p) } : {}),
+    ...(u.retake ? { retake: u.retake } : {}),
   });
 }
 
 /** Chave do vídeo TRANSPARENTE do item (sem fundo nem posição): o mesmo vídeo pago serve a qualquer posição/fundo. */
-function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
+export function alphaKeyFor(ctx: Ctx, input: DirectedInput, u: RenderUnit): string {
   const p = input.params ?? {};
   return itemKey({
     kind: 'clip', text: u.script, voice: ctx.voice, lookId: unitCamera(input, u).lookId,
-    motionPrompt: u.motionPrompt?.trim() || p.motionPrompt, expressiveness: p.expressiveness, background: 'transparent',
+    motionPrompt: unitMotion(input, u, p), expressiveness: p.expressiveness, background: 'transparent',
     engine: p.engine, resolution: '1080p', aspectRatio: '16:9', adapterVersion: ctx.sim ? `${ctx.adapterVersion}+sim-standin-2` : ctx.adapterVersion, simulated: ctx.sim,
+    ...(u.retake ? { retake: u.retake } : {}),
   });
 }
 
@@ -410,7 +434,7 @@ async function planAndReuse(jobId: string, ctx: Ctx) {
     // cenas em movimento: pedido de câmera, narração própria e fala de até 15 s — ANTES de qualquer cobrança
     const problems = cinematicPlanProblems(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio });
     if (problems.length) throw new InvalidDirectionError(problems.join(' '));
-    const { units, merged } = planRenderUnits(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio });
+    const { units, merged } = planRenderUnits(ctx.direction.shots, { hasNarrationAudio: ctx.ownAudio, retake: ctx.direction.retake });
     // valida as câmeras ANTES de qualquer cobrança
     for (const u of units) if (u.kind !== 'audio') unitCamera(input, u);
     if (merged.length) console.warn(`[media] job ${jobId}: planos curtos fundidos ao vizinho para o HeyGen: ${merged.join(', ')}`);
@@ -946,8 +970,8 @@ async function pollInFlight(jobId: string, heygen: HeyGenAdapter): Promise<boole
 }
 
 /** Idempotency-Key de um envio, derivada só do estado gravado (estável entre passos, retries e processos). */
-export function submitKey(requestId: string, itemId: string, s: Pick<ShotState, 'submitSeq' | 'plateFallback'>): string {
-  return `${requestId}:${itemId}:${s.submitSeq ?? 0}${s.plateFallback ? ':bg' : ''}`.replace(/[^A-Za-z0-9_:.-]/g, '-').slice(0, 255);
+export function submitKey(requestId: string, itemId: string, s: Pick<ShotState, 'submitSeq' | 'plateFallback'>, retake?: number): string {
+  return `${requestId}:${itemId}:${s.submitSeq ?? 0}${s.plateFallback ? ':bg' : ''}${retake ? `:rt${retake}` : ''}`.replace(/[^A-Za-z0-9_:.-]/g, '-').slice(0, 255);
 }
 
 /** HeyGen recusou o pedido por causa do conteúdo (4xx que não é concorrência/limite): candidato a cair no fundo da apresentação. */
@@ -1004,7 +1028,7 @@ async function submitWindow(jobId: string, ctx: Ctx, heygen: HeyGenAdapter) {
     const cam = unitCamera(input, u);
     // mesma chave em retries do MESMO envio (24h), derivada SÓ do estado gravado; nova chave só após falha do HeyGen
     // (submitSeq) ou com o fundo da apresentação após recusa do fundo de continuidade (`:bg`, plateFallback gravado antes)
-    const idempotencyKey = submitKey(job.requestId, u.id, s);
+    const idempotencyKey = submitKey(job.requestId, u.id, s, u.retake);
     if (u.kind === 'cinematic') {
       const seconds = s.cinematicSeconds ?? cinematicClipSeconds(u.cinematicAction, s.segmentSeconds ?? 0);
       const created = await heygen.createCinematicVideo({
@@ -1035,7 +1059,7 @@ async function submitWindow(jobId: string, ctx: Ctx, heygen: HeyGenAdapter) {
       backgroundAssetId: background.assetId,
       engine: p.engine,
       expressiveness: p.expressiveness,
-      motionPrompt: u.motionPrompt?.trim() || p.motionPrompt,
+      motionPrompt: unitMotion(input, u, p),
       removeBackground: background.removeBackground,
       callbackUrl: ctx.cfg.heygenCallbackUrl,
       callbackId: job.id,
@@ -1226,6 +1250,14 @@ export async function renderDirectedScene(
     const words = src?.words?.length ? src.words.map((w) => ({ text: w.text, start: w.start - src.sourceStart })).filter((w) => w.start >= -0.05) : undefined;
     chips.set(id, { graphics, ...(words ? { words } : {}) });
   }
+  // painel dinâmico: as mesmas palavras relativas ao plano (cada tópico entra quando a fala chega nele)
+  const topicWords = new Map<string, Array<{ text: string; start: number }>>();
+  if (input.screenTopics?.length) {
+    for (const [id, src] of wordSources) {
+      if (src.words?.length) topicWords.set(id, src.words.map((w) => ({ text: w.text, start: w.start - src.sourceStart })).filter((w) => w.start >= -0.05));
+    }
+  }
+  const screenEyebrow = input.screenText?.trim() || input.screenTopics?.length ? await lessonEyebrow(job) : undefined;
   const output = path.join(dir, 'scene.mp4');
   await renew();
   const result = await composeScene({
@@ -1235,6 +1267,10 @@ export async function renderDirectedScene(
     // estúdio com zonas: pergunta da decisão seguinte no fim e letreiro com o nome na abertura da aula
     ...(input.nextQuestion?.trim() ? { teaser: { question: input.nextQuestion } } : {}),
     ...(input.lowerThird?.name?.trim() ? { lowerThird: input.lowerThird } : {}),
+    ...(input.screenText?.trim() ? { screenText: input.screenText } : {}),
+    // painel da cena: ícone de cada tópico por palavra-chave e a linha de cima "Aula N · título" (só remontagem: fora das chaves do clipe)
+    ...(input.screenTopics?.length ? { screenTopics: { topics: input.screenTopics.map((t) => ({ ...t, icon: panelIconFor(t.text) })), words: topicWords } } : {}),
+    ...(screenEyebrow ? { screenEyebrow } : {}),
     ...(input.videoPalette ? { palette: input.videoPalette } : {}),
     ...(watermark ? { watermark: { brand: watermark.brand, position: watermark.position, opacity: watermark.opacity, accent: input.directionStyle?.slideAccent ?? '#1a66d1' } } : {}),
   });

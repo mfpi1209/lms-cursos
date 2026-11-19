@@ -1,0 +1,11 @@
+{
+  "curso": "crs_j1pnhyikua4s5yiy",
+  "titulo": "Segurança digital: golpes, senhas e privacidade",
+  "materiais": [
+    {"id":"guia-senha-forte","titulo":"Guia: senha forte e gerenciador de senhas","descricao":"Como criar senhas longas e únicas, usar um gerenciador e conferir se você já foi vazado.","categoria":"resumo","modulo":1,"fonte":"guia-senha-forte.html","formato":"pdf"},
+    {"id":"checklist-duas-etapas","titulo":"Checklist: ative a verificação em duas etapas","descricao":"Passo a passo para ligar as duas etapas no WhatsApp, no Google e na conta de estudo, com códigos de backup.","categoria":"checklist","modulo":2,"fonte":"checklist-duas-etapas.html","formato":"pdf"},
+    {"id":"sinais-de-golpe","titulo":"Infográfico: sinais de golpe","descricao":"Os quatro golpes mais comuns de WhatsApp, Pix, falso atendente e falso boleto, num olhar só.","categoria":"infografico","modulo":3,"fonte":"infografico-sinais-golpe.html","formato":"png"},
+    {"id":"nunca-mandar-lgpd","titulo":"Resumo: o que nunca mandar por mensagem e noções de LGPD","descricao":"A lista do que não vai por mensagem e os seus direitos sobre os dados pessoais.","categoria":"resumo","modulo":4,"fonte":"resumo-nunca-mandar-lgpd.html","formato":"pdf"},
+    {"id":"plano-primeira-hora","titulo":"Plano de ação: caí num golpe, a primeira hora","descricao":"Imprima, preencha os contatos úteis e deixe à mão para saber o que fazer na primeira hora.","categoria":"modelo","modulo":5,"fonte":"plano-primeira-hora.html","formato":"pdf"}
+  ]
+}

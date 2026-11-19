@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { Field, Input, Label } from '@/components/ui/input';
 import { RichTextEditor } from '@/components/studio/rich-text-editor';
 import { ScaffoldFields } from '@/components/studio/scaffold-fields';
-import { MissionFields } from '@/components/studio/storyboard/scene-fields';
+import { MissionFields, TaskFields } from '@/components/studio/storyboard/scene-fields';
 import { MediaPanel } from '@/components/studio/media-panel';
 import { ReactionFineAdjust, SceneFineAdjust } from '@/components/studio/fine-adjust';
 import {
@@ -140,11 +140,13 @@ export function NodeForm({ courseId, lessonId, graph, node, objectives, onGraphC
 
       {node.type === 'mission' && <MissionFields node={node} graph={graph} changeGraph={onGraphChange} />}
 
+      {node.type === 'task' && <TaskFields node={node} changeGraph={onGraphChange} />}
+
       {node.type === 'assessment' && <AssessmentFields node={node} patch={patch} />}
 
       {node.type === 'end' && <EndFields node={node} patch={patch} />}
 
-      {!['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'assessment', 'end'].includes(node.type) && (
+      {!['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'task', 'assessment', 'end'].includes(node.type) && (
         <p className="rounded-md bg-danger-soft p-3 text-sm text-danger">
           Este tipo de bloco ainda não tem executor. Ele bloqueia a publicação; troque por um tipo disponível ou exclua.
         </p>

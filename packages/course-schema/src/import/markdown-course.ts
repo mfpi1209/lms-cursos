@@ -1,11 +1,15 @@
 import { CourseDocumentSchema, type Branding, type CastMember, type CourseDocument, type Lesson, type Module, type Presentation } from '../course';
 import type { Edge, LessonGraph, Objective } from '../graph';
-import type { AnyNode, ChoiceQuality, RecapItem } from '../nodes';
+import { TASK_CRITERIA_MAX, type AnyNode, type ScreenRecording, type ChoiceQuality, type RecapItem, type TaskDeliverable, type TaskFileKind, type TaskReview } from '../nodes';
 import type { RichTextDocument } from '../richtext';
-import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, nextChipsCamera, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, zoneTalkCamera, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
+import { boldSegments, CARD_LIMITS, CHIPS_LIMITS, resolveCameraPlacement, SAFE_GESTURES, sameWords, spokenWords, stripBold, zoneCamerasOf, type Camera, type SceneDirection, type Shot, type ShotFraming, type SlideVariant, type ZoneCameraSet } from '../direction';
 import { compileCourse, type CompileIssue, type CourseCompileResult } from '../compile';
-import { courseLengthReport } from '../length';
+import { courseLengthReport, lengthProfile, type CourseFormat } from '../length';
+import { parseDurationMinutes } from '../duration';
 import { applyCallsToGraph, callFromSituation } from '../bridge';
+import { screenMockLookupKey, type ScreenMockIssue } from './screen-mocks-markdown';
+import type { ScreenMock } from '../screen-mock';
+import type { SceneTopic, SceneTopicsIssue } from './scene-topics-markdown';
 import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
 
 /*
@@ -14,11 +18,44 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  * Formato do roteiro (ver docs/roteiros/curso-primeira-vaga.md):
  *  - cabeçalho: `# Título` + linhas `Ideia:`, `Público:`, `Objetivo final:`,
  *    `Duração-alvo:`, `Personagens de exemplo (fictícios):`;
+ *  - cabeçalho, linhas opcionais (ausentes = comportamento de sempre):
+ *    `Formato: EaD | micro` (sem acento nem caixa; padrão micro) escolhe os limites
+ *    de extensão (`LENGTH_PROFILES`): EaD aceita aulas de até 30 min e 40 cenas, falas
+ *    de 40 a 300 palavras e compara o curso com a meta sem folga; micro mantém aulas
+ *    de até 6 min e 9 cenas, falas de 60 a 120 palavras e folga de 1,5×;
+ *    `Duração-alvo:` aceita só a duração (`6 h`, `6h30`, `360 min`) além do texto livre;
+ *    `Certificado: sim | não` e `Carga horária: 8 h | 8h30 | 480 min` guardam
+ *    `certificate` no curso (nada é emitido ainda); `Certificado: sim` sem carga
+ *    horária gera o aviso CERTIFICATE_NO_WORKLOAD e vale a soma das aulas;
  *  - `## Módulo N — título` + `Descrição:`; `### Aula N — título` + `Objetivo:`;
  *  - cenas `### CÓDIGO — título` (códigos únicos no curso inteiro):
  *    - `V..` vídeo: `**Fala para gravação**` + fala entre aspas, `Texto na tela:`
  *      (palavras-chave) e `Cartão:` opcional (título + tópicos com **negrito**);
  *      segue para a cena seguinte;
+ *      `Vídeo próprio: arquivo.mp4` (também `Video proprio:`; uma ou mais linhas, em ordem) marca gravação
+ *      de tela própria: MP4 em tela cheia, narração da instrutora por cima, legenda, SEM avatar. Vira
+ *      `screenRecordings` no nó (`fileName`; o `assetId` vem quando o MP4 é anexado na cena). A cena importa
+ *      sem o arquivo existir (aviso SCREEN_MEDIA_MISSING por cena sem mídia anexada). Nessas cenas não se
+ *      gera direção/câmera de avatar: o `Cartão:` (se houver) vai para o texto da tela. `Vídeo próprio:` em
+ *      cena que não é `V..` gera SCREEN_RECORDING_WRONG_SCENE (a linha é ignorada). Conferência cruzada: se as
+ *      notas (`## Notas…`) trouxerem `Cenas com gravação de tela (anexar o MP4 na cena): V07 (a, b) · V12 (c)`
+ *      (nomes sem `.mp4`), a lista é comparada com as cenas que têm `Vídeo próprio:`; divergência de cena ou
+ *      de arquivos gera SCREEN_LIST_MISMATCH. Sem a linha nas notas, não há conferência.
+ *      Exemplo em docs/roteiros/exemplos/exemplo-video-proprio.md;
+ *      TELAS SIMULADAS (sem gravação humana): um arquivo `docs/roteiros/telas/<nome-do-roteiro>.telas.md` ao lado
+ *      do roteiro (pasta `telas/` irmã), com uma seção `## gravacao_x` por arquivo (sintaxe em `screen-mock.ts`,
+ *      leitor `parseScreenMocksMarkdown`). O CLI o carrega sozinho (`--telas <arquivo>` troca o caminho,
+ *      `--sem-telas` desliga) e passa `screenMocks` ao importador. Com o mapa: a gravação cujo nome tem tela
+ *      ganha `mock` e `source: 'mock'` (o MP4 é gerado depois, sem provedor pago); cena `V..` listada nas notas
+ *      (`Cenas com gravação de tela …`) SEM linha `Vídeo próprio:` ganha as gravações da lista, na ordem (sem
+ *      SCREEN_LIST_MISMATCH). Avisos: SCREEN_MOCK_PENDING (uma vez por curso: "N telas simuladas a gerar"),
+ *      SCREEN_MOCK_MISSING (gravação sem tela simulada e sem mídia), SCREEN_MOCK_UNUSED (tela que nenhuma cena
+ *      usa) e SCREEN_MOCK_INVALID (problema do arquivo de telas, com chave e linha). Sem `screenMocks`, nada muda;
+ *      TÓPICOS DO PAINEL (estúdio com zonas): `docs/roteiros/telas/<nome-do-roteiro>.topicos.md` (`## V07` + `- tópico
+ *      (na fala: "trecho")`; leitor `parseSceneTopicsMarkdown`) → opção `sceneTopics`: a cena `V..` ganha `topics`
+ *      (campo opcional do nó), que a montagem mostra um a um no painel conforme a fala. Avisos: SCENE_TOPICS_INVALID
+ *      (problema do arquivo, com linha), SCENE_TOPICS_UNUSED (código sem cena de vídeo), SCENE_TOPICS_IGNORED (cena
+ *      com gravação de tela). Sem `sceneTopics`, nada muda;
  *    - `Q..` decisão: `Situação:`, `Voz opcional: sim|não`, `Chamada:` (frase
  *      com que a instrutora chama o aluno no FIM do vídeo anterior; ausente =
  *      `callFromSituation` — fato + pergunta do enunciado —, com aviso) e a tabela
@@ -30,6 +67,11 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  *    - `AV..` avaliação: `Tentativas: N`, `Aprovação: X de Y`, perguntas
  *      numeradas com alternativas (a correta marcada `(correta)`) e `Explicação:`;
  *    - `A..` anotação opcional: `Pergunta:`, `Pular: sim`, `Destino:`;
+ *    - `T..` tarefa com entrega (o aluno envia e um avaliador confere): `Entrega: link | link e arquivo`
+ *      (sem a linha, `link`), `Arquivos: PDF · imagem` (opcional; sem a linha, os dois, até 10 MB),
+ *      `Instrução:` (o que fazer e o que enviar), `Critérios: a · b · c` (1 a 10 itens de sim ou não),
+ *      `Correção: avaliador | automática` (sem a linha, `avaliador`), `Obrigatória: sim | não` (opcional; sem a
+ *      linha, `sim`: conta para o certificado) e `Destino:`. Exemplo em docs/roteiros/exemplos/exemplo-cruzeiro-tarefa.md;
  *    - `### FIM — O que você levou`: tópicos, `Meu roteiro:` (itens separados
  *      por `;`) e `Checklist: Título: a · b · c` opcional. `Destino: FIM` é o
  *      encerramento da própria aula.
@@ -41,7 +83,8 @@ import { reactionFromFeedback, REACTION_WORDS } from '../reaction';
  * fraca 0 na variável `pontos` da aula); composição → `reflection` com
  * `scaffold`; avaliação → uma cena `assessment` por pergunta encadeadas, com a
  * variável `acertos` e dois encerramentos (aprovado / revisar) para o critério
- * "X de Y"; anotação → `reflection` livre com `minLength: 0`; FIM → `end` com
+ * "X de Y"; anotação → `reflection` livre com `minLength: 0`; tarefa → `task`
+ * (a aula segue depois do envio; a correção é feita depois, no estúdio); FIM → `end` com
  * o roteiro ("Meu roteiro"): frases montadas, anotação, checklist e os tópicos
  * de "O que você levou".
  */
@@ -58,6 +101,12 @@ export interface ParsedHeader {
   finalGoal: string;
   targetDuration: string;
   characters: string;
+  /** `Formato:` (texto como escrito; vazio = ausente) */
+  format: string;
+  /** `Certificado:` (texto como escrito; vazio = ausente) */
+  certificate: string;
+  /** `Carga horária:` (texto como escrito; vazio = ausente) */
+  workload: string;
 }
 
 export interface ParsedCard {
@@ -131,6 +180,23 @@ export interface ParsedNote {
   destination: string;
 }
 
+export interface ParsedTask {
+  kind: 'task';
+  code: string;
+  title: string;
+  /** `Entrega: link | link e arquivo` */
+  deliverable: TaskDeliverable;
+  /** `Arquivos: PDF · imagem` (só vale com `link e arquivo`) */
+  fileKinds: TaskFileKind[];
+  instruction: string;
+  criteria: string[];
+  /** `Correção: avaliador | automática` */
+  review: TaskReview;
+  /** `Obrigatória: sim | não` (conta para o certificado) */
+  required: boolean;
+  destination: string;
+}
+
 export interface ParsedEnd {
   kind: 'end';
   code: 'FIM';
@@ -141,7 +207,8 @@ export interface ParsedEnd {
   checklist?: { title: string; items: string[] };
 }
 
-export type ParsedScene = ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedEnd;
+/** `screenFiles`: nomes das linhas `Vídeo próprio:` da cena, em ordem (só valem em `V..`; nas demais geram aviso). */
+export type ParsedScene = (ParsedVideo | ParsedDecision | ParsedScaffoldScene | ParsedAssessment | ParsedNote | ParsedTask | ParsedEnd) & { screenFiles?: string[] };
 
 export interface ParsedLesson {
   number: number;
@@ -161,6 +228,8 @@ export interface ParsedCourse {
   title: string;
   header: ParsedHeader;
   modules: ParsedModule[];
+  /** linha das notas `Cenas com gravação de tela (...)`; ausente = a linha não existe (sem conferência) */
+  screenList?: Array<{ code: string; files: string[] }>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -172,7 +241,7 @@ const H1_RE = /^#\s+(.+?)\s*$/;
 const H2_RE = /^##\s+/;
 const MODULE_RE = new RegExp(`^##\\s+M[óo]dulo\\s+(\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
 const LESSON_RE = new RegExp(`^###\\s+Aula\\s+(\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
-const SCENE_RE = new RegExp(`^###\\s+(FIM|AV\\d+|V\\d+|Q\\d+|M\\d+|A\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
+const SCENE_RE = new RegExp(`^###\\s+(FIM|AV\\d+|V\\d+|Q\\d+|M\\d+|A\\d+|T\\d+)\\s*${DASH}\\s*(.+?)\\s*$`);
 const H3_RE = /^###\s+/;
 const KEY_RE = /^([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9 ()/-]{0,40}?):\s*(.*)$/;
 const BULLET_RE = /^-\s+(.+?)\s*$/;
@@ -233,6 +302,9 @@ function parseHeader(lines: string[]): { title: string; header: ParsedHeader } {
       finalGoal: pickField(fields, 'Objetivo final', 'Objetivo'),
       targetDuration: pickField(fields, 'Duracao-alvo', 'Duracao', 'Duração'),
       characters: pickField(fields, 'Personagens'),
+      format: pickField(fields, 'Formato'),
+      certificate: pickField(fields, 'Certificado'),
+      workload: pickField(fields, 'Carga horaria', 'Carga horária'),
     },
   };
 }
@@ -413,6 +485,82 @@ function parseNote(b: Block): ParsedNote {
   return { kind: 'note', code: b.code, title: b.title, text: text || free, skippable, destination };
 }
 
+const TASK_DELIVERABLE: Record<string, TaskDeliverable> = { link: 'link', 'link e arquivo': 'link_file', 'link + arquivo': 'link_file', 'link ou arquivo': 'link_file', link_file: 'link_file' };
+const TASK_REVIEW: Record<string, TaskReview> = { avaliador: 'manual', manual: 'manual', automatica: 'auto', auto: 'auto' };
+const TASK_FILE_KIND: Record<string, TaskFileKind> = { pdf: 'pdf', imagem: 'image', imagens: 'image', image: 'image', foto: 'image', fotos: 'image' };
+
+/**
+ * Tarefa com entrega (`T..`). A instrução pode continuar nas linhas seguintes (até a próxima chave conhecida).
+ * Erros de formato param o roteiro: entrega ou correção desconhecida, sem instrução, sem critérios, mais de 10 critérios, sem destino.
+ */
+function parseTask(b: Block): ParsedTask {
+  let deliverable: TaskDeliverable = 'link';
+  let fileKinds: TaskFileKind[] = ['pdf', 'image'];
+  let review: TaskReview = 'manual';
+  let required = true;
+  let destination = '';
+  let criteria: string[] = [];
+  const instruction: string[] = [];
+  let inInstruction = false;
+  for (const raw of b.body) {
+    const line = raw.trim();
+    if (!line) continue;
+    const kv = keyLine(line);
+    switch (kv?.key) {
+      case 'entrega': {
+        const d = TASK_DELIVERABLE[foldKey(kv.value)];
+        if (!d) throw new MarkdownCourseError(`tarefa ${b.code}: entrega "${kv.value}" desconhecida (use "link" ou "link e arquivo")`, b.line);
+        deliverable = d;
+        inInstruction = false;
+        continue;
+      }
+      case 'arquivos':
+      case 'arquivo': {
+        const kinds = kv.value.split(/\s+·\s+|\s+•\s+|\s*,\s*|\s+e\s+/).map((x) => x.trim()).filter(Boolean).map((x) => ({ raw: x, kind: TASK_FILE_KIND[foldKey(x)] }));
+        const bad = kinds.find((k) => !k.kind);
+        if (bad || !kinds.length) throw new MarkdownCourseError(`tarefa ${b.code}: tipo de arquivo "${bad?.raw ?? kv.value}" desconhecido (use "PDF" e/ou "imagem")`, b.line);
+        fileKinds = [...new Set(kinds.map((k) => k.kind!))];
+        inInstruction = false;
+        continue;
+      }
+      case 'instrucao':
+      case 'instrucoes':
+        instruction.push(stripQuotes(kv.value));
+        inInstruction = true;
+        continue;
+      case 'criterios':
+      case 'criterio':
+        criteria = [...criteria, ...splitDots(kv.value)];
+        inInstruction = false;
+        continue;
+      case 'correcao': {
+        const r = TASK_REVIEW[foldKey(kv.value)];
+        if (!r) throw new MarkdownCourseError(`tarefa ${b.code}: correção "${kv.value}" desconhecida (use "avaliador" ou "automática")`, b.line);
+        review = r;
+        inInstruction = false;
+        continue;
+      }
+      case 'obrigatoria':
+      case 'obrigatorio':
+        required = yes(kv.value);
+        inInstruction = false;
+        continue;
+      case 'destino':
+        destination = kv.value;
+        inInstruction = false;
+        continue;
+    }
+    // linha solta (ou com dois-pontos no meio do texto): continua a instrução
+    if (inInstruction) instruction.push(line);
+  }
+  const text = smartQuotes(instruction.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim());
+  if (!text) throw new MarkdownCourseError(`tarefa ${b.code} sem "Instrução:"`, b.line);
+  if (!criteria.length) throw new MarkdownCourseError(`tarefa ${b.code} sem "Critérios:" (de 1 a ${TASK_CRITERIA_MAX} itens de sim ou não, separados por " · ")`, b.line);
+  if (criteria.length > TASK_CRITERIA_MAX) throw new MarkdownCourseError(`tarefa ${b.code}: ${criteria.length} critérios (máximo ${TASK_CRITERIA_MAX})`, b.line);
+  if (!destination) throw new MarkdownCourseError(`tarefa ${b.code} sem "Destino:"`, b.line);
+  return { kind: 'task', code: b.code, title: b.title, deliverable, fileKinds, instruction: text, criteria, review, required, destination };
+}
+
 function parseEnd(b: Block): ParsedEnd {
   const takeaways: string[] = [];
   const myScript: string[] = [];
@@ -436,13 +584,35 @@ function parseEnd(b: Block): ParsedEnd {
   return { kind: 'end', code: 'FIM', title: b.title, takeaways, myScript, ...(checklist ? { checklist } : {}) };
 }
 
+const SCREEN_FILE_RE = /^[^\\/]+\.mp4$/i;
+
+/** Linhas `Vídeo próprio: arquivo.mp4` do corpo da cena, em ordem. */
+function screenFilesOf(b: Block): string[] {
+  const files: string[] = [];
+  b.body.forEach((raw, i) => {
+    const kv = keyLine(raw.trim());
+    if (kv?.key !== 'video proprio') return;
+    const name = kv.value.replace(/^[`"“'\s]+|[`"”'\s]+$/g, '');
+    if (!SCREEN_FILE_RE.test(name) || name.includes('..')) throw new MarkdownCourseError(`${b.code}: "Vídeo próprio:" precisa de um arquivo .mp4 sem pasta (recebido "${kv.value}")`, b.line + i + 1);
+    files.push(name);
+  });
+  return files;
+}
+
 function parseScene(b: Block): ParsedScene {
+  const scene = parseSceneKind(b);
+  const screenFiles = screenFilesOf(b);
+  return screenFiles.length ? { ...scene, screenFiles } : scene;
+}
+
+function parseSceneKind(b: Block): ParsedScene {
   if (b.code === 'FIM') return parseEnd(b);
   if (b.code.startsWith('AV')) return parseAssessment(b);
   if (b.code.startsWith('V')) return parseVideo(b);
   if (b.code.startsWith('Q')) return parseDecision(b);
   if (b.code.startsWith('M')) return parseScaffold(b);
   if (b.code.startsWith('A')) return parseNote(b);
+  if (b.code.startsWith('T')) return parseTask(b);
   throw new MarkdownCourseError(`código de cena desconhecido "${b.code}"`, b.line);
 }
 
@@ -460,6 +630,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
   let block: Block | undefined;
   let lessonHeaderLines: string[] = [];
   let stopped = false;
+  let stopAt = -1;
 
   const flushBlock = () => {
     if (!block) return;
@@ -492,6 +663,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
       // qualquer outra seção "##" (ex.: "Notas para a montagem") encerra o roteiro
       flushLesson();
       stopped = true;
+      stopAt = i;
       break;
     }
     const les = LESSON_RE.exec(line);
@@ -518,6 +690,17 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
   }
   flushLesson();
 
+  // notas: lista de cenas com gravação de tela (conferência cruzada com `Vídeo próprio:`)
+  let screenList: ParsedCourse['screenList'];
+  if (stopAt >= 0) {
+    for (const raw of lines.slice(stopAt)) {
+      const m = /^\s*Cenas com grava[çc][ãa]o de tela[^:]*:\s*(.*)$/i.exec(raw);
+      if (!m) continue;
+      screenList = [...(screenList ?? [])];
+      for (const e of m[1]!.matchAll(/([A-Za-z]+\d+)\s*\(([^)]*)\)/g)) screenList.push({ code: e[1]!.toUpperCase(), files: e[2]!.split(',').map((x) => x.trim()).filter(Boolean) });
+    }
+  }
+
   // códigos únicos no curso inteiro
   const seen = new Map<string, string>();
   for (const m of modules)
@@ -528,7 +711,7 @@ export function parseMarkdownCourse(md: string): ParsedCourse {
         if (seen.has(s.code)) throw new MarkdownCourseError(`código ${s.code} repetido (${seen.get(s.code)} e ${where})`);
         seen.set(s.code, where);
       }
-  return { title, header, modules };
+  return { title, header, modules, ...(screenList ? { screenList } : {}) };
 }
 
 /* ------------------------------------------------------------------ */
@@ -597,8 +780,18 @@ function groupLines(sentences: string[], max = PRESENTER_SHOT_WORDS.max): string
   return out;
 }
 
-const GESTURE_CYCLE = ['open_palms_honest', 'lean_in_curious', 'hands_explaining', 'relaxed_shoulders_reassuring', 'nod_warm', 'hands_together_focused'] as const;
+const GESTURE_CYCLE = ['nod_slightly_smile', 'lean_in_curious', 'relaxed_shoulders_calm', 'relaxed_shoulders_reassuring', 'nod_warm', 'tilt_head_thoughtful'] as const;
 const gesture = (id: string) => SAFE_GESTURES.find((g) => g.id === id)?.prompt ?? 'nods slowly, warm';
+
+/**
+ * Estúdio com zonas: uma cena dirigida usa UMA câmera para todos os planos (uma tomada contínua, sem troca de
+ * lado no meio da fala). Câmera da cena `sceneIndex` (cenas dirigidas da aula, a partir de 0): esquerda, direita,
+ * esquerda… (só um lado no kit = sempre esse lado). Pura.
+ */
+export function sideCameraOf(z: ZoneCameraSet, sceneIndex: number): string {
+  const sides = [z.left, z.right].filter((x): x is string => !!x);
+  return sides[sceneIndex % sides.length]!;
+}
 
 export interface CardDirectionOptions {
   /** câmera principal (planos com apresentadora); ausente = sem `cameraId` */
@@ -613,12 +806,11 @@ export interface CardDirectionOptions {
   /** `card` = o cartão em tela cheia de antes (sem apresentadora); padrão `presenter_panel` */
   cardLayout?: 'presenter_panel' | 'card';
   /**
-   * estúdio com zonas: a fala vai na câmera de fala da cena (`talk`) e o
-   * cartão vira `presenter_chips` na câmera lateral `chips` (o lado que
-   * alterna com as pílulas anteriores). Cada câmera com o enquadramento
-   * nativo dela (tela cheia, sem zoom). Ignora `cameraId`/`cardLayout`.
+   * estúdio com zonas: a fala inteira vai na câmera da cena (`talk`, uma só) e o
+   * cartão vira `presenter_chips` NA MESMA câmera (as pílulas ficam na parede
+   * livre do outro lado). Enquadramento nativo dela (tela cheia, sem zoom). Ignora `cameraId`/`cardLayout`.
    */
-  zone?: { talk: { cameraId: string; framing: ShotFraming }; chips: { cameraId: string; framing: ShotFraming } };
+  zone?: { talk: { cameraId: string; framing: ShotFraming } };
 }
 
 /**
@@ -683,7 +875,7 @@ export function buildCardDirection(narration: string, card: ParsedCard, opts: Ca
   if (opts.zone) {
     // estúdio com zonas: a apresentadora num terço (câmera lateral, sem transformação) e as pílulas na parede livre, surgindo quando ditas
     const p = presenter(cardLine);
-    shots.push({ ...p, cameraId: opts.zone.chips.cameraId, framing: opts.zone.chips.framing, layout: 'presenter_chips', slide: { ...cardSlide, bullets: card.bullets.slice(0, CHIPS_LIMITS.chips).map((b) => b.slice(0, 90)) } });
+    shots.push({ ...p, layout: 'presenter_chips', slide: { ...cardSlide, bullets: card.bullets.slice(0, CHIPS_LIMITS.chips).map((b) => b.slice(0, 90)) } });
   } else if (opts.cardLayout === 'card') {
     shots.push({ id: `s${shots.length + 1}`, line: cardLine, framing: 'medium', layout: 'card', cameraMove: 'static', slide: { ...cardSlide, variant: opts.variant }, transitionIn: 'cut' });
   } else {
@@ -692,7 +884,7 @@ export function buildCardDirection(narration: string, card: ParsedCard, opts: Ca
     shots.push({ ...p, framing: opts.fullFrameNative ?? 'medium', layout: 'presenter_panel', slide: cardSlide });
   }
   for (const line of closing) shots.push(presenter(line));
-  const direction: SceneDirection = { version: 1, shots, intent: opts.zone ? `Estúdio com zonas: a fala na câmera da cena; as pílulas "${clipWords(stripBold(card.title), 6)}" surgem na parede livre e a fala volta.` : opts.cardLayout === 'card' ? `Apresentadora na câmera principal; o cartão "${clipWords(stripBold(card.title), 6)}" cobre a lista e a fala volta a ela.` : `Apresentadora na câmera principal; o painel "${clipWords(stripBold(card.title), 6)}" mostra a lista ao lado dela e a fala segue com ela.`, source: 'author' };
+  const direction: SceneDirection = { version: 1, shots, intent: opts.zone ? `Estúdio com zonas: a cena inteira numa câmera só (uma tomada); as pílulas "${clipWords(stripBold(card.title), 6)}" surgem na parede livre e a fala volta.` : opts.cardLayout === 'card' ? `Apresentadora na câmera principal; o cartão "${clipWords(stripBold(card.title), 6)}" cobre a lista e a fala volta a ela.` : `Apresentadora na câmera principal; o painel "${clipWords(stripBold(card.title), 6)}" mostra a lista ao lado dela e a fala segue com ela.`, source: 'author' };
   if (!sameWords(shots.map((s) => s.line).join(' '), narration)) return undefined;
   return direction;
 }
@@ -717,7 +909,7 @@ export function buildTalkDirection(narration: string, talk: { cameraId: string; 
     transitionIn: 'cut',
   }));
   if (!sameWords(shots.map((s) => s.line).join(' '), narration)) return undefined;
-  return { version: 1, shots, intent: 'Estúdio com zonas: a fala inteira na câmera da cena (as cenas alternam entre a 3/4 e as laterais).', source: 'author' };
+  return { version: 1, shots, intent: 'Estúdio com zonas: a fala inteira numa câmera só (uma tomada); as cenas alternam esquerda e direita.', source: 'author' };
 }
 
 /** Câmeras do estúdio com zonas resolvidas para o importador: ids por zona + enquadramento de cada uma (nativo na tela cheia). */
@@ -727,13 +919,15 @@ export interface ImportZones {
 }
 
 export function importZonesFrom(presentation: Partial<Presentation> | undefined): ImportZones | undefined {
-  const cameras = (presentation?.cameras ?? []) as Camera[];
+  const all = (presentation?.cameras ?? []) as Camera[];
+  // só câmeras frontais e laterais: a 3/4 (zona center / ângulo não frontal) inventa relógio/pulseira e não entra no importador
+  const cameras = all.filter((c) => (c.angle ?? 'front') === 'front' && c.zone !== 'center');
   const set = zoneCamerasOf(cameras);
   if (!set) return undefined;
   return {
     set,
     framing: (id) => {
-      const cam = cameras.find((c) => c.id === id);
+      const cam = all.find((c) => c.id === id);
       return cam && resolveCameraPlacement(presentation ?? null, cam).placement === 'full_frame' ? (cam.nativeFraming ?? 'medium') : 'medium';
     },
   };
@@ -760,6 +954,8 @@ export interface MarkdownCourseOptions {
   lessonMinutes?: number;
   /** duração total alvo; padrão: lida de "Duração-alvo" */
   targetMinutes?: number;
+  /** formato do curso (limites de extensão); padrão: lido de "Formato" ou `micro` */
+  format?: CourseFormat;
   audienceProfile?: CourseDocument['brief']['audienceProfile'];
   level?: CourseDocument['brief']['level'];
   traits?: CourseDocument['brief']['traits'];
@@ -776,6 +972,21 @@ export interface MarkdownCourseOptions {
    * vira pílulas numa câmera lateral alternando o lado).
    */
   zones?: ImportZones;
+  /**
+   * Telas simuladas por nome de gravação (sem `.mp4`; ver `parseScreenMocksMarkdown`). Com o mapa: gravação de
+   * `Vídeo próprio:` cujo nome tem tela ganha `mock` e `source: 'mock'`; cena `V..` da lista das notas sem linha
+   * `Vídeo próprio:` ganha as gravações da lista (fallback). Sem o mapa, nada muda.
+   */
+  screenMocks?: Map<string, ScreenMock>;
+  /** problemas lidos do arquivo de telas; viram avisos SCREEN_MOCK_INVALID */
+  screenMockIssues?: ScreenMockIssue[];
+  /**
+   * Tópicos do painel dinâmico por código de cena em maiúsculas (`V07`; ver `parseSceneTopicsMarkdown`): viram `topics`
+   * no nó da cena de vídeo (estúdio com zonas). Sem o mapa, nada muda. Cena com gravação de tela não recebe (aviso).
+   */
+  sceneTopics?: Map<string, SceneTopic[]>;
+  /** problemas lidos do arquivo de tópicos; viram avisos SCENE_TOPICS_INVALID */
+  sceneTopicIssues?: SceneTopicsIssue[];
 }
 
 export interface MarkdownImportReport {
@@ -784,8 +995,19 @@ export interface MarkdownImportReport {
   warnings: CompileIssue[];
 }
 
+/** `Formato:` → `ead` | `micro` (sem acento nem caixa); `undefined` se vazio ou desconhecido. */
+export function parseCourseFormat(text: string): CourseFormat | undefined {
+  const t = foldKey(text).replace(/[.\s]+/g, ' ').trim();
+  if (/^(ead|e a d|ensino a distancia|educacao a distancia)$/.test(t)) return 'ead';
+  if (/^(micro|microlearning|micro aulas?|curto)$/.test(t)) return 'micro';
+  return undefined;
+}
+
 /** "12 aulas de 5 a 7 minutos (cerca de 1h15 no total)" → { lessonMinutes, targetMinutes }. */
 export function parseTargetDuration(text: string, lessons: number): { lessonMinutes?: number; targetMinutes?: number } {
+  // só a duração ("6 h", "6h30", "360 min"): é a meta total
+  const only = parseDurationMinutes(text);
+  if (only !== undefined) return { targetMinutes: only };
   const range = /de\s+(\d+)\s+a\s+(\d+)\s+min/i.exec(text);
   const single = /(\d+)\s+min\w*\s+por\s+aula/i.exec(text);
   const lessonMinutes = range ? Math.ceil((Number(range[1]) + Number(range[2])) / 2) : single ? Number(single[1]) : undefined;
@@ -855,9 +1077,31 @@ interface LessonBuild {
   edgeCount: number;
 }
 
+/** Tela da gravação para a cena: primeiro `nome@CENA`, depois `nome` (sem caixa, sem `.mp4`). Devolve a chave achada. */
+function findMock(mocks: Map<string, ScreenMock> | undefined, fileName: string, sceneCode: string): { mock: ScreenMock; key: string } | undefined {
+  if (!mocks) return undefined;
+  const base = screenMockLookupKey(fileName);
+  for (const want of [`${base}@${sceneCode.toLowerCase()}`, base]) {
+    for (const [name, mock] of mocks) if (screenMockLookupKey(name) === want) return { mock, key: want };
+  }
+  return undefined;
+}
+
+/** Uso das telas simuladas no curso inteiro (preenchido por `buildLesson`). */
+interface ScreenUse {
+  /** cena `V..` → arquivos da lista das notas */
+  notes: Map<string, string[]>;
+  used: Set<string>;
+  pending: number;
+  /** cenas que ganharam gravações só pela lista das notas */
+  fallback: Set<string>;
+  /** cenas (código) que receberam tópicos do painel */
+  topicsUsed: Set<string>;
+}
+
 function buildLesson(
   parsed: ParsedLesson,
-  ctx: { moduleObjectiveIds: string[]; lessonId: string; objectiveId: string; lastOfCourse: boolean; opts: MarkdownCourseOptions; warn: (i: CompileIssue) => void; nextVariant: () => SlideVariant; allCodes: Map<string, string>; reactionIndex: (advance?: number) => number },
+  ctx: { moduleObjectiveIds: string[]; lessonId: string; objectiveId: string; lastOfCourse: boolean; opts: MarkdownCourseOptions; warn: (i: CompileIssue) => void; nextVariant: () => SlideVariant; allCodes: Map<string, string>; reactionIndex: (advance?: number) => number; screens: ScreenUse },
 ): LessonBuild {
   const { lessonId, objectiveId, opts, warn } = ctx;
   const endId = `fim_${lessonId}`;
@@ -891,10 +1135,11 @@ function buildLesson(
   const go = (id: string, from: string, to: string, extra: Partial<Edge> = {}): Edge => ({ id, from, to, ...extra });
   let firstVideo = true;
   let videoIndex = 0;
-  // estúdio com zonas: lado das últimas pílulas da aula (o próximo plano de pílulas vai para o outro lado)
-  let chipsSide: 'left' | 'right' | undefined;
+  // estúdio com zonas: nº de cenas dirigidas da aula até aqui (a 1ª = esquerda, a 2ª = direita…; uma câmera por cena)
+  let directedScenes = 0;
 
   scenes.forEach((scene, index) => {
+    if (scene.screenFiles?.length && scene.kind !== 'video') warn({ code: 'SCREEN_RECORDING_WRONG_SCENE', lessonId, ...(scene.kind === 'end' ? {} : { nodeId: nodeIdOf(scene.code) }), message: `${scene.code}: "Vídeo próprio:" só vale em cena de vídeo (V..); a linha foi ignorada` });
     if (scene.kind === 'end') return;
     const id = nodeIdOf(scene.code);
     switch (scene.kind) {
@@ -904,17 +1149,45 @@ function buildLesson(
         videoIndex++;
         let body = paragraphs(scene.screenText || scene.title);
         let direction: SceneDirection | undefined;
-        if (scene.card) {
+        // gravação de tela própria: tela cheia, sem avatar → nenhuma direção/câmera de avatar; o cartão (se houver) vai para o texto da tela
+        const mocks = opts.screenMocks;
+        const mockOf = (fileName: string): ScreenMock | undefined => findMock(mocks, fileName, scene.code)?.mock;
+        let screenFiles = scene.screenFiles;
+        if (!screenFiles?.length && mocks) {
+          // sem "Vídeo próprio:": vale a lista das notas, se alguma tem tela simulada
+          const listed = ctx.screens.notes.get(scene.code)?.map((f) => (/\.mp4$/i.test(f) ? f : `${f}.mp4`));
+          if (listed?.length && listed.some((f) => mockOf(f))) {
+            screenFiles = listed;
+            ctx.screens.fallback.add(scene.code);
+          }
+        }
+        const screenRecordings: ScreenRecording[] | undefined = screenFiles?.length
+          ? screenFiles.map((fileName) => {
+              const found = findMock(mocks, fileName, scene.code);
+              if (!found) return { fileName };
+              const mock = found.mock;
+              ctx.screens.used.add(found.key);
+              ctx.screens.pending++;
+              return { fileName, mock, source: 'mock' as const };
+            })
+          : undefined;
+        if (screenRecordings) {
+          const semTela = screenRecordings.filter((r) => !r.mock).map((r) => r.fileName);
+          if (semTela.length) {
+            if (mocks) warn({ code: 'SCREEN_MOCK_MISSING', lessonId, nodeId: id, message: `${scene.code}: sem tela simulada nem mídia (${semTela.join(', ')})` });
+            else warn({ code: 'SCREEN_MEDIA_MISSING', lessonId, nodeId: id, message: `${scene.code}: falta mídia (${semTela.join(', ')})` });
+          }
+          if (scene.card) body = doc(paragraph(scene.screenText || scene.title), paragraph(scene.card.title), list(scene.card.bullets));
+        } else if (scene.card) {
           if (scene.card.bullets.length > CARD_LIMITS.bullets) warn({ code: 'CARD_TOO_MANY_BULLETS', lessonId, nodeId: id, message: `${scene.code}: cartão com ${scene.card.bullets.length} tópicos (recomendado até ${CARD_LIMITS.bullets})` });
           for (const b of scene.card.bullets) if (wc(stripBold(b)) > CARD_LIMITS.bulletWords) warn({ code: 'CARD_BULLET_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: tópico do cartão com ${wc(stripBold(b))} palavras (máximo ${CARD_LIMITS.bulletWords})` });
           if (wc(stripBold(scene.card.title)) > CARD_LIMITS.titleWords) warn({ code: 'CARD_TITLE_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: título do cartão com ${wc(stripBold(scene.card.title))} palavras (máximo ${CARD_LIMITS.titleWords})` });
           const variant = ctx.nextVariant();
           const z = opts.zones;
-          const talkId = z ? zoneTalkCamera(z.set, videoIndex - 1) : undefined;
-          const pick = z ? nextChipsCamera(z.set, chipsSide) : undefined;
-          const zone = z && talkId && pick ? { talk: { cameraId: talkId, framing: z.framing(talkId) }, chips: { cameraId: pick.cameraId, framing: z.framing(pick.cameraId) } } : undefined;
+          const talkId = z ? sideCameraOf(z.set, directedScenes) : undefined;
+          const zone = z && talkId ? { talk: { cameraId: talkId, framing: z.framing(talkId) } } : undefined;
           direction = opts.direction === false ? undefined : buildCardDirection(scene.narration, scene.card, { ...(opts.mainCameraId ? { cameraId: opts.mainCameraId } : {}), variant, sceneTitle: scene.title, ...(opts.mainCameraFullFrameNative ? { fullFrameNative: opts.mainCameraFullFrameNative } : {}), ...(zone ? { zone } : {}) });
-          if (direction && pick && direction.shots.some((s) => s.layout === 'presenter_chips')) chipsSide = pick.zone;
+          if (direction && zone) directedScenes++;
           if (!direction) {
             // sem recorte possível: o cartão vai para o texto da tela (TODO: montar a direção à mão no estúdio)
             body = doc(paragraph(scene.screenText || scene.title), paragraph(scene.card.title), list(scene.card.bullets));
@@ -922,14 +1195,21 @@ function buildLesson(
           }
         }
         // estúdio com zonas: as falas sem cartão também ganham direção (câmera da cena; as cenas alternam 3/4 e laterais)
-        if (!direction && !scene.card && opts.zones && opts.direction !== false) {
-          const talkId = zoneTalkCamera(opts.zones.set, videoIndex - 1);
+        if (!direction && !scene.card && !screenRecordings && opts.zones && opts.direction !== false) {
+          const talkId = sideCameraOf(opts.zones.set, directedScenes);
           direction = buildTalkDirection(scene.narration, { cameraId: talkId, framing: opts.zones.framing(talkId) });
+          if (direction) directedScenes++;
         }
-        if (wc(scene.narration) > 120) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo 120)` });
-        if (wc(scene.narration) < 60) warn({ code: 'NARRATION_SHORT', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (alvo 60–120)` });
+        const speech = lengthProfile(opts.format);
+        if (wc(scene.narration) > speech.narrationMaxWords) warn({ code: 'NARRATION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (máximo ${speech.narrationMaxWords})` });
+        if (wc(scene.narration) < speech.narrationMinWords) warn({ code: 'NARRATION_SHORT', lessonId, nodeId: id, message: `${scene.code}: fala com ${wc(scene.narration)} palavras (alvo ${speech.narrationMinWords}–${speech.narrationMaxWords})` });
         if (wc(scene.screenText) > 25) warn({ code: 'SCREEN_TEXT_WITH_NARRATION', lessonId, nodeId: id, message: `${scene.code}: ${wc(scene.screenText)} palavras na tela numa cena com fala (recomendado até 25)` });
-        const gestureId = videoIndex % 2 === 1 ? 'smile_welcoming' : 'open_palms_honest';
+        // tópicos do painel dinâmico (só cena de avatar; gravação de tela própria não tem painel)
+        const topicsOfScene = opts.sceneTopics?.get(scene.code.toUpperCase());
+        if (topicsOfScene?.length) ctx.screens.topicsUsed.add(scene.code.toUpperCase());
+        if (topicsOfScene?.length && screenRecordings) warn({ code: 'SCENE_TOPICS_IGNORED', lessonId, nodeId: id, message: `${scene.code}: tem gravação de tela (tela cheia, sem avatar); os tópicos do painel foram ignorados` });
+        const sceneTopics = topicsOfScene?.length && !screenRecordings ? topicsOfScene : undefined;
+        const gestureId = videoIndex % 2 === 1 ? 'smile_welcoming' : 'nod_slightly_smile';
         nodes.push({
           id,
           type,
@@ -940,6 +1220,8 @@ function buildLesson(
           narration: scene.narration,
           motionPrompt: gesture(gestureId),
           ...(direction ? { direction } : {}),
+          ...(screenRecordings ? { screenRecordings } : {}),
+          ...(sceneTopics ? { topics: sceneTopics.map((t) => ({ text: t.text, ...(t.cue ? { cue: t.cue } : {}) })) } : {}),
         });
         edges.push(go(`e_${id}`, id, nextOf(index, scene.code)));
         rows.push([id]);
@@ -1007,6 +1289,26 @@ function buildLesson(
           maxLength: 600,
           prompt: paragraphs(scene.text || scene.title, scene.skippable ? 'É opcional: pode pular.' : ''),
           placeholder: clipChars(scene.text || scene.title, 200),
+        });
+        edges.push(go(`e_${id}`, id, resolve(scene.destination, scene.code)));
+        rows.push([id]);
+        break;
+      }
+      case 'task': {
+        if (scene.instruction.length > 2000) warn({ code: 'TASK_INSTRUCTION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: instrução com ${scene.instruction.length} caracteres (cortada em 2.000)` });
+        for (const c of scene.criteria) if (c.length > 200) warn({ code: 'TASK_CRITERION_TOO_LONG', lessonId, nodeId: id, message: `${scene.code}: critério "${clipWords(c, 6)}…" com ${c.length} caracteres (cortado em 200)` });
+        if (scene.deliverable === 'link' && scene.fileKinds.length < 2) warn({ code: 'TASK_FILES_WITHOUT_FILE', lessonId, nodeId: id, message: `${scene.code}: "Arquivos:" só vale com "Entrega: link e arquivo"` });
+        nodes.push({
+          id,
+          type: 'task',
+          title: clipChars(scene.title, 120),
+          objectiveIds: [],
+          required: scene.required,
+          instruction: clipChars(scene.instruction, 2000),
+          deliverable: scene.deliverable,
+          fileKinds: scene.fileKinds,
+          criteria: scene.criteria.map((c, ci) => ({ id: `c${ci + 1}`, label: clipChars(c, 200) })),
+          review: scene.review,
         });
         edges.push(go(`e_${id}`, id, resolve(scene.destination, scene.code)));
         rows.push([id]);
@@ -1097,8 +1399,11 @@ function buildLesson(
   const takeaways = end.takeaways.length ? doc(paragraph(end.title || 'O que você levou'), list(end.takeaways)) : paragraphs(end.title);
   nodes.push(endNode(endId, takeaways, outcome));
   const endRow = [endId];
-  if (hasAssessment && assessments.some((a) => Math.min(a.passMin, a.questions.length) > 0)) {
-    const a = assessments[0]!;
+  // o encerramento "revisar" só existe quando alguma avaliação com critério termina a aula (Destino: FIM);
+  // com outro destino (ex.: uma tarefa depois), quem não passa segue o mesmo caminho e o nó ficaria solto
+  const retryAssessments = assessments.filter((a) => Math.min(a.passMin, a.questions.length) > 0 && resolve(a.destination, a.code) === endId);
+  if (retryAssessments.length) {
+    const a = retryAssessments[0]!;
     nodes.push(
       endNode(
         retryEndId,
@@ -1131,6 +1436,8 @@ function buildLesson(
   if (decisionCodes.length) criterionParts.push(`escolhe respostas fortes em ${decisionCodes.join(', ')}`);
   if (composeCodes.length) criterionParts.push(`monta a frase de ${composeCodes.join(', ')}`);
   if (hasAssessment) criterionParts.push(`passa na revisão ${assessments.map((a) => a.code).join(', ')}`);
+  const taskCodes = scenes.filter((s) => s.kind === 'task').map((s) => s.code);
+  if (taskCodes.length) criterionParts.push(`envia a entrega de ${taskCodes.join(', ')}`);
   const objectiveTitle = parsed.objective.replace(/^Ao final,?\s*/i, '').trim();
   const objective: Objective = {
     id: objectiveId,
@@ -1170,8 +1477,17 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
   const warn = (i: CompileIssue) => warnings.push(i);
   const lessonsTotal = parsed.modules.reduce((a, m) => a + m.lessons.length, 0);
   const duration = parseTargetDuration(parsed.header.targetDuration, lessonsTotal);
-  const lessonMinutes = opts.lessonMinutes ?? duration.lessonMinutes ?? 6;
+  const headerFormat = parseCourseFormat(parsed.header.format);
+  if (parsed.header.format.trim() && !headerFormat) warn({ code: 'FORMAT_UNKNOWN', message: `Formato "${parsed.header.format}" não reconhecido; vale o formato micro (use "EaD" ou "micro")` });
+  const format: CourseFormat | undefined = opts.format ?? headerFormat;
+  // EaD: sem minutos por aula declarados, reparte a meta entre as aulas (a carga horária cai na soma delas)
+  const givenTarget = opts.targetMinutes ?? duration.targetMinutes;
+  const eadLessonMinutes = format === 'ead' && !opts.lessonMinutes && !duration.lessonMinutes && lessonsTotal && givenTarget ? Math.min(600, Math.max(1, Math.round(givenTarget / lessonsTotal))) : undefined;
+  const lessonMinutes = opts.lessonMinutes ?? duration.lessonMinutes ?? eadLessonMinutes ?? 6;
   const targetMinutes = opts.targetMinutes ?? duration.targetMinutes ?? Math.max(5, lessonMinutes * lessonsTotal);
+  const certificateOn = parsed.header.certificate.trim() ? yes(parsed.header.certificate) : undefined;
+  const workloadMinutes = parsed.header.workload.trim() ? parseDurationMinutes(parsed.header.workload) : undefined;
+  if (parsed.header.workload.trim() && workloadMinutes === undefined) warn({ code: 'WORKLOAD_UNREADABLE', message: `Carga horária "${parsed.header.workload}" não reconhecida (use "8 h", "8h30" ou "480 min")` });
 
   const allCodes = new Map<string, string>();
   for (const m of parsed.modules) for (const l of m.lessons) for (const s of l.scenes) if (s.kind !== 'end') allCodes.set(s.code, `aula ${l.number}`);
@@ -1185,27 +1501,58 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
     reactionAt += advance;
     return at;
   };
-  const mainCameraId = opts.mainCameraId ?? opts.presentation?.cameras?.[0]?.id;
+  const zones = importZonesFrom(opts.presentation);
+  // estúdio com zonas: o avatar principal é a câmera FRONTAL da esquerda (nunca a 3/4)
+  const explicitMain = opts.mainCameraId ? opts.presentation?.cameras?.find((c) => c.id === opts.mainCameraId) : undefined;
+  const mainCameraId = zones && (!explicitMain || (explicitMain.angle ?? 'front') !== 'front') ? (zones.set.left ?? zones.set.right) : (opts.mainCameraId ?? opts.presentation?.cameras?.[0]?.id);
   const mainCam = mainCameraId ? opts.presentation?.cameras?.find((c) => c.id === mainCameraId) : undefined;
   const mainCameraFullFrameNative = mainCam && resolveCameraPlacement(opts.presentation ?? null, mainCam).placement === 'full_frame' ? (mainCam.nativeFraming ?? 'medium') : undefined;
-  const zones = importZonesFrom(opts.presentation);
-  const lessonOpts: MarkdownCourseOptions = { ...opts, lessonMinutes, ...(mainCameraId ? { mainCameraId } : {}), ...(mainCameraFullFrameNative ? { mainCameraFullFrameNative } : {}), ...(zones ? { zones } : {}) };
+  const lessonOpts: MarkdownCourseOptions = { ...opts, lessonMinutes, ...(format ? { format } : {}), ...(mainCameraId ? { mainCameraId } : {}), ...(mainCameraFullFrameNative ? { mainCameraFullFrameNative } : {}), ...(zones ? { zones } : {}) };
 
   const objectives: Objective[] = [];
   const modules: Module[] = [];
   const lessonIds: string[] = [];
+  const screenScenes = new Map<string, { lessonId: string; files: string[] }>();
+  const screens: ScreenUse = { notes: new Map((parsed.screenList ?? []).map((e) => [e.code, e.files])), used: new Set(), pending: 0, fallback: new Set(), topicsUsed: new Set() };
   const lastLesson = parsed.modules[parsed.modules.length - 1]?.lessons.slice(-1)[0];
   for (const m of parsed.modules) {
     const moduleObjectiveIds = m.lessons.map((l) => `obj_aula_${pad2(l.number)}`);
     const lessons: Lesson[] = [];
     for (const l of m.lessons) {
       const lessonId = `aula_${pad2(l.number)}`;
-      const built = buildLesson(l, { moduleObjectiveIds, lessonId, objectiveId: `obj_aula_${pad2(l.number)}`, lastOfCourse: l === lastLesson, opts: lessonOpts, warn, nextVariant, allCodes, reactionIndex });
+      const built = buildLesson(l, { moduleObjectiveIds, lessonId, objectiveId: `obj_aula_${pad2(l.number)}`, lastOfCourse: l === lastLesson, opts: lessonOpts, warn, nextVariant, allCodes, reactionIndex, screens });
+      for (const sc of l.scenes) if (sc.kind === 'video' && sc.screenFiles?.length) screenScenes.set(sc.code, { lessonId, files: sc.screenFiles });
       lessons.push(built.lesson);
       objectives.push(built.objective);
       lessonIds.push(lessonId);
     }
     modules.push({ id: `mod_${pad2(m.number)}`, title: clipChars(m.title, 160), description: clipChars(m.description, 1000), lessons });
+  }
+
+  // conferência cruzada com a linha das notas (sem a linha, nada a conferir)
+  if (parsed.screenList) {
+    const base = (f: string) => f.replace(/\.mp4$/i, '').trim().toLowerCase();
+    const listed = new Map(parsed.screenList.map((e) => [e.code, e.files]));
+    const mismatch = (code: string, lessonId: string | undefined, why: string) => warn({ code: 'SCREEN_LIST_MISMATCH', ...(lessonId ? { lessonId, nodeId: nodeIdOf(code) } : {}), message: `${code}: ${why}` });
+    for (const [code, { lessonId, files }] of screenScenes) {
+      const inNotes = listed.get(code);
+      if (!inNotes) mismatch(code, lessonId, 'tem "Vídeo próprio:" mas não está na lista das notas');
+      else if (files.map(base).join('|') !== inNotes.map(base).join('|')) mismatch(code, lessonId, `arquivos diferentes das notas (cena: ${files.join(', ')}; notas: ${inNotes.join(', ')})`);
+    }
+    for (const code of listed.keys()) if (!screenScenes.has(code) && !screens.fallback.has(code)) mismatch(code, undefined, 'está na lista das notas mas a cena não tem "Vídeo próprio:"');
+  }
+
+  // telas simuladas: avisos do arquivo de telas, a gerar e sem uso
+  if (opts.screenMocks) {
+    for (const i of opts.screenMockIssues ?? []) warn({ code: 'SCREEN_MOCK_INVALID', message: `telas${i.key ? ` ${i.key}` : ''}${i.line ? ` (linha ${i.line})` : ''}: ${i.message}` });
+    for (const name of opts.screenMocks.keys()) if (!screens.used.has(screenMockLookupKey(name))) warn({ code: 'SCREEN_MOCK_UNUSED', message: `a tela simulada "${name}" não é usada por nenhuma cena` });
+    if (screens.pending) warn({ code: 'SCREEN_MOCK_PENDING', message: `${screens.pending} telas simuladas a gerar` });
+  }
+
+  // tópicos do painel: avisos do arquivo e códigos sem cena de vídeo
+  if (opts.sceneTopics) {
+    for (const i of opts.sceneTopicIssues ?? []) warn({ code: 'SCENE_TOPICS_INVALID', message: `tópicos (linha ${i.line}): ${i.message}` });
+    for (const code of opts.sceneTopics.keys()) if (!screens.topicsUsed.has(code.toUpperCase())) warn({ code: 'SCENE_TOPICS_UNUSED', message: `os tópicos de ${code} não foram usados: não há cena de vídeo com esse código` });
   }
 
   const h = parsed.header;
@@ -1246,12 +1593,14 @@ export function markdownToCourseDocumentWithReport(parsed: ParsedCourse, opts: M
       tone: clipChars(opts.tone ?? 'brasileiro, acolhedor, direto; apresentadora em conversa com o aluno; sem julgar', 200),
       narrativeVoice: opts.narrativeVoice ?? 'second_person',
       targetMinutes: Math.min(600, Math.max(5, Math.round(targetMinutes))),
+      ...(format ? { format } : {}),
       sourcesNote: clipChars(opts.sourcesNote ?? `Roteiro autoral em Markdown ("${parsed.title}"), importado sem IA. Personagens fictícios.`, 2000),
       ...(opts.audienceProfile ? { audienceProfile: opts.audienceProfile } : {}),
       ...(opts.level ? { level: opts.level } : {}),
       traits: opts.traits ?? [],
       interaction: { guidedChoices: true, voiceTraining: true, noWriting: true },
     },
+    ...(certificateOn !== undefined || workloadMinutes !== undefined ? { certificate: { enabled: certificateOn ?? false, ...(workloadMinutes !== undefined ? { workloadMinutes } : {}) } } : {}),
     objectives,
     modules,
     completion: { requiredLessonIds: lessonIds },

@@ -1,0 +1,50 @@
+{
+  "curso": "crs_g3vzc9kcvbkt284c",
+  "titulo": "IA na prática para estudar e trabalhar",
+  "materiais": [
+    {
+      "id": "resumo-ia-na-pratica",
+      "titulo": "Resumo do curso",
+      "descricao": "Os sete módulos num só lugar: como a IA funciona, os 4 P, estudo sem cola, trabalho, golpes, privacidade e o seu assistente.",
+      "categoria": "resumo",
+      "fonte": "resumo-ia-na-pratica.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "conferir-fato-numero-nome-fonte",
+      "titulo": "Caça-alucinação: confira antes de usar",
+      "descricao": "Lista para passar em qualquer resposta da IA: fato, número, nome e fonte, e o que revisar antes de enviar um texto.",
+      "categoria": "checklist",
+      "modulo": 1,
+      "fonte": "conferir-fato-numero-nome-fonte.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "pedidos-prontos-estudar",
+      "titulo": "Pedidos prontos para estudar com IA",
+      "descricao": "Os cinco jeitos de estudar com IA, com o pedido pronto para copiar e trocar o tema pelo seu.",
+      "categoria": "exemplos",
+      "modulo": 3,
+      "fonte": "pedidos-prontos-estudar.html",
+      "formato": "pdf"
+    },
+    {
+      "id": "nunca-entra-na-ia",
+      "titulo": "O que nunca entra na IA",
+      "descricao": "Infográfico para guardar no celular: o que ficar de fora, o teste do grupo de WhatsApp e as regras de uso.",
+      "categoria": "infografico",
+      "modulo": 6,
+      "fonte": "nunca-entra-na-ia.html",
+      "formato": "png"
+    },
+    {
+      "id": "prompt-mestre-modelo",
+      "titulo": "Monte o seu prompt-mestre",
+      "descricao": "Modelo para preencher com os 4 P e as suas regras, mais a lista de conferência da missão final.",
+      "categoria": "modelo",
+      "modulo": 7,
+      "fonte": "prompt-mestre-modelo.html",
+      "formato": "pdf"
+    }
+  ]
+}

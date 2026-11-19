@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { allLessons, CALL_SHOT_ID, markdownToCourseDocument, parseMarkdownCourse } from '@lms/course-schema';
-import { mediaConfigFromEnv } from '@lms/media';
+import { allLessons, CALL_SHOT_ID, continuousTakeGroups, markdownToCourseDocument, parseMarkdownCourse } from '@lms/course-schema';
+import { estimateNarrationSeconds, mediaConfigFromEnv } from '@lms/media';
 import { directedPartialReuse, resolveSceneProduction, sceneRequestFromPresentation } from './media';
 
 /* Vídeo dirigido antes de uma decisão com "Chamada:": o vídeo já pago não tinha o plano da chamada. */
@@ -45,6 +45,14 @@ const cams = [
 ];
 const doc = markdownToCourseDocument(parseMarkdownCourse(MD), { presentation: { avatarId: 'l34', voiceProvider: 'elevenlabs', voiceId: 'v1', cameras: cams } });
 const lesson = allLessons(doc)[0]!;
+// o importador agora grava cada cena numa câmera só; estes testes cobrem a direção MANUAL com troca de câmera (2 tomadas):
+// os 2 primeiros planos numa lateral e o restante (incluindo a chamada) na outra
+{
+  const v01 = lesson.graph.nodes.find((n) => n.id === 'v01') as unknown as { direction: { shots: Array<{ cameraId?: string }> } };
+  v01.direction.shots.forEach((sh, i) => {
+    sh.cameraId = i < 2 ? 'cam_dir' : 'cam_esq';
+  });
+}
 const cfg = mediaConfigFromEnv({ MEDIA_SIMULATION: '0' } as unknown as NodeJS.ProcessEnv);
 const env = { PLATFORM_BRAND: 'dnawork' } as unknown as NodeJS.ProcessEnv;
 
@@ -57,24 +65,68 @@ describe('orçamento: reaproveitamento parcial de cena dirigida (chamada acresce
   const prevInput = { ...now.jobInput, direction: { ...(now.jobInput.direction as object), shots: shots.filter((s) => s.id !== CALL_SHOT_ID) } };
   const prev = { jobId: 'mjb_old', input: prevInput, adapterVersion: now.adapterVersion, simulated: false };
 
-  it('cobra só o plano novo da chamada', () => {
+  it('cobra só a tomada que ganhou a chamada (o plano final na mesma câmera passa a fazer parte do mesmo clipe contínuo)', () => {
     expect(shots.at(-1)?.id).toBe(CALL_SHOT_ID);
     const p = directedPartialReuse(prev, now, false)!;
-    expect(p).toMatchObject({ fromJobId: 'mjb_old', reusedShots: shots.length - 1, newShots: 1 });
-    expect(p.chars).toBe('Agora é com você: o campeonato do bairro entra no currículo?'.length);
+    // a chamada fica na câmera do plano anterior: os dois formam UMA tomada (um pedido ao HeyGen); as demais tomadas são reaproveitadas
+    expect(shots.at(-1)!.cameraId).toBe(shots.at(-2)!.cameraId);
+    expect(p).toMatchObject({ fromJobId: 'mjb_old', reusedShots: shots.length - 2, newShots: 2 });
+    expect(p.chars).toBe(`${shots.at(-2)!.line} Agora é com você: o campeonato do bairro entra no currículo?`.length);
     expect(p.estimatedUsd).toBeGreaterThan(0);
-    expect(p.estimatedUsd).toBeLessThan(now.estimate.estimatedUsd / 3);
+    expect(p.estimatedUsd).toBeLessThan(now.estimate.estimatedUsd);
   });
 
   it('na dúvida, custo cheio: voz, apresentação ou adaptador diferentes, plano novo curto demais ou nada em comum', () => {
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, voiceId: 'outra' } }, now, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'x' } }, now, false)).toBeNull();
     // plano novo numa câmera que o vídeo não usava: compara a impressão restrita às câmeras dos planos pagos
-    expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'antes' } }, now, false, 'antes')?.newShots).toBe(1);
+    expect(directedPartialReuse({ ...prev, input: { ...prevInput, presentationFingerprint: 'antes' } }, now, false, 'antes')?.newShots).toBe(2);
     expect(directedPartialReuse({ ...prev, adapterVersion: 'v0' }, now, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, simulated: true }, now, false)).toBeNull();
-    const short = { ...now, jobInput: { ...now.jobInput, direction: { shots: [...shots.slice(0, -1), { ...shots.at(-1)!, line: 'Sua vez.' }] } } };
+    const short = { ...now, jobInput: { ...now.jobInput, direction: { shots: [...shots.slice(0, -1), { ...shots.at(-1)!, line: 'Sua vez.', cameraId: 'cam_34' }] } } };
     expect(directedPartialReuse(prev, short, false)).toBeNull();
     expect(directedPartialReuse({ ...prev, input: { ...prevInput, direction: { shots: [{ id: 's1', line: 'Outra fala qualquer aqui.' }] } } }, now, false)).toBeNull();
+  });
+});
+
+describe('orçamento: refazer só uma tomada (direction.retake)', () => {
+  const base = resolveSceneProduction(doc, sceneRequestFromPresentation(doc, lesson.id, 'v01'), cfg, env);
+  const baseDir = base.jobInput.direction as { shots: Shots; retake?: Record<string, number> };
+  const takes = continuousTakeGroups(baseDir.shots.map((s) => ({ line: s.line, cameraId: s.cameraId, layout: (s.layout ?? 'presenter') as never, slide: undefined })), { hasNarrationAudio: true });
+  const prev = { jobId: 'mjb_old', input: base.jobInput, adapterVersion: base.adapterVersion, simulated: false };
+  const withRetake = (retake: Record<string, number>) => {
+    const d = structuredClone(doc);
+    const node = allLessons(d)[0]!.graph.nodes.find((n) => n.id === 'v01') as unknown as { direction: { retake?: Record<string, number> } };
+    node.direction.retake = retake;
+    return resolveSceneProduction(d, sceneRequestFromPresentation(d, lesson.id, 'v01'), cfg, env);
+  };
+
+  it('a variação muda o hash da cena (vídeo novo) e vai na entrada do job; sem ela o hash de antes não muda', () => {
+    expect(takes.length).toBeGreaterThan(1);
+    const first = baseDir.shots[takes[1]![0]!]!.id;
+    const re = withRetake({ [first]: 1 });
+    expect(re.sceneHash).not.toBe(base.sceneHash);
+    expect((re.jobInput.direction as { retake?: unknown }).retake).toEqual({ [first]: 1 });
+    expect(withRetake({ [first]: 2 }).sceneHash).not.toBe(re.sceneHash);
+    expect(withRetake({}).sceneHash).toBe(base.sceneHash);
+  });
+
+  it('cobra só os segundos da tomada refeita (voz já paga não é cobrada de novo); as demais são reaproveitadas', () => {
+    const idx = takes[1]!;
+    const first = baseDir.shots[idx[0]!]!.id;
+    const re = withRetake({ [first]: 1 });
+    const p = directedPartialReuse(prev, re, false)!;
+    const takeText = idx.map((i) => baseDir.shots[i]!.line.trim()).join(' ');
+    expect(p).toMatchObject({ fromJobId: 'mjb_old', newShots: idx.length, reusedShots: baseDir.shots.length - idx.length });
+    expect(p.seconds).toBe(estimateNarrationSeconds(takeText));
+    expect(p.seconds).toBeLessThan(base.estimate.narrationSeconds);
+    expect(p.chars).toBe(0);
+    expect(p.estimatedUsd).toBeGreaterThan(0);
+    expect(p.estimatedUsd).toBeLessThan(re.estimate.estimatedUsd);
+    // a mesma variação já paga (job anterior já refeito) é reaproveitada: nada a cobrar
+    expect(directedPartialReuse({ ...prev, input: re.jobInput }, re, false)).toMatchObject({ newShots: 0, seconds: 0, estimatedUsd: 0 });
+    // nova variação (2) da mesma tomada: cobra de novo só ela
+    const p2 = directedPartialReuse({ ...prev, input: re.jobInput }, withRetake({ [first]: 2 }), false)!;
+    expect(p2.newShots).toBe(idx.length);
   });
 });

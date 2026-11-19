@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { CornerDownRight, GitMerge, Plus, Trash2 } from 'lucide-react';
-import type { AnyNode, AssessmentNode, ChoiceNode, ConsequenceNode, EndNode, LessonGraph, MissionNode, ReflectionNode } from '@lms/course-schema';
+import { TASK_CRITERIA_MAX, taskDeliverableOf, taskInstructionOf, type AnyNode, type AssessmentNode, type ChoiceNode, type ConsequenceNode, type EndNode, type LessonGraph, type MissionNode, type ReflectionNode, type TaskFileKind, type TaskNode } from '@lms/course-schema';
 import { Button } from '@/components/ui/button';
 import { Input, Textarea } from '@/components/ui/input';
 import { conditionalEdges, createNode, describeCondition, insertNodeAfter, newOptionId, primaryEdge, removeEdges, replaceNode, setNextEdge, setOptionEdge } from '@/components/studio/graph-ops';
@@ -533,6 +533,105 @@ export function MissionFields({ node, graph, changeGraph }: { node: MissionNode;
           {node.draftFromNodeId && !sources.some((n) => n.id === node.draftFromNodeId) && <option value={node.draftFromNodeId}>{node.draftFromNodeId} (não encontrada)</option>}
         </select>
         {sources.length === 0 && <span className="font-normal text-fg-faint">Esta aula não tem atividade “Na prática” com molde para trazer a frase.</span>}
+      </label>
+    </div>
+  );
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Tarefa com entrega                                                   */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Campos da tarefa: a instrução, o que a pessoa entrega (link, ou link e arquivo), os critérios de sim ou não (um por
+ * linha), quem corrige e se conta para o certificado. O título da cena é o da tarefa. Publicar exige título, instrução
+ * e de 1 a 10 critérios.
+ */
+export function TaskFields({ node, changeGraph }: { node: TaskNode; changeGraph: GraphChange }) {
+  const patch = makePatch<TaskNode>(node.id, changeGraph);
+  const deliverable = taskDeliverableOf(node);
+  const instruction = taskInstructionOf(node);
+  // os critérios são editados como texto (um por linha); as linhas vazias do fim ficam só na tela
+  const [criteriaText, setCriteriaText] = React.useState(() => node.criteria.map((c) => c.label).join('\n'));
+  const setCriteria = (text: string) => {
+    setCriteriaText(text);
+    const labels = text.split('\n').map((l) => l.trim().slice(0, 200)).filter(Boolean).slice(0, TASK_CRITERIA_MAX);
+    patch({ criteria: labels.map((label, i) => ({ id: `c${i + 1}`, label })) }, `node.criteria.${node.id}`);
+  };
+  const toggleKind = (kind: TaskFileKind, on: boolean) => {
+    const next = on ? [...new Set([...node.fileKinds, kind])] : node.fileKinds.filter((k) => k !== kind);
+    if (next.length) patch({ fileKinds: next });
+  };
+  const lines = criteriaText.split('\n').filter((l) => l.trim()).length;
+  return (
+    <div className="space-y-3" data-testid={`task-fields-${node.id}`}>
+      <p className="rounded-lg bg-accent-soft px-3 py-2 text-xs text-fg">
+        A pessoa <strong>envia uma entrega</strong> e a aula segue. A correção acontece depois, em “Entregas”. A tarefa nunca trava a aula nem a conclusão do curso; quando é obrigatória, o certificado só sai com a entrega aprovada.
+      </p>
+      <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+        Instrução: o que fazer e o que enviar
+        <Textarea
+          className="min-h-24 text-sm"
+          rows={3}
+          maxLength={2000}
+          value={instruction}
+          placeholder="Ex.: Grave um vídeo de 1 minuto se apresentando e envie o link."
+          data-testid="task-instruction"
+          aria-required
+          onChange={(e) => patch({ instruction: e.target.value, instructions: undefined }, `node.instruction.${node.id}`)}
+        />
+        <span className="self-end font-normal text-fg-faint">{instruction.length}/2000</span>
+      </label>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+          O que a pessoa entrega
+          <select className={selectClass} value={deliverable} data-testid="task-deliverable" onChange={(e) => patch({ deliverable: e.target.value === 'link_file' ? 'link_file' : 'link' })}>
+            <option value="link">Um link (https)</option>
+            <option value="link_file">Um link e, se quiser, um arquivo</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+          Quem corrige
+          <select className={selectClass} value={node.review} data-testid="task-review" onChange={(e) => patch({ review: e.target.value === 'auto' ? 'auto' : 'manual' })}>
+            <option value="manual">Um avaliador da equipe</option>
+            <option value="auto">Ninguém: aprova ao enviar</option>
+          </select>
+        </label>
+      </div>
+      {deliverable === 'link_file' && (
+        <fieldset className="text-xs font-medium text-fg-muted">
+          <legend>Arquivos aceitos (até 10 MB)</legend>
+          <div className="mt-1 flex flex-wrap gap-4">
+            {(['pdf', 'image'] as const).map((kind) => (
+              <label key={kind} className="flex min-h-11 items-center gap-2 text-sm font-normal text-fg">
+                <input type="checkbox" className="size-4" checked={node.fileKinds.includes(kind)} data-testid={`task-file-${kind}`} onChange={(e) => toggleKind(kind, e.target.checked)} />
+                {kind === 'pdf' ? 'PDF' : 'Imagem (PNG ou JPEG)'}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+      <label className="flex flex-col gap-0.5 text-xs font-medium text-fg-muted">
+        Critérios de sim ou não, um por linha (de 1 a {TASK_CRITERIA_MAX})
+        <Textarea
+          className="min-h-24 text-sm"
+          rows={4}
+          value={criteriaText}
+          placeholder={'Fala o nome e o curso\nCita um objetivo\nTem até 1 minuto'}
+          data-testid="task-criteria"
+          aria-required
+          onChange={(e) => setCriteria(e.target.value)}
+        />
+        <span className={cn('self-end font-normal', lines > TASK_CRITERIA_MAX ? 'text-danger' : 'text-fg-faint')}>
+          {Math.min(lines, TASK_CRITERIA_MAX)}/{TASK_CRITERIA_MAX}
+          {lines > TASK_CRITERIA_MAX ? ` · só os ${TASK_CRITERIA_MAX} primeiros valem` : ''}
+        </span>
+      </label>
+      {node.review === 'auto' && node.criteria.length > 0 && <p className="text-xs text-fg-muted">Com aprovação ao enviar, os critérios aparecem para a pessoa como orientação, mas ninguém os confere.</p>}
+      <label className="flex min-h-11 items-center gap-2 text-sm text-fg">
+        <input type="checkbox" className="size-4" checked={node.required} data-testid="task-required" onChange={(e) => patch({ required: e.target.checked })} />
+        Obrigatória para o certificado (a entrega precisa estar aprovada)
       </label>
     </div>
   );

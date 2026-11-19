@@ -6,6 +6,7 @@ import { dispatchQueuedJobs, pollRunningJobs, reconcileJob } from './media';
 import { processAgentRun } from './agent';
 import { ingestSource } from './sources';
 import { newRetentionState, runRetentionIfDue } from './retention';
+import { fanOutOutboxEvent, startWebhookDispatcher } from './webhooks';
 
 /**
  * Worker do incremento 1: consumidor idempotente do outbox transacional, por
@@ -22,6 +23,7 @@ const handlers: Record<string, Handler> = {
   'enrollment.created': async (p) => console.log('[outbox] enrollment.created', p),
   'lesson.completed': async (p) => console.log('[outbox] lesson.completed', p),
   'course.completed': async (p) => console.log('[outbox] course.completed', p),
+  'certificate.issued': async (p) => console.log('[outbox] certificate.issued', p),
   'media_job.queued': async () => void (await dispatchQueuedJobs()),
   'media_job.reconcile': async (p) => reconcileJob(String(p.jobId)),
   'media_job.succeeded': async (p) => console.log('[outbox] media_job.succeeded', p),
@@ -69,6 +71,8 @@ async function handleOne(ev: typeof schema.outboxEvents.$inferSelect) {
       console.log(`[outbox] ${ev.type} ${ev.id}`);
       await handler(ev.payload);
     } else console.warn(`[outbox] sem handler para ${ev.type}; marcando como processado`);
+    // webhooks de saída: só cria as entregas (idempotente); o envio HTTP roda em outro laço, sem atrasar o outbox
+    await fanOutOutboxEvent(db, { id: ev.id, type: ev.type, payload: ev.payload, createdAt: ev.createdAt });
   } catch (e) {
     // devolve à fila com tentativa contada
     await db
@@ -84,6 +88,7 @@ async function main() {
   console.log(`[worker] ${describeAiMode(aiConfigFromEnv())}`);
   console.log(`[worker] ${describeMediaMode(mediaConfigFromEnv())}`);
   let stopping = false;
+  const webhookDispatcher = startWebhookDispatcher(getDb());
   process.on('SIGTERM', () => (stopping = true));
   process.on('SIGINT', () => (stopping = true));
   let lastMediaPoll = 0;
@@ -117,6 +122,7 @@ async function main() {
       await new Promise((r) => setTimeout(r, POLL_MS));
     }
   }
+  await webhookDispatcher.stop();
   console.log('[worker] encerrado');
 }
 

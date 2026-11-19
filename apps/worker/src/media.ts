@@ -12,6 +12,7 @@ import { loadStandInVideo } from './compose-scene';
 import { JobNotRunningError, PaidButNotStoredError, patchJobInput, storeCaptions, storeWithRetry, synthesizeOnce, type CaptionsRef } from './narration';
 import { placeStoredClip, placementFromParams, presentationBackground, type PlacementParams } from './placement';
 import { isBumperJob, processBumperJob, reconcileBumperJob } from './bumper';
+import { isScreenJob, processScreenJob, reconcileScreenJob } from './screen-scene';
 import { isAdjustJob, processAdjustJob, reconcileAdjustJob } from './adjust';
 import { finishSingleShotBytes } from './watermark-clip';
 import type { WatermarkSpec } from '@lms/media';
@@ -48,7 +49,7 @@ export function retryDueAt(job: Pick<media.MediaJobRow, 'attempts' | 'updatedAt'
  * plano único — mesmo roteiro, voz, modelo e estabilidade do ElevenLabs (a
  * posição da apresentadora e o fundo mudam o hash, mas não a fala).
  */
-async function findPaidNarration(job: media.MediaJobRow): Promise<{ voiceAssetId: string; alignment?: ElevenLabsAlignment } | undefined> {
+export async function findPaidNarration(job: media.MediaJobRow): Promise<{ voiceAssetId: string; alignment?: ElevenLabsAlignment } | undefined> {
   const t = schema.mediaJobs;
   const ji = job.input as { script?: string; voiceProvider?: string; voiceId?: string | null; params?: Record<string, unknown> };
   const p = ji.params ?? {};
@@ -162,7 +163,7 @@ async function ensureCaptions(job: media.MediaJobRow, assetId: string, captions?
   }
 }
 
-export async function attachToNode(job: media.MediaJobRow, assetId: string | null, simulated: boolean, transcript?: string, captions?: CaptionsRef) {
+export async function attachToNode(job: media.MediaJobRow, assetId: string | null, simulated: boolean, transcript?: string, captions?: CaptionsRef, screenResult?: { fit: 'ok' | 'short' | 'trimmed'; recordings: Array<{ fileName: string; durationSec: number; assetId?: string; source?: 'upload' | 'mock' }> }) {
   if (!assetId) return;
   const input = job.input as { script: string; captions?: CaptionsRef; presentationFingerprint?: unknown };
   const cap = await ensureCaptions(job, assetId, captions);
@@ -170,6 +171,7 @@ export async function attachToNode(job: media.MediaJobRow, assetId: string | nul
   const presentationFingerprint = typeof input.presentationFingerprint === 'string' && input.presentationFingerprint ? { presentationFingerprint: input.presentationFingerprint } : {};
   await authoring.setNodeMedia(getDb(), {
     courseId: job.courseId, lessonId: job.lessonId, nodeId: job.nodeId, userId: job.createdBy, note: `Vídeo gerado pelo job ${job.id}`,
+    ...(screenResult ? { screenResult } : {}),
     media: {
       assetId, kind: 'video', transcript: (transcript ?? input.script)?.slice(0, 20000), stale: false, generatedFrom: { jobId: job.id, sceneHash: job.sceneHash, provider: job.provider, simulated, ...presentationFingerprint },
       // legendas WebVTT (WCAG 1.2.2); `approx` = tempos estimados sem alinhamento
@@ -504,6 +506,8 @@ export async function processQueuedJob(jobId: string) {
     await fail(running, simWorkerRealJobMessage(running), false);
     return;
   }
+  // gravação de tela própria: tela cheia + narração em voz, sem avatar (nunca chama o HeyGen)
+  if (isScreenJob(job)) return processScreenJob(jobId);
   // cena dirigida (plano a plano): pipeline próprio, inclusive no modo de demonstração
   if (isDirectedJob(job)) return startDirectedJob(jobId);
   const input = job.input as { script: string; avatarId: string; voiceProvider: 'heygen' | 'elevenlabs'; voiceId: string | null; params: Record<string, any> };
@@ -652,6 +656,7 @@ export async function reconcileJob(jobId: string) {
   const job = await media.getJob(db, jobId);
   if (!job || job.status !== 'running') return;
   // multi-clipe: fica running/rendering até todos os planos ficarem prontos, depois composing
+  if (isScreenJob(job)) return reconcileScreenJob(job);
   if (isDirectedJob(job)) return reconcileDirectedJob(jobId);
   // vinheta: render local síncrono; só volta para a fila se o worker morreu no meio
   if (isBumperJob(job)) return reconcileBumperJob(job);

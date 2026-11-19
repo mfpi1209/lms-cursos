@@ -1,0 +1,85 @@
+/* Kit visual dos materiais de apoio DNA Work (PDF A4 e infográfico 1080 px). Sem marca de terceiros. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --navy: #0b1424;
+  --navy-2: #111c2e;
+  --lime: #c8f03c;
+  --teal: #0b7d74;
+  --teal-dark: #086158;
+  --teal-soft: #d7f6f2;
+  --ink: #16202f;
+  --muted: #4b5873;
+  --line: #d9dfe8;
+  --paper: #ffffff;
+  --warn: #9a4b00;
+  --warn-soft: #fff1e0;
+  --ok: #1e6e44;
+  --ok-soft: #dcf5e6;
+  --display: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--body); color: var(--ink); background: var(--paper); font-size: 10.5pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* ---------- PDF (A4) ---------- */
+@page { size: A4; margin: 16mm 0 18mm; }
+@page :first { margin-top: 0; }
+body:not(.info) { padding: 0 16mm; }
+.doc-head { background: var(--navy); color: #f4f7fb; margin: 0 -16mm 8mm; padding: 12mm 16mm 9mm; }
+.doc-head .curso { font-size: 9pt; color: var(--lime); font-weight: 600; letter-spacing: .02em; }
+.doc-head h1 { font-family: var(--display); font-weight: 700; font-size: 24pt; line-height: 1.1; margin: 2mm 0 2mm; }
+.doc-head .sub { color: #a9b4c6; font-size: 10.5pt; max-width: 150mm; }
+.doc-head .logo { height: 7mm; float: right; margin-top: 1mm; }
+
+h2 { font-family: var(--display); font-weight: 600; font-size: 14pt; color: var(--teal-dark); margin: 7mm 0 2mm; break-after: avoid; }
+h3 { font-family: var(--display); font-weight: 600; font-size: 11.5pt; margin: 5mm 0 1.5mm; break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+ul, ol { margin: 0 0 3mm; padding-left: 5.5mm; }
+li { margin-bottom: 1.2mm; }
+strong { font-weight: 600; }
+
+/* caixas */
+.box { border: 1px solid var(--line); border-radius: 3mm; padding: 4mm 5mm; margin: 3mm 0 4mm; break-inside: avoid; }
+.box.dica { background: var(--teal-soft); border-color: transparent; }
+.box.alerta { background: var(--warn-soft); border-color: transparent; }
+.box.ok { background: var(--ok-soft); border-color: transparent; }
+.box > :last-child { margin-bottom: 0; }
+.rotulo { font-family: var(--display); font-weight: 600; font-size: 10pt; display: block; margin-bottom: 1mm; }
+
+/* checklist */
+.check { list-style: none; padding-left: 0; }
+.check li { padding-left: 7mm; position: relative; margin-bottom: 2mm; }
+.check li::before { content: ''; position: absolute; left: 0; top: .5mm; width: 3.6mm; height: 3.6mm; border: 1.4px solid var(--teal); border-radius: 1mm; }
+
+/* tabela / modelo para preencher */
+table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; break-inside: avoid; font-size: 10pt; }
+th { text-align: left; background: var(--navy); color: #f4f7fb; font-weight: 600; padding: 2mm 2.5mm; }
+td { border-bottom: 1px solid var(--line); padding: 2.2mm 2.5mm; vertical-align: top; }
+td.preencher { height: 9mm; }
+.linha { border-bottom: 1px solid var(--muted); height: 8mm; margin-bottom: 1mm; }
+
+/* exemplo de texto (prompt, mensagem, currículo) */
+.exemplo { font-family: var(--body); background: #f4f6fa; border-left: 3px solid var(--teal); padding: 3mm 4mm; margin: 2mm 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+
+.rodape { margin-top: 8mm; padding-top: 3mm; border-top: 1px solid var(--line); color: var(--muted); font-size: 8.5pt; }
+
+/* ---------- Infográfico (PNG 1080 px de largura) ---------- */
+body.info { width: 1080px; background: var(--navy); color: #f4f7fb; font-size: 26px; line-height: 1.35; padding: 72px 72px 64px; }
+.info .curso { color: var(--lime); font-weight: 600; font-size: 24px; }
+.info h1 { font-family: var(--display); font-weight: 700; font-size: 64px; line-height: 1.05; margin: 14px 0 18px; }
+.info .sub { color: #a9b4c6; font-size: 28px; margin-bottom: 44px; }
+.info .passos { display: grid; gap: 22px; }
+.info .passo { background: var(--navy-2); border-radius: 24px; padding: 28px 32px; display: grid; grid-template-columns: 76px 1fr; gap: 22px; align-items: start; }
+.info .num { width: 64px; height: 64px; border-radius: 50%; background: var(--lime); color: var(--navy); font-family: var(--display); font-weight: 700; font-size: 32px; display: grid; place-items: center; }
+.info .passo h3 { font-family: var(--display); font-weight: 600; font-size: 32px; margin: 4px 0 6px; color: #fff; }
+.info .passo p { margin: 0; color: #c9d2e0; }
+.info .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.info .cartao { background: var(--navy-2); border-radius: 24px; padding: 28px 30px; }
+.info .cartao h3 { font-family: var(--display); font-size: 30px; margin: 0 0 8px; color: var(--lime); }
+.info .cartao p { margin: 0; color: #c9d2e0; }
+.info .destaque { margin-top: 36px; background: var(--lime); color: var(--navy); border-radius: 24px; padding: 28px 32px; font-weight: 600; }
+.info .assinatura { margin-top: 44px; display: flex; justify-content: space-between; align-items: center; color: #8592a6; font-size: 22px; }
+.info .assinatura img { height: 40px; }

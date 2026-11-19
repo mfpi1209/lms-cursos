@@ -127,7 +127,7 @@ export const DEFAULT_SLIDE_ACCENT = '#1a66d1';
 
 /** Gestos de exemplo (motion prompt do HeyGen, em inglês). */
 /** Gestos de exemplo (motion prompt do HeyGen, em inglês): um gesto + uma emoção, do vocabulário seguro (sem dedos/sinais). */
-export const GESTURE_EXAMPLES = ['smiles softly, welcoming', 'nods slowly, warm', 'opens both palms, honest', 'leans in slightly, curious', 'places a hand on the chest, sincere'];
+export const GESTURE_EXAMPLES = ['smiles softly, welcoming', 'nods slowly, warm', 'nods slightly, warm smile', 'leans in slightly, curious', 'tilts head, thoughtful'];
 
 export const newShotId = () => `shot_${shortId()}`;
 export const newCameraId = () => `cam_${shortId()}`;

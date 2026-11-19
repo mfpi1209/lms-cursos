@@ -113,6 +113,51 @@ export function cinematicPrompt(prompt: string, pronoun: CinematicPronoun = 'she
   return `${head}${/[.!?]$/.test(head) ? '' : '.'} ${suffix}`;
 }
 
+/**
+ * Sufixo fixo de TODO pedido de movimento do apresentador: o avatar às vezes inventa relógio, pulseira ou
+ * objeto na mão quando o gesto envolve as mãos. Aplicado no envio (vale também para documentos já importados).
+ */
+export const MOTION_SAFETY_SUFFIX = 'hands relaxed and mostly still, bare wrists, no watch, no bracelet, no objects in hands';
+/** Limite do campo `motion_prompt` enviado (o pedido do autor/IA tem até 200; o sufixo cabe junto). */
+export const MOTION_PROMPT_MAX = 300;
+
+/** Pedido de movimento final: gesto do autor/IA (se houver) + sufixo fixo, em até {@link MOTION_PROMPT_MAX} caracteres. */
+export function motionPromptWithSafety(prompt?: string | null): string {
+  const base = (prompt ?? '').trim().replace(/\s+/g, ' ').replace(/[.,;:\s]+$/u, '');
+  if (!base) return MOTION_SAFETY_SUFFIX;
+  return `${base.slice(0, MOTION_PROMPT_MAX - MOTION_SAFETY_SUFFIX.length - 2).trimEnd()}, ${MOTION_SAFETY_SUFFIX}`;
+}
+
+/**
+ * Câmera que não é de frente (3/4, lateral): o pulso de trás não aparece na imagem-base e o HeyGen inventa
+ * relógio/pulseira quando o apresentador gesticula. Nessas câmeras ele mantém as mãos juntas na cintura.
+ */
+export const HANDS_CLASPED_MOTION = 'keeps both hands loosely clasped together in front of the waist the whole time, no hand gestures';
+
+/** Gesto do item conforme o ângulo da câmera: de frente = o gesto pedido; outro ângulo = mãos juntas + o gesto (rosto/tronco). */
+export function motionPromptForAngle(prompt: string | null | undefined, angle: string | null | undefined): string | undefined {
+  const g = (prompt ?? '').trim();
+  if (!angle || angle === 'front') return g || undefined;
+  return g ? `${HANDS_CLASPED_MOTION}; ${g}` : HANDS_CLASPED_MOTION;
+}
+
+/**
+ * Variação de retomada: o HeyGen devolve o MESMO vídeo para o mesmo pedido (mesma imagem, áudio e movimento), então
+ * refazer uma tomada sem mudar nada no pedido sai idêntico. A retomada N acrescenta uma frase curta e neutra ao
+ * movimento (só nas tomadas refeitas; as demais chaves ficam iguais), o bastante para o HeyGen gerar outra versão.
+ */
+const RETAKE_VARIATIONS = [
+  'calm natural posture, both wrists bare and plain',
+  'relaxed stance, plain shirt cuffs, bare skin on both wrists',
+  'steady and composed, empty hands, no jewelry at all',
+  'gentle natural breathing, arms relaxed, bare forearms and wrists',
+  'composed presenter posture, clean wrists with no accessories',
+];
+export function retakeVariation(n: number | null | undefined): string | undefined {
+  if (!n || n <= 0) return undefined;
+  return `${RETAKE_VARIATIONS[(n - 1) % RETAKE_VARIATIONS.length]}, bare fingers with no rings (take ${n + 1})`;
+}
+
 export class HeyGenError extends Error {
   constructor(public readonly status: number, public readonly code: string, message: string, public readonly retryAfterSeconds?: number) {
     super(message);
@@ -183,8 +228,9 @@ export class HeyGenAdapter {
       output_format: input.transparent ? 'webm' : 'mp4',
     };
     if (input.engine) body.engine = { type: input.engine };
-    if (input.expressiveness && input.engine !== 'avatar_v') body.expressiveness = input.expressiveness;
-    if (input.motionPrompt?.trim()) body.motion_prompt = input.motionPrompt.trim().slice(0, 300);
+    if (input.expressiveness && input.engine !== 'avatar_v' && input.engine !== 'avatar_iii') body.expressiveness = input.expressiveness;
+    // só quando há pedido de movimento (sem ele, o motor não recebe o campo, como antes); avatar_iii não usa gesto
+    if (input.motionPrompt?.trim() && input.engine !== 'avatar_iii') body.motion_prompt = motionPromptWithSafety(input.motionPrompt);
     if (input.removeBackground && !input.transparent && !input.keepLookBackground) body.remove_background = true;
     if (input.audioAssetId) body.audio_asset_id = input.audioAssetId;
     else {

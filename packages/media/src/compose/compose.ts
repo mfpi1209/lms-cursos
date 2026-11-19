@@ -8,7 +8,8 @@ import { renderBrandCardToFile, renderCaptionToFile, renderSlideToFile, slideTon
 import { renderWatermarkToFile, watermarkPlacementFor } from './watermark';
 import { skipIfUnrenderable } from './raster';
 import { PANEL_SHIFT, panelRevealTimes, panelSpecFromSlide, renderPanelStatesToFiles } from './panel';
-import { LOWER_THIRD_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, renderChipsGraphics, renderLowerThirdSprite, renderTeaserSprite, teaserWindow, type ChipsGraphics, type PlacedSprite, type Zone, type ZonePaletteInput } from './zones';
+import { LOWER_THIRD_WINDOW, SCREEN_TEXT_WINDOW, TEASER_FADE, chipPopFrameCount, chipTimeline, lowerThirdWindow, parseScreenText, renderChipsGraphics, renderLowerThirdSprite, renderTeaserSprite, screenTextWindow, teaserWindow, type ChipsGraphics, type PlacedSprite, type ScreenTextSprite, type Zone, type ZonePaletteInput } from './zones';
+import { ZONE_PANEL, renderZonePanelPlan, scheduleZonePanel, type ZonePanelPlan, type ZonePanelStep, type ZonePanelTopic } from './zone-panel';
 import type { WatermarkCorner } from '../brand-tokens';
 
 /**
@@ -233,6 +234,10 @@ export interface ComposePlan {
   lowerThird?: PlacedSprite;
   /** pergunta a seguir (sprite posicionado), nos últimos ≈ 3 s da cena */
   teaser?: PlacedSprite;
+  /** texto na tela (painel no lado livre), de 0,6 s até o fim da cena (`screenTextWindow`) */
+  screenText?: ScreenTextSprite;
+  /** painel da cena no lado livre (`zone-panel.ts`): estados encadeados com fusões; vale no lugar de `screenText` */
+  zonePanel?: ZonePanelPlan;
 }
 
 export interface ShotTimelineEntry {
@@ -263,7 +268,7 @@ export interface ComposeCommand {
   /** layout efetivamente usado (cai para `presenter` se faltar slide/letreiro) */
   layouts: Layout[];
   /** janelas das camadas da cena (s, tempo final): letreiro e pergunta a seguir */
-  overlays: { lowerThird?: { from: number; to: number }; teaser?: { from: number; to: number } };
+  overlays: { lowerThird?: { from: number; to: number }; teaser?: { from: number; to: number }; screenText?: { from: number; to: number } };
 }
 
 /** x do recorte de largura `cw` centrado em `fx` (fração), dentro do quadro */
@@ -594,6 +599,51 @@ export function buildComposeCommand(plan: ComposePlan): ComposeCommand {
     v = 'ltv';
     overlays.lowerThird = lt;
   }
+  const stw = plan.screenText || plan.zonePanel ? screenTextWindow(acc, teaserWin?.from) : null;
+  if (plan.zonePanel && stw) {
+    // painel da cena (estúdio com zonas): um PNG por estado, encadeados com fusões (xfade) numa única camada com alfa
+    const zp = plan.zonePanel;
+    const states = zp.states.filter((st) => st.at < stw.to - 0.05);
+    const end = stw.to - stw.from;
+    let cur = '';
+    states.forEach((st, j) => {
+      const next = states[j + 1];
+      // cada estado dura até o fim da fusão que traz o próximo (o último, até o fim da janela)
+      const len = (next ? next.at + next.fade : stw.to) - st.at + 2 / fps;
+      const ii = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(len), '-i', st.path]);
+      chains.push(`[${ii}:v]format=rgba,settb=1/${fps},setpts=N[zps${j}]`);
+      if (j === 0) cur = 'zps0';
+      else {
+        chains.push(`[${cur}][zps${j}]xfade=transition=fade:duration=${sec(Math.max(1 / fps, st.fade))}:offset=${sec(st.at - stw.from)}[zpx${j}]`);
+        cur = `zpx${j}`;
+      }
+    });
+    if (cur) {
+      const fd = ZONE_PANEL.fadeIn;
+      const fadeOut = stw.to < acc - 1e-6 ? `,fade=t=out:st=${sec(end - 0.25)}:d=0.25:alpha=1` : '';
+      chains.push(`[${cur}]format=rgba,trim=duration=${sec(end)},fade=t=in:st=0:d=${sec(fd)}:alpha=1${fadeOut},setpts=PTS-STARTPTS+${sec(stw.from)}/TB[zpw]`);
+      chains.push(`[${v}][zpw]overlay=x=${zp.x}:y=${zp.y}:format=auto:eof_action=pass:enable='between(t,${sec(stw.from)},${sec(stw.to)})'[zpv]`);
+      v = 'zpv';
+      overlays.screenText = stw;
+      // marca d'água no mesmo canto da sombra do painel: volta por cima dela (como no modelo aprovado), senão some
+      if (zp.watermarkPath) {
+        const wi = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(end), '-i', zp.watermarkPath]);
+        chains.push(`[${wi}:v]format=rgba,fade=t=in:st=0:d=${sec(fd)}:alpha=1${fadeOut},setpts=PTS-STARTPTS+${sec(stw.from)}/TB[zpm]`);
+        chains.push(`[${v}][zpm]overlay=0:0:format=auto:eof_action=pass:enable='between(t,${sec(stw.from)},${sec(stw.to)})'[zpmv]`);
+        v = 'zpmv';
+      }
+    }
+  } else if (plan.screenText && stw) {
+    // entra em 0,6 s (fade + desliza 40 px da borda do lado livre) e fica até o fim (ou até a pergunta a seguir)
+    const fd = SCREEN_TEXT_WINDOW.fade;
+    const si = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(stw.to), '-i', plan.screenText.path]);
+    const fadeOut = stw.to < acc - 1e-6 ? `,fade=t=out:st=${sec(stw.to - 0.25)}:d=0.25:alpha=1` : '';
+    chains.push(`[${si}:v]format=rgba,fade=t=in:st=${sec(stw.from)}:d=${sec(fd)}:alpha=1${fadeOut}[stw]`);
+    const slide = `${Math.round(40 * k)}*pow(1-min(1,max(0,(t-${sec(stw.from)})/${sec(fd)})),3)`;
+    chains.push(`[${v}][stw]overlay=x='${plan.screenText.x}${plan.screenText.side === 'left' ? '-' : '+'}${slide}':y=${plan.screenText.y}:eval=frame:format=auto:enable='between(t,${sec(stw.from)},${sec(stw.to)})'[stv]`);
+    v = 'stv';
+    overlays.screenText = stw;
+  }
   if (plan.teaser && teaserWin && teaserWin.to - teaserWin.from > 0.3) {
     const ti = addInput(['-loop', '1', '-framerate', String(fps), '-t', sec(teaserWin.to - teaserWin.from), '-i', plan.teaser.path]);
     chains.push(`[${ti}:v]format=rgba,setpts=PTS-STARTPTS+${sec(teaserWin.from)}/TB,fade=t=in:st=${sec(teaserWin.from)}:d=${sec(TEASER_FADE)}:alpha=1[tzw]`);
@@ -646,6 +696,19 @@ export interface ComposeSceneInput {
   teaser?: { question: string } | null;
   /** letreiro com o nome (primeira cena narrada da aula): 0,6–4,5 s, canto inferior esquerdo */
   lowerThird?: { name: string; role?: string; brand?: string } | null;
+  /**
+   * "Texto na tela" da cena: painel no lado livre (o oposto à apresentadora), de 0,6 s até o fim. Só vale quando
+   * TODOS os planos são `presenter` (sem pílulas, painel, cartão ou slide) numa câmera de zona esquerda/direita.
+   */
+  screenText?: string | null;
+  /**
+   * Tópicos do painel da cena (mesma regra de zona do `screenText`; ver `zone-panel.ts`): o `screenText` vira o título
+   * e cada tópico acende no tempo da fala (`scheduleZonePanel`). `words` = palavras da narração por plano, com tempo RELATIVO ao
+   * início do plano (o mesmo alinhamento das legendas/pílulas); sem elas, os tópicos se distribuem igualmente.
+   */
+  screenTopics?: { topics: ZonePanelTopic[]; words?: Map<string, Array<{ text: string; start: number }>> } | null;
+  /** linha de cima do painel da cena: "Aula N · título da aula" */
+  screenEyebrow?: string | null;
   /** cores dos gráficos (pergunta a seguir, letreiro); ausente = as da marca */
   palette?: ZonePaletteInput | null;
   /**
@@ -688,6 +751,38 @@ export async function watermarkFilesFor(shots: Array<Pick<ComposeShot, 'id' | 'l
   return out;
 }
 
+/**
+ * Zona (esquerda/direita) em que o painel do texto na tela vale: todos os planos `presenter` (sem pílulas, painel,
+ * cartão ou slide) e a MESMA câmera de zona lateral em todos; senão undefined (a cena não ganha painel).
+ */
+export function screenTextZone(shots: Array<{ id: string; layout?: Layout }>, clips: Map<string, { zone?: Zone }>): 'left' | 'right' | undefined {
+  if (!shots.length || shots.some((s) => (s.layout ?? 'presenter') !== 'presenter')) return undefined;
+  const zones = new Set(shots.map((s) => clips.get(s.id)?.zone));
+  const z = [...zones][0];
+  return zones.size === 1 && (z === 'left' || z === 'right') ? z : undefined;
+}
+
+/**
+ * Palavras da narração no tempo da CENA montada, a partir das palavras por plano (tempo relativo ao plano). Planos
+ * fundidos num clipe só recebem também as palavras dos planos SEGUINTES (o alinhamento é do clipe inteiro): cada
+ * palavra entra uma vez só, no plano em que é dita — repetidas, quebravam a busca do `cue` (o trecho deixava de
+ * ser contíguo) e o tópico acendia fora de hora.
+ */
+export function sceneWords(timeline: ReadonlyArray<Pick<ShotTimelineEntry, 'id' | 'start' | 'duration' | 'audioDelay'>>, words: Map<string, Array<{ text: string; start: number }>> | undefined, headTrim?: Map<string, number>): Array<{ text: string; start: number }> {
+  const out: Array<{ text: string; start: number }> = [];
+  timeline.forEach((t, i) => {
+    const trim = headTrim?.get(t.id) ?? 0;
+    const last = i === timeline.length - 1;
+    for (const w of words?.get(t.id) ?? []) {
+      const rel = w.start - trim;
+      // dentro do plano: de 0,05 s antes do começo até 0,05 s antes do fim (o último fica com o que sobrar)
+      if (rel < -0.05 || (!last && rel >= t.duration - t.audioDelay - 0.05)) continue;
+      out.push({ text: w.text, start: Number((t.start + t.audioDelay + rel).toFixed(3)) });
+    }
+  });
+  return out.sort((a, b) => a.start - b.start);
+}
+
 export interface ComposeSceneResult {
   output: string;
   durationSeconds: number;
@@ -703,6 +798,8 @@ export interface ComposeSceneResult {
   joins: Array<{ id: string; headTrim: number; tailTrim: number; source: TightenResult['source']; punch: number }>;
   /** volume antes/depois da normalização (A15) */
   loudness?: LoudnessResult;
+  /** painel da cena (estúdio com zonas): passos aplicados (estado, início da fusão e a palavra de cada tópico) */
+  zonePanel?: ZonePanelStep[];
 }
 
 /** Tópicos do painel como desenhados (até 3, sem vazios). */
@@ -851,7 +948,35 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   const lowerThird = input.lowerThird?.name?.trim()
     ? await skipIfUnrenderable('letreiro com o nome', () => renderLowerThirdSprite(path.join(outDir, 'lower-third.png'), input.lowerThird!, { width, height, watermarkSide: input.watermark ? (input.watermark.position === 'bottom-left' ? 'left' : 'right') : null, palette: input.palette }))
     : undefined;
-  const cmd = buildComposeCommand({ width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}) });
+  const stSpec = parseScreenText(input.screenText);
+  const stZone = screenTextZone(input.shots.map((x) => ({ id: x.id, layout: x.layout })), input.clips);
+  const scenePlan = { width, height, fps, background: input.background ?? '#000000', shots, ...(teaser ? { teaser } : {}), ...(lowerThird ? { lowerThird } : {}) };
+  // painel da cena (estúdio com zonas, todos os planos `presenter` na mesma câmera lateral): o painel aprovado do
+  // `presenter_panel` no lado livre. Título = o "Texto na tela"; tópicos = os da cena (ou, sem eles, os itens de um
+  // "Título: a, b, c"); sem tópicos nem itens, o painel fica só com a linha de cima e o título.
+  let zonePanel: ZonePanelPlan | undefined;
+  let zonePanelSteps: ZonePanelStep[] | undefined;
+  const zpTopics: ZonePanelTopic[] = input.screenTopics?.topics?.length ? input.screenTopics.topics : (stSpec?.items ?? []).map((text) => ({ text }));
+  const zpTitle = stSpec ? (stSpec.title ?? (stSpec.items ? undefined : stSpec.text)) : undefined;
+  if (stZone && (zpTopics.length || zpTitle)) {
+    // 1ª passada (só planejamento): tempos dos planos na cena montada, para pôr as palavras (relativas ao plano) no tempo da cena
+    const pre = buildComposeCommand(scenePlan);
+    const win = screenTextWindow(pre.totalDuration, teaser ? teaserWindow(pre.totalDuration).from : undefined);
+    if (win) {
+      const trim = new Map(joinInfo.map((j) => [j.id, j.headTrim]));
+      const words = sceneWords(pre.timeline, input.screenTopics?.words, trim);
+      const steps = scheduleZonePanel(zpTopics, words, win, fps);
+      // o painel fica no lado LIVRE: o oposto ao do apresentador
+      zonePanel = await skipIfUnrenderable('painel da cena', () => renderZonePanelPlan(path.join(outDir, 'zone-panel'), { ...(input.screenEyebrow?.trim() ? { eyebrow: input.screenEyebrow.trim() } : {}), ...(zpTitle ? { title: zpTitle } : {}), topics: zpTopics }, steps, { width, height, side: stZone === 'left' ? 'right' : 'left' }));
+      if (zonePanel) {
+        zonePanelSteps = steps;
+        // a marca d'água do mesmo lado do painel ficaria sob a sombra: a montagem a repõe por cima
+        const mark = marks?.get(input.shots[0]!.id);
+        if (mark && input.watermark && (input.watermark.position === 'bottom-left' ? 'left' : 'right') === zonePanel.side) zonePanel = { ...zonePanel, watermarkPath: mark };
+      }
+    }
+  }
+  const cmd = buildComposeCommand({ ...scenePlan, ...(zonePanel ? { zonePanel } : {}) });
   // DIAGNÓSTICO, só quando a variável de ambiente COMPOSE_DUMP=<arquivo.json> está definida (nunca em produção):
   // grava o comando da montagem (entradas, filter_complex, duração, transições) para investigar imagem e som
   // desencontrados. Não altera a montagem; sem a variável, não faz nada. Mantido de propósito: foi o que achou o
@@ -870,7 +995,7 @@ export async function composeScene(input: ComposeSceneInput): Promise<ComposeSce
   // volume único (A15): a mesma voz sai no mesmo nível em todos os cursos, e a vinheta (−16 LUFS) emenda sem salto
   const loudness = input.loudnorm === false ? undefined : await normalizeLoudnessInPlace(input.output);
   const out = await ffprobe(input.output);
-  return { output: input.output, durationSeconds: out.durationSeconds, expectedDurationSeconds: cmd.totalDuration, layouts: cmd.layouts, overlaps: cmd.overlaps, transitions: cmd.transitions, timeline: cmd.timeline, overlays: cmd.overlays, joins: joinInfo, ...(loudness ? { loudness } : {}) };
+  return { output: input.output, durationSeconds: out.durationSeconds, expectedDurationSeconds: cmd.totalDuration, layouts: cmd.layouts, overlaps: cmd.overlaps, transitions: cmd.transitions, timeline: cmd.timeline, overlays: cmd.overlays, joins: joinInfo, ...(loudness ? { loudness } : {}), ...(zonePanelSteps && cmd.overlays.screenText ? { zonePanel: zonePanelSteps } : {}) };
 }
 
 /**

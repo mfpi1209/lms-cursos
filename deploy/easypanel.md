@@ -19,6 +19,14 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
   - `BETTER_AUTH_URL` = URL pública (ex.: `https://cursos.exemplo.com.br`)
   - `TRUSTED_PROXIES` = IP/CIDR do Traefik na rede do EasyPanel (necessário para gravar o IP real no registro de acesso do Marco Civil; sem isso, um `X-Forwarded-For` com mais de um valor fica sem IP e o log avisa). Atrás do Cloudflare, `CLIENT_IP_HEADERS=cf-connecting-ip,x-forwarded-for`. Ver `.env.example`.
   - `NEXT_PUBLIC_APP_URL` = mesma URL pública
+  - E-mail (link de acesso e "Esqueci minha senha"; sem isso nenhum e-mail é entregue, só vai para o log):
+    - `EMAIL_TRANSPORT` = `smtp` ou `resend` (padrão `log`, que não entrega nada);
+    - `EMAIL_FROM` = remetente, de um domínio verificado (ex.: `DNA Work <nao-responda@seudominio.com.br>`);
+    - com `smtp`: `SMTP_URL` (ex.: `smtps://usuario:senha@smtp.exemplo.com:465`); com `resend`: `RESEND_API_KEY`;
+    - `MAGIC_LINK_TTL_HOURS` (opcional, padrão 72). A recuperação de senha vale por 1 hora.
+    - Em produção o link inteiro nunca vai para o log. `EMAIL_LOG_FULL_LINKS` é só de desenvolvimento.
+  - Limites de login: ficam no código (`apps/web/src/lib/auth-access.ts`) e valem em memória com 1 réplica do web. Um laboratório atrás de um mesmo IP comporta 30 logins por minuto; cada conta aceita 10 senhas a cada 5 minutos. Para o IP certo, `TRUSTED_PROXIES` precisa estar correto.
+  - `WEBHOOK_SECRET_KEY` = chave que cifra os segredos dos webhooks de saída (`openssl rand -hex 32`, 64 caracteres hexadecimais). **Obrigatória em produção e igual no web e no worker**: sem ela o estúdio recusa cadastrar webhooks e o worker não assina as entregas. Guarde uma cópia da chave fora do servidor: perdê-la ou trocá-la invalida os segredos já guardados (é preciso recadastrar os webhooks). Detalhes em `docs/integracao/api-v1.md`.
   - `NEXT_PUBLIC_BRAND_NAME`, `NEXT_PUBLIC_BRAND_PRIMARY` (opcionais)
   - `AI_PROVIDER=fake` (até a fase B)
   - `LMS_ACCESS_TOKEN` (segredo do `POST /api/integracao/acessos`, usado pelo sistema de recrutamento; sem ele a rota responde 503)
@@ -28,7 +36,10 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
 
 - Dockerfile: `Dockerfile.worker`. Sem porta pública.
 - Mesmas variáveis `DATABASE_URL`, `REDIS_URL`, `AI_PROVIDER`.
-- Comando padrão roda o consumidor do outbox. Réplicas: 1.
+- Comando padrão roda o consumidor do outbox e o envio dos webhooks de saída. Réplicas: 1.
+- `WEBHOOK_SECRET_KEY` (a mesma do web), para assinar as entregas dos webhooks. O servidor do worker precisa de saída para a internet (HTTPS) até os endereços cadastrados; o worker recusa destinos em rede privada (SSRF), então nada precisa ser liberado para dentro.
+- Os webhooks não têm fila externa: ficam na tabela `webhook_deliveries` (8 tentativas, de 1 minuto a 12 horas). Se o worker ficar parado, as entregas esperam e seguem quando ele voltar.
+- Depois do deploy: a migração `0022_webhooks` cria as tabelas `webhook_endpoints` e `webhook_deliveries` (só acrescenta; rode `pnpm --filter @lms/db migrate` como na seção 4).
 
 ## 4. Migrations e seed
 

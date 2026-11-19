@@ -10,6 +10,11 @@ export interface AnswerRecord {
   attempts?: number;
   /** missão "Leve para a vida real": `later` (Vou fazer depois) ou `done` (Já experimentei); `text` guarda "O que você percebeu?" */
   missionStatus?: MissionStatus;
+  /**
+   * tarefa com entrega: o aluno enviou (`sent`) ou seguiu com a entrega que já tinha (`kept`). O link, o arquivo e a
+   * correção ficam em `task_submissions` (db), nunca aqui.
+   */
+  submission?: 'sent' | 'kept';
   answeredAt: string;
 }
 
@@ -53,6 +58,12 @@ export type Intent =
   | { kind: 'reflect'; text: string }
   /** missão: sempre avança ("Vou fazer depois" também conclui a cena); `note` só com `done`, até MISSION_NOTE_MAX */
   | { kind: 'mission'; status: MissionStatus; note?: string }
+  /**
+   * tarefa com entrega: envia o link (https) e, se a tarefa aceitar, o arquivo já enviado (`fileAssetId`). A aula segue
+   * logo depois; a correção é assíncrona. `keep: true` = seguir com a entrega que já existe (aula refeita): sem link,
+   * e é o servidor que confirma que a entrega existe.
+   */
+  | { kind: 'submit'; link?: string; fileAssetId?: string; keep?: boolean }
   | { kind: 'assess'; optionIds: string[] };
 
 export interface Evidence {
@@ -94,6 +105,7 @@ export class EngineError extends Error {
       | 'TEXT_TOO_SHORT'
       | 'TEXT_TOO_LONG'
       | 'INVALID_MISSION'
+      | 'INVALID_SUBMISSION'
       | 'NO_TRANSITION'
       | 'NOT_EXECUTABLE'
       | 'BACK_NOT_ALLOWED'

@@ -34,7 +34,7 @@ function h(type: string, style: Record<string, unknown>, ...children: unknown[])
 /* ------------------------------------------------------------------ */
 
 type Shape = ['path', string] | ['circle', number, number, number] | ['rect', number, number, number, number, number];
-const ICON_SHAPES: Record<string, Shape[]> = {
+export const ICON_SHAPES: Record<string, Shape[]> = {
   house: [['path', 'M3 21h18M5 21V8l7-5 7 5v13'], ['path', 'M9 21v-6h6v6']],
   calendar: [['rect', 3, 4, 18, 17, 2], ['path', 'M16 2v4M8 2v4M3 10h18']],
   heart: [['path', 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z']],
@@ -51,6 +51,18 @@ const ICON_SHAPES: Record<string, Shape[]> = {
   check: [['path', 'M20 6L9 17l-5-5']],
   file: [['path', 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'], ['path', 'M14 2v6h6M16 13H8M16 17H8M10 9H8']],
   'user-circle': [['circle', 12, 12, 10], ['circle', 12, 10, 3], ['path', 'M7 20.66V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.66']],
+  sparkles: [['path', 'M11 4l1.9 5.1L18 11l-5.1 1.9L11 18l-1.9-5.1L4 11l5.1-1.9z'], ['path', 'M19 3v4M17 5h4M19 17v4M17 19h4']],
+  alert: [['path', 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'], ['path', 'M12 9v4M12 17h.01']],
+  shield: [['path', 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'], ['path', 'M9 12l2 2 4-4']],
+  lightbulb: [['path', 'M9 18h6M10 22h4'], ['path', 'M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14']],
+  pencil: [['path', 'M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z']],
+  gift: [['path', 'M20 12v10H4V12M2 7h20v5H2zM12 22V7'], ['path', 'M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z']],
+  help: [['circle', 12, 12, 10], ['path', 'M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01']],
+  list: [['path', 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01']],
+  eye: [['path', 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'], ['circle', 12, 12, 3]],
+  zap: [['path', 'M13 2L3 14h9l-1 8 10-12h-9l1-8z']],
+  target: [['circle', 12, 12, 10], ['circle', 12, 12, 6], ['circle', 12, 12, 2]],
+  repeat: [['path', 'M23 4v6h-6M1 20v-6h6'], ['path', 'M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15']],
 };
 
 export function iconNode(name: string, size: number, color: string): Node {
@@ -78,9 +90,28 @@ export interface PanelSpec {
   eyebrow?: string;
 }
 
-/** Árvore satori do painel no estado `lit` (quantos tópicos acesos). */
-export function panelTree(spec: PanelSpec, o: { width: number; height: number; lit: number }): Node {
-  const { width, height } = o;
+/** Fração da largura do quadro coberta pela sombra do painel (some em 48%). */
+export const PANEL_SHADE_WIDTH = 0.48;
+
+/**
+ * Faixa da camada do painel no quadro: o quadro inteiro (padrão, `presenter_panel`) ou, com `clip`, só a faixa da
+ * sombra encostada no lado `side` (painel das cenas do estúdio com zonas: PNG menor, mais barato de sobrepor).
+ */
+export function panelCanvas(o: { width: number; height: number; side?: 'left' | 'right'; clip?: boolean }): { x: number; y: number; w: number; h: number } {
+  if (!o.clip) return { x: 0, y: 0, w: o.width, h: o.height };
+  const w = Math.ceil((o.width * PANEL_SHADE_WIDTH) / 2) * 2;
+  return { x: o.side === 'right' ? o.width - w : 0, y: 0, w, h: o.height };
+}
+
+/**
+ * Árvore satori do painel no estado `lit` (quantos tópicos acesos). `side: 'right'` = versão ESPELHADA (sombra e
+ * painel encostados à direita; o texto continua alinhado à esquerda dentro do painel). `clip` = desenha só a faixa
+ * da sombra (`panelCanvas`). Sem título, o painel fica só com a linha de cima e os tópicos.
+ */
+export function panelTree(spec: PanelSpec, o: { width: number; height: number; lit: number; side?: 'left' | 'right'; clip?: boolean }): Node {
+  const { height } = o;
+  const side = o.side ?? 'left';
+  const width = panelCanvas(o).w;
   const k = height / 1080;
   const px = (n: number) => Math.round(n * k);
   const panelW = px(640);
@@ -104,15 +135,19 @@ export function panelTree(spec: PanelSpec, o: { width: number; height: number; l
     return words.map((w) => h('div', { display: 'flex', flexDirection: 'row', marginRight: Math.round(textSize * 0.26) },
       w.map((x) => h('span', { display: 'flex', fontSize: textSize, lineHeight: 1.15, fontWeight: x.bold ? 800 : 400, color: x.bold ? '#FFFFFF' : 'rgba(255,255,255,0.86)' }, x.text))));
   };
-  const shade = `linear-gradient(90deg, rgba(15,16,48,0.97) 0%, rgba(15,16,48,0.92) 30%, rgba(15,16,48,0.55) 40%, rgba(15,16,48,0) 48%)`;
+  // paradas da sombra em fração do QUADRO (0,97 → 0,92 em 30% → 0,55 em 40% → 0 em 48%), convertidas para a largura desenhada
+  const stop = (f: number) => `${Number(((f * o.width * 100) / width).toFixed(2))}%`;
+  const shade = `linear-gradient(${side === 'right' ? 270 : 90}deg, rgba(15,16,48,0.97) 0%, rgba(15,16,48,0.92) ${stop(0.3)}, rgba(15,16,48,0.55) ${stop(0.4)}, rgba(15,16,48,0) ${stop(PANEL_SHADE_WIDTH)})`;
   return h('div', { display: 'flex', width, height, fontFamily: 'Inter', position: 'relative', backgroundImage: shade },
-    h('div', { display: 'flex', flexDirection: 'column', position: 'absolute', left: px(96), top: px(170), width: panelW },
+    h('div', { display: 'flex', flexDirection: 'column', position: 'absolute', left: side === 'right' ? width - px(96) - panelW : px(96), top: px(170), width: panelW },
       spec.eyebrow
         ? h('div', { display: 'flex', flexDirection: 'row', alignItems: 'center' },
             h('div', { display: 'flex', width: px(36), height: px(4), borderRadius: px(2), background: '#FF7A08', marginRight: px(12) }),
             h('div', { display: 'flex', fontSize: px(23), fontWeight: 600, color: '#FFB070', letterSpacing: 0.5 }, clampText(spec.eyebrow, 56)))
         : null,
-      h('div', { display: 'flex', fontSize: titleSize, lineHeight: 1.02, fontWeight: 800, color: '#FFFFFF', letterSpacing: -1.4 * k, marginTop: spec.eyebrow ? px(22) : 0, marginBottom: px(46), maxWidth: panelW }, title),
+      title
+        ? h('div', { display: 'flex', fontSize: titleSize, lineHeight: 1.02, fontWeight: 800, color: '#FFFFFF', letterSpacing: -1.4 * k, marginTop: spec.eyebrow ? px(22) : 0, marginBottom: px(46), maxWidth: panelW }, title)
+        : spec.eyebrow ? h('div', { display: 'flex', height: px(34) }) : null,
       h('div', { display: 'flex', flexDirection: 'column' },
         spec.bullets.map((b, i) =>
           h('div', {
@@ -136,10 +171,10 @@ async function toPng(tree: Node, width: number, height: number): Promise<Uint8Ar
   return (await rasterizeSvg(svg)).png;
 }
 
-export async function renderPanelPng(spec: PanelSpec, o: { width?: number; height?: number; lit: number }): Promise<Uint8Array> {
+export async function renderPanelPng(spec: PanelSpec, o: { width?: number; height?: number; lit: number; side?: 'left' | 'right'; clip?: boolean }): Promise<Uint8Array> {
   const width = o.width ?? 1920;
   const height = o.height ?? 1080;
-  return toPng(panelTree(spec, { width, height, lit: o.lit }), width, height);
+  return toPng(panelTree(spec, { ...o, width, height }), panelCanvas({ ...o, width, height }).w, height);
 }
 
 /** Painel a partir do slide do plano (tópicos com `**negrito**`, ícones resolvidos por `iconFor`). */

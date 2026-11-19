@@ -1,8 +1,9 @@
 import { getDb, learning, publishing } from '@lms/db';
-import { allLessons, migrateCourseDocument, ownImageUrl, sortTrails } from '@lms/course-schema';
+import { allLessons, freeCourseWorkloadMinutes, hasCertificate, isFreeCourse, migrateCourseDocument, moduleIndexOfLesson, ownImageUrl, sortTrails } from '@lms/course-schema';
 import { lessonThumbUrl } from '../_components/learner-ui';
 import type { CourseTileData, CourseVideo } from '../_components/course-tile';
 import { courseArtFor, type CoverArt } from './course-art';
+import { freeCourseCta, type FreeCourseCardData } from './free-course';
 import { HERO_BANNER_COURSE_IDS, shortTitleFor } from './short-titles';
 import { versionsRuntime } from '@/server/lesson-runtime';
 
@@ -40,7 +41,13 @@ export interface LearnerCourse {
   video: CourseVideo;
   /** tempo de vídeo da próxima aula ("Continuar assistindo") */
   nextLessonVideo?: { minS: number; maxS: number };
+  /** trilha de pílulas do curso; curso livre nunca tem (fica na seção "Cursos livres") */
   trail?: string;
+  /**
+   * Curso livre (EaD, ver `isFreeCourse`): tem seção e cartão próprios e NÃO entra nas trilhas de pílulas nem em
+   * "Mais cursos". Presente só nos cursos livres.
+   */
+  free?: FreeCourseCardData;
   /** chave estável do curso (`courses.slug`): posição nas trilhas em série */
   slug: string;
   /** arte da vitrine (WebP em `public/capas`), quando o curso tem uma */
@@ -69,7 +76,10 @@ function firstReaction(nodes: MediaNode[]): string | undefined {
   return undefined;
 }
 
-/** Cursos do aluno com progresso, capas, tempo e trilha (vitrine e "Minhas trilhas"). */
+/**
+ * Cursos do aluno com progresso, capas, tempo e trilha (vitrine e "Minhas trilhas"). Cursos livres vêm marcados em
+ * `free` e sem trilha: `trails` só tem trilhas de pílulas.
+ */
 export async function loadLearnerCourses(userId: string) {
   const db = getDb();
   const enrollments = await learning.listEnrollmentsForUser(db, userId);
@@ -101,7 +111,10 @@ export async function loadLearnerCourses(userId: string) {
     const nextLesson = isDone ? undefined : (inProgress ?? lessons.find((l) => !completedSet.has(l.id)));
     const nextIndex = nextLesson ? lessons.findIndex((l) => l.id === nextLesson.id) : -1;
     const startHref = nextLesson ? `/aprender/${enr.id}/aulas/${nextLesson.id}` : `/aprender/${enr.id}`;
-    const cta = isDone ? 'Rever o curso' : inProgress ? `Continuar aula ${nextIndex + 1}` : started ? `Começar aula ${nextIndex + 1}` : 'Começar';
+    // curso livre (EaD): a ação fala do MÓDULO; pílula: da aula
+    const isFree = isFreeCourse(doc);
+    const nextModuleIndex = doc && nextLesson ? moduleIndexOfLesson(doc, nextLesson.id) : -1;
+    const cta = isFree ? freeCourseCta({ isDone, started, nextModuleIndex }) : isDone ? 'Rever o curso' : inProgress ? `Continuar aula ${nextIndex + 1}` : started ? `Começar aula ${nextIndex + 1}` : 'Começar';
     const rail = isDone ? 100 : totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
     const lessonsCopy = totalLessons > 0 ? `${totalLessons} ${totalLessons === 1 ? 'aula' : 'aulas'} · ${completedLessons} ${completedLessons === 1 ? 'concluída' : 'concluídas'}` : null;
     const tagline = doc?.learnerSummary?.trim() || doc?.branding.tagline?.trim() || doc?.description?.trim() || undefined;
@@ -122,7 +135,8 @@ export async function loadLearnerCourses(userId: string) {
     const nextLessonVideo = nextLesson && rt ? rt.lessons.get(nextLesson.id) : undefined;
     const heroVideo = firstVideo(nextLesson ?? lessons[0]);
     const openingVideo = firstVideo(lessons[0]);
-    const trail = enr.courseTrail ?? undefined;
+    // curso livre não entra nas trilhas de pílulas, mesmo que o cadastro do curso tenha uma trilha
+    const trail = isFree ? undefined : (enr.courseTrail ?? undefined);
     // imagem do cartão deitado: 1) banner largo do instrutor (public/destaque), 2) retrato do instrutor no estúdio
     // (a cena mostra o quadro do vídeo se o retrato não carregar), 3) quadro do vídeo de abertura
     const wideFrame = thumb;
@@ -163,7 +177,30 @@ export async function loadLearnerCourses(userId: string) {
       ...(newLessonIndexes.length ? { news: { count: newLessonIndexes.length, href: `/aprender/${enr.id}/aulas/${lessons[newLessonIndexes[0]!]!.id}`, title: lessons[newLessonIndexes[0]!]!.title, indexes: newLessonIndexes } } : {}),
       ...(trail ? { trail } : {}),
     };
-    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, lessonsTotal: lessons.length, ...(art ? { art } : {}), newLessonIndexes, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, video, ...(nextLessonVideo && !nextLessonVideo.missing.length ? { nextLessonVideo: { minS: nextLessonVideo.minS, maxS: nextLessonVideo.maxS } } : {}), ...(trail ? { trail } : {}), slug: enr.courseSlug, ...(portrait ? { portrait } : {}), shortTitle, ...(nextLesson && nextIndex >= 0 ? { nextLessonIndex: nextIndex, nextLessonTitle: nextLesson.title } : {}), tile };
+    const free: FreeCourseCardData | undefined =
+      isFree && doc
+        ? {
+            id: enr.id,
+            href: `/aprender/${enr.id}`,
+            startHref,
+            title: shortTitle,
+            ...(tagline ? { summary: tagline } : {}),
+            ...(presenter ? { presenter } : {}),
+            ...(posterArt ? { poster: posterArt } : {}),
+            ...(presenterImg ? { photo: presenterImg } : {}),
+            ...(thumb && thumb !== presenterImg ? { fallback: thumb } : {}),
+            workloadMinutes: freeCourseWorkloadMinutes(doc),
+            modules: doc.modules.filter((m) => m.lessons.length > 0).length,
+            lessons: lessons.length,
+            required: totalLessons,
+            completed: completedLessons,
+            percent: rail,
+            status: isDone ? 'completed' : started ? 'in_progress' : 'new',
+            cta,
+            certificate: hasCertificate(doc),
+          }
+        : undefined;
+    return { enr, lessons, done, ...(current >= 0 ? { current } : {}), completedLessons, totalLessons, lessonsTotal: lessons.length, ...(art ? { art } : {}), newLessonIndexes, started, isDone, startHref, cta, rail, lessonsCopy, ...(tagline ? { tagline } : {}), ...(backdrop ? { backdrop } : {}), ...(thumb ? { thumb } : {}), ...(posterThumb ? { posterThumb } : {}), ...(posterArt ? { posterArt } : {}), ...(presenter ? { presenter } : {}), lastActivity, ...(heroVideo ? { heroVideo } : {}), ...(openingVideo ? { openingVideo } : {}), decisions, video, ...(nextLessonVideo && !nextLessonVideo.missing.length ? { nextLessonVideo: { minS: nextLessonVideo.minS, maxS: nextLessonVideo.maxS } } : {}), ...(trail ? { trail } : {}), ...(free ? { free } : {}), slug: enr.courseSlug, ...(portrait ? { portrait } : {}), shortTitle, ...(nextLesson && nextIndex >= 0 ? { nextLessonIndex: nextIndex, nextLessonTitle: nextLesson.title } : {}), tile };
   });
   // trilhas na ordem de aprendizado (TRAIL_ORDER), não alfabética
   const trails = sortTrails([...new Set(courses.map((c) => c.trail).filter((t): t is string => !!t))]);

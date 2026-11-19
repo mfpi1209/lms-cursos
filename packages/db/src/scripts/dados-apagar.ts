@@ -23,8 +23,14 @@ await runScript(async ({ db }) => {
   console.log(`${apply ? '' : '[simulação, nada foi alterado] '}${r.mode === 'encerrar' ? 'Encerrar' : 'Apagar'} a conta ${r.userId}`);
   if (r.mode === 'apagar') {
     console.log(`  apaga: ${c.sessoes} sessão(ões), ${c.matriculas} matrícula(s), ${c.tentativasDeAula} tentativa(s) de aula, ${c.eventos} evento(s), ${c.evidencias} evidência(s), ${c.missoes} missão(ões) com ${c.historicoDeMissoes} versão(ões), ${c.checagensDeTrilha} checagem(ns)`);
+    console.log(`  entregas de tarefa: ${c.entregas} entrega(s) e ${c.arquivosDeEntrega} arquivo(s)`);
+    if (r.taskFiles.length) {
+      console.log(`  ATENÇÃO: ${apply ? 'apague' : 'depois do --apply, apague'} também estes arquivos no storage (o script só apaga o registro):`);
+      for (const f of r.taskFiles) console.log(`    [${f.storageProvider}] ${f.storageKey}`);
+    }
     console.log(`  outbox: ${c.eventosPendentesDoOutbox} evento(s) apagado(s)`);
     console.log(`  selos: ${c.selosParaCancelarEAnonimizar} cancelado(s) e sem o nome ("Titular removido a pedido")`);
+    console.log(`  certificados de curso: ${c.certificadosParaCancelarEAnonimizar} cancelado(s), sem nome e sem RGM`);
     console.log(`  mantém (obrigação legal, sem ligação com a pessoa): ${c.registrosDeAcessoMantidos} registro(s) de acesso, ${c.registrosDeAuditoriaMantidos} de auditoria`);
   } else console.log('  marca a conta como encerrada (nada é apagado agora)');
   console.log(apply ? 'Concluído. Registre no log de pedidos e responda pelo modelo E.' : 'Para executar, repita com --apply.');

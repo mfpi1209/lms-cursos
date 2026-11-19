@@ -91,7 +91,7 @@ describe('revisão pré-gravação: as correções do relatório estão no docum
         expect(norm(plano!.line)).toBe(norm(nova));
         if (mais) {
           // plano novo: gesto contido
-          expect(['nods slowly, warm', 'hands relaxed at the waist, calm, small nods']).toContain(plano!.motionPrompt);
+          expect(['nods slowly, warm', 'nods slightly, warm smile']).toContain(plano!.motionPrompt);
           expect(plano!.layout).toBe('presenter');
         }
         // a fala da cena é a soma dos planos

@@ -206,3 +206,45 @@ export function toWebVtt(cues: CaptionCue[]): string {
     .join('\n\n');
   return `WEBVTT\n\n${body}${body ? '\n' : ''}`;
 }
+
+/* ---------------- leitura do WebVTT (QA e prévia: o tempo da fala a partir da legenda já gravada) ---------------- */
+
+/** Lê um WebVTT (o que `toWebVtt` escreve, com ou sem número da legenda e sem estilos): legendas em ordem. */
+export function parseWebVtt(vtt: string): CaptionCue[] {
+  const time = (s: string): number => {
+    const p = s.trim().replace(',', '.').split(':').map(Number);
+    return p.length === 3 ? p[0]! * 3600 + p[1]! * 60 + p[2]! : p[0]! * 60 + (p[1] ?? 0);
+  };
+  const cues: CaptionCue[] = [];
+  for (const block of vtt.replace(/^﻿/, '').split(/\r?\n\s*\r?\n/)) {
+    const lines = block.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const at = lines.findIndex((l) => l.includes('-->'));
+    if (at < 0) continue;
+    const [a, b] = lines[at]!.split('-->');
+    const start = time(a!);
+    const end = time((b ?? '').trim().split(/\s+/)[0] ?? '');
+    const text = lines.slice(at + 1).join(' ').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    if (text && Number.isFinite(start) && Number.isFinite(end) && end > start) cues.push({ start, end, text });
+  }
+  return cues.sort((x, y) => x.start - y.start);
+}
+
+/**
+ * Palavras com tempo a partir das legendas: dentro de cada legenda o tempo é repartido pelas palavras em proporção
+ * ao número de letras (+1 pelo espaço). O erro é de fração de segundo (uma legenda dura no máximo ~5 s): serve para a
+ * prévia e a conferência de sincronia; a montagem de verdade usa o alinhamento exato da narração.
+ */
+export function wordsFromCues(cues: ReadonlyArray<CaptionCue>): CaptionWord[] {
+  const out: CaptionWord[] = [];
+  for (const c of cues) {
+    const ws = c.text.split(/\s+/).filter(Boolean);
+    const total = ws.reduce((n, w) => n + w.length + 1, 0) || 1;
+    let acc = 0;
+    for (const w of ws) {
+      const start = c.start + ((c.end - c.start) * acc) / total;
+      acc += w.length + 1;
+      out.push({ text: w, start, end: c.start + ((c.end - c.start) * acc) / total });
+    }
+  }
+  return out;
+}

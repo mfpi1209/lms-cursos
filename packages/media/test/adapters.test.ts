@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
-import { CINEMATIC_SAFETY_SUFFIX, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, HeyGenError, clampCinematicDuration, isTransparentUnsupportedError, verifyHeyGenWebhookSignature, sceneHashSync, simulatedSilenceWav, sniffMime, mediaConfigFromEnv } from '../src';
+import { CINEMATIC_SAFETY_SUFFIX, MOTION_PROMPT_MAX, MOTION_SAFETY_SUFFIX, motionPromptWithSafety, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, HeyGenError, clampCinematicDuration, isTransparentUnsupportedError, verifyHeyGenWebhookSignature, sceneHashSync, simulatedSilenceWav, sniffMime, mediaConfigFromEnv } from '../src';
 
 type Call = { url: string; init: RequestInit };
 function fakeFetch(handler: (url: string, init: RequestInit) => Response | Promise<Response>) {
@@ -211,7 +211,7 @@ describe('expressividade (HeyGen v3 + ElevenLabs v4)', () => {
     const hg = new HeyGenAdapter('k', 'https://api.test', fetch);
     await hg.createAvatarVideo({ title: 't', avatarId: 'a', audioAssetId: 'aud', engine: 'avatar_iv', expressiveness: 'high', motionPrompt: 'nods and opens hands, warm', removeBackground: true, backgroundColor: '#EFE6D8', idempotencyKey: 'k1' });
     const b = JSON.parse(String(calls[0]!.init.body));
-    expect(b).toMatchObject({ engine: { type: 'avatar_iv' }, expressiveness: 'high', motion_prompt: 'nods and opens hands, warm', remove_background: true, background: { type: 'color', value: '#EFE6D8' } });
+    expect(b).toMatchObject({ engine: { type: 'avatar_iv' }, expressiveness: 'high', motion_prompt: `nods and opens hands, warm, ${MOTION_SAFETY_SUFFIX}`, remove_background: true, background: { type: 'color', value: '#EFE6D8' } });
     await hg.createAvatarVideo({ title: 't', avatarId: 'a', script: 'oi', voiceId: 'v', engine: 'avatar_v', expressiveness: 'high', idempotencyKey: 'k2' });
     expect(JSON.parse(String(calls[1]!.init.body)).expressiveness).toBeUndefined();
   });
@@ -224,5 +224,29 @@ describe('expressividade (HeyGen v3 + ElevenLabs v4)', () => {
     expect(b4.previous_text).toBe('antes');
     await el.synthesize({ text: 'Oi', voiceId: 'v', modelId: 'eleven_multilingual_v2' });
     expect(JSON.parse(String(calls[1]!.init.body)).voice_settings).toMatchObject({ style: 0, use_speaker_boost: true });
+  });
+});
+
+describe('pedido de movimento do HeyGen: sufixo de mãos contidas', () => {
+  it('acrescenta o sufixo fixo ao gesto e respeita o limite do campo', () => {
+    expect(motionPromptWithSafety('nods slightly, warm smile')).toBe(`nods slightly, warm smile, ${MOTION_SAFETY_SUFFIX}`);
+    expect(motionPromptWithSafety('opens both palms.')).toBe(`opens both palms, ${MOTION_SAFETY_SUFFIX}`);
+    const max = motionPromptWithSafety('x'.repeat(200));
+    expect(max.length).toBeLessThanOrEqual(MOTION_PROMPT_MAX);
+    expect(max.endsWith(MOTION_SAFETY_SUFFIX)).toBe(true);
+    expect(MOTION_SAFETY_SUFFIX).toMatch(/no watch.*no bracelet.*no objects in hands/);
+  });
+
+  it('o corpo enviado ao HeyGen leva o sufixo; sem gesto, o campo continua ausente', async () => {
+    const bodies: any[] = [];
+    const fetchImpl = (async (_u: string, init: RequestInit) => {
+      bodies.push(JSON.parse(String(init.body)));
+      return new Response(JSON.stringify({ data: { video_id: 'v1', status: 'pending' } }), { status: 200 });
+    }) as unknown as typeof fetch;
+    const a = new HeyGenAdapter('k', 'https://api.test', fetchImpl);
+    await a.createAvatarVideo({ title: 't', avatarId: 'a', script: 'oi', voiceId: 'v', motionPrompt: 'tilts head, thoughtful', idempotencyKey: 'k1' });
+    await a.createAvatarVideo({ title: 't', avatarId: 'a', script: 'oi', voiceId: 'v', idempotencyKey: 'k2' });
+    expect(bodies[0].motion_prompt).toBe(`tilts head, thoughtful, ${MOTION_SAFETY_SUFFIX}`);
+    expect('motion_prompt' in bodies[1]).toBe(false);
   });
 });

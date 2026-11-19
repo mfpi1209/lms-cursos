@@ -3,8 +3,8 @@ import { versionRuntime } from '@/server/lesson-runtime';
 import { LESSON_RANGE_MIN_DIFF_S, formatCourseVideo, formatLessonVideo, seriesPartOf, spokenClock } from '@lms/course-schema';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, Play, RotateCcw, Sparkles } from 'lucide-react';
-import { getDb, learning, recognition, DomainError } from '@lms/db';
-import { allLessons, ownImageUrl, type Lesson } from '@lms/course-schema';
+import { getDb, learning, recognition, submissions, certificates, DomainError } from '@lms/db';
+import { allLessons, freeCourseWorkloadMinutes, hasCertificate, isFreeCourse, ownImageUrl, type Lesson } from '@lms/course-schema';
 import { computeProgress } from '@lms/course-engine';
 import { requireViewer, HttpError } from '@/server/viewer';
 import { requireOwnEnrollment } from '@/server/learner';
@@ -15,7 +15,12 @@ import { ChapterCard, CourseArt, ctaOutline, ctaPrimary, lessonThumbUrl, Segment
 import { CourseMenu } from '../_components/course-menu';
 import { CourseTrailCard } from '../_components/course-trail-card';
 import { PendingMissions } from '../_components/pending-missions';
+import { TaskDeliveries } from '../_components/task-deliveries';
+import { CourseMaterials } from '../_components/course-materials';
+import { CourseCertificate } from '../_components/course-certificate';
 import { shortTitleFor } from '../_lib/short-titles';
+import { buildFreeCourseOutline, freeCourseCta } from '../_lib/free-course';
+import { FreeCourseHeader, FreeCourseModules, FreeCourseRemaining } from '../_components/free-course-view';
 import { cn, formatDate } from '@/lib/utils';
 
 export async function generateMetadata({ params }: { params: Promise<{ enrollmentId: string }> }) {
@@ -100,8 +105,40 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
   const summary = document.learnerSummary?.trim() || document.description;
   // trilha do curso: conquista deste curso e o caminho até o Selo DNA Work da trilha
   const pendingMissions = await learning.pendingMissions(db, { enrollmentId });
+  // tarefas com entrega do curso e a situação de cada uma (a correção chega depois da aula)
+  const taskDeliveries = await submissions.learnerTasks(db, { enrollmentId });
   const seriesPart = seriesPartOf(course.slug, course.trail);
   const trailStatus = course.trail ? await recognition.trailStatus(db, { workspaceId: course.workspaceId, userId: viewer.user.id, trail: course.trail }) : null;
+  // Curso livre (EaD): cabeçalho com carga horária e a lista de MÓDULOS no lugar da capa e do trilho de capítulos das pílulas.
+  const free = isFreeCourse(document)
+    ? buildFreeCourseOutline({
+        document,
+        lessons: Object.fromEntries(lessons.map((l, i) => [l.id, statuses[i]!])),
+        answers: await learning.courseAnswers(db, { enrollmentId }),
+        missions: await learning.missionRecords(db, { enrollmentId }),
+        optionalLessonIds: enrollment.optionalLessonIds,
+        completed: isCompleted,
+      })
+    : null;
+  // Certificado de conclusão: emite o que já cumpria a regra antes (idempotente, nunca lança) e lê a situação
+  let certificateCard: React.ReactNode = null;
+  if (hasCertificate(document)) {
+    await certificates.tryIssue(db, enrollmentId);
+    const cs = await certificates.statusForEnrollment(db, enrollmentId);
+    if (cs.offered) {
+      certificateCard = <CourseCertificate enrollmentId={enrollmentId} issued={cs.certificate ? { code: cs.certificate.code, issuedAt: cs.certificate.issuedAt } : null} pending={cs.rule.pending} {...(primaryHref ? { resumeHref: primaryHref } : {})} />;
+    }
+  }
+  const restartHref = firstLesson && (completedCount > 0 || attempts.length > 0) && !(nextStatus?.kind === 'in_progress' && nextIdx === 0) ? `/aprender/${enrollmentId}/aulas/${firstLesson.id}?reiniciar=1` : undefined;
+  const courseMenu = (
+    <CourseMenu
+      restartLesson={nextStatus?.kind === 'in_progress' && nextLesson ? { label: `Reiniciar aula ${nextIdx + 1}`, href: `/aprender/${enrollmentId}/aulas/${nextLesson.id}?reiniciar=1` } : undefined}
+      restartFromStart={restartHref}
+      chaptersHref="#capitulos"
+      recap={recap}
+      enrollmentId={enrollmentId}
+    />
+  );
 
   return (
     <div className="space-y-12">
@@ -111,7 +148,26 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
         </Link>
       </nav>
 
+      {free && (
+        <>
+          <FreeCourseHeader
+            title={course.title}
+            {...(summary ? { summary } : {})}
+            {...(document.branding.presenterName?.trim() || document.presentation.avatarName?.trim() ? { presenter: (document.branding.presenterName?.trim() || document.presentation.avatarName?.trim())! } : {})}
+            {...(ownImageUrl(document.presentation.avatarPreviewUrl) || heroThumb ? { photo: (ownImageUrl(document.presentation.avatarPreviewUrl) || heroThumb)! } : {})}
+            workloadMinutes={freeCourseWorkloadMinutes(document)}
+            certificate={hasCertificate(document)}
+            outline={free}
+            {...(primaryHref ? { primary: { href: primaryHref, label: freeCourseCta({ isDone: isCompleted || !nextLesson, started: attempts.length > 0, nextModuleIndex: free.next ? free.next.moduleIndex - 1 : -1 }) } } : {})}
+          >
+            {courseMenu}
+          </FreeCourseHeader>
+          <FreeCourseRemaining outline={free} />
+        </>
+      )}
+
       {/* Capa estilo serviço de vídeo: um quadro da próxima aula ocupando a capa, título e os dois botões que importam. */}
+      {!free && (
       <header className="relative isolate overflow-hidden rounded-[22px] border border-line bg-[#0f1030] text-white" data-testid="course-hero">
         {heroThumb ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -159,13 +215,7 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
                 Ver conteúdo novo
               </Link>
             )}
-            <CourseMenu
-              restartLesson={nextStatus?.kind === 'in_progress' && nextLesson ? { label: `Reiniciar aula ${nextIdx + 1}`, href: `/aprender/${enrollmentId}/aulas/${nextLesson.id}?reiniciar=1` } : undefined}
-              restartFromStart={firstLesson && (completedCount > 0 || attempts.length > 0) && !(nextStatus?.kind === 'in_progress' && nextIdx === 0) ? `/aprender/${enrollmentId}/aulas/${firstLesson.id}?reiniciar=1` : undefined}
-              chaptersHref="#capitulos"
-              recap={recap}
-              enrollmentId={enrollmentId}
-            />
+            {courseMenu}
           </div>
           {newIdx >= 0 && (
             <p className="text-sm text-white/75" data-testid="course-new-note">
@@ -179,12 +229,20 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
           )}
         </div>
       </header>
+      )}
+
+      {isCompleted && certificateCard}
+
+      {taskDeliveries.length > 0 && <TaskDeliveries enrollmentId={enrollmentId} items={taskDeliveries} />}
 
       {pendingMissions.length > 0 && <PendingMissions enrollmentId={enrollmentId} items={pendingMissions} />}
 
       {trailStatus && <CourseTrailCard status={trailStatus} courseDone={isCompleted} courseLabel={shortTitleFor(course.id, course.title)} {...(seriesPart ? { part: { n: seriesPart.part, total: seriesPart.total } } : {})} />}
 
+      {free && <FreeCourseModules outline={free} enrollmentId={enrollmentId} />}
+
       {/* Capítulos: um trilho por módulo, com a miniatura de cada aula. */}
+      {!free && (
       <section id="capitulos" aria-labelledby="lessons-heading" className="scroll-mt-6 space-y-8" data-testid="lesson-list">
         <h2 id="lessons-heading" className="text-[32px] leading-tight text-fg">Capítulos</h2>
         {document.modules.filter((m) => m.lessons.length > 0).map((m, mi) => (
@@ -218,6 +276,11 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
           </div>
         ))}
       </section>
+      )}
+
+      {!isCompleted && certificateCard}
+
+      <CourseMaterials materials={document.materials ?? []} modules={document.modules} />
 
       {report && (
         <section aria-labelledby="objectives-heading" className="space-y-4">

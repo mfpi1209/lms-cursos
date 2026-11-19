@@ -267,7 +267,7 @@ export function objetivoVoce(curso: CursoPacote, aula: AulaDoPacote): string {
 /* ------------------------------------------------------------------ */
 
 /** Gestos seguros (sem mãos soltas, objetos nem sinais): o avatar gera mal "opens both palms" e parecidos. */
-export const GESTOS_SEGUROS = ['nods slowly, warm', 'hands relaxed at the waist, calm, small nods', 'leans in slightly, curious', 'relaxes the shoulders and smiles, reassuring'] as const;
+export const GESTOS_SEGUROS = ['nods slowly, warm', 'nods slightly, warm smile', 'leans in slightly, curious', 'relaxes the shoulders and smiles, reassuring'] as const;
 export const GESTO_ABERTURA = 'smiles softly, welcoming';
 export const GESTO_CHAMADA = 'tilts the head slightly, inviting';
 export const GESTOS_PROIBIDOS_RE = /opens? both palms|both hands|moves both|brings both|hand on|finger|point|wave|thumb/i;

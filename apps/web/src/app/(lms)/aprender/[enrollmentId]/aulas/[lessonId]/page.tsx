@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { DomainError, getDb, identity, learning, recognition } from '@lms/db';
-import { findLesson, trailSlug } from '@lms/course-schema';
+import { DomainError, certificates, getDb, identity, learning, recognition } from '@lms/db';
+import { findLesson, hasCertificate, trailSlug } from '@lms/course-schema';
 import { requireViewer, HttpError } from '@/server/viewer';
 import { requireOwnEnrollment } from '@/server/learner';
 import { learnerTabTitle } from '@/server/learner-metadata';
@@ -77,6 +77,11 @@ export default async function LessonPage({
       const note = trailSealNote({ ...ts, courses: ts.courses.map((c) => (c.courseId === enr.course.id ? { ...c, done: true } : c)) }, 'parte');
       platform.courseTrail = { ...platform.courseTrail, series: true, sealNote: note };
     }
+  }
+  // certificado de conclusão: o player mostra "Ver meu certificado" (já emitido ou emitido ao fechar a regra) ou o aviso do que falta
+  if (hasCertificate(enr.document)) {
+    const cs = await certificates.statusForEnrollment(getDb(), enrollmentId);
+    if (cs.offered) platform.certificate = { courseHref: `/aprender/${enrollmentId}`, ...(cs.certificate ? { code: cs.certificate.code } : {}) };
   }
   if (identity.canEdit(viewer.role) && enr.course.workspaceId === viewer.workspace.id) platform.studioHref = `/estudio/cursos/${enr.course.id}/aulas/${lessonId}`;
 

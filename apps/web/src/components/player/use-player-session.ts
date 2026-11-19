@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { backAvailability, type AssessmentOutcome, type AttemptState, type Intent, type NavigationTarget, type ProgressSummary } from '@lms/course-engine';
-import type { AnyNode, Lesson, MediaRef, MissionStatus, RichTextDocument } from '@lms/course-schema';
+import type { AnyNode, Lesson, MediaRef, MissionStatus, RichTextDocument, TaskStatus } from '@lms/course-schema';
+import type { TaskRecordView } from './task-delivery';
 import { ApiError, newEventId } from '@/lib/api';
 import type { PlayerDriver, PlayerStart, PlayerStepResult } from './types';
 import { missionAckAnnouncement } from './immersive/scene-flow';
@@ -58,6 +59,10 @@ export interface SavedComposition {
   mission?: MissionStatus;
   /** missão: o que a pessoa tocou agora (difere de `mission` quando o servidor manteve "Já experimentei") */
   requested?: MissionStatus;
+  /** tarefa com entrega recém-enviada: a situação que o servidor devolveu (`submitted`, ou `approved` na correção automática) */
+  task?: TaskStatus;
+  /** tarefa: a entrega como ficou no servidor (ausente na prévia) */
+  taskRecord?: TaskRecordView;
 }
 
 /** O que o servidor deixou valendo para uma missão (por cena): fonte única do chip final e da confirmação. */
@@ -109,6 +114,8 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
   const [saved, setSaved] = useState<SavedComposition | null>(null);
   const [missions, setMissions] = useState<MissionResults>({});
   const [announce, setAnnounce] = useState('');
+  /** código do certificado emitido nesta sessão (a conclusão da aula acabou de fechar a regra) */
+  const [certificateCode, setCertificateCode] = useState<string | null>(null);
   /** o aluno já clicou para avançar: o vídeo da próxima cena pode tocar sozinho */
   const [gesture, setGesture] = useState(false);
 
@@ -161,6 +168,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
     (sub: Submission, res: PlayerStepResult) => {
       setSession((prev) => ({ state: res.state, revision: res.revision, progress: res.progress, attemptNumber: prev?.attemptNumber ?? 1 }));
       setConflict(false);
+      if (res.certificate?.code) setCertificateCode(res.certificate.code);
       const node = findNode(lesson, sub.nodeId);
       const intent = sub.intent;
       if (intent.kind === 'choose' && node?.type === 'choice') {
@@ -186,18 +194,28 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
       const missionSaved = intent.kind === 'mission' && node?.type === 'mission';
       const missionNow = missionSaved && intent.kind === 'mission' ? { status: res.mission?.status ?? intent.status, note: res.mission ? (res.mission.note ?? '') : (intent.status === 'done' ? (intent.note ?? '').trim() : '') } : null;
       if (missionNow) setMissions((prev) => ({ ...prev, [sub.nodeId]: { status: missionNow.status, note: missionNow.note || null } }));
+      // entrega enviada agora (não o "seguir com a entrega que já existe"): a confirmação fica até "Continuar aula".
+      // O registro completo só vem na resposta original; num reenvio do mesmo evento (replay) vale só a situação.
+      const taskRecord = res.task?.record && typeof res.task.record.link === 'string' ? res.task.record : undefined;
+      const taskSent = intent.kind === 'submit' && node?.type === 'task' && !intent.keep ? { status: res.task?.record?.status ?? (node.review === 'auto' ? ('approved' as const) : ('submitted' as const)), record: taskRecord } : null;
       setSaved(
         composed && intent.kind === 'reflect'
           ? { fromNodeId: sub.nodeId, toNodeId: res.toNodeId, text: intent.text.trim() }
           : missionNow && intent.kind === 'mission'
             ? { fromNodeId: sub.nodeId, toNodeId: res.toNodeId, text: missionNow.note, mission: missionNow.status, requested: intent.status }
-            : null,
+            : taskSent
+              ? { fromNodeId: sub.nodeId, toNodeId: res.toNodeId, text: '', task: taskSent.status, ...(taskSent.record ? { taskRecord: taskSent.record } : {}) }
+              : null,
       );
       // "Continuar"/"Pular vídeo" não registram resposta: só anunciam a próxima cena.
       const nextTitle = res.transitioned ? findNode(lesson, res.toNodeId)?.title?.trim() : undefined;
       const nextCopy = nextTitle ? `Próxima cena: ${nextTitle}${/[.!?…]$/.test(nextTitle) ? '' : '.'}` : 'Próxima cena.';
       if (composed) {
         setAnnounce('Resposta salva no Meu roteiro.');
+        return;
+      }
+      if (taskSent) {
+        setAnnounce(taskSent.status === 'approved' ? 'Entrega enviada e aprovada.' : 'Entrega enviada. Em correção.');
         return;
       }
       if (missionNow && intent.kind === 'mission') {
@@ -344,6 +362,7 @@ export function usePlayerSession(lesson: Lesson, driver: PlayerDriver, opts: { /
     saved,
     /** o que o servidor deixou valendo em cada missão registrada nesta sessão */
     missions,
+    certificateCode,
     /** "Continuar aula": tira a confirmação e mostra a cena seguinte */
     dismissSaved: () => setSaved(null),
     announce,

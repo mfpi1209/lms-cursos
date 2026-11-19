@@ -1,0 +1,11 @@
+{
+  "curso": "crs_k56estb8rf34g6s2",
+  "titulo": "Dinheiro no controle",
+  "materiais": [
+    {"id":"orcamento-30min","titulo":"Planilha de orçamento em 30 minutos","descricao":"Modelo com as quatro colunas (categoria, previsto, real e diferença) e o orçamento da Bia como exemplo. Use na prática do módulo 1.","categoria":"modelo","modulo":1,"fonte":"orcamento-30min.html","formato":"pdf"},
+    {"id":"quanto-custa-cada-divida","titulo":"Quanto custa cada dívida","descricao":"Resumo com as contas da aula: juro composto, cheque especial, parcelado e CET. Consulte antes de aceitar qualquer crédito.","categoria":"resumo","modulo":2,"fonte":"quanto-custa-cada-divida.html","formato":"pdf"},
+    {"id":"roteiro-negociacao","titulo":"Lista de dívidas e roteiro de negociação","descricao":"Para preencher: sua lista de dívidas, a ordem de pagar e as cinco perguntas para negociar com o credor.","categoria":"modelo","modulo":3,"fonte":"roteiro-negociacao.html","formato":"pdf"},
+    {"id":"golpes-pix-boleto","titulo":"Como reconhecer golpe de Pix e boleto","descricao":"Infográfico com o que conferir antes de confirmar e as três regras contra golpe. Salve no celular.","categoria":"infografico","modulo":4,"fonte":"golpes-pix-boleto.html","formato":"png"},
+    {"id":"reserva-e-metas","titulo":"Checklist da reserva e metas do ano","descricao":"Passo a passo para começar a reserva de emergência e transformar desejos em metas com valor e prazo.","categoria":"checklist","modulo":5,"fonte":"reserva-e-metas.html","formato":"pdf"}
+  ]
+}

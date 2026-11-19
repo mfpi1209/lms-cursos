@@ -323,7 +323,7 @@ export class KitError extends Error {
   }
 }
 
-const ZONE_ORDER: Record<CameraZone, number> = { center: 0, left: 1, right: 2 };
+const ZONE_ORDER: Record<CameraZone, number> = { left: 0, right: 1, center: 2 };
 
 /**
  * Câmeras do instrutor no estúdio do kit, prontas para a apresentação: todas

@@ -13,6 +13,7 @@ COPY packages/course-engine/package.json packages/course-engine/
 COPY packages/db/package.json packages/db/
 COPY packages/ai/package.json packages/ai/
 COPY packages/media/package.json packages/media/
+COPY packages/email/package.json packages/email/
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS build

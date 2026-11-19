@@ -62,8 +62,14 @@ export interface UserDataExport {
   evidencias: Array<Record<string, unknown>>;
   missoes: Array<Record<string, unknown>>;
   historicoDeMissoes: Array<Record<string, unknown>>;
+  /** entregas de tarefa: o link enviado, a situação e o comentário do avaliador */
+  entregas: Array<Record<string, unknown>>;
+  historicoDeEntregas: Array<Record<string, unknown>>;
+  /** arquivos enviados nas entregas (só os dados do arquivo; o conteúdo é pedido à parte) */
+  arquivosDeEntrega: Array<Record<string, unknown>>;
   checagensDeTrilha: Array<Record<string, unknown>>;
   selos: Array<Record<string, unknown>>;
+  certificados: Array<Record<string, unknown>>;
   auditoria: Array<Record<string, unknown>>;
   registrosDeAcesso: Array<Record<string, unknown>>;
   eventosPendentes: Array<Record<string, unknown>>;
@@ -100,8 +106,16 @@ export async function collectUserData(db: DbOrTx, email: string, now: Date = new
   const missions = await db.select().from(s.missionResponses).where(eq(s.missionResponses.userId, uid)).orderBy(asc(s.missionResponses.createdAt));
   const missionIds = missions.map((m) => m.id);
   const missionEvents = missionIds.length ? await db.select().from(s.missionResponseEvents).where(inArray(s.missionResponseEvents.responseId, missionIds)).orderBy(asc(s.missionResponseEvents.createdAt)) : [];
+  const tasks = await db.select().from(s.taskSubmissions).where(eq(s.taskSubmissions.userId, uid)).orderBy(asc(s.taskSubmissions.createdAt));
+  const taskIds = tasks.map((t) => t.id);
+  const taskEvents = taskIds.length ? await db.select().from(s.taskSubmissionEvents).where(inArray(s.taskSubmissionEvents.submissionId, taskIds)).orderBy(asc(s.taskSubmissionEvents.createdAt)) : [];
+  const taskFiles = await db
+    .select({ id: s.assets.id, nome: s.assets.originalName, tipo: s.assets.mimeType, tamanhoEmBytes: s.assets.sizeBytes, enviadoEm: s.assets.createdAt, entrega: s.assets.metadata })
+    .from(s.assets)
+    .where(taskUploadsOf(uid));
   const checks = await db.select().from(s.trailCheckAttempts).where(eq(s.trailCheckAttempts.userId, uid)).orderBy(asc(s.trailCheckAttempts.createdAt));
   const badges = await db.select().from(s.trailBadges).where(eq(s.trailBadges.userId, uid)).orderBy(asc(s.trailBadges.issuedAt));
+  const certs = await db.select().from(s.courseCertificates).where(eq(s.courseCertificates.userId, uid)).orderBy(asc(s.courseCertificates.issuedAt));
   const audit = await db
     .select()
     .from(s.auditLogs)
@@ -123,8 +137,12 @@ export async function collectUserData(db: DbOrTx, email: string, now: Date = new
     evidencias: evidence,
     missoes: missions,
     historicoDeMissoes: missionEvents,
+    entregas: tasks,
+    historicoDeEntregas: taskEvents,
+    arquivosDeEntrega: taskFiles.map((f) => ({ ...f, entrega: f.entrega?.taskUpload ?? null })),
     checagensDeTrilha: checks,
     selos: badges,
+    certificados: certs,
     auditoria: audit,
     registrosDeAcesso: access,
     eventosPendentes: outbox,
@@ -154,8 +172,10 @@ export function summarizeUserData(d: UserDataExport): string {
     `- ${plural(d.matriculas.length, 'curso em que você está matriculado', 'cursos em que você está matriculado')}, ${completed} concluído${completed === 1 ? '' : 's'}.`,
     `- ${plural(d.tentativasDeAula.length, 'tentativa de aula registrada', 'tentativas de aula registradas')}.`,
     `- ${plural(d.missoes.length, 'missão registrada', 'missões registradas')}, ${notes} com nota escrita por você.`,
+    `- ${plural(d.entregas.length, 'entrega de tarefa enviada', 'entregas de tarefa enviadas')}, com ${plural(d.arquivosDeEntrega.length, 'arquivo', 'arquivos')}.`,
     `- ${plural(d.checagensDeTrilha.length, 'checagem final de trilha feita', 'checagens finais de trilha feitas')}.`,
     `- ${plural(d.selos.length, 'selo', 'selos')}${d.selos.length ? ': ' + d.selos.map((b) => `${String(b.trailName)} (${b.revokedAt ? 'cancelado' : 'válido'}, código ${String(b.code)})`).join('; ') : ''}.`,
+    `- ${plural(d.certificados.length, 'certificado de curso', 'certificados de curso')}${d.certificados.length ? ': ' + d.certificados.map((c) => `${String(c.courseTitle)} (${c.revokedAt ? 'cancelado' : 'válido'}, código ${String(c.code)})`).join('; ') : ''}.`,
     '',
     'Registros técnicos',
     `- ${plural(d.sessoesAtivas.length, 'sessão ativa (entrada em um aparelho)', 'sessões ativas (entradas em aparelhos)')}, com endereço de IP e navegador.`,
@@ -337,12 +357,21 @@ export interface ErasureCounts {
   evidencias: number;
   missoes: number;
   historicoDeMissoes: number;
+  entregas: number;
+  /** arquivos enviados nas entregas (a linha some com a conta; o objeto no storage é apagado por quem roda o script) */
+  arquivosDeEntrega: number;
   checagensDeTrilha: number;
   selosParaCancelarEAnonimizar: number;
+  certificadosParaCancelarEAnonimizar: number;
   eventosPendentesDoOutbox: number;
   /** ficam, sem chave para a pessoa (obrigação legal / prestação de contas) */
   registrosDeAcessoMantidos: number;
   registrosDeAuditoriaMantidos: number;
+}
+
+/** Arquivos que a pessoa enviou em entregas de tarefa (assets `document` com `metadata.taskUpload`). */
+function taskUploadsOf(userId: string) {
+  return and(eq(s.assets.createdBy, userId), sql`${s.assets.metadata} ? 'taskUpload'`)!;
 }
 
 export async function countFootprint(db: DbOrTx, userId: string): Promise<ErasureCounts> {
@@ -358,8 +387,11 @@ export async function countFootprint(db: DbOrTx, userId: string): Promise<Erasur
     evidencias: enrollmentIds.length ? await n(db.select({ n: sql<number>`count(*)` }).from(s.objectiveEvidence).where(inArray(s.objectiveEvidence.enrollmentId, enrollmentIds))) : 0,
     missoes: missionIds.length,
     historicoDeMissoes: missionIds.length ? await n(db.select({ n: sql<number>`count(*)` }).from(s.missionResponseEvents).where(inArray(s.missionResponseEvents.responseId, missionIds))) : 0,
+    entregas: await n(db.select({ n: sql<number>`count(*)` }).from(s.taskSubmissions).where(eq(s.taskSubmissions.userId, userId))),
+    arquivosDeEntrega: await n(db.select({ n: sql<number>`count(*)` }).from(s.assets).where(taskUploadsOf(userId))),
     checagensDeTrilha: await n(db.select({ n: sql<number>`count(*)` }).from(s.trailCheckAttempts).where(eq(s.trailCheckAttempts.userId, userId))),
     selosParaCancelarEAnonimizar: await n(db.select({ n: sql<number>`count(*)` }).from(s.trailBadges).where(eq(s.trailBadges.userId, userId))),
+    certificadosParaCancelarEAnonimizar: await n(db.select({ n: sql<number>`count(*)` }).from(s.courseCertificates).where(eq(s.courseCertificates.userId, userId))),
     eventosPendentesDoOutbox: await n(db.select({ n: sql<number>`count(*)` }).from(s.outboxEvents).where(outboxOf(userId, enrollmentIds))),
     registrosDeAcessoMantidos: await n(db.select({ n: sql<number>`count(*)` }).from(s.accessLogs).where(eq(s.accessLogs.userId, userId))),
     registrosDeAuditoriaMantidos: await n(db.select({ n: sql<number>`count(*)` }).from(s.auditLogs).where(or(eq(s.auditLogs.actorId, userId), eq(s.auditLogs.entityId, userId), sql`${s.auditLogs.data}->>'userId' = ${userId}`))),
@@ -378,6 +410,11 @@ export interface ErasureResult {
   counts: ErasureCounts;
   /** ids dos selos tratados (cancelados e sem nome) */
   badgeIds: string[];
+  /**
+   * Arquivos de entrega cuja linha foi apagada com a conta: quem chama apaga o OBJETO no storage (este pacote não tem
+   * acesso ao storage). A lista também fica na auditoria (`user.delete`).
+   */
+  taskFiles: Array<{ storageProvider: string; storageKey: string }>;
 }
 
 /** Só alunos: conta com papel de equipe (admin/autor/revisor) não é apagada por aqui (tem autoria ligada ao id). */
@@ -401,7 +438,8 @@ export async function eraseUser(db: Database, input: { email: string; apply: boo
   await assertStudentOnly(db, u.id);
   const counts = await countFootprint(db, u.id);
   const badges = await db.select({ id: s.trailBadges.id, revokedAt: s.trailBadges.revokedAt }).from(s.trailBadges).where(eq(s.trailBadges.userId, u.id));
-  const base = { mode: 'apagar' as const, userId: u.id, counts, badgeIds: badges.map((b) => b.id) };
+  const taskFiles = await db.select({ storageProvider: s.assets.storageProvider, storageKey: s.assets.storageKey }).from(s.assets).where(taskUploadsOf(u.id));
+  const base = { mode: 'apagar' as const, userId: u.id, counts, badgeIds: badges.map((b) => b.id), taskFiles };
   if (!input.apply) return { ...base, applied: false };
 
   await db.transaction(async (tx) => {
@@ -411,15 +449,28 @@ export async function eraseUser(db: Database, input: { email: string; apply: boo
       await tx.update(s.trailBadges).set({ revokedAt: b.revokedAt ?? now, holderName: REMOVED_HOLDER_NAME }).where(eq(s.trailBadges.id, b.id));
       await tx.insert(s.auditLogs).values({ id: newId('aud'), actorId: input.actorId ?? null, action: 'badge.revoke', entityType: 'trail_badge', entityId: b.id, data: { userId: u.id, motivo: 'exclusão da conta a pedido do titular', via: input.via ?? 'dados:apagar' } });
     }
+    // certificados de curso: cancelados e sem nome nem RGM (o código continua consultável e diz que foi cancelado)
+    const certs = await tx.select({ id: s.courseCertificates.id, revokedAt: s.courseCertificates.revokedAt }).from(s.courseCertificates).where(eq(s.courseCertificates.userId, u.id));
+    for (const c of certs) {
+      await tx
+        .update(s.courseCertificates)
+        .set({ revokedAt: c.revokedAt ?? now, revokedReason: 'exclusão da conta a pedido do titular', holderName: REMOVED_HOLDER_NAME, holderRgm: null })
+        .where(eq(s.courseCertificates.id, c.id));
+      await tx.insert(s.auditLogs).values({ id: newId('aud'), actorId: input.actorId ?? null, action: 'certificate.revoke', entityType: 'course_certificate', entityId: c.id, data: { userId: u.id, motivo: 'exclusão da conta a pedido do titular', via: input.via ?? 'dados:apagar' } });
+    }
     await tx.delete(s.outboxEvents).where(outboxOf(u.id, enrollmentIds));
+    // entregas de webhook ainda guardadas: o corpo tem o e-mail e o RGM da pessoa
+    await tx.delete(s.webhookDeliveries).where(sql`${s.webhookDeliveries.payload} #>> '{data,aluno,id}' = ${u.id}`);
     await tx.insert(s.auditLogs).values({
       id: newId('aud'),
       actorId: input.actorId ?? null,
       action: 'user.delete',
       entityType: 'user',
       entityId: u.id,
-      data: { motivo: 'pedido do titular', via: input.via ?? 'dados:apagar', selosCancelados: base.badgeIds.length, matriculas: counts.matriculas },
+      data: { motivo: 'pedido do titular', via: input.via ?? 'dados:apagar', selosCancelados: base.badgeIds.length, matriculas: counts.matriculas, entregas: counts.entregas, arquivosDeEntregaNoStorage: taskFiles.map((f) => f.storageKey) },
     });
+    // arquivos de entrega: a linha sai antes da conta (assets.created_by não tem cascata); a entrega e o histórico vão na cascata
+    await tx.delete(s.assets).where(taskUploadsOf(u.id));
     await tx.delete(s.user).where(eq(s.user.id, u.id));
   });
   return { ...base, applied: true };
@@ -432,7 +483,7 @@ export async function closeAccount(db: Database, input: { email: string; apply: 
   if (!u) throw new DomainError('NOT_FOUND', 'Não há conta com este e-mail.');
   await assertStudentOnly(db, u.id);
   const counts = await countFootprint(db, u.id);
-  const base = { mode: 'encerrar' as const, userId: u.id, counts, badgeIds: [] as string[] };
+  const base = { mode: 'encerrar' as const, userId: u.id, counts, badgeIds: [] as string[], taskFiles: [] as ErasureResult['taskFiles'] };
   if (!input.apply) return { ...base, applied: false };
   await db.transaction(async (tx) => {
     await tx.insert(s.accountClosures).values({ userId: u.id, reason: input.reason ?? 'pedido_do_titular' }).onConflictDoNothing();

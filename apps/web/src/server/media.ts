@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { DomainError, media } from '@lms/db';
-import { mediaSceneOf, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection } from '@lms/course-schema';
+import { mediaSceneOf, continuousTakeGroups, takeRetake, sceneUsesScreenRecording, CINEMATIC_MAX_SECONDS, cameraPlacementHashPart, clampFullFrameShots, directionNarration, findLesson, firstNarratedNodeId, nextDecisionQuestion, presentationFingerprint, resolveCameraPlacement, richTextToPlain, shotIsCinematic, singleShotPlacementParams, zoneCamerasOf, type BackdropFrame, type CourseDocument, type LessonGraph, type Presentation, type PresenterGrade, type SceneDirection, type Shot } from '@lms/course-schema';
+import { resolveScreenScene } from './media-screen';
 import { COMPOSE_PIPELINE_VERSION, ELEVENLABS_ADAPTER_VERSION, ElevenLabsAdapter, HEYGEN_ADAPTER_VERSION, HeyGenAdapter, describeMediaMode, directionLinesMatchSpoken, estimateMediaCostUsd, estimateNarrationSeconds, mediaConfigFromEnv, platformBrandName, resolveWatermark, sceneHashSync, singleShotAlphaKey, type MediaProviderConfig } from '@lms/media';
 
 let modeLogged = false;
@@ -142,8 +143,18 @@ export interface PartialReuse {
   estimatedUsd: number;
 }
 
-type ShotLike = { line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null };
-const shotReuseKey = (s: ShotLike) => JSON.stringify([s.line.replace(/\s+/g, ' ').trim(), s.cameraId ?? '', s.motionPrompt?.trim() ?? '', s.layout ?? 'presenter']);
+type ShotLike = { id?: string; line: string; cameraId?: string | null; motionPrompt?: string | null; layout?: string | null; slide?: unknown };
+/**
+ * Tomadas contínuas: o worker gera UM clipe por grupo de planos vizinhos na mesma câmera (`continuousTakeGroups`),
+ * então o reaproveitamento é por GRUPO (a chave do clipe vem da fala inteira do grupo, a câmera e o gesto do primeiro plano).
+ */
+const takeGroups = (shots: ShotLike[], ownAudio: boolean): ShotLike[][] =>
+  continuousTakeGroups(shots.map((s) => ({ line: s.line, cameraId: s.cameraId ?? undefined, layout: (s.layout ?? 'presenter') as Shot['layout'], slide: s.slide as Shot['slide'] })), { hasNarrationAudio: ownAudio }).map((g) => g.map((i) => shots[i]!));
+/** `retake` = direction.retake da cena; a variação da tomada entra na chave só quando > 0 (chaves antigas inalteradas). */
+const takeReuseKey = (g: ShotLike[], retake?: Record<string, number>) => {
+  const rt = takeRetake(retake, g.map((s) => s.id ?? ''));
+  return JSON.stringify([g.map((s) => s.line.replace(/\s+/g, ' ').trim()).join(' '), g[0]!.cameraId ?? '', g[0]!.motionPrompt?.trim() ?? '', g.length === 1 ? (g[0]!.layout ?? 'presenter') : 'take', ...(rt > 0 ? [rt] : [])]);
+};
 /** Menos palavras que isto e o worker funde o plano ao vizinho (MIN_UNIT_SECONDS 1,2 s a 2,5 palavras/s), mudando a chave do item pago. */
 const MIN_FRESH_SHOT_WORDS = 4;
 
@@ -157,28 +168,35 @@ export function directedPartialReuse(
    */
   fingerprintForPrevCameras?: string,
 ): PartialReuse | null {
-  const nextDir = next.jobInput.direction as { shots?: ShotLike[] } | undefined;
-  const prevDir = prev.input.direction as { shots?: ShotLike[] } | undefined;
+  const nextDir = next.jobInput.direction as { shots?: ShotLike[]; retake?: Record<string, number> } | undefined;
+  const prevDir = prev.input.direction as { shots?: ShotLike[]; retake?: Record<string, number> } | undefined;
   if (!nextDir?.shots?.length || !prevDir?.shots?.length) return null;
   if (prev.adapterVersion !== next.adapterVersion || prev.simulated !== simulated) return null;
   if ((prev.input.voiceId ?? null) !== (next.jobInput.voiceId ?? null) || prev.input.voiceProvider !== next.jobInput.voiceProvider || prev.input.avatarId !== next.jobInput.avatarId) return null;
   const fp = fingerprintForPrevCameras ?? next.jobInput.presentationFingerprint;
   if (!fp || prev.input.presentationFingerprint !== fp) return null;
+  const ownAudio = next.jobInput.voiceProvider === 'elevenlabs';
   const pool = new Map<string, number>();
-  for (const s of prevDir.shots) pool.set(shotReuseKey(s), (pool.get(shotReuseKey(s)) ?? 0) + 1);
+  for (const g of takeGroups(prevDir.shots, ownAudio)) pool.set(takeReuseKey(g, prevDir.retake), (pool.get(takeReuseKey(g, prevDir.retake)) ?? 0) + 1);
   const fresh: ShotLike[] = [];
-  for (const s of nextDir.shots) {
-    const k = shotReuseKey(s);
+  const freshGroups: ShotLike[][] = [];
+  for (const g of takeGroups(nextDir.shots, ownAudio)) {
+    const k = takeReuseKey(g, nextDir.retake);
     const left = pool.get(k) ?? 0;
     if (left > 0) pool.set(k, left - 1);
-    else fresh.push(s);
+    else {
+      fresh.push(...g);
+      freshGroups.push(g);
+    }
   }
   const reusedShots = nextDir.shots.length - fresh.length;
   if (reusedShots === 0) return null;
-  if (fresh.some((s) => s.layout === 'cinematic' || s.line.trim().split(/\s+/).filter(Boolean).length < MIN_FRESH_SHOT_WORDS)) return null;
+  if (freshGroups.some((g) => g.some((s) => s.layout === 'cinematic') || g.map((s) => s.line).join(' ').trim().split(/\s+/).filter(Boolean).length < MIN_FRESH_SHOT_WORDS)) return null;
   const text = fresh.map((s) => s.line.trim()).join(' ');
   const seconds = fresh.length ? estimateNarrationSeconds(text) : 0;
-  const chars = text.length;
+  // tomada refeita (só a variação mudou): o vídeo é novo (HeyGen), mas a voz do trecho já está paga (mesma fala) — não cobra caracteres
+  const prevPlain = new Set(takeGroups(prevDir.shots, ownAudio).map((g) => takeReuseKey(g)));
+  const chars = freshGroups.filter((g) => !prevPlain.has(takeReuseKey(g))).reduce((a, g) => a + g.map((s) => s.line.trim()).join(' ').length, 0);
   const estimatedUsd = fresh.length ? estimateMediaCostUsd({ elevenLabsChars: next.jobInput.voiceProvider === 'elevenlabs' ? chars : 0, heygenSeconds: seconds }) : 0;
   return { fromJobId: prev.jobId, reusedShots, newShots: fresh.length, chars, seconds, estimatedUsd };
 }
@@ -190,14 +208,64 @@ export function directedPartialReuse(
  * orientadora · DNA Work"). Fora do modo de zonas, nada (o hash das cenas de
  * antes não muda). Cada campo só existe quando se aplica.
  */
-export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string } } {
+/** Versão do desenho do painel do lado vazio (zone-panel.ts). Subir quando o desenho mudar: remonta só as cenas com painel. */
+export const ZONE_PANEL_VERSION = 'zone-panel-1';
+
+export function studioSceneOverlays(doc: Pick<CourseDocument, 'presentation' | 'branding'>, graph: Pick<LessonGraph, 'nodes' | 'edges' | 'startNodeId'>, nodeId: string, directed: boolean, env: NodeJS.ProcessEnv = process.env, direction?: Pick<SceneDirection, 'shots'>): { nextQuestion?: string; lowerThird?: { name: string; role?: string; brand?: string }; screenText?: string; screenTopics?: Array<{ text: string; cue?: string }>; panelVersion?: string } {
   if (!directed || !zoneCamerasOf(doc.presentation.cameras)) return {};
   const nextQuestion = nextDecisionQuestion(graph, nodeId);
   const name = doc.branding?.presenterName?.trim();
   const role = doc.branding?.presenterRole?.trim();
   const brand = platformBrandName(env.PLATFORM_BRAND, env);
   const lowerThird = name && firstNarratedNodeId(graph) === nodeId ? { name, ...(role ? { role } : {}), ...(brand ? { brand } : {}) } : undefined;
-  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}) };
+  const screenText = sceneScreenText(doc, graph, nodeId, direction);
+  const screenTopics = sceneScreenTopics(doc, graph, nodeId, direction);
+  // versão do painel do lado vazio: entra no hash só das cenas com painel, para remontar quando o desenho muda
+  const panel = screenText || screenTopics ? { panelVersion: ZONE_PANEL_VERSION } : {};
+  return { ...(nextQuestion ? { nextQuestion } : {}), ...(lowerThird ? { lowerThird } : {}), ...(screenText ? { screenText } : {}), ...(screenTopics ? { screenTopics } : {}), ...panel };
+}
+
+/** Limite do texto na tela que vai para o painel (o resto é cortado na montagem em até 3 linhas). */
+export const SCREEN_TEXT_MAX_CHARS = 140;
+
+/** Painel no lado livre só vale com a apresentadora num lado em TODOS os planos e sem pílulas/painel/cartão/slide. */
+function sidePanelApplies(doc: Pick<CourseDocument, 'presentation'>, direction?: Pick<SceneDirection, 'shots'>): boolean {
+  if (!direction?.shots.length) return false;
+  const cameras = doc.presentation.cameras ?? [];
+  for (const s of direction.shots) {
+    if ((s.layout ?? 'presenter') !== 'presenter' || s.slide) return false;
+    const zone = s.cameraId ? cameras.find((c) => c.id === s.cameraId)?.zone : undefined;
+    if (zone !== 'left' && zone !== 'right') return false;
+  }
+  return true;
+}
+
+/**
+ * Tópicos do painel dinâmico (`topics` do nó da cena; ver `parseSceneTopicsMarkdown`): mesma regra de zona do
+ * `sceneScreenText` (o "Texto na tela" vira o título). Só montagem: entra no hash da cena e no pedido, NUNCA nas
+ * chaves de reaproveitamento do clipe do HeyGen. Sem tópicos (ou cena que não se aplica): undefined = painel estático.
+ */
+export function sceneScreenTopics(doc: Pick<CourseDocument, 'presentation'>, graph: Pick<LessonGraph, 'nodes'>, nodeId: string, direction?: Pick<SceneDirection, 'shots'>): Array<{ text: string; cue?: string }> | undefined {
+  if (!sidePanelApplies(doc, direction)) return undefined;
+  const node = graph.nodes.find((n) => n.id === nodeId) as { type: string; topics?: Array<{ text: string; cue?: string }> } | undefined;
+  if (!node || (node.type !== 'scenario' && node.type !== 'content') || !node.topics?.length) return undefined;
+  const topics = node.topics.map((t) => ({ text: t.text.replace(/\s+/g, ' ').trim(), ...(t.cue?.trim() ? { cue: t.cue.replace(/\s+/g, ' ').trim() } : {}) })).filter((t) => t.text).slice(0, 8);
+  return topics.length ? topics : undefined;
+}
+
+/**
+ * "Texto na tela" do roteiro (`body` do nó V..; a importação grava `Texto na tela:` ou, sem ele, o título da
+ * cena) para o painel do lado livre do estúdio com zonas. Só vale em cena dirigida com a apresentadora num lado
+ * (todos os planos `presenter` numa câmera de zona esquerda/direita) e SEM pílulas/painel/cartão/slide no plano:
+ * com cartão, o texto já aparece nas pílulas. Texto igual ao título da cena (sem "Texto na tela") não vira painel.
+ */
+export function sceneScreenText(doc: Pick<CourseDocument, 'presentation'>, graph: Pick<LessonGraph, 'nodes'>, nodeId: string, direction?: Pick<SceneDirection, 'shots'>): string | undefined {
+  if (!sidePanelApplies(doc, direction)) return undefined;
+  const node = graph.nodes.find((n) => n.id === nodeId) as { type: string; title?: string; body?: unknown } | undefined;
+  if (!node || (node.type !== 'scenario' && node.type !== 'content')) return undefined;
+  const text = richTextToPlain(node.body as never).replace(/\s+/g, ' ').trim();
+  if (!text || text === (node.title ?? '').replace(/\s+/g, ' ').trim()) return undefined;
+  return text.length > SCREEN_TEXT_MAX_CHARS ? `${text.slice(0, SCREEN_TEXT_MAX_CHARS - 1).replace(/\s+\S*$/, '')}…` : text;
 }
 
 /**
@@ -223,6 +291,12 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
   }
   // com direção, a fala é a soma dos planos (o áudio é cortado nesses trechos); o roteiro enviado é ignorado
   const script = (direction ? directionNarration(direction) : (body.script ?? spoken)).trim();
+  // gravação de tela própria: tela cheia + narração em voz, SEM avatar (plano próprio; ver media-screen.ts)
+  if (sceneUsesScreenRecording(node as never)) {
+    if (!script) throw new DomainError('VALIDATION', 'O bloco não tem texto para narrar');
+    if (script.length > SCRIPT_MAX_CHARS) throw new DomainError('VALIDATION', `Roteiro acima de ${SCRIPT_MAX_CHARS.toLocaleString('pt-BR')} caracteres; divida a cena`);
+    return resolveScreenScene(node as never, { lessonId: body.lessonId, lessonTitle: found.lesson.title, body, script, cfg, env, watermarkBranding: doc.branding?.watermark });
+  }
   const pres = doc.presentation;
   const isPhoto = (pres.avatarType ?? 'photo_avatar') === 'photo_avatar';
   if (!script) throw new DomainError('VALIDATION', 'O bloco não tem texto para narrar');
@@ -252,8 +326,10 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
     backgroundColor: body.backgroundColor,
     backgroundAssetId: body.backgroundAssetId,
     resolution: '1080p',
-    engine: 'avatar_iv' as const,
-    expressiveness: isPhoto ? pres.expressiveness : undefined,
+    engine: (pres.avatarEngine ?? 'avatar_iv') as 'avatar_iii' | 'avatar_iv',
+    expressiveness: isPhoto && (pres.avatarEngine ?? 'avatar_iv') === 'avatar_iv' ? pres.expressiveness : undefined,
+    // só presente quando ligado (não muda o hash das cenas sem ele)
+    ...(pres.handsStill ? { handsStill: true } : {}),
     motionPrompt: motionPrompt || undefined,
     removeBackground: pres.removeBackground,
     elevenLabsModelId: body.voiceProvider === 'elevenlabs' ? cfg.elevenLabsModelId : undefined,
@@ -293,13 +369,13 @@ export function resolveSceneProduction(doc: CourseDocument, body: SceneProductio
   // só entra no hash/entrada quando se aplica
   const watermark = resolveWatermark(doc.branding?.watermark, env.PLATFORM_BRAND);
   // estúdio com zonas: pergunta a seguir (próximo nó é decisão) e letreiro com o nome (primeira cena da aula); só quando se aplicam
-  const studio = studioSceneOverlays(doc, found.lesson.graph, body.nodeId, !!direction, env);
+  const studio = studioSceneOverlays(doc, found.lesson.graph, body.nodeId, !!direction, env, direction);
   // cores dos gráficos montados (véu, pergunta a seguir, letreiro): só no vídeo dirigido e só quando o curso define
   const videoPalette = direction && doc.branding?.videoPalette ? { videoPalette: doc.branding.videoPalette } : {};
   const hashParams = direction
     ? {
         ...params,
-        direction: { version: direction.version, shots: effectiveShots },
+        direction: { version: direction.version, shots: effectiveShots, ...(direction.retake && Object.keys(direction.retake).length ? { retake: direction.retake } : {}) },
         ...(watermark ? { watermark } : {}),
         ...studio,
         ...videoPalette,
@@ -443,7 +519,7 @@ export function reusedMediaFor(job: media.MediaJobRow, sceneHash: string, script
 }
 
 export function publicJob(j: media.MediaJobRow) {
-  const input = j.input as { avatarId?: unknown; voiceProvider?: unknown; voiceId?: unknown; script?: unknown; estimate?: unknown; recomposeOf?: unknown };
+  const input = j.input as { avatarId?: unknown; voiceProvider?: unknown; voiceId?: unknown; script?: unknown; estimate?: unknown; recomposeOf?: unknown; screenResult?: unknown };
   return {
     id: j.id,
     lessonId: j.lessonId,
@@ -463,7 +539,7 @@ export function publicJob(j: media.MediaJobRow) {
     quoteId: j.quoteId,
     approvedBy: j.approvedBy,
     approvedAt: j.approvedAt,
-    input: { avatarId: input.avatarId, voiceProvider: input.voiceProvider, voiceId: input.voiceId, scriptChars: String(input.script ?? '').length, estimate: input.estimate, ...(typeof input.recomposeOf === 'string' ? { recomposeOf: input.recomposeOf } : {}) },
+    input: { avatarId: input.avatarId, voiceProvider: input.voiceProvider, voiceId: input.voiceId, scriptChars: String(input.script ?? '').length, estimate: input.estimate, ...(typeof input.recomposeOf === 'string' ? { recomposeOf: input.recomposeOf } : {}), ...(input.screenResult ? { screenResult: input.screenResult } : {}) },
     createdAt: j.createdAt,
     startedAt: j.startedAt,
     finishedAt: j.finishedAt,

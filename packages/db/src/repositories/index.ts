@@ -1,6 +1,7 @@
 export * as authoring from './authoring';
 export * as publishing from './publishing';
 export * as learning from './learning';
+export * as submissions from './submissions';
 export * as identity from './identity';
 export * as media from './media';
 export * as sources from './sources';
@@ -10,3 +11,10 @@ export * as recognition from './recognition';
 export * as privacy from './privacy';
 export * as access from './access';
 export * as retention from './retention';
+export * as students from './students';
+export * as integrationTokens from './integration-tokens';
+export * as reports from './reports';
+export * as webhooks from './webhooks';
+export * as reviewMarks from './review-marks';
+export * as materials from './materials';
+export * as certificates from './certificates';

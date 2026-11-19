@@ -37,6 +37,7 @@ import { ReviewSummaryView } from './review-summary';
 import { ScaffoldComposer, type ComposedSentence } from './scaffold-composer';
 import { saveButtonState } from './compose-state';
 import { closingNodeId as closingNodeIdOf, isLastLessonOfCourse } from './immersive/scene-flow';
+import { TaskEnrollmentContext, TaskView } from './task-view-classic';
 
 /* ------------------------------------------------------------------------ */
 /* Player                                                                    */
@@ -112,6 +113,7 @@ function ClassicPlayer({ lesson, driver, courseTitle, exitHref, player, platform
   const hasVideo = lesson.graph.nodes.some((n) => !!videoMediaOf(n));
 
   return (
+    <TaskEnrollmentContext.Provider value={platform?.enrollmentId}>
     <div className={cn('mx-auto space-y-6', hasVideo ? 'max-w-3xl' : 'max-w-2xl')}>
       <PlayerHeader
         courseTitle={courseTitle}
@@ -190,6 +192,7 @@ function ClassicPlayer({ lesson, driver, courseTitle, exitHref, player, platform
         </NodeFrame>
       )}
     </div>
+    </TaskEnrollmentContext.Provider>
   );
 }
 
@@ -440,6 +443,8 @@ function CardBody({
       return node.scaffold ? <ComposeView node={node} pending={pending} fieldError={fieldError} onSend={onSend} /> : <ReflectionView node={node} pending={pending} fieldError={fieldError} onSend={onSend} />;
     case 'mission':
       return <MissionView node={node} pending={pending} fieldError={fieldError} onSend={onSend} />;
+    case 'task':
+      return <TaskView key={node.id} node={node} pending={pending} fieldError={fieldError} onSend={onSend} />;
     case 'assessment':
       return <AssessmentView node={node} pending={pending} fieldError={fieldError} retry={retry} onSend={onSend} />;
     case 'end':

@@ -1,6 +1,7 @@
-import type { Branding, BumperPlayOn, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
+import type { Branding, BumperPlayOn, CourseMaterial, EndNode, Lesson, RichTextDocument } from '@lms/course-schema';
 import type { BrandMark } from '@/config/brand';
 import type { AttemptState, Intent, NavigationTarget, ProgressSummary, AssessmentOutcome } from '@lms/course-engine';
+import type { TaskRecordView } from './task-delivery';
 
 /** Resultado de um passo do motor, igual para LMS (persistido) e prévia (sem persistência). */
 export interface PlayerStepResult {
@@ -16,6 +17,10 @@ export interface PlayerStepResult {
   courseCompleted: boolean;
   /** só na missão "Leve para a vida real": o que o servidor deixou valendo (não rebaixa "Já experimentei") */
   mission?: { status: 'later' | 'done'; note: string | null };
+  /** só na tarefa com entrega: a entrega que ficou valendo no servidor (ausente na prévia, que não grava nada) */
+  task?: { outcome: 'created' | 'resubmitted' | 'kept'; record: TaskRecordView };
+  /** o servidor emitiu o certificado do curso com esta conclusão de aula (só no LMS) */
+  certificate?: { code: string };
 }
 
 export interface PlayerStart {
@@ -121,6 +126,10 @@ export interface PlatformContext {
   series?: PlatformSeries;
   /** matrícula (LMS): habilita as respostas do curso inteiro no roteiro */
   enrollmentId?: string;
+  /** o curso oferece certificado de conclusão (só LMS): `code` se já emitido; `courseHref` é a página do curso, onde está o que falta */
+  certificate?: { code?: string; courseHref: string };
+  /** materiais de apoio do módulo desta aula (botão "Materiais" no cabeçalho); ausente = sem botão */
+  materials?: { items: CourseMaterial[]; moduleLabel?: string };
   /** encerramento com roteiro do curso (de qualquer aula) e os nós que ele cita */
   recap?: { lessonId: string; endNode: EndNode; nodes: Record<string, RecapNodeRef> };
   /**

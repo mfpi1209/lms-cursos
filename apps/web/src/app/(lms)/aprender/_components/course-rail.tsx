@@ -10,9 +10,10 @@ import { cn } from '@/lib/utils';
  * - `wide3`: três cartões 4:3 que preenchem a linha no computador (≥ 1024 px); abaixo, trilho com dois e um pedaço do próximo;
  * - `portrait5`: cinco cartões 3:4 em colunas (≥ 1100 px); abaixo, trilho de cartões de 172–220 px;
  * - `trails`: cartões das trilhas, três por vez no computador largo e dois e meio abaixo (a 4ª sempre alcançável pelo trilho);
- * - `cards`: trilho simples de cartões 4:3 (usado em "Minhas trilhas").
+ * - `cards`: trilho simples de cartões 4:3 (usado em "Minhas trilhas");
+ * - `free`: cursos livres, cartões grandes em coluna (dois lado a lado no computador quando há mais de um); não desliza.
  */
-export type RailLayout = 'cards' | 'wide3' | 'portrait5' | 'trails';
+export type RailLayout = 'cards' | 'wide3' | 'portrait5' | 'trails' | 'free';
 
 /**
  * Seção da vitrine: título, andamento real e link da trilha, com os cartões numa grade ou num trilho que desliza.

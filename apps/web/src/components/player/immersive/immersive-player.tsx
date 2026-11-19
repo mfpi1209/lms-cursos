@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Award, BookOpen, Check, CircleCheck, Copy, FileText, Flag, Footprints, ListChecks, ListVideo, Maximize, Mic, Minimize, MousePointerClick, Pause, Pencil, Play, RotateCcw, Target, Undo2 } from 'lucide-react';
+import { ArrowLeft, Award, BookOpen, Check, CircleCheck, Copy, FileText, Flag, Footprints, ListChecks, ListVideo, Maximize, Mic, Minimize, MousePointerClick, Paperclip, Pause, Pencil, Play, RotateCcw, Send, Target, Undo2 } from 'lucide-react';
 import { resolveReview, type AttemptState, type ProgressSummary, type ReviewSummary } from '@lms/course-engine';
 import {
   MISSION_LABELS,
@@ -12,6 +12,9 @@ import {
   questionVideoFollows,
   questionVideoSkipped,
   richTextToPlain,
+  TASK_LABELS,
+  taskAcceptedMime,
+  taskInstructionOf,
   type AnyNode,
   type AssessmentNode,
   type ChoiceNode,
@@ -22,6 +25,8 @@ import {
   type ReflectionNode,
   type RichTextBlock,
   type RichTextDocument,
+  type TaskNode,
+  type TaskStatus,
 } from '@lms/course-schema';
 import { cn } from '@/lib/utils';
 import { RichText } from '@/components/rich-text';
@@ -35,6 +40,7 @@ import { ImmersiveFullscreenProvider, useImmersiveFullscreen, useImmersiveFullsc
 import { OptionCards } from './option-cards';
 import { RecordAnswer, WriteAnswer, useMicAvailable, type OpenAnswerDraft } from './open-answer';
 import { RecapDrawer, useCourseRecap, type CourseRecap } from './recap-drawer';
+import { MaterialsDrawer } from '@/components/materials/materials-drawer';
 import { BRIDGE_BUTTON, BRIDGE_EYEBROW, BRIDGE_LINE, CLOSING_LABEL, LAST_PRACTICE_CHIP, closingCardTitle, closingNodeId as closingNodeIdOf, farewellAfter, isCourseEnd, isLastLessonOfCourse, isLastPractice, missionAckText, missionAfter, missionContinueLabel } from './scene-flow';
 import { chipFor, clock, headingSize, isTipScene, resolveBrand, splitPrompt, type ResolvedBrand } from './theme';
 import { ImButton, ImCard, ImLink, StatusChip } from './ui';
@@ -53,6 +59,8 @@ import { BrandBumper } from '../brand-bumper';
 import { bumperPlaysHere } from '../platform-context';
 import { LegalLinks } from '@/components/legal/legal-links';
 import { NOTE_PRIVACY_HINT } from '../privacy-hint';
+import { useTaskDraft, useTaskRecord, type TaskRecordView } from '../task-delivery';
+import { TaskCriteriaList, TaskDeliveryFields, TaskStatusCard } from '../task-delivery-view';
 
 /**
  * Player da plataforma: cabeçalho com a marca, palco escuro com o vídeo (ou a
@@ -86,6 +94,7 @@ export function ImmersivePlayer({
 }) {
   const brand = useMemo(() => resolveBrand(platform), [platform]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [materialsOpen, setMaterialsOpen] = useState(false);
   // tela cheia no raiz do player (não desmonta entre cenas, reações, decisões, missão e despedida): ela segue pela aula toda
   const rootRef = useRef<HTMLDivElement>(null);
   const fullscreen = useImmersiveFullscreen(rootRef, platform.enrollmentId ?? lesson.id);
@@ -168,6 +177,7 @@ export function ImmersivePlayer({
     ...(platform.courseTrail ? { courseTrail: platform.courseTrail } : {}),
     ...(platform.series ? { series: platform.series } : {}),
     ...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {}),
+    ...(platform.certificate ? { certificate: platform.certificate } : {}),
     exitHref,
     ...(driver.mode === 'lms' && lessons[0]?.href ? { courseRestartHref: `${lessons[0].href}?reiniciar=1` } : {}),
     shortLabel: shortLessonLabel(lesson),
@@ -204,7 +214,7 @@ export function ImmersivePlayer({
       )}
     >
       {/* tela cheia: só o palco (cabeçalho e rodapé saem; "Meu roteiro" e o tema voltam ao sair) */}
-      {!fullscreen.active && <PlatformHeader brand={brand} homeHref={homeHref} {...(platform.series ? { seriesLabel: seriesHeaderLabel(platform.series) } : {})} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} />}
+      {!fullscreen.active && <PlatformHeader brand={brand} homeHref={homeHref} {...(platform.series ? { seriesLabel: seriesHeaderLabel(platform.series) } : {})} onOpenRecap={() => setDrawerOpen(true)} drawerOpen={drawerOpen} {...(platform.materials ? { materialsCount: platform.materials.items.length, onOpenMaterials: () => setMaterialsOpen(true), materialsOpen } : {})} />}
 
       <p className="sr-only" role="status" aria-live="polite">
         {announce}
@@ -288,6 +298,15 @@ export function ImmersivePlayer({
       )}
 
       <RecapDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} recap={recap} {...(platform.enrollmentId ? { enrollmentId: platform.enrollmentId } : {})} />
+      {platform.materials && (
+        <MaterialsDrawer
+          open={materialsOpen}
+          onClose={() => setMaterialsOpen(false)}
+          materials={platform.materials.items}
+          {...(platform.materials.moduleLabel ? { moduleLabel: platform.materials.moduleLabel } : {})}
+          {...(platform.enrollmentId ? { courseHref: `/aprender/${platform.enrollmentId}` } : {})}
+        />
+      )}
       <LessonMapDrawer
         platform
         open={nav.mapOpen}
@@ -312,7 +331,7 @@ export function ImmersivePlayer({
 /* Cabeçalho                                                                 */
 /* ------------------------------------------------------------------------ */
 
-function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen }: { brand: ResolvedBrand; homeHref: string; /** curso que é parte de uma série: "{trilha} · Parte N de 3" no lugar do nome do curso */ seriesLabel?: string; onOpenRecap: () => void; drawerOpen: boolean }) {
+function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen, materialsCount, onOpenMaterials, materialsOpen }: { brand: ResolvedBrand; homeHref: string; /** curso que é parte de uma série: "{trilha} · Parte N de 3" no lugar do nome do curso */ seriesLabel?: string; onOpenRecap: () => void; drawerOpen: boolean; /** materiais de apoio do módulo da aula: botão "Materiais" (ausente = sem botão) */ materialsCount?: number; onOpenMaterials?: () => void; materialsOpen?: boolean }) {
   return (
     <header className="mx-auto flex h-16 w-full max-w-[1920px] items-center justify-between gap-3 px-4 md:grid md:h-[72px] md:grid-cols-[1fr_auto_1fr] md:px-10">
       {brand.mark ? (
@@ -348,6 +367,20 @@ function PlatformHeader({ brand, homeHref, seriesLabel, onOpenRecap, drawerOpen 
       )}
       <div className="flex items-center justify-end gap-2 md:gap-3">
         <ThemeSwitch />
+        {onOpenMaterials && materialsCount ? (
+          <button
+            type="button"
+            onClick={onOpenMaterials}
+            aria-haspopup="dialog"
+            aria-expanded={!!materialsOpen}
+            data-testid="open-materials"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 rounded-[12px] border border-line-strong px-3 text-[15px] font-medium text-fg hover:border-fg/40 hover:bg-fg/5 md:px-5"
+          >
+            <Paperclip className="size-5" aria-hidden="true" />
+            <span className="max-md:sr-only">Materiais</span>
+            <span className="sr-only">({materialsCount})</span>
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={onOpenRecap}
@@ -404,16 +437,18 @@ interface FrameInfo {
   series?: PlatformSeries;
   /** matrícula (LMS): habilita registrar a missão e o roteiro com as missões do curso */
   enrollmentId?: string;
+  /** o curso oferece certificado (código se já emitido ao abrir a aula) */
+  certificate?: { code?: string; courseHref: string };
 }
 
-type StepKind = 'video' | 'choice' | 'mission' | 'real' | 'review' | 'closing';
-const STEP_LABEL: Record<StepKind, string> = { video: 'Vídeo', choice: 'Decisão', mission: 'Na prática', real: MISSION_LABELS.moment, review: 'Revisão', closing: CLOSING_LABEL };
+type StepKind = 'video' | 'choice' | 'mission' | 'real' | 'task' | 'review' | 'closing';
+const STEP_LABEL: Record<StepKind, string> = { video: 'Vídeo', choice: 'Decisão', mission: 'Na prática', real: MISSION_LABELS.moment, task: 'Entrega', review: 'Revisão', closing: CLOSING_LABEL };
 
 /** Etapas da aula na ordem do roteiro (avaliações seguidas viram uma só "Revisão"); o fim não conta. */
 export function lessonSteps(lesson: Lesson, closingNodeId?: string): Array<{ kind: StepKind; nodeIds: string[] }> {
   const out: Array<{ kind: StepKind; nodeIds: string[] }> = [];
   for (const n of lesson.graph.nodes) {
-    const kind: StepKind | null = n.id === closingNodeId ? 'closing' : n.type === 'scenario' || n.type === 'content' || n.type === 'consequence' ? 'video' : n.type === 'choice' ? 'choice' : n.type === 'reflection' ? 'mission' : n.type === 'mission' ? 'real' : n.type === 'assessment' ? 'review' : null;
+    const kind: StepKind | null = n.id === closingNodeId ? 'closing' : n.type === 'scenario' || n.type === 'content' || n.type === 'consequence' ? 'video' : n.type === 'choice' ? 'choice' : n.type === 'reflection' ? 'mission' : n.type === 'mission' ? 'real' : n.type === 'task' ? 'task' : n.type === 'assessment' ? 'review' : null;
     if (!kind) continue;
     const last = out[out.length - 1];
     if (kind === 'review' && last?.kind === 'review') last.nodeIds.push(n.id);
@@ -422,7 +457,7 @@ export function lessonSteps(lesson: Lesson, closingNodeId?: string): Array<{ kin
   return out;
 }
 
-const STEP_ICON: Record<StepKind, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>> = { video: Play, choice: MousePointerClick, mission: Target, real: Footprints, review: ListChecks, closing: Flag };
+const STEP_ICON: Record<StepKind, React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' }>> = { video: Play, choice: MousePointerClick, mission: Target, real: Footprints, task: Send, review: ListChecks, closing: Flag };
 
 /**
  * Trilha da aula (gamificação leve): uma marca por etapa — feita (laranja, com visto), atual (anel) e a fazer.
@@ -918,6 +953,8 @@ function Scene({
   const savedCompose = savedNode?.type === 'reflection' && savedNode.scaffold ? savedNode : null;
   // missão "Leve para a vida real" recém-registrada: o motor já seguiu, mas a confirmação fica até "Continuar aula"
   const savedMission = savedNode?.type === 'mission' && savedHere?.mission ? { node: savedNode, status: savedHere.mission, note: savedHere.text, requested: savedHere.requested } : null;
+  // tarefa com entrega recém-enviada: o motor já seguiu, mas a confirmação ("Entrega enviada. Em correção.") fica até "Continuar aula"
+  const savedTask = savedNode?.type === 'task' && savedHere?.task ? { node: savedNode, status: savedHere.task, record: savedHere.taskRecord ?? null } : null;
   const stageRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingId = useId();
@@ -932,7 +969,7 @@ function Scene({
   // "Assistir" (sem isso o vídeo tocava sozinho por cima e o retorno só aparecia no fim dele)
   // ...exceto quando a instrutora já reagiu em vídeo à escolha: aí o próximo vídeo segue direto (continuidade);
   // o retorno escrito aparece no painel quando o vídeo termina
-  const holdForCarry = (!!carryHere && !!capable && capable.type !== 'choice' && !(carryHere.kind === 'choice' && carryHere.reaction)) || !!savedCompose || !!savedMission;
+  const holdForCarry = (!!carryHere && !!capable && capable.type !== 'choice' && !(carryHere.kind === 'choice' && carryHere.reaction)) || !!savedCompose || !!savedMission || !!savedTask;
   // fechamento do curso (a despedida, depois da última prática): rótulo próprio, cartão-título e legendas ligadas por padrão
   const isClosing = !!node && !completed && node.id === frame.closingNodeId;
   const video = useSceneVideo(capable, media, gesture && !holdForCarry && !videoSeen, { captionsDefault: isClosing });
@@ -951,14 +988,14 @@ function Scene({
   // antes do primeiro play, um só acionador (o da abertura): a barra de controles entra quando o vídeo começa
   const hasControls = video.active && video.phase !== 'idle';
   // abertura leve (sem o painel branco): cena com vídeo ainda não iniciado e sem retorno de escolha a mostrar antes
-  const opening = !!node && !completed && !savedCompose && !savedMission && video.active && video.phase === 'idle' && !carryHere && (node.type === 'scenario' || node.type === 'content' || node.type === 'consequence');
+  const opening = !!node && !completed && !savedCompose && !savedMission && !savedTask && video.active && video.phase === 'idle' && !carryHere && (node.type === 'scenario' || node.type === 'content' || node.type === 'consequence');
   const firstSceneId = useMemo(() => lesson.graph.nodes.find((n) => n.type === 'scenario' || n.type === 'content')?.id, [lesson.graph.nodes]);
   // decisão sem vídeo próprio: o palco mostra o fim do vídeo que fez a chamada (o instrutor "pausado"), não um fundo vazio
   const stageFrame = useMemo(() => {
     if (!node || media) return frame;
     // fim sem retrato do curso (`avatarPreviewUrl` vazio, ex.: C01): o palco mostra o último vídeo visto, não um lado vazio
     const endWithoutPortrait = node.type === 'end' && !frame.posterUrl;
-    if (node.type !== 'choice' && node.type !== 'reflection' && node.type !== 'mission' && !endWithoutPortrait) return frame;
+    if (node.type !== 'choice' && node.type !== 'reflection' && node.type !== 'mission' && node.type !== 'task' && !endWithoutPortrait) return frame;
     // decisão: o vídeo que fez a chamada; missão (ou decisão sem anfitrião): o último vídeo do caminho feito
     const videoOf = (id: string | undefined) => {
       const n = id ? lesson.graph.nodes.find((x) => x.id === id) : undefined;
@@ -979,7 +1016,7 @@ function Scene({
   const retryHere = retry && retry.nodeId === state.currentNodeId ? retry : null;
   // pergunta e missão abrem no centro, com o fundo escurecido (o que o aluno precisa fazer em evidência)
   const composeHere = !!node && !completed && !watching && node.type === 'reflection' && !!node.scaffold;
-  const centered = (!!node && !completed && !watching && (node.type === 'choice' || node.type === 'reflection' || node.type === 'mission')) || !!savedCompose || !!savedMission;
+  const centered = (!!node && !completed && !watching && (node.type === 'choice' || node.type === 'reflection' || node.type === 'mission' || node.type === 'task')) || !!savedCompose || !!savedMission || !!savedTask;
   // pergunta/atividade no centro: o vídeo já terminou e a barra ficaria embaixo do painel (fora da tela); some
   const barShown = hasControls && !centered;
   const wide = composeHere || !!savedCompose;
@@ -987,7 +1024,7 @@ function Scene({
   const endNode = node?.type === 'end' ? node : null;
   // vinheta: no palco inteiro antes da atividade/fim (OutroStage, na raiz). Quem pulou vídeos a vê aqui, no fim,
   // junto com o painel de encerramento (não trava o fluxo)
-  const bumperEl = savedCompose || savedMission ? null : completed && frame.bumper && !outroPlayed ? (
+  const bumperEl = savedCompose || savedMission || savedTask ? null : completed && frame.bumper && !outroPlayed ? (
     <BrandBumper key="end" bumper={frame.bumper} gesture={gesture} variant="stage" onDone={onOutroDone} />
   ) : null;
   // "Resultado da simulação": decisões desta aula revisadas a partir das respostas da tentativa
@@ -999,7 +1036,7 @@ function Scene({
   // Foco no título a cada cena (sem rolar a página); no celular, garante o palco à vista.
   // Resposta "Na prática" recém-salva: a confirmação (perto do botão que o aluno tocou) fica à vista.
   // "Continuar aula": volta ao fluxo normal (foco no título da cena seguinte, palco à vista).
-  const savedShown = !!savedCompose || !!savedMission;
+  const savedShown = !!savedCompose || !!savedMission || !!savedTask;
   const wasSaved = useRef(savedShown);
   useEffect(() => {
     const h = headingRef.current;
@@ -1007,7 +1044,7 @@ function Scene({
     const s = stageRef.current;
     if (!s) return;
     if (savedShown) {
-      s.querySelector('[data-testid="compose-saved"], [data-testid="mission-saved"]')?.scrollIntoView({ behavior: 'auto', block: 'center' });
+      s.querySelector('[data-testid="compose-saved"], [data-testid="mission-saved"], [data-testid="task-saved"]')?.scrollIntoView({ behavior: 'auto', block: 'center' });
       return;
     }
     const r = s.getBoundingClientRect();
@@ -1131,6 +1168,22 @@ function Scene({
         onContinue={dismissSaved}
       />
     );
+  } else if (savedTask) {
+    panel = (
+      <TaskPanel
+        key={`salva:${savedTask.node.id}`}
+        node={savedTask.node}
+        carry={null}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={null}
+        onSend={send}
+        saved={{ status: savedTask.status, record: savedTask.record }}
+        onContinue={dismissSaved}
+        {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})}
+      />
+    );
   } else if (completed) {
     panel = (
       <EndPanel
@@ -1146,6 +1199,7 @@ function Scene({
         hasRecap={!!recap}
         onOpenRecap={onOpenRecap}
         achievements={lessonAchievements(lesson.graph.nodes, state, missionStatusMap)}
+        {...(frame.certificate ? { certificate: { ...frame.certificate, ...(player.certificateCode || frame.certificate.code ? { code: (player.certificateCode ?? frame.certificate.code)! } : {}) } } : {})}
         {...(frame.series ? { series: frame.series } : {})}
         {...(frame.courseEnd ? { courseEnd: { course: seriesEndsTrail(frame.series) ? frame.series!.trail : frame.courseTitle, ...((endNode?.closingLine?.trim() || recap?.closingLine) ? { closingLine: (endNode?.closingLine?.trim() || recap?.closingLine)! } : {}) } } : {})}
         {...(!nextLesson && frame.achievement && frame.lessons.every((l) => l.status === 'completed' || l.id === lesson.id) ? { conquest: { name: frame.achievement, ...(frame.courseTrail ? { trail: frame.courseTrail } : {}) } } : {})}
@@ -1214,6 +1268,22 @@ function Scene({
         onRetry={retrySend}
         lastPractice={isLastPractice(lesson.graph, node.id, frame.lastLesson)}
         farewell={farewellAfter(lesson.graph, node.id, frame.lastLesson)}
+      />
+    );
+  } else if (node.type === 'task') {
+    panel = (
+      <TaskPanel
+        key={node.id}
+        node={node}
+        carry={carryHere}
+        headingRef={headingRef}
+        headingId={headingId}
+        pending={pending}
+        fieldError={fieldError}
+        onSend={send}
+        saveError={stepError && inflight?.nodeId === node.id ? stepError : null}
+        onRetry={retrySend}
+        {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})}
       />
     );
   } else if (node.type === 'reflection' && node.scaffold) {
@@ -1312,7 +1382,7 @@ function Scene({
               </button>
             </ImCard>
           )}
-          {stepError && !composeHere && node?.type !== 'mission' && (
+          {stepError && !composeHere && node?.type !== 'mission' && node?.type !== 'task' && (
             <ImCard role="alert" className="mb-6 border-danger/40 text-danger">
               <p className="font-semibold">Não foi possível enviar sua resposta.</p>
               <p className="mt-1 text-sm">{stepError}</p>
@@ -1327,7 +1397,7 @@ function Scene({
         </PanelArea>
       </section>
 
-      {completed && !savedCompose && !savedMission && endNode && recap && endNode.recap && endNode.recap.length > 0 && (
+      {completed && !savedCompose && !savedMission && !savedTask && endNode && recap && endNode.recap && endNode.recap.length > 0 && (
         <div className="mx-auto mt-8 w-full max-w-[880px] space-y-8 px-4 md:mt-12 md:px-0">
           <RecapView items={recap.items} title={recap.title} variant="page" headingLevel={2} className="border-line bg-bg-2" {...(frame.enrollmentId ? { enrollmentId: frame.enrollmentId } : {})} />
           {recap.closingLine && !frame.courseEnd && (
@@ -1473,6 +1543,8 @@ function NodePanel({
       return node.scaffold ? <ComposePanel node={node} carry={carry} {...p} /> : <ReflectionPanel node={node} carry={carry} {...p} />;
     case 'mission':
       return <MissionPanel node={node} carry={carry} {...p} />;
+    case 'task':
+      return <TaskPanel node={node} carry={carry} {...p} />;
     case 'assessment':
       return <AssessmentPanel node={node} carry={carry} retry={retry} {...p} />;
     default:
@@ -2460,6 +2532,168 @@ export function MissionPanel({
 
 /* ---------------------------- Avaliação --------------------------------- */
 
+/* ------------------------- Tarefa com entrega ---------------------------- */
+
+/**
+ * Tarefa com entrega: a instrução, "O que o avaliador confere" (os critérios), o link, o arquivo opcional e "Enviar entrega".
+ * A aula segue depois do envio; a correção vem depois. O painel mostra o que já existe na matrícula:
+ *  - sem entrega, ou devolvida (com o comentário do avaliador): o formulário;
+ *  - em correção ou aprovada (aula refeita): a situação e "Continuar", que segue sem enviar de novo (`keep`);
+ *  - `saved`: acabou de enviar; a confirmação fica até "Continuar aula" (o motor já está na cena seguinte).
+ * Na prévia do estúdio (sem matrícula) nada é gravado e o arquivo não é enviado.
+ */
+export function TaskPanel({
+  node,
+  carry,
+  headingRef,
+  headingId,
+  pending,
+  fieldError,
+  onSend,
+  enrollmentId,
+  saved,
+  onContinue,
+  saveError,
+  onRetry,
+}: PanelProps & {
+  node: TaskNode;
+  carry: Carry | null;
+  /** matrícula (LMS); ausente na prévia */
+  enrollmentId?: string;
+  /** entrega recém-enviada: a situação que o servidor devolveu e, no LMS, o registro completo */
+  saved?: { status: TaskStatus; record: TaskRecordView | null };
+  onContinue?: () => void;
+  /** falha de rede ao enviar: o envio pode ser repetido (mesmo evento) */
+  saveError?: string | null;
+  onRetry?: () => void;
+}) {
+  const existing = useTaskRecord(saved ? undefined : enrollmentId, node.id);
+  const acceptedMime = taskAcceptedMime(node);
+  const record = existing.record;
+  const draft = useTaskDraft({ acceptedMime, ...(enrollmentId ? { uploadUrl: `/api/enrollments/${enrollmentId}/tasks/${node.id}/file` } : {}) });
+  // devolvida: o formulário já vem com o link anterior, para o aluno corrigir em cima dele
+  const prefilled = useRef(false);
+  useEffect(() => {
+    if (prefilled.current || record?.status !== 'returned') return;
+    prefilled.current = true;
+    if (!draft.link) draft.setLink(record.link);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [record]);
+  const continueRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (saved) continueRef.current?.focus({ preventScroll: true });
+  }, [saved]);
+
+  const title = node.title?.trim() || TASK_LABELS.moment;
+  const instruction = taskInstructionOf(node);
+  const busy = pending || draft.uploading;
+  const head = <PanelHead ref={headingRef} id={headingId} chip={{ label: saved ? 'Entrega enviada' : 'Sua vez', tone: 'accent' }} title={title} {...(title === TASK_LABELS.moment ? {} : { eyebrow: TASK_LABELS.moment })} />;
+
+  if (saved) {
+    return (
+      <div data-testid="task-panel" data-state="saved">
+        {head}
+        <div data-testid="task-saved" className="mt-6">
+          {saved.record ? (
+            <TaskStatusCard record={saved.record} />
+          ) : (
+            <ImCard role="status" data-testid="task-status" data-status={saved.status}>
+              <p className="text-[20px] font-semibold leading-snug text-fg">{saved.status === 'approved' ? TASK_LABELS.approved : TASK_LABELS.submitted}</p>
+              {!enrollmentId && <p className="mt-2 text-[16px] text-fg/80">Na prévia, nada é gravado nem enviado para correção.</p>}
+            </ImCard>
+          )}
+        </div>
+        <ActionBar className="md:grid-cols-1">
+          <ImButton ref={continueRef} size="xl" className="w-full" data-testid="task-continue" onClick={onContinue}>
+            Continuar aula
+          </ImButton>
+        </ActionBar>
+      </div>
+    );
+  }
+
+  if (existing.loading) {
+    return (
+      <div data-testid="task-panel" data-state="loading">
+        {head}
+        <p role="status" className="mt-6 text-[17px] text-fg/75">
+          Carregando sua entrega…
+        </p>
+      </div>
+    );
+  }
+
+  // aula refeita com entrega em correção ou já aprovada: mostra a situação e segue, sem enviar de novo
+  if (record && record.status !== 'returned') {
+    return (
+      <div data-testid="task-panel" data-state={record.status}>
+        {head}
+        {carry && <CarryCard carry={carry} />}
+        {instruction && <p className="mt-4 whitespace-pre-line text-[18px] leading-relaxed text-fg/80">{instruction}</p>}
+        <TaskStatusCard record={record} className="mt-6" />
+        <FieldError message={fieldError} />
+        {saveError && (
+          <div role="alert" className="mt-4 rounded-[12px] border border-danger/50 bg-danger-soft px-4 py-3 text-[15px] text-fg" data-testid="task-save-error">
+            <p className="font-semibold">Não foi possível continuar.</p>
+            <p className="mt-0.5">{saveError}</p>
+          </div>
+        )}
+        <ActionBar className="md:grid-cols-1">
+          <ImButton size="xl" className="w-full" data-testid="task-keep" disabled={pending} aria-busy={pending} onClick={() => (saveError && onRetry ? onRetry() : onSend({ kind: 'submit', keep: true }))}>
+            {pending ? 'Enviando…' : 'Continuar'}
+          </ImButton>
+        </ActionBar>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      data-testid="task-panel"
+      data-state={record ? 'returned' : 'open'}
+      noValidate
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (busy) return;
+        void draft.prepare().then((payload) => {
+          if (payload) onSend({ kind: 'submit', link: payload.link, ...(payload.fileAssetId ? { fileAssetId: payload.fileAssetId } : {}) });
+        });
+      }}
+    >
+      {head}
+      {carry && <CarryCard carry={carry} />}
+      {instruction && (
+        <p data-testid="task-instruction" className="mt-4 whitespace-pre-line text-[18px] leading-relaxed text-fg/85">
+          {instruction}
+        </p>
+      )}
+      {record && <TaskStatusCard record={record} className="mt-6" />}
+      <TaskCriteriaList criteria={node.criteria} auto={node.review === 'auto'} className="mt-6" />
+      <div className="mt-6">
+        <TaskDeliveryFields draft={draft} acceptedMime={acceptedMime} disabled={pending} preview={!enrollmentId} />
+      </div>
+      <FieldError message={fieldError} />
+      {saveError && (
+        <div role="alert" className="mt-4 rounded-[12px] border border-danger/50 bg-danger-soft px-4 py-3 text-[15px] text-fg" data-testid="task-save-error">
+          <p className="font-semibold">Não foi possível enviar sua entrega.</p>
+          <p className="mt-0.5">{saveError}</p>
+          {onRetry && (
+            <ImButton variant="outline" size="sm" className="mt-3" onClick={onRetry} disabled={pending} data-testid="task-retry">
+              Tentar de novo
+            </ImButton>
+          )}
+        </div>
+      )}
+      <ActionBar className="md:grid-cols-1">
+        <ImButton type="submit" size="xl" className="w-full" data-testid="task-submit" disabled={busy} aria-busy={busy}>
+          {draft.uploading ? 'Enviando o arquivo…' : pending ? 'Enviando…' : record ? 'Enviar de novo' : TASK_LABELS.submit}
+        </ImButton>
+      </ActionBar>
+      <p className="mt-3 text-[14px] leading-snug text-fg/70">{node.review === 'auto' ? 'Sua entrega é registrada ao enviar e a aula continua.' : 'Depois de enviar, a aula continua. A correção chega depois, aqui e na página do curso.'}</p>
+    </form>
+  );
+}
+
 function AssessmentPanel({ node, carry, retry, headingRef, headingId, pending, fieldError, onSend }: PanelProps & { node: AssessmentNode; carry: Carry | null; retry: RetryInfo | null }) {
   const [selected, setSelected] = useState<string[]>([]);
   const subId = useId();
@@ -2529,7 +2763,10 @@ export function EndPanel({
   conquest,
   courseEnd,
   series,
+  certificate,
 }: {
+  /** o curso oferece certificado: com `code`, a ação para vê-lo; sem, o aviso de que sai quando tudo estiver concluído (só no fim do curso) */
+  certificate?: { code?: string; courseHref: string };
   /** o curso é parte de uma trilha em série: chip "Parte N concluída", botão para a próxima parte e, na última, o fim da trilha */
   series?: PlatformSeries;
   /** o CURSO acaba aqui: título "Você concluiu …", chip "Curso concluído", a frase de fecho logo abaixo e o selo em destaque */
@@ -2609,6 +2846,21 @@ export function EndPanel({
       {node && <RichText doc={node.summary} className={cn(BODY, 'mt-5')} />}
       {!ownRecap && !courseEnd && node?.closingLine && <p className="mt-6 text-[26px] font-semibold leading-tight tracking-[-0.02em] text-fg md:text-[32px]">{node.closingLine}</p>}
       {ownRecap && <p className="mt-5 text-base text-fg/75">Seu roteiro está logo abaixo: copie ou imprima quando quiser.</p>}
+      {certificate?.code ? (
+        <div data-testid="end-certificate" className="mt-6 flex flex-col gap-3 rounded-2xl border border-line-strong bg-fg/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[16px] font-medium leading-snug text-fg">Seu certificado de conclusão está pronto.</p>
+          <ImLink href={`/certificado/${certificate.code}/imprimir`} data-testid="end-certificate-link">
+            Ver meu certificado
+          </ImLink>
+        </div>
+      ) : certificate && courseEnd ? (
+        <p data-testid="end-certificate-pending" className="mt-6 text-[16px] leading-snug text-fg/85">
+          Seu certificado sai quando tudo estiver concluído.{' '}
+          <a href={certificate.courseHref} className="inline-flex min-h-11 items-center font-semibold text-[var(--im-accent-ink)] underline underline-offset-2">
+            Veja o que falta na página do curso.
+          </a>
+        </p>
+      ) : null}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         {nextLesson ? (
           <ImLink href={nextLesson.href} data-testid="next-lesson-link">

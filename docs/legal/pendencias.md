@@ -2,6 +2,8 @@
 
 Documento interno para o responsável pelo produto, para a revisão jurídica e para a equipe de código. Acompanha o conjunto listado em `README.md`. Rascunhos escritos em 01/11/2026 a partir do código do repositório e de medições em navegador. Nada aqui é parecer jurídico.
 
+> **NÃO PUBLICAR ATÉ CONFIRMAR O CONTROLADOR.** As páginas `/privacidade`, `/termos`, `/cookies` e `/seguranca` seguem em rascunho por padrão (aviso e `noindex` ligados). A variável `LEGAL_PUBLISHED=1` tira o aviso: só ligue depois de (1) confirmar quem é o controlador do piloto e preencher `LEGAL_CONTROLLER_*` e `LEGAL_DPO_*`, (2) o advogado revisar os textos e o `dpa-contrato-operacao.md`, (3) assinar o contrato de operação. Detalhes na seção 13.
+
 ## Como usar este arquivo
 
 - Os quatro textos públicos moraram aqui até 01/11/2026 e agora vivem em `apps/web/src/content/legal/` (ver `README.md`). Os nomes de arquivo citados abaixo continuam valendo, nessa pasta.
@@ -217,6 +219,66 @@ Feito no código (nada disso está em produção, então **nenhum marcador `[PEN
 - Aceite dos termos registrado com data por conta: depende de decisão do advogado.
 
 **O que a subida precisa configurar** (web): `TRUSTED_PROXIES` (IP ou CIDR do Traefik na rede do EasyPanel; sem isso uma cadeia `X-Forwarded-For` com mais de um valor resulta em IP vazio e um aviso no log), `CLIENT_IP_HEADERS` (padrão `x-forwarded-for`; atrás do Cloudflare, `cf-connecting-ip,x-forwarded-for`), opcional `CLIENT_PORT_HEADER`. Worker: `RETENTION_*` (todos opcionais). Rodar `pnpm --filter @lms/db migrate` (migração 0019). Medir o IP gravado em `access_logs` com um login real em produção antes de remover o marcador.
+
+## 12. Entrega de tarefa ("Missão com entrega"), acrescentada em 12/11/2026
+
+Feito no código, fora do ar: o aluno envia um link e, quando a tarefa pede, um arquivo; um avaliador da equipe aprova ou devolve com comentário. Linha 17 do `registro-de-operacoes.md`. Migração `0020_entregas` (tabelas `task_submissions` e `task_submission_events`).
+
+**Dados pessoais novos**
+
+- **Link enviado pelo aluno.** O endereço fica guardado; o conteúdo (em geral um vídeo do próprio aluno) fica em serviço de fora, escolhido por ele. A plataforma não baixa nem copia esse conteúdo.
+- **Arquivo enviado pelo aluno** (PDF, PNG ou JPEG de até 10 MB), com o nome original do arquivo. Pode conter imagem, voz, letra ou dados do aluno e de terceiros.
+- **Comentário do avaliador** sobre a entrega, e os critérios marcados como atendidos ou não. É uma avaliação sobre a pessoa.
+- **Quem corrigiu e quando** (dado da equipe).
+
+**Para o advogado decidir** (todos `A CONFIRMAR`)
+
+1. **Retenção do arquivo. A CONFIRMAR.** Proposta: apagar o arquivo 12 meses depois da aprovação (ou da última movimentação, se a entrega nunca foi aprovada) e manter a linha da entrega (link, situação, comentário) pelo prazo do percurso. Motivo: depois de aprovada, a entrega só serve para provar que o certificado foi bem emitido, e para isso bastam a situação, a data e quem aprovou. Alternativa mais curta: 6 meses.
+2. **Retenção do link, do comentário e do histórico. A CONFIRMAR.** Proposta: o mesmo prazo do percurso (conta ativa + 12 meses). Se o certificado do curso tiver prazo próprio (plano, item 1.1), alinhar com ele.
+3. **Arquivo enviado e nunca usado. A CONFIRMAR.** O envio do arquivo acontece antes de o aluno confirmar a entrega; se ele desiste, o arquivo fica sem entrega. Proposta: apagar em 30 dias.
+4. **Base legal. A CONFIRMAR.** Proposta: execução de contrato para a entrega que o curso pede. O arquivo é opcional na tela; confirmar se isso muda a base.
+5. **Menores de idade e imagem. A CONFIRMAR.** A tarefa de exemplo pede um vídeo do aluno se apresentando. O vídeo fica fora da plataforma, mas a equipe o assiste. Avaliar se o texto da política e dos termos precisa dizer isso, e se a instrução deve orientar a não mostrar outras pessoas. A tela já avisa: "A equipe que corrige vê seu nome, seu link e seu arquivo. Não envie documentos pessoais nem dados de outras pessoas."
+6. **Política de privacidade e termos.** Incluir a entrega de tarefa (o que é guardado, quem vê, por quanto tempo) antes de a função ir ao ar. Os textos públicos não foram alterados nesta rodada.
+7. **Direito de revisão.** A aprovação e a devolução são decisões de uma pessoa (ou automáticas, quando o curso escolhe "aprova ao enviar", que não avalia nada). Confirmar se o texto público precisa explicar como contestar uma devolução.
+
+**Para o código** (não feito nesta rodada)
+
+- **Rotina de retenção dos arquivos.** Não existe. Os prazos dos itens 1 e 3 precisam de um passo novo no job diário do worker (`apps/worker/src/retention.ts`), desligado por padrão até a decisão, como os outros.
+- **Apagar o objeto no storage.** `dados:apagar` apaga a entrega, o histórico e o registro do arquivo, e imprime a chave de cada arquivo no storage para ser apagado à mão (o pacote do banco não acessa o storage). A rotina que apaga contas encerradas (`RETENTION_CLOSED_ACCOUNTS_ENABLED`, desligada) faz o mesmo e deixa as chaves na auditoria (`user.delete`, campo `arquivosDeEntregaNoStorage`), mas **não apaga o objeto**. Antes de ligar essa rotina, fazer o worker apagar os objetos.
+- **Antivírus.** Fora do plano. O servidor confere só o tipo do arquivo pelos primeiros bytes. Mitigações em vigor: PDF sempre baixado (nunca aberto dentro da plataforma), resposta com `nosniff` e `sandbox`, leitura só pela equipe e pelo dono.
+- **Apagar uma entrega a pedido, sem apagar a conta.** Não há botão nem script próprio (a nota da missão tem). Hoje só por `dados:apagar`, que apaga a conta inteira, ou por acesso direto ao banco.
+- **`dados:exportar`** já inclui as entregas, o histórico e os dados de cada arquivo (nome, tipo, tamanho, data). O conteúdo do arquivo não vai no JSON: o aluno já o baixa pela própria tela; se o pedido exigir, copiar do storage.
+- **Auditoria.** Ações novas: `task.review` (quem aprovou ou devolveu, sem o texto do comentário) e `task.view` (quem abriu a entrega). O prazo é o da auditoria (2 anos, a confirmar).
+
+## 13. Modelo "workspace de cliente": cliente controlador, DNA operadora (13/11/2026)
+
+**Decisão do dono (seguida à risca):** o cliente (instituição de ensino; no piloto, o lado da Cruzeiro do Sul ou do polo) é o **controlador**: decide a finalidade e tem a relação com o aluno. A DNA é a **operadora**: trata os dados em nome dele. Os textos não dizem mais que a DNA é controladora dos dados dos alunos.
+
+### Resolvido nesta rodada
+
+- Política de privacidade, termos, cookies e resumo de segurança reescritos no modelo controlador/operadora (`apps/web/src/content/legal/`). A política lista o que o código trata hoje: nome, e-mail, RGM, telefone, link de acesso (uso único, 72 h), percurso, notas, reflexões (até 500 caracteres, com link colado como texto), "Na prática", entregas de tarefa (link e arquivo opcional) e o compartilhamento com o controlador por API, CSV e webhooks. Certificado: dito como "quando houver" (o recurso ficou para depois). Selo: mantido, com `[A CONFIRMAR]`.
+- Campos do controlador (nome, CNPJ, endereço, contato, encarregado e contato do encarregado) como variáveis de ambiente do deploy do cliente, sem migração: `LEGAL_CONTROLLER_NAME`, `LEGAL_CONTROLLER_CNPJ`, `LEGAL_CONTROLLER_ADDRESS`, `LEGAL_CONTROLLER_CONTACT`, `LEGAL_DPO_NAME`, `LEGAL_DPO_CONTACT`. Vazias, as páginas mostram `[CONTROLADOR: nome]`, `[ENCARREGADO: nome]` etc. (Motivo: as páginas são públicas, sem workspace logado, e a tabela `workspaces` só tem `branding` e `spend_limits`.)
+- `LEGAL_DRAFT = true` virou `LEGAL_PUBLISHED`: padrão = rascunho (aviso e `noindex`); `LEGAL_PUBLISHED=1` desliga. Documentada no `.env.example`. Testes em `apps/web/src/lib/legal/controller.test.ts`.
+- Minuta do contrato de operação: `dpa-contrato-operacao.md` (campos em branco, suboperadores confirmados no código, anexo de medidas).
+- Já verdade no código e por isso sem `[PENDENTE]`: link de acesso de 72 h e uso único, confirmação por clique, recuperação de senha por e-mail, tokens de integração, webhooks assinados, rotina de retenção, scripts `dados:exportar`/`dados:apagar`, cookies (sessão e tema).
+
+### Segue pendente
+
+- **Confirmar o controlador do piloto** (quem assina: Cruzeiro do Sul, o polo ou outra pessoa jurídica) e preencher as variáveis `LEGAL_*`. Depende do contrato principal entre as partes (jurídico).
+- **Revisão do advogado**, itens marcados `[REVISAR JURÍDICO]` / `[revisar jurídico]`: (1) a divisão do que a DNA trata como controladora (contas da equipe da DNA, logs de segurança, registro de acessos do Marco Civil, art. 15) e do que trata como operadora; (2) bases legais, que agora são do controlador; (3) prazos de retenção, que o controlador define; (4) quem responde aos titulares dentro dos 15 dias e o prazo de ajuda da DNA; (5) prazo de aviso de incidente da DNA ao controlador (a minuta propõe 48 h) frente aos 3 dias úteis da Resolução CD/ANPD 15/2024 (conferir o artigo); (6) suboperadores e a autorização geral da cláusula 7; (7) responsabilidade (art. 42), limite de valor e foro; (8) quem é o destinatário do CSV, da API e dos webhooks (a instituição ou o sistema "DNA" indicado por ela, e se esse sistema é operado por terceiro); (9) titularidade do conteúdo dos cursos do cliente; (10) o que fazer com o selo e com o certificado quando o recurso existir.
+- **Hospedagem, HTTPS e backup**: seguem `[PENDENTE ATÉ ESTAR NO AR]` (provedor e país, conexão criptografada, cópias de segurança, IP real no registro de acessos). Fornecedores de e-mail (SMTP ou Resend) e de armazenamento (S3 ou disco) ainda não escolhidos; se ficarem fora do Brasil, vale o item de transferência internacional da minuta.
+- Para a DNA preencher na minuta: razão social, CNPJ, endereço, representante e contato (em branco de propósito).
+- Textos que citam a DNA com CNPJ e endereço (`40.380.163/0001-61`, Rua do Bosque 1621) vêm da rodada de 01/11/2026 (itens 1.9 e 2); a divergência de endereço com o cadastro público continua aberta.
+- Os documentos internos `registro-de-operacoes.md`, `avaliacao-de-impacto.md`, `procedimento-direitos-do-titular.md` e `plano-de-incidentes.md` ainda dizem "Controladora: DNA Work". Atualizar para o modelo controlador/operadora depois da confirmação do controlador (o registro do art. 37 muda de papel: a DNA passa a registrar como operadora). Itens 1.1, 1.2 e 1.3 desta lista (parceira como controladora conjunta, "não enviamos a empresas") ficam superados pela decisão acima, mas dependem do contrato.
+- Aviso no campo de texto livre e botão de apagar a nota continuam fora do ar (seção 11, item 6).
+- Certificado de conclusão: quando existir, acrescentar aos textos, ao registro e à minuta (aditivo).
+
+### Regra de publicação
+
+1. Controlador confirmado e variáveis `LEGAL_*` preenchidas no deploy.
+2. Textos e minuta revisados pelo advogado; `[DATA DE VIGÊNCIA]` e `[URL DO PORTAL]` preenchidos.
+3. Contrato de operação assinado.
+4. Só então `LEGAL_PUBLISHED=1`. Enquanto isso, o aviso de rascunho fica ligado.
 
 ## Fontes
 

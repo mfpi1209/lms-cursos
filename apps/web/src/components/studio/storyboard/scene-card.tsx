@@ -1,15 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { AlertCircle, Copy, Flag, Gauge, Info, MoreHorizontal, Trash2 } from 'lucide-react';
-import type { AnyNode, LessonGraph, Objective, Presentation, RichTextDocument } from '@lms/course-schema';
+import { AlertCircle, Copy, Flag, Gauge, Info, MonitorPlay, MoreHorizontal, Trash2 } from 'lucide-react';
+import { sceneUsesScreenRecording, type AnyNode, type LessonGraph, type Objective, type Presentation, type RichTextDocument } from '@lms/course-schema';
 import { markMediaStale, nodeMedia, nodeSupportsMedia, replaceNode, withNodeMedia } from '@/components/studio/graph-ops';
 import { cn } from '@/lib/utils';
 import type { GenerateResult } from './generate';
 import { InlineRichText, InlineTitle } from './inline-editors';
 import { MediaStrip } from './media-strip';
 import { isSpokenNode, NarrationFields, nodeNarration, spokenScript } from './narration-fields';
-import { AssessmentFields, ChoiceOptions, ConsequenceFields, EndFields, MissionFields, NextScene, ReflectionFields, makePatch, type GraphChange } from './scene-fields';
+import { AssessmentFields, ChoiceOptions, ConsequenceFields, EndFields, MissionFields, TaskFields, NextScene, ReflectionFields, makePatch, type GraphChange } from './scene-fields';
 import { sceneDot, sceneTypeLabel, type SceneEntry, type SceneNotice, type StoryboardModel } from './scene-model';
 import { RecapEditor } from './recap-fields';
 import { ACTIVE_JOB, type MediaJob } from './use-media-jobs';
@@ -67,6 +67,7 @@ const MAIN_TEXT_LABEL: Record<string, { label: string; placeholder: string }> = 
   consequence: { label: 'O que acontece', placeholder: 'O que acontece depois dessa escolha?' },
   reflection: { label: 'A pergunta para refletir', placeholder: 'Que pergunta aberta a pessoa vai responder?' },
   mission: { label: 'A missão', placeholder: '' },
+  task: { label: 'A tarefa', placeholder: '' },
   assessment: { label: 'O enunciado', placeholder: 'Escreva a pergunta da verificação…' },
   end: { label: 'O resumo final', placeholder: 'O que fica dessa aula? Resuma em poucas linhas…' },
 };
@@ -176,6 +177,12 @@ export function SceneCard(props: SceneCardProps) {
               {sceneTypeLabel(node.type)}
             </span>
             {isStart && <span className="rounded-full bg-accent-soft px-2 py-0.5 font-medium text-accent">Primeira cena</span>}
+            {sceneUsesScreenRecording(node) && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-paid-soft px-2 py-0.5 font-medium text-paid" data-testid={`scene-screen-recording-${node.id}`}>
+                <MonitorPlay className="h-3 w-3" aria-hidden="true" />
+                Gravação de tela
+              </span>
+            )}
             {!!props.qualityCount && (
               <button
                 type="button"
@@ -232,7 +239,7 @@ export function SceneCard(props: SceneCardProps) {
       <div className={cn('mt-4 flex flex-col gap-5', nodeSupportsMedia(node) && (nested ? 'md:grid md:grid-cols-[minmax(0,1fr)_12rem] md:items-start' : 'md:grid md:grid-cols-[minmax(0,1fr)_15rem] md:items-start'))}>
       <div className={cn('min-w-0 space-y-4', nested && 'space-y-3')}>
         {/* Texto principal (a missão tem campos próprios, abaixo) */}
-        {node.type !== 'mission' && (
+        {node.type !== 'mission' && node.type !== 'task' && (
           <div>
             <p className="mb-0.5 text-xs font-medium text-fg-muted">{text.label}</p>
             <InlineRichText id={`text-${node.id}`} label={text.label} placeholder={text.placeholder} value={mainText(node)} onChange={setText} />
@@ -250,6 +257,7 @@ export function SceneCard(props: SceneCardProps) {
         {node.type === 'consequence' && <ConsequenceFields node={node} changeGraph={changeGraph} />}
         {node.type === 'reflection' && <ReflectionFields node={node} changeGraph={changeGraph} />}
         {node.type === 'mission' && <MissionFields node={node} graph={graph} changeGraph={changeGraph} />}
+        {node.type === 'task' && <TaskFields node={node} changeGraph={changeGraph} />}
         {node.type === 'assessment' && <AssessmentFields node={node} changeGraph={changeGraph} />}
         {node.type === 'end' && <EndFields node={node} changeGraph={changeGraph} />}
         {node.type === 'end' && <RecapEditor node={node} model={model} changeGraph={changeGraph} />}

@@ -3,8 +3,14 @@
  * não leva `docs/`). Os demais documentos jurídicos (internos) ficam em `docs/legal/`.
  */
 
-/** Enquanto for `true`, as páginas mostram o aviso de rascunho e pedem aos buscadores que não as indexem. Mudar aqui, em um só lugar. */
-export const LEGAL_DRAFT = true;
+/**
+ * Enquanto `LEGAL_PUBLISHED` não for `1` (ou `true`), as páginas mostram o aviso de rascunho e pedem aos buscadores que não as
+ * indexem. O PADRÃO É RASCUNHO: só se liga a variável depois do jurídico e de confirmar quem é o controlador.
+ * Lida a cada pedido (as páginas são dinâmicas): basta reiniciar o serviço com a variável mudada.
+ */
+export function isLegalDraft(env: Record<string, string | undefined> = process.env): boolean {
+  return !/^(1|true|sim|yes|on)$/i.test(env.LEGAL_PUBLISHED?.trim() ?? '');
+}
 export const LEGAL_DRAFT_LABEL = 'Rascunho em revisão jurídica';
 export const LEGAL_DRAFT_NOTE = 'Este texto ainda está sendo revisado. Trechos entre colchetes ainda serão preenchidos ou confirmados.';
 

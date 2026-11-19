@@ -1,5 +1,6 @@
+import { ScreenMockSchema } from './screen-mock';
 import { z } from 'zod';
-import { RichTextDocumentSchema } from './richtext';
+import { RichTextDocumentSchema, richTextToPlain } from './richtext';
 import { EffectSchema, ConditionSchema } from './dsl';
 import { SceneDirectionSchema } from './direction';
 import { ReflectionScaffoldSchema } from './scaffold';
@@ -76,6 +77,39 @@ const BaseNode = {
   title: z.string().max(120).optional(),
 };
 
+/**
+ * Gravação de tela própria (MP4 em tela cheia, narração da instrutora por cima, legenda da narração, SEM avatar).
+ * A ordem do array é a ordem de exibição. Contrato consumido pela montagem (ffmpeg):
+ *  - `fileName`: nome do arquivo `.mp4` (sem pasta), como escrito em `Vídeo próprio:` no roteiro;
+ *  - `assetId`: mídia anexada na cena (ausente = ainda falta anexar → aviso SCREEN_MEDIA_MISSING);
+ *  - `durationSec`: duração real do MP4, preenchida pela montagem/upload;
+ *  - `fit`: como o MP4 coube na fala (`ok` cabe, `short` ficou curto, `trimmed` foi cortado), preenchido pela montagem.
+ * Cena com `screenRecordings` não vazio = tela cheia sem avatar (a direção/câmera do avatar não se aplica).
+ */
+export const ScreenRecordingSchema = z.object({
+  fileName: z
+    .string()
+    .min(5)
+    .max(160)
+    .refine((v) => /\.mp4$/i.test(v), 'o arquivo deve terminar em .mp4')
+    .refine((v) => !/[\\/]/.test(v) && !v.includes('..'), 'use só o nome do arquivo, sem pasta nem ".."'),
+  assetId: z.string().min(1).max(128).optional(),
+  durationSec: z.number().positive().max(36000).optional(),
+  fit: z.enum(['ok', 'short', 'trimmed']).optional(),
+  /** tela simulada: a plataforma gera o MP4 a partir desta descrição (sem gravação humana); ver screen-mock.ts */
+  mock: ScreenMockSchema.optional(),
+  /** origem do asset: enviado pela equipe (`upload`) ou gerado da tela simulada (`mock`) */
+  source: z.enum(['upload', 'mock']).optional(),
+});
+export type ScreenRecording = z.infer<typeof ScreenRecordingSchema>;
+
+/** Tópico do painel dinâmico de uma cena (ver `topics` em `ScenarioNodeSchema`). */
+export const SceneTopicSchema = z.object({
+  text: z.string().trim().min(1).max(60),
+  cue: z.string().trim().min(1).max(160).optional(),
+});
+export type SceneTopicSpec = z.infer<typeof SceneTopicSchema>;
+
 export const ScenarioNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('scenario'),
@@ -87,6 +121,16 @@ export const ScenarioNodeSchema = z.object({
   /** direção cinematográfica (planos); quando presente, o vídeo é montado plano a plano */
   direction: SceneDirectionSchema.optional(),
   media: MediaRefSchema.optional(),
+  /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
+  screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
+  /**
+   * Tópicos do painel dinâmico (estúdio com zonas, cena dirigida sem pílulas/cartão/slide): entram um a um no lado
+   * vazio conforme a apresentadora fala (o "Texto na tela" do `body` vira o título). `cue` = trecho da fala em que o
+   * tópico entra (sem ele vale o próprio texto). Só montagem: não entra nas chaves de reaproveitamento do clipe do
+   * HeyGen (muda só o hash da cena). Vêm de `docs/roteiros/telas/<roteiro>.topicos.md` (importador) ou do comando
+   * `aplicar-topicos` (rascunho existente).
+   */
+  topics: z.array(SceneTopicSchema).min(1).max(8).optional(),
 });
 
 export const ContentNodeSchema = z.object({
@@ -100,6 +144,10 @@ export const ContentNodeSchema = z.object({
   /** direção cinematográfica (planos); quando presente, o vídeo é montado plano a plano */
   direction: SceneDirectionSchema.optional(),
   media: MediaRefSchema.optional(),
+  /** gravações de tela próprias (tela cheia, sem avatar), em ordem de exibição; ausente = cena de avatar de sempre */
+  screenRecordings: z.array(ScreenRecordingSchema).min(1).max(12).optional(),
+  /** tópicos do painel dinâmico da cena (ver `ScenarioNodeSchema.topics`) */
+  topics: z.array(SceneTopicSchema).min(1).max(8).optional(),
   /**
    * Revisão de respostas ("Resultado da simulação"): decisões DESTA aula que a
    * cena lista com a pergunta, a resposta escolhida, a marca ("Forte" / "Pode
@@ -336,13 +384,110 @@ export const DialogueNodeSchema = z.object({
   maxTurns: z.number().int().min(1).max(20),
   exitNodeIds: z.array(NodeIdSchema).min(1),
 });
+/* ------------------------------------------------------------------------ */
+/* Tarefa com entrega ("Missão com entrega")                                 */
+/* ------------------------------------------------------------------------ */
+
+/** O que o aluno entrega: só um link, ou um link e (se quiser) um arquivo. `text` e `file` são os valores antigos do contrato. */
+export const TASK_DELIVERABLES = ['link', 'link_file'] as const;
+export type TaskDeliverable = (typeof TASK_DELIVERABLES)[number];
+export const TASK_FILE_KINDS = ['pdf', 'image'] as const;
+export type TaskFileKind = (typeof TASK_FILE_KINDS)[number];
+/** tipos de arquivo aceitos em cada grupo (conferidos pelos primeiros bytes no envio) */
+export const TASK_FILE_MIME: Record<TaskFileKind, readonly string[]> = { pdf: ['application/pdf'], image: ['image/png', 'image/jpeg'] };
+/** tamanho máximo do arquivo da entrega: 10 MB */
+export const TASK_FILE_MAX_BYTES = 10 * 1024 * 1024;
+export const TASK_LINK_MAX = 2000;
+export const TASK_CRITERIA_MAX = 10;
+export const TASK_COMMENT_MAX = 2000;
+export const TASK_REVIEWS = ['manual', 'auto'] as const;
+export type TaskReview = (typeof TASK_REVIEWS)[number];
+/** Situação de uma entrega: enviada (em correção), aprovada ou devolvida (o aluno reenvia). */
+export const TASK_STATUSES = ['submitted', 'approved', 'returned'] as const;
+export type TaskStatus = (typeof TASK_STATUSES)[number];
+export const TASK_LABELS = {
+  moment: 'Tarefa com entrega',
+  criteria: 'O que o avaliador confere',
+  link: 'Link da sua entrega',
+  file: 'Arquivo (opcional)',
+  submit: 'Enviar entrega',
+  submitted: 'Entrega enviada. Em correção.',
+  approved: 'Entrega aprovada',
+  returned: 'Entrega devolvida para ajuste',
+} as const;
+
+export const TaskCriterionSchema = z.object({
+  id: NodeIdSchema,
+  /** frase que se responde com sim ou não ("Fala o nome e o curso") */
+  label: z.string().trim().min(1).max(200),
+});
+export type TaskCriterion = z.infer<typeof TaskCriterionSchema>;
+
+/**
+ * Tarefa: o aluno ENTREGA algo (um link e, se o curso pedir, um arquivo) e um avaliador confere por critérios de sim ou não.
+ * É outro tipo, separado da missão "Leve para a vida real" (que continua opcional e sem entrega).
+ *
+ * A aula segue logo depois do envio; a correção acontece depois, fora da aula. A tarefa NUNCA bloqueia a aula nem a conclusão
+ * do curso: só alimenta a regra do certificado (`required`, padrão `true`: a entrega precisa estar aprovada).
+ *
+ * Os campos aceitam vazio no rascunho; o compilador bloqueia a publicação sem instrução ou sem critérios (`TASK_*`).
+ * Campos antigos do contrato (`instructions`, `deliverable: 'text' | 'file'`, `rubricId`) continuam aceitos: ver
+ * `taskInstructionOf` e `taskDeliverableOf`.
+ */
 export const TaskNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('task'),
-  instructions: RichTextDocumentSchema,
-  deliverable: z.enum(['text', 'file']),
+  /** o que fazer e o que enviar, em texto simples */
+  instruction: z.string().max(2000).default(''),
+  /** contrato antigo: instrução em texto rico (usada quando `instruction` está vazia) */
+  instructions: RichTextDocumentSchema.optional(),
+  deliverable: z.enum([...TASK_DELIVERABLES, 'text', 'file']).default('link'),
+  /** tipos de arquivo aceitos quando a entrega tem arquivo (até `TASK_FILE_MAX_BYTES`) */
+  fileKinds: z.array(z.enum(TASK_FILE_KINDS)).min(1).max(TASK_FILE_KINDS.length).default([...TASK_FILE_KINDS]),
+  /** itens de sim ou não que o avaliador confere (1 a 10 para publicar) */
+  criteria: z.array(TaskCriterionSchema).max(TASK_CRITERIA_MAX).default([]),
+  /** `manual`: um avaliador aprova ou devolve; `auto`: aprova ao enviar (os critérios ficam só como orientação) */
+  review: z.enum(TASK_REVIEWS).default('manual'),
+  /** contrato antigo, sem uso */
   rubricId: z.string().optional(),
 });
+
+/** Entrega da tarefa nos valores atuais: `file` (antigo) vale `link_file`; `text` (antigo) vale `link`. */
+export function taskDeliverableOf(node: { deliverable: z.infer<typeof TaskNodeSchema>['deliverable'] }): TaskDeliverable {
+  return node.deliverable === 'link_file' || node.deliverable === 'file' ? 'link_file' : 'link';
+}
+
+/** Instrução da tarefa em texto simples: `instruction` ou, em documentos antigos, o texto de `instructions`. */
+export function taskInstructionOf(node: { instruction?: string; instructions?: z.infer<typeof RichTextDocumentSchema> }): string {
+  const own = (node.instruction ?? '').trim();
+  if (own) return own;
+  return node.instructions ? richTextToPlain(node.instructions).trim() : '';
+}
+
+/** Tipos MIME que esta tarefa aceita como arquivo (vazio quando a entrega é só o link). */
+export function taskAcceptedMime(node: { deliverable: z.infer<typeof TaskNodeSchema>['deliverable']; fileKinds: readonly TaskFileKind[] }): string[] {
+  if (taskDeliverableOf(node) !== 'link_file') return [];
+  return node.fileKinds.flatMap((k) => [...TASK_FILE_MIME[k]]);
+}
+
+/**
+ * Confere o link de uma entrega: precisa ser um endereço `https://` válido, com até `TASK_LINK_MAX` caracteres.
+ * Devolve o link limpo ou a mensagem para o aluno.
+ */
+export function checkTaskLink(raw: unknown): { ok: true; link: string } | { ok: false; message: string } {
+  const link = typeof raw === 'string' ? raw.trim() : '';
+  if (!link) return { ok: false, message: 'Cole o link da sua entrega.' };
+  if (link.length > TASK_LINK_MAX) return { ok: false, message: `O link precisa ter até ${TASK_LINK_MAX} caracteres.` };
+  if (!/^https:\/\//i.test(link) || /\s/.test(link)) return { ok: false, message: 'O link precisa começar com https://' };
+  try {
+    const u = new URL(link);
+    if (u.protocol !== 'https:' || !u.hostname.includes('.') || u.username || u.password) return { ok: false, message: 'Confira o link: ele precisa ser um endereço https:// válido.' };
+  } catch {
+    return { ok: false, message: 'Confira o link: ele precisa ser um endereço https:// válido.' };
+  }
+  return { ok: true, link };
+}
+
 export const EvidenceNodeSchema = z.object({
   ...BaseNode,
   type: z.literal('evidence'),
@@ -370,6 +515,7 @@ export const ExecutableNodeSchema = z.discriminatedUnion('type', [
   ConsequenceNodeSchema,
   ReflectionNodeSchema,
   MissionNodeSchema,
+  TaskNodeSchema,
   AssessmentNodeSchema,
   EndNodeSchema,
 ]);
@@ -396,16 +542,22 @@ export type ChoiceNode = z.infer<typeof ChoiceNodeSchema>;
 export type ConsequenceNode = z.infer<typeof ConsequenceNodeSchema>;
 export type ReflectionNode = z.infer<typeof ReflectionNodeSchema>;
 export type MissionNode = z.infer<typeof MissionNodeSchema>;
+export type TaskNode = z.infer<typeof TaskNodeSchema>;
 export type AssessmentNode = z.infer<typeof AssessmentNodeSchema>;
 export type EndNode = z.infer<typeof EndNodeSchema>;
 export type ExecutableNode = z.infer<typeof ExecutableNodeSchema>;
 export type AnyNode = z.infer<typeof AnyNodeSchema>;
 export type NodeType = AnyNode['type'];
 
+/** A cena é uma gravação de tela própria (tela cheia, sem avatar)? */
+export function sceneUsesScreenRecording(node: AnyNode | { screenRecordings?: ScreenRecording[] | undefined }): boolean {
+  return ((node as { screenRecordings?: ScreenRecording[] }).screenRecordings?.length ?? 0) > 0;
+}
+
 /** Tipos com executor + renderer registrados no incremento atual. */
-export const EXECUTABLE_NODE_TYPES = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'assessment', 'end'] as const;
+export const EXECUTABLE_NODE_TYPES = ['scenario', 'content', 'choice', 'consequence', 'reflection', 'mission', 'task', 'assessment', 'end'] as const;
 export type ExecutableNodeType = (typeof EXECUTABLE_NODE_TYPES)[number];
-export const PLANNED_NODE_TYPES = ['dialogue', 'task', 'evidence', 'resource_simulation', 'ai_feedback'] as const;
+export const PLANNED_NODE_TYPES = ['dialogue', 'evidence', 'resource_simulation', 'ai_feedback'] as const;
 
 export function isExecutableNodeType(t: string): t is ExecutableNodeType {
   return (EXECUTABLE_NODE_TYPES as readonly string[]).includes(t);
@@ -429,7 +581,7 @@ export const NODE_TYPE_LABELS: Record<NodeType, string> = {
   assessment: 'Avaliação',
   end: 'Encerramento',
   dialogue: 'Conversa (em breve)',
-  task: 'Tarefa (em breve)',
+  task: 'Tarefa com entrega',
   evidence: 'Evidência (em breve)',
   resource_simulation: 'Simulação de recursos (em breve)',
   ai_feedback: 'Feedback com IA (em breve)',

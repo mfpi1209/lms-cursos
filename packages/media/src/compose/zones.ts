@@ -234,6 +234,7 @@ export function teaserWindow(total: number): { from: number; to: number } {
 /* Desenho                                                               */
 /* ------------------------------------------------------------------ */
 
+/** Desenha a árvore (satori) e rasteriza (resvg): PNG + pixels. */
 async function render(tree: Node, width: number, height: number): Promise<{ png: Uint8Array; pixels: Uint8Array; width: number; height: number }> {
   const svg = await satori(tree as never, { width, height, fonts: loadSlideFonts() });
   const r = await rasterizeSvg(svg, { pixels: true });
@@ -564,3 +565,128 @@ export async function renderLowerThirdSprite(file: string, who: { name: string; 
   const rect = lowerThirdRect({ width: W, height: H, w: box.w, h: box.h, watermarkSide: o.watermarkSide });
   return { path: file, x: rect.x - box.x, y: rect.y - box.y, w: sw, h: sh };
 }
+
+/* ------------------------------------------------------------------ */
+/* Texto na tela (painel no lado livre da cena dirigida)                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * "Texto na tela" do roteiro (`Texto na tela: …` da cena V..; no documento é o
+ * `body` do nó) numa cena do estúdio com zonas SEM pílulas/cartão/slide: um
+ * painel de vidro marinho no lado livre (a parede do outro lado da
+ * apresentadora), que entra em 0,6 s e fica até o fim da cena (some quando a
+ * pergunta a seguir entra). É só montagem: nada aqui entra na chave do clipe.
+ *
+ * Formas: `Título: a, b, c` (2 a 3 itens curtos) vira título + itens; uma lista
+ * `A · B · C` vira só itens; o resto é uma frase em até 3 linhas.
+ */
+export interface ScreenTextSpec {
+  title?: string;
+  items?: string[];
+  /** frase corrida (sem título/itens) */
+  text?: string;
+}
+
+export const SCREEN_TEXT_WINDOW = { from: 0.6, fade: 0.35, minSeconds: 1 } as const;
+const SCREEN_TEXT_MAX_ITEMS = 3;
+const SCREEN_TEXT_ITEM_CHARS = 30;
+const SCREEN_TEXT_TITLE_CHARS = 34;
+const SCREEN_TEXT_MAX_LINES = 3;
+
+const stripEnd = (s: string) => s.replace(/[\s.;,]+$/, '').trim();
+
+/** Interpreta o texto da tela (ver `ScreenTextSpec`); null = nada a mostrar. */
+export function parseScreenText(raw: string | null | undefined): ScreenTextSpec | null {
+  const t = (raw ?? '').replace(/\s+/g, ' ').trim();
+  if (!t) return null;
+  const fitItems = (parts: string[]) => {
+    const items = parts.map(stripEnd).filter(Boolean);
+    return items.length >= 2 && items.length <= SCREEN_TEXT_MAX_ITEMS && items.every((x) => x.length <= SCREEN_TEXT_ITEM_CHARS) ? items : null;
+  };
+  if (/\s·\s/.test(t)) {
+    const items = fitItems(t.split(/\s·\s/));
+    if (items) return { items };
+  }
+  const colon = t.indexOf(':');
+  if (colon >= 3 && colon <= SCREEN_TEXT_TITLE_CHARS && !/[.!?;]/.test(t.slice(0, colon))) {
+    const items = fitItems(t.slice(colon + 1).split(/\s*[,;]\s*/));
+    if (items) return { title: t.slice(0, colon).trim(), items };
+  }
+  return { text: t };
+}
+
+/** Janela do painel (s, tempo final da cena): de 0,6 s até o fim (ou até a pergunta a seguir entrar); null = curta demais. */
+export function screenTextWindow(total: number, teaserFrom?: number | null): { from: number; to: number } | null {
+  const to = Math.min(total, teaserFrom != null ? teaserFrom - 0.1 : total);
+  const from = SCREEN_TEXT_WINDOW.from;
+  return to - from >= SCREEN_TEXT_WINDOW.minSeconds ? { from, to: Number(to.toFixed(3)) } : null;
+}
+
+/** Tamanho do texto corrido (px a 1080p) e o texto cortado para caber em `SCREEN_TEXT_MAX_LINES` linhas. */
+export function fitScreenText(text: string, innerWidth: number, k: number): { size: number; text: string } {
+  const perLine = (size: number) => Math.max(8, Math.floor(innerWidth / (size * 0.56 * k)));
+  const need = (size: number) => {
+    // linhas pela quebra gulosa em palavras
+    let lines = 1;
+    let cur = 0;
+    for (const w of text.split(' ')) {
+      const add = (cur ? 1 : 0) + w.length;
+      if (cur + add > perLine(size) && cur) { lines++; cur = w.length; } else cur += add;
+    }
+    return lines;
+  };
+  for (const size of [46, 42, 38, 34]) if (need(size) <= SCREEN_TEXT_MAX_LINES) return { size, text };
+  return { size: 34, text: clampText(text, perLine(34) * SCREEN_TEXT_MAX_LINES - 6) };
+}
+
+export interface ScreenTextSprite extends PlacedSprite {
+  /** lado da coluna no quadro (de onde o painel desliza) */
+  side: 'left' | 'right';
+}
+
+/**
+ * Painel do texto na tela: coluna livre da câmera de zona (`chipsColumn`),
+ * topo em `panelTop`, vidro marinho com barra laranja. Devolve o sprite
+ * recortado e a posição no quadro.
+ */
+export async function renderScreenTextSprite(file: string, spec: ScreenTextSpec, o: { width?: number; height?: number; zone?: Zone | null; palette?: ZonePaletteInput | null } = {}): Promise<ScreenTextSprite> {
+  const colors = zoneColors(o.palette);
+  const W = o.width ?? 1920;
+  const H = o.height ?? 1080;
+  const k = H / 1080;
+  const px = (n: number) => Math.round(n * k);
+  const col = chipsColumn({ width: W, zone: o.zone });
+  const sp = px(ZONE_GEOMETRY.shadowPad);
+  const border = Math.max(1, Math.round(k));
+  const padX = px(34);
+  const inner = col.width - padX * 2 - border * 2 - px(30);
+  const bar = h('div', { display: 'flex', width: px(8), borderRadius: px(4), background: colors.accent, marginRight: px(22), flexShrink: 0 });
+  let body: Node;
+  if (spec.items?.length) {
+    body = h('div', { display: 'flex', flexDirection: 'column', width: inner },
+      spec.title ? h('div', { display: 'flex', fontSize: px(40), lineHeight: 1.15, fontWeight: 800, color: colors.eyebrow, marginBottom: px(16) }, clampText(spec.title, SCREEN_TEXT_TITLE_CHARS)) : null,
+      spec.items.map((it, i) => h('div', { display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: i === 0 ? 0 : px(12) },
+        h('div', { display: 'flex', width: px(14), height: px(14), borderRadius: 999, background: colors.accent, marginRight: px(16), flexShrink: 0 }),
+        h('div', { display: 'flex', fontSize: px(38), lineHeight: 1.2, fontWeight: 700, color: colors.onBase, width: inner - px(30) }, clampText(it, SCREEN_TEXT_ITEM_CHARS)))));
+  } else {
+    const fit = fitScreenText(spec.text ?? '', inner, k);
+    body = h('div', { display: 'flex', width: inner, fontSize: px(fit.size), lineHeight: 1.22, fontWeight: 800, color: colors.onBase }, fit.text);
+  }
+  const card = h('div', {
+    // satori soma padding e borda à largura: o painel inteiro ocupa a coluna
+    display: 'flex', flexDirection: 'row', width: col.width - padX * 2 - border * 2, padding: `${px(28)}px ${padX}px`, borderRadius: px(24),
+    background: colors.panel, border: `${border}px solid ${ZONE_GLASS.border}`, boxShadow: `0 ${px(18)}px ${px(36)}px rgba(15,16,48,0.30)`,
+  }, bar, body);
+  const cw = col.width + sp * 2;
+  const ch = px(560);
+  const r = await render(h('div', { display: 'flex', width: cw, height: ch, padding: sp, fontFamily: 'Inter', alignItems: 'flex-start' }, card), cw, ch);
+  const box = alphaBBox(r.pixels, r.width, r.height, 200) ?? { x: sp, y: sp, w: col.width, h: px(200) };
+  const sh = Math.min(ch, box.y + box.h + sp);
+  const cropped = (await rasterizeSvg(`<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${sh}" viewBox="0 0 ${cw} ${sh}"><image href="data:image/png;base64,${Buffer.from(r.png).toString('base64')}" width="${cw}" height="${ch}"/></svg>`)).png;
+  await writeFile(file, cropped);
+  const top = Math.round(H * ZONE_GEOMETRY.panelTop);
+  return { path: file, x: col.x - box.x, y: top - box.y, w: cw, h: sh, side: col.side };
+}
+
+/** Para os desenhos irmãos (texto na tela dinâmico): mesma árvore satori e rasterização. */
+export { h as zoneH, render as zoneRender, type Node as ZoneNode };
