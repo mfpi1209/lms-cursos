@@ -16,6 +16,8 @@ export interface CatalogItem {
   trail?: string;
   done: boolean;
   started: boolean;
+  /** publicado e ainda sem matrícula: o cartão inscreve a pessoa */
+  open?: boolean;
 }
 
 const norm = (t: string) => t.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -74,7 +76,12 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
   const seriesGroups = collapse ? groups.filter((g) => g.card) : [];
   type Row = { type: 'group'; g: Group } | { type: 'series'; cards: SeriesCardData[] };
   const rows: Row[] = groups.flatMap<Row>((g) => {
-    if (collapse && g.card) return g === seriesGroups[0] ? [{ type: 'series', cards: seriesGroups.map((x) => x.card!) }] : [];
+    if (collapse && g.card) {
+      const head: Row[] = g === seriesGroups[0] ? [{ type: 'series', cards: seriesGroups.map((x) => x.card!) }] : [];
+      const openCourses = g.courses.filter((c) => c.open);
+      if (openCourses.length === 0) return head;
+      return [...head, { type: 'group', g: { ...g, card: undefined, href: undefined, courses: openCourses, all: openCourses } }];
+    }
     if (g.card) return g.courses.length > 0 || (g.card && trailMatches(g.card) && !!q) ? [{ type: 'group', g }] : [];
     return g.courses.length > 0 ? [{ type: 'group', g }] : [];
   });
@@ -160,6 +167,7 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
           );
         }
         const g = row.g;
+        const onlyOpen = g.courses.length > 0 && g.courses.every((c) => c.open);
         const layout: RailLayout = g.card || g.courses.length <= 3 ? 'wide3' : 'portrait5';
         const variant = layout === 'portrait5' ? 'portrait' : 'landscape';
         const showCard = !!g.card && (!q || trailMatches(g.card));
@@ -170,8 +178,8 @@ export function Catalog({ items, trails, series = {}, query }: { items: CatalogI
             count={g.card ? g.card.total : g.courses.length}
             {...(g.card ? { countLabel: `trilha em ${g.card.total} partes` } : {})}
             testId={`trail-${g.key}`}
-            progress={g.card ? trailProgressCopy(g.card.partsDone, g.card.total, 'partes') : trailProgressCopy(g.all.filter((i) => i.done).length, g.all.length)}
-            {...(g.href ? { href: g.href } : {})}
+            progress={onlyOpen ? `${g.courses.length} ${g.courses.length === 1 ? 'curso disponível' : 'cursos disponíveis'}` : g.card ? trailProgressCopy(g.card.partsDone, g.card.total, 'partes') : trailProgressCopy(g.all.filter((i) => i.done).length, g.all.length)}
+            {...(g.href && !onlyOpen ? { href: g.href } : {})}
             layout={layout}
             {...(showCard ? { lead: <SeriesTile s={g.card!} testId={`series-${g.key}`} banner /> } : {})}
           >

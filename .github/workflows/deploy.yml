@@ -1,0 +1,42 @@
+name: Deploy LMS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-lms
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Disparar WEBHOOK_DEPLOY_LMS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar webhook de deploy
+        env:
+          WEBHOOK_DEPLOY_LMS: ${{ secrets.WEBHOOK_DEPLOY_LMS }}
+        run: |
+          set -euo pipefail
+          if [ -z "${WEBHOOK_DEPLOY_LMS}" ]; then
+            echo "O secret WEBHOOK_DEPLOY_LMS não está configurado neste repositório."
+            exit 1
+          fi
+          http_code="$(curl --silent --show-error --location --max-redirs 3 \
+            --output /tmp/deploy-body.txt \
+            --write-out '%{http_code}' \
+            --request GET \
+            --retry 3 \
+            --retry-delay 5 \
+            --retry-connrefused \
+            "${WEBHOOK_DEPLOY_LMS}")"
+          echo "Webhook respondeu HTTP ${http_code}"
+          if [ "${http_code}" -lt 200 ] || [ "${http_code}" -ge 300 ]; then
+            echo "O webhook recusou o deploy."
+            exit 1
+          fi

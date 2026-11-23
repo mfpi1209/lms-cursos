@@ -45,6 +45,28 @@ export async function enrollStudent(db: Database, input: { courseId: string; use
   });
 }
 
+/** Cursos publicados do workspace em que esta pessoa ainda não está matriculada (a vitrine oferece inscrição). */
+export async function listOpenPublishedCourses(db: DbOrTx, workspaceId: string, userId: string) {
+  return db
+    .select({
+      id: s.courses.id,
+      slug: s.courses.slug,
+      title: s.courses.title,
+      trail: s.courses.trail,
+      posterAssetId: s.courses.posterAssetId,
+      versionId: s.courseVersions.id,
+      document: s.courseVersions.document,
+    })
+    .from(s.courses)
+    .innerJoin(s.courseVersions, and(eq(s.courseVersions.courseId, s.courses.id), eq(s.courseVersions.versionNumber, s.courses.latestVersionNumber)))
+    .where(and(
+      eq(s.courses.workspaceId, workspaceId),
+      eq(s.courses.status, 'published'),
+      sql`not exists (select 1 from ${s.enrollments} where ${s.enrollments.courseId} = ${s.courses.id} and ${s.enrollments.userId} = ${userId})`,
+    ))
+    .orderBy(asc(s.courses.title));
+}
+
 export async function listEnrollmentsForUser(db: DbOrTx, userId: string) {
   return db
     .select({
