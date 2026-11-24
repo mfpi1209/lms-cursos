@@ -55,6 +55,14 @@ export function FreeCourseBadges({ certificate, className }: { certificate: bool
   );
 }
 
+/**
+ * Recorte da foto no quadro do cartão. As capas dos cursos livres são largas (16:9) com a apresentadora no terço
+ * esquerdo (rosto entre 22% e 29% da largura; a direita é a parede do estúdio). O quadro do cartão no computador
+ * (48% do cartão) mostra cerca de metade da largura da foto: centralizar cortava a pessoa e deixava a parede. 10%
+ * põe a pessoa inteira no quadro, com um pouco do estúdio ao lado; no celular o quadro é 16:9 e a foto aparece inteira.
+ */
+export const FREE_CARD_FOCUS = '10% 30%';
+
 /** Imagens do cartão em ordem: a capa própria do curso (se tiver), a foto do instrutor e o quadro do vídeo. */
 export const freeCardImages = (c: Pick<FreeCourseCardData, 'poster' | 'photo' | 'fallback'>): string[] => [c.poster, c.photo, c.fallback].filter((s): s is string => !!s);
 
@@ -72,7 +80,7 @@ export function FreeCourseCard({ c, testId, priority = false }: { c: FreeCourseC
     <li className="dna-li" data-status={c.status} data-testid={testId}>
       <article aria-labelledby={headingId} className="dna-free border border-line bg-surface">
         <div className="dna-free__media">
-          <CoverImage fallbacks={freeCardImages(c)} format="wide" title={c.title} priority={priority} />
+          <CoverImage fallbacks={freeCardImages(c)} format="wide" title={c.title} priority={priority} fallbackPosition={FREE_CARD_FOCUS} />
           <span aria-hidden="true" className="dna-card__scrim dna-card__scrim--soft" />
           <FreeCourseBadges certificate={c.certificate} className="absolute left-3 top-3 right-3" />
         </div>
