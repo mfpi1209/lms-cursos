@@ -213,6 +213,8 @@ export interface OpenCourse {
   slug: string;
   trail?: string;
   tile: CourseTileData;
+  /** curso livre: vai para a seção "Cursos livres" (cartão grande, botão que inscreve), não para "Mais cursos" */
+  free?: FreeCourseCardData;
 }
 
 export async function loadOpenCourses(workspaceId: string, userId: string): Promise<OpenCourse[]> {
@@ -272,6 +274,29 @@ export async function loadOpenCourses(workspaceId: string, userId: string): Prom
       cta: 'Inscrever-se',
       ...(trail ? { trail } : {}),
     };
-    return { courseId: row.id, slug: row.slug, ...(trail ? { trail } : {}), tile };
+    const free: FreeCourseCardData | undefined = isFreeCourse(doc)
+      ? {
+          id: `open-${row.id}`,
+          href: '/aprender',
+          startHref: '/aprender',
+          title: shortTitle,
+          ...(tagline ? { summary: tagline } : {}),
+          ...(presenter ? { presenter } : {}),
+          ...(posterArt ? { poster: posterArt } : {}),
+          ...(presenterImg ? { photo: presenterImg } : {}),
+          ...(thumb && thumb !== presenterImg ? { fallback: thumb } : {}),
+          workloadMinutes: freeCourseWorkloadMinutes(doc),
+          modules: doc.modules.filter((m) => m.lessons.length > 0).length,
+          lessons: lessons.length,
+          required: lessons.length,
+          completed: 0,
+          percent: 0,
+          status: 'new',
+          cta: 'Começar',
+          certificate: hasCertificate(doc),
+          enrollCourseId: row.id,
+        }
+      : undefined;
+    return { courseId: row.id, slug: row.slug, ...(trail && !free ? { trail } : {}), tile, ...(free ? { free } : {}) };
   });
 }
