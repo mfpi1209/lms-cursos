@@ -88,7 +88,7 @@ const percentOf = (c: Pick<CourseTileData, 'status' | 'lessons' | 'completed'>) 
  * reserva em ordem; sem nenhum, um fundo marinho com a inicial. O quadro tem proporção fixa: nada muda de lugar quando a
  * imagem chega ou falha. Só a primeira imagem da página pede prioridade (`priority`); as demais são preguiçosas.
  */
-export function CoverImage({ art, fallbacks = [], format, title, priority = false, className, position }: { art?: CoverArt; fallbacks?: Array<string | undefined>; format: 'portrait' | 'landscape' | 'wide'; title: string; priority?: boolean; className?: string; position?: string }) {
+export function CoverImage({ art, fallbacks = [], format, title, priority = false, className, position, fallbackPosition = '50% 20%' }: { art?: CoverArt; fallbacks?: Array<string | undefined>; format: 'portrait' | 'landscape' | 'wide'; title: string; priority?: boolean; className?: string; position?: string; /** recorte das imagens sem `art` (capa, foto do instrutor, quadro do vídeo) */ fallbackPosition?: string }) {
   const sources = React.useMemo(() => [...(art ? [art.src] : []), ...fallbacks.filter((s): s is string => !!s)], [art, fallbacks]);
   const [i, setI] = React.useState(0);
   const ref = React.useRef<HTMLImageElement>(null);
@@ -106,7 +106,7 @@ export function CoverImage({ art, fallbacks = [], format, title, priority = fals
     );
   }
   const native = i === 0 && !!art;
-  const pos = native && art ? (position ?? art.position[format]) : '50% 20%';
+  const pos = native && art ? (position ?? art.position[format]) : fallbackPosition;
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
