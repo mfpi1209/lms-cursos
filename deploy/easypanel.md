@@ -43,7 +43,7 @@ Dois serviços de aplicação (web e worker) apontando para Postgres, Redis e st
 
 ## 4. Migrations e seed
 
-Rodar antes da primeira subida e a cada deploy com migration nova (job one-off no EasyPanel ou `docker run` com a imagem do worker):
+O **worker aplica as migrações pendentes sozinho ao iniciar** (idempotente; `MIGRATE_ON_START=0` desliga). Confira no log do worker a linha `migrações do banco em dia` (ou `FALHA ao aplicar migrações`). Para rodar à mão (job one-off no EasyPanel ou `docker run` com a imagem do worker):
 
 ```bash
 pnpm --filter @lms/db migrate

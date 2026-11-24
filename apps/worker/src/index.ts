@@ -1,5 +1,5 @@
 import { and, asc, eq, isNull, lt, sql } from 'drizzle-orm';
-import { getDb, schema, agent } from '@lms/db';
+import { getDb, schema, agent, runMigrations } from '@lms/db';
 import { aiConfigFromEnv, describeAiMode } from '@lms/ai';
 import { describeMediaMode, mediaConfigFromEnv } from '@lms/media';
 import { dispatchQueuedJobs, pollRunningJobs, reconcileJob } from './media';
@@ -82,7 +82,25 @@ async function handleOne(ev: typeof schema.outboxEvents.$inferSelect) {
   }
 }
 
+/**
+ * Aplica as migrações pendentes ao subir (idempotente: as já aplicadas são puladas). Assim um deploy com migração nova
+ * não depende de um job manual no painel. `MIGRATE_ON_START=0` desliga. Se falhar, registra e segue: o web não depende
+ * do worker, e o erro fica no log para correção.
+ */
+async function migrateOnStart(): Promise<void> {
+  if (process.env.MIGRATE_ON_START === '0') return;
+  const url = process.env.DATABASE_URL;
+  if (!url) return;
+  try {
+    await runMigrations(url);
+    console.log('[worker] migrações do banco em dia');
+  } catch (e) {
+    console.error('[worker] FALHA ao aplicar migrações; seguindo sem elas:', e instanceof Error ? e.message : e);
+  }
+}
+
 async function main() {
+  await migrateOnStart();
   console.log(`[worker] iniciado; polling do outbox a cada ${POLL_MS}ms`);
   // modo resolvido (demo/real), só nomes — nunca chaves
   console.log(`[worker] ${describeAiMode(aiConfigFromEnv())}`);
