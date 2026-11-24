@@ -173,7 +173,8 @@ function DetailsMedia({ c, className }: { c: CourseTileData; className?: string 
   );
 }
 
-function useEnroll(courseId: string | undefined) {
+/** Inscreve a pessoa no curso publicado e abre o curso (`href` devolvido pela API). */
+export function useEnroll(courseId: string | undefined) {
   const [pending, setPending] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   async function enroll() {

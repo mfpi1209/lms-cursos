@@ -927,11 +927,13 @@ button.dna-card__link { font: inherit; text-align: inherit; background: none; bo
   .dna-free__media { aspect-ratio: auto; min-height: 280px; }
   .dna-free__body { gap: 16px; padding: 24px; }
 }
+/* em número ímpar, o primeiro (o curso em andamento vem antes) ocupa a linha inteira: sem buraco no fim da grade */
 @media (min-width: 1100px) {
   .dna-rail--free:has(> li:nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free { grid-template-columns: minmax(0, 52%) minmax(0, 1fr); }
-  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free__media { min-height: 340px; }
-  .dna-rail--free:not(:has(> li:nth-child(2))) .dna-free__body { padding: 32px 40px; }
+  .dna-rail--free > li:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+  .dna-rail--free > li:first-child:nth-last-child(odd) .dna-free { grid-template-columns: minmax(0, 52%) minmax(0, 1fr); }
+  .dna-rail--free > li:first-child:nth-last-child(odd) .dna-free__media { min-height: 340px; }
+  .dna-rail--free > li:first-child:nth-last-child(odd) .dna-free__body { padding: 32px 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .dna-card { transition: none !important; transform: none !important; } }
 

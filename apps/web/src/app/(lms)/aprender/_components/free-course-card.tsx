@@ -4,6 +4,7 @@ import { formatWorkload, spokenWorkload } from '@lms/course-schema';
 import { cn } from '@/lib/utils';
 import { CourseRail } from './course-rail';
 import { CoverImage } from './course-tile';
+import { FreeEnrollButton } from './free-enroll-button';
 import { ctaOutline, ctaPrimary } from './learner-ui';
 import type { FreeCourseCardData } from '../_lib/free-course';
 import { trailProgressCopy } from '../_lib/trail-order';
@@ -75,6 +76,7 @@ export const freeCardImages = (c: Pick<FreeCourseCardData, 'poster' | 'photo' | 
 export function FreeCourseCard({ c, testId, priority = false }: { c: FreeCourseCardData; testId?: string; priority?: boolean }) {
   const done = c.status === 'completed';
   const progressText = done ? 'Curso concluído' : c.status === 'in_progress' ? `${c.completed} de ${c.required} ${c.required === 1 ? 'aula concluída' : 'aulas concluídas'}` : 'Você ainda não começou';
+  const open = !!c.enrollCourseId;
   const headingId = `free-${c.id}`;
   return (
     <li className="dna-li" data-status={c.status} data-testid={testId}>
@@ -87,9 +89,13 @@ export function FreeCourseCard({ c, testId, priority = false }: { c: FreeCourseC
         <div className="dna-free__body">
           <div className="min-w-0 space-y-1.5">
             <h3 id={headingId} className="text-[20px]! font-bold! leading-[26px]! tracking-[-0.01em]! text-fg [overflow-wrap:anywhere] [text-wrap:balance] md:text-[24px]! md:leading-[30px]!">
-              <Link href={c.href} className="rounded-[6px] underline-offset-4 hover:underline" data-testid="free-open">
-                {c.title}
-              </Link>
+              {open ? (
+                c.title
+              ) : (
+                <Link href={c.href} className="rounded-[6px] underline-offset-4 hover:underline" data-testid="free-open">
+                  {c.title}
+                </Link>
+              )}
             </h3>
             {c.presenter && <p className="text-[15px] leading-[22px] text-fg-muted">com {c.presenter}</p>}
             {c.summary && <p className="line-clamp-2 max-w-prose text-[15px] leading-[22px] text-fg/85">{c.summary}</p>}
@@ -105,12 +111,16 @@ export function FreeCourseCard({ c, testId, priority = false }: { c: FreeCourseC
             </p>
           </div>
           <div className="flex flex-col gap-2 pt-1 min-[420px]:flex-row min-[420px]:flex-wrap">
-            <Link href={c.startHref} className={cn(ctaPrimary, 'px-5')} data-testid="free-start">
-              {!done && <Play className="size-4 fill-current" aria-hidden="true" />}
-              {c.cta}
-              <span className="sr-only">: {c.title}</span>
-            </Link>
-            {!done && (
+            {c.enrollCourseId ? (
+              <FreeEnrollButton courseId={c.enrollCourseId} label={c.cta} title={c.title} />
+            ) : (
+              <Link href={c.startHref} className={cn(ctaPrimary, 'px-5')} data-testid="free-start">
+                {!done && <Play className="size-4 fill-current" aria-hidden="true" />}
+                {c.cta}
+                <span className="sr-only">: {c.title}</span>
+              </Link>
+            )}
+            {!done && !open && (
               <Link href={c.href} className={cn(ctaOutline, 'px-5')} data-testid="free-modules">
                 <ListVideo className="size-4" aria-hidden="true" />
                 Ver módulos

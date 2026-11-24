@@ -36,6 +36,11 @@ export interface FreeCourseCardData {
   cta: string;
   /** só quando o documento liga o certificado (`certificate.enabled`) */
   certificate: boolean;
+  /**
+   * Curso publicado em que a pessoa ainda NÃO está matriculada: o botão principal inscreve e abre o curso (não há página
+   * de módulos nem andamento ainda). Sem ele, `id` é o da matrícula.
+   */
+  enrollCourseId?: string;
 }
 
 /** Rótulo da ação do curso livre pelo estado real: o módulo (base 0) da próxima aula entra depois de começar. */

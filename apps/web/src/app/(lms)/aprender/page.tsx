@@ -45,7 +45,7 @@ type Mode = 'new' | 'progress' | 'next' | 'done';
 async function Home({ userId, workspaceId, name, q }: { userId: string; workspaceId: string; name?: string | null; q?: string }) {
   const { courses, trails: enrolledTrails } = await loadLearnerCourses(userId);
   const open = await loadOpenCourses(workspaceId, userId);
-  const trails = sortTrails([...new Set([...enrolledTrails, ...open.map((c) => c.trail).filter((t): t is string => !!t)])]);
+  const trails = sortTrails([...new Set([...enrolledTrails, ...open.flatMap((c) => (c.trail && !c.free ? [c.trail] : []))])]);
   const firstName = name?.trim().split(/\s+/)[0];
 
   // continuar: o curso em andamento mais recente
@@ -88,10 +88,11 @@ async function Home({ userId, workspaceId, name, q }: { userId: string; workspac
     ];
   });
   // cursos livres matriculados têm seção própria: não entram nas trilhas de pílulas nem em "Mais cursos"
-  const free = courses.flatMap((c) => (c.free ? [c.free] : []));
+  // os livres ainda sem matrícula entram na mesma seção, depois dos matriculados, com o botão que inscreve
+  const free = [...courses.flatMap((c) => (c.free ? [c.free] : [])), ...open.flatMap((c) => (c.free ? [c.free] : []))];
   const items: CatalogItem[] = [
     ...courses.filter((c) => !c.free).map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: c.isDone, started: c.started })),
-    ...open.map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: false, started: false, open: true })),
+    ...open.filter((c) => !c.free).map((c) => ({ tile: c.tile, slug: c.slug, ...(c.trail ? { trail: c.trail } : {}), done: false, started: false, open: true })),
   ];
 
   const hl = 'text-[var(--im-accent-ink)]';
