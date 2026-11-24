@@ -7,6 +7,7 @@ import { processAgentRun } from './agent';
 import { ingestSource } from './sources';
 import { newRetentionState, runRetentionIfDue } from './retention';
 import { fanOutOutboxEvent, startWebhookDispatcher } from './webhooks';
+import { autoImportCourses } from './course-import';
 
 /**
  * Worker do incremento 1: consumidor idempotente do outbox transacional, por
@@ -101,6 +102,8 @@ async function migrateOnStart(): Promise<void> {
 
 async function main() {
   await migrateOnStart();
+  // cursos do pacote público (uma vez; em segundo plano para não atrasar o outbox). Ver course-import.ts
+  void autoImportCourses();
   console.log(`[worker] iniciado; polling do outbox a cada ${POLL_MS}ms`);
   // modo resolvido (demo/real), só nomes — nunca chaves
   console.log(`[worker] ${describeAiMode(aiConfigFromEnv())}`);
