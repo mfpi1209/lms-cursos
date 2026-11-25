@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { DbOrTx } from '../client';
 import * as s from '../schema';
 import type { WorkspaceRole } from '../schema/identity';
@@ -38,4 +38,20 @@ export function canPublish(role: WorkspaceRole | null | undefined): boolean {
 }
 export function canEnroll(role: WorkspaceRole | null | undefined): boolean {
   return role === 'admin';
+}
+
+/** Pessoas (alunos) do workspace com a contagem de matrículas, para a página "Pessoas" do estúdio. */
+export async function listStudentsWithEnrollmentCount(db: DbOrTx, workspaceId: string) {
+  return db
+    .select({
+      id: s.user.id,
+      name: s.user.name,
+      email: s.user.email,
+      createdAt: s.user.createdAt,
+      enrollmentCount: sql<number>`(select count(*)::int from ${s.enrollments} where ${s.enrollments.userId} = ${s.user.id})`,
+    })
+    .from(s.workspaceMemberships)
+    .innerJoin(s.user, eq(s.user.id, s.workspaceMemberships.userId))
+    .where(and(eq(s.workspaceMemberships.workspaceId, workspaceId), eq(s.workspaceMemberships.role, 'student')))
+    .orderBy(s.user.name);
 }
