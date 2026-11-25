@@ -48,6 +48,9 @@ export default async function StudioLayout({ children }: { children: React.React
               <Link href="/estudio/pessoas" className={navLink}>
                 Pessoas
               </Link>
+              <Link href="/estudio/acompanhamento" className={`${navLink} max-[600px]:hidden`} data-testid="nav-acompanhamento">
+                Acompanhamento
+              </Link>
               <Link href="/estudio/entregas" className={navLink} data-testid="nav-entregas">
                 Entregas
                 {pendingDeliveries > 0 && (
