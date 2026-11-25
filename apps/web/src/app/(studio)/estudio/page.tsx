@@ -38,6 +38,8 @@ export default async function LibraryPage() {
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-3">
+          {/* em telas estreitas o link some do cabeçalho: o acesso fica aqui */}
+          <Link href="/estudio/acompanhamento" className={cn(buttonVariants({ variant: 'secondary', size: 'lg' }), 'min-[601px]:hidden')}>Acompanhamento</Link>
           <Link href="/estudio/modelos" className={cn(buttonVariants({ variant: 'secondary', size: 'lg' }))}>Modelos prontos</Link>
           {canEdit && (
             <Link href="/estudio/novo" className={cn(buttonVariants({ size: 'lg' }))} data-testid="new-course">

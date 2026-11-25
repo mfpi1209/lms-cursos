@@ -989,3 +989,55 @@ button.dna-card__link { font: inherit; text-align: inherit; background: none; bo
   .dna-trail__body, .dna-trail--banner .dna-trail__body { position: static; width: 100%; padding: 14px 16px 16px; }
   .dna-trail__eyebrow { white-space: nowrap; }
 }
+
+/* ===================================================================
+   Acompanhamento dos alunos (estúdio › Acompanhamento)
+   Cores da situação validadas (faixa de luminosidade, daltonismo, contraste ≥ 3:1 sobre o painel):
+   escuro #27A065 / #4F8AE8 / #C98419 · claro #178A52 / #2563EB / #B45309. "Não começou" = cinza com hachura
+   (ausência de atividade), "cancelada" fica fora da faixa. Texto nunca usa essas cores; o rótulo vai ao lado.
+   =================================================================== */
+.theme-studio {
+  --trk-concluiu: #27a065;
+  --trk-em_dia: #4f8ae8;
+  --trk-parado: #c98419;
+  --trk-nao_comecou: #6b7891;
+  --trk-cancelada: #3a4559;
+}
+:root[data-theme='light'] .theme-studio {
+  --trk-concluiu: #178a52;
+  --trk-em_dia: #2563eb;
+  --trk-parado: #b45309;
+  --trk-nao_comecou: #98a2b3;
+  --trk-cancelada: #d0d5dd;
+}
+.trk-fill { background: var(--trk-c); }
+.trk-fill[data-hatch='true'] {
+  background: repeating-linear-gradient(135deg, var(--trk-c) 0 3px, color-mix(in oklab, var(--trk-c) 45%, transparent) 3px 7px);
+}
+/* faixa de situação: 2px de folga entre segmentos, pontas arredondadas só nas extremidades */
+.trk-strip { display: flex; gap: 2px; height: 28px; }
+.trk-strip > a { min-width: 6px; transition: filter 150ms; }
+.trk-strip > a:first-child { border-radius: 8px 0 0 8px; }
+.trk-strip > a:last-child { border-radius: 0 8px 8px 0; }
+.trk-strip > a:only-child { border-radius: 8px; }
+.trk-strip > a:hover, .trk-strip > a:focus-visible { filter: brightness(1.15); }
+.trk-strip > a[aria-current='true'] { outline: 2px solid var(--t-fg); outline-offset: 2px; }
+/* barras de atividade diária: dica no hover/foco */
+.trk-bars { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: end; gap: 2px; height: 140px; }
+.trk-bar { position: relative; height: 100%; display: flex; align-items: flex-end; outline: none; }
+.trk-bar > .trk-col { width: 100%; border-radius: 4px 4px 0 0; background: var(--trk-em_dia); min-height: 2px; }
+.trk-bar[data-zero='true'] > .trk-col { background: var(--t-track); }
+.trk-bar:hover > .trk-col, .trk-bar:focus-visible > .trk-col { filter: brightness(1.2); }
+.trk-bar:focus-visible { box-shadow: 0 0 0 2px var(--t-fg); border-radius: 4px; }
+.trk-bar > .trk-tip {
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); z-index: 2;
+  white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 120ms;
+  background: var(--t-surface-2); color: var(--t-fg); border: 1px solid var(--t-line-strong);
+  border-radius: 8px; padding: 4px 8px; font-size: 12px; line-height: 1.3;
+}
+.trk-bar:first-child > .trk-tip, .trk-bar:nth-child(2) > .trk-tip { left: 0; transform: none; }
+.trk-bar:last-child > .trk-tip, .trk-bar:nth-last-child(2) > .trk-tip { left: auto; right: 0; transform: none; }
+.trk-bar:hover > .trk-tip, .trk-bar:focus-visible > .trk-tip { opacity: 1; }
+.trk-meter { height: 6px; border-radius: 999px; background: var(--t-track); overflow: hidden; }
+.trk-meter > span { display: block; height: 100%; border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .trk-strip > a, .trk-bar > .trk-tip { transition: none; } }
